@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load i18n static %}
+
+    {% block menu-nav %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a href="/" class="navbar-brand"><img id="menu_logo" style="width: auto; max-width: 300px; height: auto; max-height: 27px; align:center; " src="{% static '/img/logo.png' %}"><span style="font-size: medium; ">&nbsp&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}</span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+
+    {% for item in request.session.portalmenu %}
+        {% if item.link == "dropdown" %}
+            <li class="nav-item dropdown">
+             <a class="nav-link dropdown-toggle" href="#" id="{{ item.title }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% if item.icon %}<i class="{{ item.icon }}"></i> {% endif %}{% translate item.title %}</a>
+             <div class="dropdown-menu" aria-labelledby="{{ item.title }}">
+
+            {% for value in request.session.portalsubmenu %}
+                {% if value.parent_id_str == item.id_str %}
+                    <a href="{{ value.link }}" class="dropdown-item">{% if value.icon %}<i class="{{ value.icon }}"></i> {% endif %}{% translate value.title %}</a>
+                {% endif %}
+            {% endfor %}
+             </div>
+            </li>
+        {% else %}
+            <li class="nav-item">
+            <a href="{{ item.link }}" class="dropdown-item">{% if item.icon %}<i class="{{ item.icon }}"></i> {% endif %}{% translate item.title %}</a>
+            </li>
+        {% endif %}
+
+    {% endfor %}
+    </ul>
+    </div>
+    </nav>
+    {% endblock %}
+
