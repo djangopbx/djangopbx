@@ -1,4 +1,3 @@
-#
 #    DjangoPBX
 #
 #    MIT License
@@ -27,26 +26,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-"""pbx URL Configuration
+from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import include, path
 
-urlpatterns = [
-    path(''       , include('portal.urls')),
-    path('portal/', include('portal.urls')),
-    path('admin/', admin.site.urls),
-]
+class PortalConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'portal'
+    verbose_name = _('Portal')
+    pbx_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7'
+    pbx_category = 'Core'
+    pbx_subcategory = ''
+    pbx_version = '1.0'
+    pbx_license = 'MIT License'

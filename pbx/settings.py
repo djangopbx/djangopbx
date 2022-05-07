@@ -54,7 +54,7 @@ SECRET_KEY = 'django-insecure-aaabbbcccdddeeefff9876543210'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.6.64']
 
 
 # Application definition
@@ -66,6 +66,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'import_export',
+    'bootstrap',
+    'fontawesome',
+    'portal.apps.PortalConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +87,7 @@ ROOT_URLCONF = 'pbx.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -149,6 +153,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+STATIC_ROOT = '/var/www/static/'
+
+# This setting defines the additional locations the staticfiles app will traverse if the FileSystemFinder finder is enabled
+# e.g. if you use the collectstatic or findstatic management command or use the static file serving view.
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

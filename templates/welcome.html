@@ -1,0 +1,10 @@
+{% extends "base_top_nav.html" %}
+
+{% load i18n static %}
+
+{% block contentclass %}container{% endblock %}
+
+    {% block content %}
+        <h1 style="text-align:center; margin-top: 100px; margin-bottom: 20px;">{% translate 'DjangoPBX Portal' %}</h1>
+        <img class="mx-auto d-block" id="menu_logo" style="width: auto; max-width: 300px; height: auto; max-height: 300px; align:center;" src="{% static '/img/welcome.png' %}">
+    {% endblock %}

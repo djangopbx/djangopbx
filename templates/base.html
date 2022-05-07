@@ -1,0 +1,74 @@
+{% load i18n static %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="keywords" content="DjangoPBX, PBX" />
+    <meta name="Description" content="DjangoPBX " />
+    <meta name="author" content="Adrian Fretwell" />
+    <title>{% block title %}{% endblock %}</title>
+    {% block style %}
+        <!-- bootstrap main stylesheet -->
+        <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}" />
+        <!-- forntawesome minimum stylesheet -->
+        <link rel="stylesheet" type="text/css" href="{% static "fontawesome/css/all.min.css" %}" />
+        <!-- Custom styles for this site -->
+        <link rel="stylesheet" type="text/css" href="{% static "css/pbx.css" %}" />
+    {% endblock %}
+
+    {% block extrastyle %}
+    {% endblock %}
+    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+</head>
+<body class="{% block bodyclass %}{% endblock %}" data-utc-offset="{% now "Z" %}">
+    {% block javascriptwarning %}
+    <noscript>
+     For full functionality of this site it is necessary to enable JavaScript.
+    </noscript>
+    {% endblock %}
+
+    {% block bodyscript %}
+    <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    {% endblock %}
+    {% block extrabodyscript %}
+    {% endblock %}
+
+    {% block litepbx-msg %}
+    {% if messages %}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // show the alert
+        setTimeout(function() {
+            $(".alert-dismissible").alert('close');
+        }, 2500);
+    });
+    </script>
+        {% for message in messages %}
+            <div id="top-alert" class="alert {% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible fade show" style="width: 100%" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="{% translate 'Close' %}">&#215;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endblock %}
+
+    {% block menu-nav %}
+    {% endblock %}
+
+    <!-- Container -->
+    <div id="main_content" style="margin-top: 70px;" class="{% block contentclass %}{% endblock %}">
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="container">
+        <h5 style="text-align:center; margin-top: 10px; font-size: 12px">DjangoPBX &copy; Adrian Fretwell 2022</h5>
+    </footer>
+    </div>
+    <!-- END Container -->
+
+</body>
+</html>
