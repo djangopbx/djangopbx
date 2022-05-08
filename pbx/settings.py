@@ -129,6 +129,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 12,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -173,3 +176,28 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Uncomment for production
+#SESSION_COOKIE_AGE = 3600
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Settings for django-import-export
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'Add'
+
+# Settings for django-tables2
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+
+# for bootstrap4 alert integration with django messages
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-secondary',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+ }
+
