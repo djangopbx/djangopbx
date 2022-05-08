@@ -44,7 +44,11 @@ from .models import (
 )
 
 from tenants.models import (
-    Domain,
+    Domain, DomainSetting,
+)
+
+from tenants.pbxsettings import (
+    PbxSettings,
 )
 
 from .serializers import (
@@ -54,25 +58,59 @@ from .serializers import (
 
 @login_required
 def index(request):
+    dreload = True
+    ureload = True
+    local_message = _('Welcome to DjangoPBX')
+    if 'domain_name' in request.session:
+        pbx_domain_name = request.session['domain_name']
+        dreload = False
 
-    m = Menu.objects.get(name = 'Default')
+    if 'domain_uuid' in request.session:
+        pbx_domain_uuid = request.session['domain_uuid']
+        dreload = False
 
-    if request.user.is_superuser:
-        menuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=True).order_by('sequence')
-        submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False).order_by('sequence')
-    else:
-        groupList = list(request.user.groups.values_list('name', flat=True))
-        menuitemList = MenuItemGroup.objects.values_list('menu_item_uuid', flat=True).filter(name__in=groupList, menu_id=m.id)
-        menuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=True, id__in=menuitemList).order_by('sequence')
-        submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False, id__in=menuitemList).order_by('sequence')
+    if 'domain_change' in request.session:
+        if request.session['domain_change'] == 'yes':
+            dreload = True
+            ureload = False
+            request.session['domain_change'] = 'no'
+            local_message = _('Domain changed to: ') + request.session['domain_name']
 
-    mainmenu = MenuItemSerializer(menuList, many=True)
-    menudata = mainmenu.data
-    request.session['portalmenu'] = menudata
+    if dreload:
+        messages.add_message(request, messages.INFO, local_message)
+        if request.user.profile.domain_id:
+            pbx_user_uuid = str(request.user.profile.user_uuid)
+            if ureload:
+                pbx_domain_name = request.user.profile.domain_id.name
+                pbx_domain_uuid = str(request.user.profile.domain_id.id)
+                request.session['domain_name'] = pbx_domain_name
+                request.session['domain_uuid'] = pbx_domain_uuid
+                request.session['user_uuid']   = pbx_user_uuid
 
-    submenu = MenuItemSerializer(submenuList, many=True)
-    submenudata = submenu.data
-    request.session['portalsubmenu'] = submenudata
+            currentmenu = PbxSettings().settings(pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True)[0]
+            m = Menu.objects.get(name = currentmenu)
+        else:
+            request.session['domain_name'] = 'None'
+            request.session['domain_uuid'] = 'f4b3b3d2-6287-489c-aa00-64529e46f2d7'
+            request.session['user_uuid']   = 'ffffffff-aaaa-489c-aa00-1234567890ab'
+            m = Menu.objects.get(name = 'Default')
+
+        if request.user.is_superuser:
+            menuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=True).order_by('sequence')
+            submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False).order_by('sequence')
+        else:
+            groupList = list(request.user.groups.values_list('name', flat=True))
+            menuitemList = MenuItemGroup.objects.values_list('menu_item_uuid', flat=True).filter(name__in=groupList, menu_id=m.id)
+            menuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=True, id__in=menuitemList).order_by('sequence')
+            submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False, id__in=menuitemList).order_by('sequence')
+
+        mainmenu = MenuItemSerializer(menuList, many=True)
+        menudata = mainmenu.data
+        request.session['portalmenu'] = menudata
+
+        submenu = MenuItemSerializer(submenuList, many=True)
+        submenudata = submenu.data
+        request.session['portalsubmenu'] = submenudata
 
     return render(request, 'portal/index.html', {})
 
@@ -83,6 +121,7 @@ def selectdomain(request, domainuuid):
     d = Domain.objects.get(pk=domainuuid)
     request.session['domain_name'] = d.name
     request.session['domain_uuid'] = str(d.id)
+    request.session['domain_change'] = 'yes'
     messages.add_message(request, messages.INFO, _('Selected Domain changed to ') + d.name)
     return HttpResponseRedirect('/')
 
