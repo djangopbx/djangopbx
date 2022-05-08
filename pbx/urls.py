@@ -49,9 +49,9 @@ from django.utils.translation import gettext_lazy as _
 # This overrides names in site headers and titles
 # , not required if custom admin templates are being used
 # but no harm in setting them.
-admin.site.site_header = _('LantecIPX Administration')
-admin.site.site_title = _('LantecIPX Admin Portal')
-admin.site.index_title = _('Welcome to the LantecIPX Admin Portal')
+admin.site.site_header = _('DjangoPBX Administration')
+admin.site.site_title = _('DjangoPBX Admin Portal')
+admin.site.index_title = _('Welcome to the DjangoPBX Admin Portal')
 
 urlpatterns = [
     path(''       , include('portal.urls')),
