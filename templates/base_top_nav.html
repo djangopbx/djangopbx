@@ -4,7 +4,7 @@
 
     {% block menu-nav %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <a href="/" class="navbar-brand"><img id="menu_logo" style="width: auto; max-width: 300px; height: auto; max-height: 27px; align:center; " src="{% static '/img/logo.png' %}"><span style="font-size: medium; ">&nbsp&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}</span></a>
+    <a href="/" class="navbar-brand"><img id="menu_logo" style="width: auto; max-width: 300px; height: auto; max-height: 27px; align:center; " src="{% static '/img/logo.png' %}"><span style="font-size: medium; ">&nbsp;&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}</span></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -31,6 +31,16 @@
         {% endif %}
 
     {% endfor %}
+    </ul>
+    <ul class="navbar-nav ms-auto">
+    <li class="nav-item">
+    {% if request.user.is_superuser %}
+        <a href="/portal/domainselect/" class="nav-link"><i class="fa fa-archway"></i> {{ request.session.domain_name }}</a>
+    {% else %}
+        <a href="#" class="nav-link"><i class="fa fa-archway"></i> {{ request.session.domain_name }}</a>
+    {% endif %}
+    </li>
+
     </ul>
     </div>
     </nav>

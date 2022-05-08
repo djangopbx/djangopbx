@@ -27,18 +27,23 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
+from .models import Profile
 
-from . import views
+def create_or_edit_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
 
-urlpatterns = [
-    path('', views.index, name='index'),
-    path("domainselect/", views.DomainSelector.as_view(), name="domainselect"),
-    path(r'selectdomain/<domainuuid>/', views.selectdomain, name='selectdomain'),
-    path(
-        "favicon.ico",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
-    ),
-]
+    try:
+        instance.profile.username   = instance.username
+    except Profile.DoesNotExist:
+        Profile.objects.create(user=instance)
+        instance.profile.username   = instance.username
+
+    instance.profile.email = instance.email
+    if instance.is_active:
+        instance.profile.user_enabled = 'true'
+    else:
+        instance.profile.user_enabled = 'false'
+
+    instance.profile.save()
+

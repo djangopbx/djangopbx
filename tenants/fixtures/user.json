@@ -1,0 +1,108 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$8T53RW0ZwZxqRO06x7V4RT$4O8AIxZV1vcIkGKwT5BqIfUJb2O46uiJD+x9lmTupDI=",
+    "last_login": "2021-11-01T14:38:39.648Z",
+    "is_superuser": true,
+    "username": "fretweah",
+    "first_name": "",
+    "last_name": "",
+    "email": "adrian@a2es.co.uk",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2021-10-17T17:37:53Z",
+    "groups": [
+      24,
+      22
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$MMQkn5NO9UT7ebGJb1pZxu$CtIn4FvqvaMNvY2ABacTbYEj+hsJVokrASiWDez24Ek=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "rowepa",
+    "first_name": "Phil",
+    "last_name": "Rowe",
+    "email": "phil@lan-tec.co.uk",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2021-10-17T17:55:46Z",
+    "groups": [
+      1
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$bQk27DzJ8kyJBhf8phqTqo$sKwviiM/YYSn741W0Ri1bNX/706nAphYvFhUohl6I+M=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "ditchbup",
+    "first_name": "Phil",
+    "last_name": "Ditchburn",
+    "email": "phild@lan-tec.co.uk",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2021-10-17T18:00:34Z",
+    "groups": [
+      1
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$uZEKR9iPH2xGDkrGASUUIX$vahzSIEbZsASQ4bfceb8dbAXunaxJGAe71HRCA5vQFY=",
+    "last_login": "2021-11-01T14:36:32.280Z",
+    "is_superuser": false,
+    "username": "af201",
+    "first_name": "af",
+    "last_name": "test",
+    "email": "adrian@a2es.co.uk",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2021-10-25T11:46:13Z",
+    "groups": [
+      8,
+      1,
+      23,
+      4,
+      19
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$09q2RfwnUnfTN6S9wwHaet$wPtAOnCtmRzQCcWrPlvubWQSByS0Uh7wkUKZ1PPBsQ4=",
+    "last_login": "2021-10-26T12:16:48.232Z",
+    "is_superuser": false,
+    "username": "af202",
+    "first_name": "Ahf",
+    "last_name": "Test2",
+    "email": "af@1ip.uk",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2021-10-26T11:19:06Z",
+    "groups": [
+      4,
+      23
+    ],
+    "user_permissions": []
+  }
+}
+]

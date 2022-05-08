@@ -1,0 +1,12 @@
+{% load i18n %}
+            {% if filter %}
+                <form action="" method="get" class="form filter-table-container">
+                <button style="margin-bottom: 5px;" type="submit" class="btn btn-outline-secondary btn-sm"><i class="fa fa-search"></i> </button>
+                <table class="paleblue">
+                <thead>
+                <tr><th>{% translate 'Filter' %}</th><th>{% translate 'Value' %}</th></tr>
+                </thead>
+                {{ filter.form.as_table }}
+                </table>
+                </form>
+            {% endif %}

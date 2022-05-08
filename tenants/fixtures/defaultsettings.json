@@ -1,0 +1,16 @@
+[
+{
+  "model": "tenants.defaultsetting",
+  "pk": "ccd9c31f-ec72-4e08-8854-5d68145b9e44",
+  "fields": {
+    "app_uuid": null,
+    "default_setting_category": "switch",
+    "default_setting_subcategory": "sip_profiles",
+    "default_setting_name": "dir",
+    "default_setting_value": "/etc/freeswitch/sip_profiles",
+    "default_setting_order": "10",
+    "default_setting_enabled": "false",
+    "default_setting_description": ""
+  }
+}
+]

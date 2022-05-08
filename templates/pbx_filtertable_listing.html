@@ -1,0 +1,24 @@
+{% load i18n static %}
+        {% load django_tables2 %}
+        <div class="row">
+        <div class="col">
+        <div class="card" style="margin-left 1%; margin-right 1%;">
+            <div class="card-header">
+                <i class="fa fa-table"></i> {% translate pbxlistingname %}
+            </div>
+            <div class="card-body">
+            {% render_table table %}
+            </div>
+        </div>
+        </div>
+        <div class="col-md-auto">
+        <div class="card" style="margin-left: 1%; margin-right: 1%;">
+            <div class="card-header">
+                <i class="fa fa-filter"></i> {% translate 'Filter' %}
+            </div>
+            <div class="card-body">
+            {% include 'table_filter.html' %}
+            </div>
+        </div>
+        </div>
+        </div>

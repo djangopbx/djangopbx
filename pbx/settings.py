@@ -69,7 +69,9 @@ INSTALLED_APPS = [
     'import_export',
     'bootstrap',
     'fontawesome',
+    'django_tables2',
     'portal.apps.PortalConfig',
+    'tenants.apps.TenantsConfig',
 ]
 
 MIDDLEWARE = [

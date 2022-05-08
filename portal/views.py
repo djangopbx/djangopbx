@@ -29,9 +29,22 @@
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.translation import gettext, gettext_lazy as _
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+
+
+import django_tables2 as tables
+from django_filters.views import FilterView
+import django_filters as filters
+
 
 from .models import (
     Menu, MenuItem, MenuItemGroup,
+)
+
+from tenants.models import (
+    Domain,
 )
 
 from .serializers import (
@@ -64,3 +77,34 @@ def index(request):
     return render(request, 'portal/index.html', {})
 
 
+@login_required
+@permission_required('tenants.domain.can_select_domain')
+def selectdomain(request, domainuuid):
+    d = Domain.objects.get(pk=domainuuid)
+    request.session['domain_name'] = d.name
+    request.session['domain_uuid'] = str(d.id)
+    messages.add_message(request, messages.INFO, _('Selected Domain changed to ') + d.name)
+    return HttpResponseRedirect('/')
+
+
+class DomainSelectorList(tables.Table):
+    class Meta:
+        model = Domain
+        attrs = {"class": "paleblue"}
+        fields = ('name', 'description')
+    name = tables.Column(linkify=("selectdomain", [tables.A("id")]))
+
+
+class DomainFilter(filters.FilterSet):
+    name = filters.CharFilter(lookup_expr='icontains')
+    description = filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Domain
+        fields = ['name', 'description', 'enabled']
+
+
+class DomainSelector(tables.SingleTableMixin, FilterView):
+    table_class = DomainSelectorList
+    queryset = Domain.objects.all()
+    filterset_class = DomainFilter
