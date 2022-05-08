@@ -93,6 +93,58 @@ CSS for log in screen
     background-color: #2868c7;
     transition: background-color 0.2s;
 }
+
+nav.navbar {
+    background-color: #e0e0e0;
+    padding: .2rem 1rem;
+}
+
+/* menu brand text */
+a.navbar-brand {
+    color: #141414;
+    font-size: 11pt;
+    white-space: nowrap;
+}
+
+/* menu brand text hover */
+a.navbar-brand:hover {
+    color: #4ac1f7 !important;
+}
+
+/* main menu item */
+ul.navbar-nav > li.nav-item > a.nav-link {
+    font-family: arial;
+    font-size: 11pt;
+    color: #141414;
+    /*padding: 15px 10px 14px 10px; !important;*/
+}
+
+ul.navbar-nav > li.nav-item:hover > a.nav-link,
+ul.navbar-nav > li.nav-item:focus > a.nav-link,
+ul.navbar-nav > li.nav-item:active > a.nav-link {
+    color: #4ac1f7;
+    background: #e0e0e0;
+}
+
+/* sub menu container */
+div.dropdown-menu > a.dropdown-item {
+    background-color: #e0e0e0;
+    color: #141414;
+    font-family: arial;
+    font-size: 11pt;
+}
+
+div.dropdown-menu > a.dropdown-item:hover,
+div.dropdown-menu > a.dropdown-item:focus,
+div.dropdown-menu > a.dropdown-item:active {
+    background-color: #e0e0e0;
+    color: #4ac1f7;
+}
+
+div.dropdown-menu {
+    background-color: #e0e0e0;
+    border: none;
+}
 /*
 .table-container th.asc:after {
     content: '\0000a0\0025b2';
