@@ -44,9 +44,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.utils.translation import gettext_lazy as _
+
+# This overrides names in site headers and titles
+# , not required if custom admin templates are being used
+# but no harm in setting them.
+admin.site.site_header = _('LantecIPX Administration')
+admin.site.site_title = _('LantecIPX Admin Portal')
+admin.site.index_title = _('Welcome to the LantecIPX Admin Portal')
 
 urlpatterns = [
     path(''       , include('portal.urls')),
     path('portal/', include('portal.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
