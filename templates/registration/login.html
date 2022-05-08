@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load i18n static %}
+
+{% block contentclass %}container{% endblock %}
+
+{% block content %}
+
+  {% if form.errors %}
+    <p style="text-align: center;">{% translate 'Your username and password do not match. Please try again.' %}</p>
+  {% endif %}
+
+  {% if next %}
+    {% if user.is_authenticated %}
+      <p style="text-align: center;">{% translate 'Your account does not have access to this page. To proceed, please login with an account that has access.' %}</p>
+    {% else %}
+      <p style="text-align: center;">{% translate 'Please login to see this page.' %}</p>
+    {% endif %}
+  {% endif %}
+
+  <div class="login">
+    <img id="login_logo" style="width: auto; max-width: 300px; height: auto; max-height: 300px; align:center" src="{% static '/img/logo.png' %}">
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      <label for="username">
+        <i class="fas fa-user"></i>
+      </label>
+      <input type="text" name="username" placeholder="{% translate 'Username' %}" id="username" required>
+      <label for="password">
+        <i class="fas fa-lock"></i>
+      </label>
+      <input type="password" name="password" placeholder="{% translate 'Password' %}" id="password" required>
+      <input type="submit" value="{% translate 'login' %}" />
+      <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+  </div>
+
+{% endblock %}

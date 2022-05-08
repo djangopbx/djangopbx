@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% load i18n static %}
+
+{% block contentclass %}container{% endblock %}
+
+{% block content %}
+
+   <div class="login">
+        <img id="login_logo" style="width: auto; max-width: 300px; height: auto; max-height: 300px; align:center" src="{% static '/img/logo.png' %}">
+        <form action="{% url 'login'%}" method="get">
+    <input type="submit" value="{% translate 'Login again' %}">
+        </form>
+    </div>
+
+{% endblock %}
