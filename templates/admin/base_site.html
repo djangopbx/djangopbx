@@ -2,12 +2,26 @@
 
 {% load static %}
 
+{% block extrastyle %}{{ block.super }}
+<style>
+:root {
+  --primary: #79aec8;
+  --secondary: #e0e0e0;
+  --link-fg: #447e9b;
+  --link-selected-fg: #5b80b2;
+  --primary-fg: #fff;
+  --header-color: #543444;
+  --header-link-color: #141414
+}
+</style>
+{% endblock %}
+
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block branding %}
-<h1 id="site-name">
-    <a href="{% url 'admin:index' %}">
-        <img src="{% static '/img/logo.png' %}" height="40px" />&nbsp&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}
+<h1 id="site-name" style="font-size: 16px;">
+    <a href="{% url 'admin:index' %}" style="color: #141414;">
+        <img src="{% static '/img/logo.png' %}" height="27px" />&nbsp&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}
     </a>
 </h1>
 {% endblock %}
