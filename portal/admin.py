@@ -82,7 +82,7 @@ class MenuItemAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        obj.save()
+        super().save_model(request, obj, form, change)
 
 
 class MenuItemInLine(admin.TabularInline):
@@ -121,7 +121,7 @@ class MenuAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        obj.save()
+        super().save_model(request, obj, form, change)
 
 
 class MenuItemGroupResource(resources.ModelResource):
@@ -139,10 +139,9 @@ class MenuItemGroupAdmin(ImportExportModelAdmin):
     ]
     list_display = ('name', 'group_id', 'menu_item_id')
 
-
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        obj.save()
+        super().save_model(request, obj, form, change)
 
 
 admin.site.register(MenuItemGroup, MenuItemGroupAdmin)
