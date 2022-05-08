@@ -27,18 +27,22 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
+from django.apps import AppConfig
+from django.db.models.signals import post_save
+from django.utils.translation import gettext_lazy as _
 
-from . import views
+class TenantsConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'tenants'
+    verbose_name = _("Tenants")
+    pbx_uuid = '8b91605b-f6d2-42e6-a56d-5d1ded01bb44'
+    pbx_category = 'Core'
+    pbx_subcategory = ''
+    pbx_version = '1.0'
+    pbx_license = 'MIT License'
 
-urlpatterns = [
-    path('', views.index, name='index'),
-    path("domainselect/", views.DomainSelector.as_view(), name="domainselect"),
-    path(r'selectdomain/<domainuuid>/', views.selectdomain, name='selectdomain'),
-    path(
-        "favicon.ico",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
-    ),
-]
+    def ready(self):
+        from django.contrib.auth.models import User
+        from . import signals
+        post_save.connect(signals.create_or_edit_user_profile, sender=User, weak=False, dispatch_uid="tenants:auth_User")
+

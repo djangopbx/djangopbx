@@ -27,18 +27,4 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
-
-from . import views
-
-urlpatterns = [
-    path('', views.index, name='index'),
-    path("domainselect/", views.DomainSelector.as_view(), name="domainselect"),
-    path(r'selectdomain/<domainuuid>/', views.selectdomain, name='selectdomain'),
-    path(
-        "favicon.ico",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
-    ),
-]
+from django.shortcuts import render

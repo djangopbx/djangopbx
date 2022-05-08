@@ -8,6 +8,7 @@ body {
 }
 /* Allows alert to be shown over nav-bar */
 #top-alert {
+  background-color: #f6fff6;
   position: fixed;
   top: 0;
   z-index: 99999;
