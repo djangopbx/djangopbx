@@ -31,7 +31,9 @@ from django.forms.models import model_to_dict
 import uuid
 from .models import DefaultSetting, DomainSetting, ProfileSetting, Domain
 
-
+#
+# Class for processing and retrieving settings
+#
 class PbxSettings():
     def default_settings(self, cat, subcat, settingtype = 'text', defaultsetting = '', usedefault = False):
         settingList = DefaultSetting.objects.values_list('value', flat=True).filter(
