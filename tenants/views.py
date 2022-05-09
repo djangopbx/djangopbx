@@ -28,3 +28,65 @@
 #
 
 from django.shortcuts import render
+from django.contrib.auth.models import User, Group
+from rest_framework import viewsets
+from rest_framework import permissions
+from .models import (
+    Domain, Profile,
+)
+from .serializers import (
+    UserSerializer, GroupSerializer, DomainSerializer, ProfileSerializer,
+)
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+
+class UserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Users to be viewed or edited.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Groups to be viewed or edited.
+    """
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class DomainViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Domains to be viewed or edited.
+    """
+    queryset = Domain.objects.all()
+    serializer_class = DomainSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows User Profiles to be viewed or edited.
+    """
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+

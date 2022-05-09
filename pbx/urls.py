@@ -52,10 +52,22 @@ from django.utils.translation import gettext_lazy as _
 admin.site.site_header = _('DjangoPBX Administration')
 admin.site.site_title = _('DjangoPBX Admin Portal')
 admin.site.index_title = _('Welcome to the DjangoPBX Admin Portal')
+from rest_framework import routers, serializers, viewsets
+
+# Routers provide an easy way of automatically determining the URL conf.
+from tenants.urls import router as tenantsrouter
+
+router = routers.DefaultRouter()
+router.registry.extend(tenantsrouter.registry)
 
 urlpatterns = [
     path(''       , include('portal.urls')),
     path('portal/', include('portal.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+
+    # Wire up our API using automatic URL routing.
+    # Additionally, we include login URLs for the browsable API.
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
