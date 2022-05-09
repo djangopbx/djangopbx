@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'import_export',
     'bootstrap',
     'fontawesome',
+    'rest_framework',
     'django_tables2',
     'portal.apps.PortalConfig',
     'tenants.apps.TenantsConfig',
@@ -176,6 +177,16 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        #'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.DjangoModelPermissions',
+    ]
+}
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
