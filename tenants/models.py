@@ -40,6 +40,9 @@ from django.urls import reverse
 from django.utils.html import mark_safe
 
 
+#
+# Becomes effectivly the pbx users table
+#
 class Profile(models.Model):
     class Meta:
         db_table = "pbx_users"
@@ -60,7 +63,9 @@ class Profile(models.Model):
     def __str__(self):
         return self.username
 
-
+#
+# Domains - each domain represents a tenant
+#
 class Domain(models.Model):
     class Meta:
         db_table = "pbx_domains"
@@ -84,6 +89,9 @@ class Domain(models.Model):
         return self.name
 
 
+#
+# ProfileSetting overrides both domain and default settings
+#
 class ProfileSetting(models.Model):
     class Meta:
         db_table = "pbx_user_settings"
@@ -106,6 +114,9 @@ class ProfileSetting(models.Model):
         return f"{self.category}->{self.subcategory}: {self.value}"
 
 
+#
+# DomainSetting overrides default settings
+#
 class DomainSetting(models.Model):
     class Meta:
         db_table = "pbx_domain_settings"
@@ -129,6 +140,9 @@ class DomainSetting(models.Model):
         return f"{self.category}->{self.subcategory}: {self.value}"
 
 
+#
+# DefaultSetting - default settings
+#
 class DefaultSetting(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     app_uuid = models.UUIDField(blank=True, null=True, editable=False)

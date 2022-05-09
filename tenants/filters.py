@@ -71,4 +71,3 @@ class SelectedDomainFilter(admin.SimpleListFilter):
         else:
             return queryset.filter(domain_id__id__exact=self.pbx_domain_uuid)
 
-
