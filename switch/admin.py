@@ -31,12 +31,14 @@ from django.contrib import admin
 
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
+from django.contrib import messages
 from .models import (
     SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable,
 )
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from import_export import resources
-
+from switch.switchfunctions import SwitchFunctions
+from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 
 class SipProfileDomainResource(resources.ModelResource):
     class Meta:
@@ -131,6 +133,17 @@ class SwitchVariableResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
+@admin.action(permissions=['change'], description='Write Switch vars.xml file')
+def write_switch_vars_file(modeladmin, request, queryset):
+    r = SwitchFunctions().save_var_xml()
+    if r == 0:
+        messages.add_message(request, messages.INFO, _('vars.xml file written'))
+    if r == 1:
+        messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->conf')
+    if r == 2:
+        messages.add_message(request, messages.WARN, _('Configuration directory does not exist:'))
+
+
 class SwitchVariableAdmin(ImportExportModelAdmin):
     resource_class = SwitchVariableResource
     save_as = True
@@ -146,6 +159,17 @@ class SwitchVariableAdmin(ImportExportModelAdmin):
     ordering = [
         'category', 'sequence', 'name'
     ]
+
+    actions = [write_switch_vars_file]
+
+    # This is a workaround to allow the admin action to be run without selecting any objects.
+    # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
+    def changelist_view(self, request, extra_context=None):
+        if 'action' in request.POST and request.POST['action'] == 'write_switch_vars_file':
+            post = request.POST.copy()
+            post.update({ACTION_CHECKBOX_NAME: 'eb30bc83-ccb8-4f27-a1d6-9340ae7de325'})
+            request._set_post(post)
+        return super(SwitchVariableAdmin, self).changelist_view(request, extra_context)
 
 
 admin.site.register(SipProfile, SipProfileAdmin)
