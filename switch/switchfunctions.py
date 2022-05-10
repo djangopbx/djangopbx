@@ -35,7 +35,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from lxml import etree
 from io import StringIO
 import switch.models
-
+from tenants.pbxsettings import PbxSettings
 
 class SwitchFunctions():
     def import_sip_profiles(self, profile_remove = False):
@@ -177,30 +177,47 @@ class SwitchFunctions():
         )
 
 
-    def save_var_xml(self, vcat, vname, vvalue, vcmd, venabled, vorder):
+    def save_var_xml(self):
         vlist = switch.models.SwitchVariable.objects.filter(enabled = 'true').order_by('category', 'sequence')
         xml = ''
         prev_var_cat = ''
         hostname = socket.gethostname()
 
-        for v in vlist:
-            if not v.category == 'Provision':
-                if not prev_var_cat == v.category:
-                    xml += "\n<!-- " + v.category + " -->\n"
-                    if len(v.description) > 0:
+        switchconflist = PbxSettings().default_settings('switch', 'conf', 'dir')
+        if switchconflist:
+            switchconfdir = switchconflist[0]
+            for v in vlist:
+                if not v.category == 'Provision':
+                    if not prev_var_cat == v.category:
                         xml += "\n<!-- " + v.category + " -->\n"
+                        if not v.description == None:
+                            if len(v.description) > 0:
+                                xml += "\n<!-- " + v.category + " -->\n"
 
-                cmd = v.command
-                if len(cmd) == 0:
-                    cmd = 'set'
-                if cmd == 'Exec-Set':
-                    cmd = 'exec-set'
-                if len(v.hostname) == 0:
-                    xml += "<X-PRE-PROCESS cmd=\"" + v.command + "\" data=\"" + v.name + "=" + v.value + "\" />\n"
-                elif v.hostname == hostname:
-                    xml += "<X-PRE-PROCESS cmd=\"" + v.command + "\" data=\"" + v.name + "=" + v.value + "\" />\n"
+                    cmd = v.command
+                    if len(cmd) == 0:
+                        cmd = 'set'
+                    if cmd == 'Exec-Set':
+                        cmd = 'exec-set'
+                    if v.hostname:
+                        if len(v.hostname) == 0:
+                            xml += "<X-PRE-PROCESS cmd=\"" + v.command + "\" data=\"" + v.name + "=" + v.value + "\" />\n"
+                        elif v.hostname == hostname:
+                            xml += "<X-PRE-PROCESS cmd=\"" + v.command + "\" data=\"" + v.name + "=" + v.value + "\" />\n"
+                    else:
+                        xml += "<X-PRE-PROCESS cmd=\"" + v.command + "\" data=\"" + v.name + "=" + v.value + "\" />\n"
 
-                prev_var_cat = v.category
+                    prev_var_cat = v.category
 
-        xml += "\n"
+#                xml += "\n"
 
+            if os.path.exists(switchconfdir):
+                f = open(switchconfdir + '/vars.xml', 'w')
+                f.write(xml)
+                f.close()
+                return 0
+            else:
+                return 2
+
+        else:
+            return 1
