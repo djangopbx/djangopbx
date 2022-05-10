@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'portal.apps.PortalConfig',
     'tenants.apps.TenantsConfig',
+    'switch.apps.SwitchConfig',
 ]
 
 MIDDLEWARE = [
