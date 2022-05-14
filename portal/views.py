@@ -147,3 +147,4 @@ class DomainSelector(tables.SingleTableMixin, FilterView):
     table_class = DomainSelectorList
     queryset = Domain.objects.all()
     filterset_class = DomainFilter
+
