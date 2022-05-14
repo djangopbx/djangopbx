@@ -27,24 +27,32 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
-from rest_framework import routers
-from . import views
-
-router = routers.DefaultRouter()
-router.register(r'menus', views.MenuViewSet)
-router.register(r'menuitems', views.MenuItemViewSet)
-router.register(r'menuitemgroups', views.MenuItemGroupViewSet)
+from  rest_framework  import serializers
+from .models import (
+    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable,
+)
 
 
-urlpatterns = [
-    path('', views.index, name='index'),
-    path("domainselect/", views.DomainSelector.as_view(), name="domainselect"),
-    path(r'selectdomain/<domainuuid>/', views.selectdomain, name='selectdomain'),
-    path(
-        "favicon.ico",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
-    ),
-]
+class SipProfileDomainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SipProfileDomain
+        fields =['url', 'id', 'sip_profile_id', 'name', 'alias', 'parse', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class SipProfileSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SipProfileSetting
+        fields =['url', 'sip_profile_id', 'name', 'value', 'enabled', 'description', 'id', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class SipProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SipProfile
+        fields =['url', 'id', 'name', 'hostname', 'enabled', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class SwitchVariableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SwitchVariable
+        fields =['url', 'id', 'category', 'name', 'value', 'command', 'hostname', 'enabled', 'sequence', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+

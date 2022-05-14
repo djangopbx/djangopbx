@@ -28,5 +28,64 @@
 #
 
 from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework import permissions
 
-# Create your views here.
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+from .models import (
+    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable,
+)
+from .serializers import (
+    SipProfileDomainSerializer, SipProfileSettingSerializer, SipProfileSerializer, SwitchVariableSerializer,
+)
+
+
+class SipProfileDomainViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SipProfileDomains to be viewed or edited.
+    """
+    queryset = SipProfileDomain.objects.all()
+    serializer_class = SipProfileDomainSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class SipProfileSettingViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SipProfileSettings to be viewed or edited.
+    """
+    queryset = SipProfileSetting.objects.all()
+    serializer_class = SipProfileSettingSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class SipProfileViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SipProfiles to be viewed or edited.
+    """
+    queryset = SipProfile.objects.all()
+    serializer_class = SipProfileSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class SwitchVariableViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows SwitchVariables to be viewed or edited.
+    """
+    queryset = SwitchVariable.objects.all()
+    serializer_class = SwitchVariableSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
