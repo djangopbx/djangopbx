@@ -48,12 +48,12 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class DomainSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Domain
-        fields = ['url', 'name', 'enabled', 'description', 'created', 'updatd', 'synchronised', 'updated_by']
+        fields = ['url', 'name', 'enabled', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
-        fields = ['url', 'domain_id', 'username', 'email', 'status', 'api_key', 'enabled', 'created', 'updatd', 'synchronised', 'updated_by']
+        fields = ['url', 'domain_id', 'username', 'email', 'status', 'api_key', 'enabled', 'created', 'updated', 'synchronised', 'updated_by']
 
 

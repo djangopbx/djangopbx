@@ -33,12 +33,15 @@ from django.utils.translation import gettext, gettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 
-
 import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
+from rest_framework import viewsets
+from rest_framework import permissions
 
-
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
 from .models import (
     Menu, MenuItem, MenuItemGroup,
 )
@@ -52,7 +55,7 @@ from tenants.pbxsettings import (
 )
 
 from .serializers import (
-    MenuItemSerializer,
+    MenuSerializer, MenuItemSerializer, MenuItemGroupSerializer,
 )
 
 
@@ -148,3 +151,38 @@ class DomainSelector(tables.SingleTableMixin, FilterView):
     queryset = Domain.objects.all()
     filterset_class = DomainFilter
 
+
+class MenuViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Menus to be viewed or edited.
+    """
+    queryset = Menu.objects.all()
+    serializer_class = MenuSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class MenuItemViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Menu Items to be viewed or edited.
+    """
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class MenuItemGroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Menus to be viewed or edited.
+    """
+    queryset = MenuItemGroup.objects.all()
+    serializer_class = MenuItemGroupSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
