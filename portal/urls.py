@@ -30,8 +30,14 @@
 from django.urls import path
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
-
+from rest_framework import routers
 from . import views
+
+router = routers.DefaultRouter()
+router.register(r'menus', views.MenuViewSet)
+router.register(r'menuitems', views.MenuItemViewSet)
+router.register(r'menuitemgroupss', views.MenuItemGroupViewSet)
+
 
 urlpatterns = [
     path('', views.index, name='index'),

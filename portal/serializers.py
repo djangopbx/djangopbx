@@ -29,18 +29,24 @@
 
 from  rest_framework  import serializers
 from .models import (
-    Menu, MenuItem
+    Menu, MenuItem, MenuItemGroup
 )
 
 
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
-        fields =['name']
+        fields =['url', 'id', 'name', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 
 
 class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
-        fields =['id_str', 'parent_id_str', 'title', 'link', 'icon']
+        fields =['url', 'id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected', 'sequence', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class MenuItemGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MenuItemGroup
+        fields =['url', 'id', 'menu_item_id', 'name', 'group_id', 'created', 'updated', 'synchronised', 'updated_by']
 
