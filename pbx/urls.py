@@ -57,10 +57,12 @@ from rest_framework import routers, serializers, viewsets
 # Routers provide an easy way of automatically determining the URL conf.
 from tenants.urls import router as tenantsrouter
 from portal.urls import router as portalrouter
+from switch.urls import router as switchrouter
 
 router = routers.DefaultRouter()
 router.registry.extend(tenantsrouter.registry)
 router.registry.extend(portalrouter.registry)
+router.registry.extend(switchrouter.registry)
 
 urlpatterns = [
     path(''       , include('portal.urls')),

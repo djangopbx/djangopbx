@@ -28,23 +28,14 @@
 #
 
 from django.urls import path
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
 from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'menus', views.MenuViewSet)
-router.register(r'menuitems', views.MenuItemViewSet)
-router.register(r'menuitemgroups', views.MenuItemGroupViewSet)
-
+router.register(r'sipprofiledomains', views.SipProfileDomainViewSet)
+router.register(r'sipprofilesettings', views.SipProfileSettingViewSet)
+router.register(r'sipprofiles', views. SipProfileViewSet)
+router.register(r'switchvariables', views. SwitchVariableViewSet)
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path("domainselect/", views.DomainSelector.as_view(), name="domainselect"),
-    path(r'selectdomain/<domainuuid>/', views.selectdomain, name='selectdomain'),
-    path(
-        "favicon.ico",
-        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
-    ),
 ]
