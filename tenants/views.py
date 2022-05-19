@@ -30,6 +30,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework import permissions
 from .models import (
     Domain, Profile, DefaultSetting, DomainSetting, ProfileSetting
@@ -50,6 +52,8 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
     #permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['username']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -62,6 +66,8 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -74,6 +80,8 @@ class DomainViewSet(viewsets.ModelViewSet):
     """
     queryset = Domain.objects.all()
     serializer_class = DomainSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -86,6 +94,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
     """
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['donain_id', 'username']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -98,6 +108,8 @@ class DefaultSettingViewSet(viewsets.ModelViewSet):
     """
     queryset = DefaultSetting.objects.all()
     serializer_class = DefaultSettingSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['app_uuid', 'category', 'subcategory', 'value_type']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -110,6 +122,8 @@ class DomainSettingViewSet(viewsets.ModelViewSet):
     """
     queryset = DomainSetting.objects.all()
     serializer_class = DomainSettingSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['domain_id', 'app_uuid', 'category', 'subcategory', 'value_type']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -122,6 +136,8 @@ class ProfileSettingViewSet(viewsets.ModelViewSet):
     """
     queryset = ProfileSetting.objects.all()
     serializer_class = ProfileSettingSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user_id', 'category', 'subcategory', 'value_type']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

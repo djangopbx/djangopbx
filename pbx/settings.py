@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'import_export',
     'bootstrap',
     'fontawesome',
+    'django_filters',
     'rest_framework',
     'django_tables2',
     'portal.apps.PortalConfig',
@@ -188,7 +189,8 @@ REST_FRAMEWORK = {
         #'rest_framework.permissions.DjangoModelPermissions',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 
 }
 

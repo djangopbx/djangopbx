@@ -37,6 +37,7 @@ import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions
 
 from pbx.restpermissions import (
@@ -158,6 +159,8 @@ class MenuViewSet(viewsets.ModelViewSet):
     """
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -170,6 +173,8 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     """
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['parent_id', 'title']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -182,7 +187,10 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
     """
     queryset = MenuItemGroup.objects.all()
     serializer_class = MenuItemGroupSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['menu_item_id', 'name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+

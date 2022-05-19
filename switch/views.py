@@ -30,6 +30,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import permissions
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -48,6 +50,8 @@ class SipProfileDomainViewSet(viewsets.ModelViewSet):
     """
     queryset = SipProfileDomain.objects.all()
     serializer_class = SipProfileDomainSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['sip_profile_id', 'name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -60,6 +64,8 @@ class SipProfileSettingViewSet(viewsets.ModelViewSet):
     """
     queryset = SipProfileSetting.objects.all()
     serializer_class = SipProfileSettingSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['sip_profile_id', 'name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -72,6 +78,8 @@ class SipProfileViewSet(viewsets.ModelViewSet):
     """
     queryset = SipProfile.objects.all()
     serializer_class = SipProfileSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -84,6 +92,8 @@ class SwitchVariableViewSet(viewsets.ModelViewSet):
     """
     queryset = SwitchVariable.objects.all()
     serializer_class = SwitchVariableSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
