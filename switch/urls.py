@@ -32,10 +32,10 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'sipprofiledomains', views.SipProfileDomainViewSet)
-router.register(r'sipprofilesettings', views.SipProfileSettingViewSet)
-router.register(r'sipprofiles', views. SipProfileViewSet)
-router.register(r'switchvariables', views. SwitchVariableViewSet)
+router.register(r'sip_profile_domains', views.SipProfileDomainViewSet)
+router.register(r'sip_profile_settings', views.SipProfileSettingViewSet)
+router.register(r'sip_profiles', views. SipProfileViewSet)
+router.register(r'switch_variables', views. SwitchVariableViewSet)
 
 urlpatterns = [
 ]

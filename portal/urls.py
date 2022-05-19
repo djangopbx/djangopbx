@@ -35,8 +35,8 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'menus', views.MenuViewSet)
-router.register(r'menuitems', views.MenuItemViewSet)
-router.register(r'menuitemgroups', views.MenuItemGroupViewSet)
+router.register(r'menu_items', views.MenuItemViewSet)
+router.register(r'menu_item_groups', views.MenuItemGroupViewSet)
 
 
 urlpatterns = [
