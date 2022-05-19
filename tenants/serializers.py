@@ -30,7 +30,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import (
-    Domain, Profile,
+    Domain, Profile, DefaultSetting, DomainSetting, ProfileSetting
 )
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -56,4 +56,21 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         model = Profile
         fields = ['url', 'domain_id', 'username', 'email', 'status', 'api_key', 'enabled', 'created', 'updated', 'synchronised', 'updated_by']
 
+
+class DefaultSettingSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = DefaultSetting
+        fields = ['url', 'id', 'app_uuid', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class DomainSettingSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = DomainSetting
+        fields = ['url', 'id', 'domain_id', 'app_uuid', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class ProfileSettingSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = ProfileSetting
+        fields = ['url', 'id', 'user_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'created', 'updated', 'synchronised', 'updated_by']
 

@@ -36,6 +36,9 @@ router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
 router.register(r'domains', views.DomainViewSet)
 router.register(r'profiles', views.ProfileViewSet)
+router.register(r'default_settings', views.DefaultSettingViewSet)
+router.register(r'domain_settings', views.DomainSettingViewSet)
+router.register(r'profile_settings', views.ProfileSettingViewSet)
 
 urlpatterns = [
 ]
