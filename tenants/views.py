@@ -32,14 +32,16 @@ from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
 from .models import (
-    Domain, Profile,
+    Domain, Profile, DefaultSetting, DomainSetting, ProfileSetting
 )
 from .serializers import (
-    UserSerializer, GroupSerializer, DomainSerializer, ProfileSerializer,
+    UserSerializer, GroupSerializer, DomainSerializer, ProfileSerializer, DefaultSettingSerializer,
+    DomainSettingSerializer, ProfileSettingSerializer
 )
 from pbx.restpermissions import (
     AdminApiAccessPermission
 )
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -84,6 +86,42 @@ class ProfileViewSet(viewsets.ModelViewSet):
     """
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class DefaultSettingViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Default Settings to be viewed or edited.
+    """
+    queryset = DefaultSetting.objects.all()
+    serializer_class = DefaultSettingSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class DomainSettingViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Domain Settings to be viewed or edited.
+    """
+    queryset = DomainSetting.objects.all()
+    serializer_class = DomainSettingSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ProfileSettingViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Profile Settings to be viewed or edited.
+    """
+    queryset = ProfileSetting.objects.all()
+    serializer_class = ProfileSettingSerializer
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
