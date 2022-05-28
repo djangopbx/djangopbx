@@ -56,7 +56,7 @@ from tenants.pbxsettings import (
 )
 
 from .serializers import (
-    MenuSerializer, MenuItemSerializer, MenuItemGroupSerializer,
+    MenuSerializer, MenuNavSerializer, MenuItemSerializer, MenuItemNavSerializer, MenuItemGroupSerializer,
 )
 
 
@@ -108,11 +108,11 @@ def index(request):
             menuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=True, id__in=menuitemList).order_by('sequence')
             submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False, id__in=menuitemList).order_by('sequence')
 
-        mainmenu = MenuItemSerializer(menuList, many=True)
+        mainmenu = MenuItemNavSerializer(menuList, many=True)
         menudata = mainmenu.data
         request.session['portalmenu'] = menudata
 
-        submenu = MenuItemSerializer(submenuList, many=True)
+        submenu = MenuItemNavSerializer(submenuList, many=True)
         submenudata = submenu.data
         request.session['portalsubmenu'] = submenudata
 

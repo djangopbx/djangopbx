@@ -38,12 +38,20 @@ class MenuSerializer(serializers.ModelSerializer):
         model = Menu
         fields =['url', 'id', 'name', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 
+class MenuNavSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Menu
+        fields =['name']
 
 class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
         fields =['url', 'id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected', 'sequence', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 
+class MenuItemNavSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MenuItem
+        fields =['id_str', 'parent_id_str', 'title', 'link', 'icon']
 
 class MenuItemGroupSerializer(serializers.ModelSerializer):
     class Meta:
