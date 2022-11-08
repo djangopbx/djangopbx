@@ -191,6 +191,11 @@ class DomainResource(resources.ModelResource):
 
 class DomainAdmin(ImportExportModelAdmin):
     resource_class = DomainResource
+    class Media:
+        css = {
+            'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
+        }
+
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['name', 'description']
     list_display = ('name', 'description', 'enabled', 'select_domain')

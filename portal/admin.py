@@ -102,6 +102,11 @@ class MenuResource(resources.ModelResource):
 
 class MenuAdmin(ImportExportModelAdmin):
     resource_class = MenuResource
+    class Media:
+        css = {
+            'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
+        }
+
     fieldsets = [
         (None,               {'fields': ['name']}),
         ('Description', {'fields': ['description'], 'classes': ['collapse']}),

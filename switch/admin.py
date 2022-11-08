@@ -114,6 +114,11 @@ class SipProfileResource(resources.ModelResource):
 
 class SipProfileAdmin(ImportExportModelAdmin):
     resource_class = SipProfileResource
+    class Media:
+        css = {
+            'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
+        }
+
     readonly_fields = ['name', 'created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['name', 'hostname', 'descrption']
     fieldsets = [
