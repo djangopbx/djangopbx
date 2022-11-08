@@ -72,9 +72,11 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'django_tables2',
+    'django_ace',
     'portal.apps.PortalConfig',
     'tenants.apps.TenantsConfig',
     'switch.apps.SwitchConfig',
+    'dialplans.apps.DialplansConfig',
 ]
 
 MIDDLEWARE = [

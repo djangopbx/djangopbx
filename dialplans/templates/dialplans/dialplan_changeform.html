@@ -1,0 +1,11 @@
+{% extends 'admin/change_form.html' %}
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+    <div class="submit-row">
+    {% if request.path|slice:"-8:" == '/change/' %}
+            <input type="submit" value="Generate XML" name="_generate-xml">
+            <input type="submit" value="Generate Details from XML" name="_generate-dd-xml">
+    {% endif %}
+    </div>
+{% endblock %}

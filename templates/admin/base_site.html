@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 
-{% load static %}
+{% load i18n static %}
 
 {% block extrastyle %}{{ block.super }}
 <style>
@@ -22,9 +22,26 @@
 {% block branding %}
 <h1 id="site-name" style="font-size: 16px;">
     <a href="{% url 'admin:index' %}" style="color: #141414;">
-        <img src="{% static '/img/logo.png' %}" height="27px" />&nbsp&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}
+        <img src="{% static '/img/logo.png' %}" height="27px" />&nbsp&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}&nbsp;-&nbsp;{{ request.session.domain_name }}
     </a>
 </h1>
 {% endblock %}
+
+            {% block userlinks %}
+                {% if site_url %}
+                    <a href="{{ site_url }}">{% translate 'Portal' %}</a> /
+                {% endif %}
+                {% if user.is_active and user.is_staff %}
+                    {% url 'django-admindocs-docroot' as docsroot %}
+                    {% if docsroot %}
+                        <a href="{{ docsroot }}">{% translate 'Documentation' %}</a> /
+                    {% endif %}
+                {% endif %}
+                {% if user.has_usable_password %}
+                <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
+                {% endif %}
+                <a href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a>
+            {% endblock %}
+
 
 {% block nav-global %}{% endblock %}
