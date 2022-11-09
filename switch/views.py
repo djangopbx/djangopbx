@@ -48,7 +48,7 @@ class SipProfileDomainViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SipProfileDomains to be viewed or edited.
     """
-    queryset = SipProfileDomain.objects.all()
+    queryset = SipProfileDomain.objects.all().order_by('sip_profile_id', 'name')
     serializer_class = SipProfileDomainSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['sip_profile_id', 'name']
@@ -62,7 +62,7 @@ class SipProfileSettingViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SipProfileSettings to be viewed or edited.
     """
-    queryset = SipProfileSetting.objects.all()
+    queryset = SipProfileSetting.objects.all().order_by('sip_profile_id', 'name')
     serializer_class = SipProfileSettingSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['sip_profile_id', 'name']
@@ -76,7 +76,7 @@ class SipProfileViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SipProfiles to be viewed or edited.
     """
-    queryset = SipProfile.objects.all()
+    queryset = SipProfile.objects.all().order_by('name')
     serializer_class = SipProfileSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
@@ -90,7 +90,7 @@ class SwitchVariableViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows SwitchVariables to be viewed or edited.
     """
-    queryset = SwitchVariable.objects.all()
+    queryset = SwitchVariable.objects.all().order_by('category', 'name')
     serializer_class = SwitchVariableSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category', 'name']

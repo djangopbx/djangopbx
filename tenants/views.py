@@ -64,7 +64,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Groups to be viewed or edited.
     """
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().order_by('name')
     serializer_class = GroupSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
@@ -78,7 +78,7 @@ class DomainViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Domains to be viewed or edited.
     """
-    queryset = Domain.objects.all()
+    queryset = Domain.objects.all().order_by('name')
     serializer_class = DomainSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
@@ -92,7 +92,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows User Profiles to be viewed or edited.
     """
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().order_by('username')
     serializer_class = ProfileSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['donain_id', 'username']
@@ -106,7 +106,7 @@ class DefaultSettingViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Default Settings to be viewed or edited.
     """
-    queryset = DefaultSetting.objects.all()
+    queryset = DefaultSetting.objects.all().order_by('category', 'subcategory')
     serializer_class = DefaultSettingSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['app_uuid', 'category', 'subcategory', 'value_type']
@@ -120,7 +120,7 @@ class DomainSettingViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Domain Settings to be viewed or edited.
     """
-    queryset = DomainSetting.objects.all()
+    queryset = DomainSetting.objects.all().order_by('domain_id', 'category', 'subcategory')
     serializer_class = DomainSettingSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['domain_id', 'app_uuid', 'category', 'subcategory', 'value_type']
@@ -134,7 +134,7 @@ class ProfileSettingViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Profile Settings to be viewed or edited.
     """
-    queryset = ProfileSetting.objects.all()
+    queryset = ProfileSetting.objects.all().order_by('user_id', 'category', 'subcategory')
     serializer_class = ProfileSettingSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['user_id', 'category', 'subcategory', 'value_type']

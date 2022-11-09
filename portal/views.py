@@ -157,7 +157,7 @@ class MenuViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Menus to be viewed or edited.
     """
-    queryset = Menu.objects.all()
+    queryset = Menu.objects.all().order_by('name')
     serializer_class = MenuSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
@@ -171,7 +171,7 @@ class MenuItemViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Menu Items to be viewed or edited.
     """
-    queryset = MenuItem.objects.all()
+    queryset = MenuItem.objects.all().order_by('menu_id', 'sequence')
     serializer_class = MenuItemSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['parent_id', 'title']
@@ -185,7 +185,7 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Menus to be viewed or edited.
     """
-    queryset = MenuItemGroup.objects.all()
+    queryset = MenuItemGroup.objects.all().order_by('menu_item_id', 'name')
     serializer_class = MenuItemGroupSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['menu_item_id', 'name']
