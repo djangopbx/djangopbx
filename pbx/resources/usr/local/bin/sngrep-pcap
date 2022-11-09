@@ -1,0 +1,44 @@
+#!/bin/bash
+
+log_pcap_dir=/var/log/django-pbx/
+
+
+pause(){
+    read -p "Press [Enter] key to continue..." fackEnterKey
+}
+
+list_pcap(){
+    local PS3="Choose a PCAP file to View: "
+    select last_pcap in $(ls -1 ${log_pcap_dir}*.pcap) quit
+    do
+    if [[ $last_pcap = "quit" ]]
+    then
+        break
+    fi
+        sudo sngrep -I $last_pcap
+    done
+
+}
+
+if [ "$#" -ne 1 ]
+then
+echo "No file name supplied - using last pcap"
+    if [ -f "${HOME}/.django-pbx/last_pcap" ]
+    then
+        last_pcap=`cat ${HOME}/.lantec-ipx/last_pcap`
+    fi
+else
+    if [[ "$1" == "list" ]]
+    then
+        trap '' SIGINT SIGQUIT SIGTSTP
+        clear
+        list_pcap
+    fi
+    if [ "$last_pcap" == "quit" ]
+    then
+        clear
+        exit
+    fi
+fi
+
+sudo sngrep -I $last_pcap

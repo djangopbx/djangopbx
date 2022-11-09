@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo ngrep -W byline -td any . host $1

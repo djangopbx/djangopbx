@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/bin/sudo /usr/sbin/nft delete element netdev filter ipv4_block_list { $1 }

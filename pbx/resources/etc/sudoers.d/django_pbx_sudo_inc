@@ -1,0 +1,2 @@
+django-pbx ALL=(root) NOPASSWD: /usr/bin/tail
+django-pbx ALL=(root) NOPASSWD: /usr/sbin/nft

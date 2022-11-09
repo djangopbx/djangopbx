@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo sngrep -LH $1

@@ -1,0 +1,9 @@
+log_pcap_dir=/var/log/django-pbx
+
+mkdir -p ${HOME}/.django-pbx
+last_pcap=${HOME}/.django-pbx/last_pcap
+
+t_now=`/bin/date +"%Y%m%d%H%M"`
+t_file="/var/log/django-pbx/$t_now-$1.pcap"
+echo $t_file > $last_pcap
+

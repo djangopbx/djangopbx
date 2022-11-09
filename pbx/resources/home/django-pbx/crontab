@@ -1,0 +1,2 @@
+# min hour dayofmonth month dayofweek cmd
+*/10  * * * * cd /home/django-pbx/pbx; ./manage.py callstats > /dev/null 2>&1
