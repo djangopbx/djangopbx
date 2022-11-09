@@ -1,0 +1,86 @@
+[
+{
+  "model": "musiconhold.musiconhold",
+  "pk": "2f69ea06-23de-47d1-8a78-3e20c54c09d9",
+  "fields": {
+    "domain_id": null,
+    "name": "default",
+    "path": "$${sounds_dir}/music/default/16000",
+    "rate": "16000",
+    "shuffle": "true",
+    "channels": null,
+    "interval": null,
+    "timer_name": "soft",
+    "chime_list": "",
+    "chime_freq": null,
+    "chime_max": null,
+    "created": "2022-11-09T15:59:13.437Z",
+    "updated": "2022-11-09T15:59:13.437Z",
+    "synchronised": null,
+    "updated_by": "system"
+  }
+},
+{
+  "model": "musiconhold.musiconhold",
+  "pk": "899ef6bc-cb8a-4f52-b903-2982769c752a",
+  "fields": {
+    "domain_id": null,
+    "name": "default",
+    "path": "$${sounds_dir}/music/default/32000",
+    "rate": "32000",
+    "shuffle": "true",
+    "channels": null,
+    "interval": null,
+    "timer_name": "soft",
+    "chime_list": "",
+    "chime_freq": null,
+    "chime_max": null,
+    "created": "2022-11-09T15:59:13.437Z",
+    "updated": "2022-11-09T15:59:13.437Z",
+    "synchronised": null,
+    "updated_by": "system"
+  }
+},
+{
+  "model": "musiconhold.musiconhold",
+  "pk": "9ee5b9e9-5e27-45ad-83bc-b95d7be92f34",
+  "fields": {
+    "domain_id": null,
+    "name": "default",
+    "path": "$${sounds_dir}/music/default/8000",
+    "rate": "8000",
+    "shuffle": "true",
+    "channels": null,
+    "interval": null,
+    "timer_name": "soft",
+    "chime_list": "",
+    "chime_freq": null,
+    "chime_max": null,
+    "created": "2022-11-09T15:59:13.437Z",
+    "updated": "2022-11-09T15:59:13.437Z",
+    "synchronised": null,
+    "updated_by": "system"
+  }
+},
+{
+  "model": "musiconhold.musiconhold",
+  "pk": "a5ec26fc-cf98-4efc-9e3a-ab89fd3b1ad6",
+  "fields": {
+    "domain_id": null,
+    "name": "default",
+    "path": "$${sounds_dir}/music/default/48000",
+    "rate": "48000",
+    "shuffle": "true",
+    "channels": null,
+    "interval": null,
+    "timer_name": "soft",
+    "chime_list": "",
+    "chime_freq": null,
+    "chime_max": null,
+    "created": "2022-11-09T15:59:13.437Z",
+    "updated": "2022-11-09T15:59:13.437Z",
+    "synchronised": null,
+    "updated_by": "system"
+  }
+}
+]

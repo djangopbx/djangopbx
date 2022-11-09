@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'tenants.apps.TenantsConfig',
     'switch.apps.SwitchConfig',
     'dialplans.apps.DialplansConfig',
+    'musiconhold.apps.MusiconholdConfig',
 ]
 
 MIDDLEWARE = [
@@ -166,6 +167,9 @@ STATIC_URL = 'static/'
 
 # The absolute path to the directory where collectstatic will collect static files for deployment.
 STATIC_ROOT = '/var/www/static/'
+
+# For model.FileField storage
+MEDIA_ROOT = '/var/lib/djangopbx'
 
 # This setting defines the additional locations the staticfiles app will traverse if the FileSystemFinder finder is enabled
 # e.g. if you use the collectstatic or findstatic management command or use the static file serving view.

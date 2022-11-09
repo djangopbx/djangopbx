@@ -27,29 +27,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-#
-#  These are Widget classes used by more than one application
-#
+from django.test import TestCase
 
-from django.forms.widgets import Select
-from django.db.models import FileField
-
-class ListTextWidget(Select):
-    template_name = 'portal/widgets/listtxt.html'
-
-    def format_value(self, value):
-        # Copied from forms.Input - makes sure value is rendered properly
-        if value == '' or value is None:
-            return ''
-        if self.is_localized:
-            return formats.localize_input(value)
-        return str(value)
-
-
-class PbxFileField(FileField):
-    def __init__(self, * args, ** kwargs):
-        super().__init__( * args, ** kwargs)
-
-    def db_type(self, connection):
-        return 'text'
-
+# Create your tests here.

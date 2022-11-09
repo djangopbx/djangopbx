@@ -27,29 +27,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-#
-#  These are Widget classes used by more than one application
-#
-
-from django.forms.widgets import Select
-from django.db.models import FileField
-
-class ListTextWidget(Select):
-    template_name = 'portal/widgets/listtxt.html'
-
-    def format_value(self, value):
-        # Copied from forms.Input - makes sure value is rendered properly
-        if value == '' or value is None:
-            return ''
-        if self.is_localized:
-            return formats.localize_input(value)
-        return str(value)
+from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
 
-class PbxFileField(FileField):
-    def __init__(self, * args, ** kwargs):
-        super().__init__( * args, ** kwargs)
-
-    def db_type(self, connection):
-        return 'text'
-
+class MusiconholdConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'musiconhold'
+    verbose_name = _('Music on Hold')
+    pbx_uuid = '1dafe0f8-c08a-289b-0312-15baf4f20f81'
+    pbx_category = 'Switch'
+    pbx_subcategory = ''
+    pbx_version = '1.0'
+    pbx_license = 'MIT License'
