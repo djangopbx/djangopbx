@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'switch.apps.SwitchConfig',
     'dialplans.apps.DialplansConfig',
     'musiconhold.apps.MusiconholdConfig',
+    'recordings.apps.RecordingsConfig',
 ]
 
 MIDDLEWARE = [
