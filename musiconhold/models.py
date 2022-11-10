@@ -35,7 +35,7 @@ from pbx.commonwidgets import PbxFileField
 
 
 def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    # file will be uploaded to MEDIA_ROOT/fs/music/<moh name>/<rate>/<filename>
     return 'fs/music/{0}/{1}/{2}'.format(instance.moh_id, instance.moh_id.rate, filename)
 
 
