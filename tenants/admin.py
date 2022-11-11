@@ -49,6 +49,8 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 
+from dialplans.dialplanfunctions import SwitchDp
+
 
 class UserResource(resources.ModelResource):
     class Meta:
@@ -218,6 +220,16 @@ class DomainAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         super().save_model(request, obj, form, change)
+        if not change:
+            SwitchDp().import_xml(obj.name, False, obj.id)  # Create dialplans
+            DomainSetting.objects.create(domain_id = obj,   # Create default menu setting
+                category = 'domain',
+                subcategory = 'menu',
+                value_type = 'text',
+                value = 'Default',
+                sequence = 10,
+                updated_by = request.user.username
+            )
 
 
 #

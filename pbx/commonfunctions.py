@@ -36,6 +36,13 @@ from django.contrib import admin
 from tenants.models import Domain
 
 
+class DomainUtils():
+
+    def domain_from_session(self, request):
+        return Domain.objects.get(name = request.session['domain_name'])
+
+
+
 class DomainFilter(admin.SimpleListFilter):
     title = _('Domain')
     parameter_name = 'workarea'

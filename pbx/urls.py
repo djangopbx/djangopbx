@@ -60,6 +60,7 @@ from portal.urls import router as portalrouter
 from switch.urls import router as switchrouter
 from dialplans.urls import router as dialplansrouter
 from recordings.urls import router as recordingsrouter
+from accounts.urls import router as accountsrouter
 
 router = routers.DefaultRouter()
 router.registry.extend(tenantsrouter.registry)
@@ -67,6 +68,7 @@ router.registry.extend(portalrouter.registry)
 router.registry.extend(switchrouter.registry)
 router.registry.extend(dialplansrouter.registry)
 router.registry.extend(recordingsrouter.registry)
+router.registry.extend(accountsrouter.registry)
 
 urlpatterns = [
     path(''       , include('portal.urls')),

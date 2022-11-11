@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'dialplans.apps.DialplansConfig',
     'musiconhold.apps.MusiconholdConfig',
     'recordings.apps.RecordingsConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
