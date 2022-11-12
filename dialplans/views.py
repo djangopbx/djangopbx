@@ -46,7 +46,7 @@ from .serializers import (
 
 class DialplanViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SipProfileDomains to be viewed or edited.
+    API endpoint that allows Dialplans to be viewed or edited.
     """
     queryset = Dialplan.objects.all().order_by('sequence', 'name')
     serializer_class = DialplanSerializer
@@ -60,7 +60,7 @@ class DialplanViewSet(viewsets.ModelViewSet):
 
 class DialplanDetailViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SipProfileSettings to be viewed or edited.
+    API endpoint that allows DialplanDetails to be viewed or edited.
     """
     queryset = DialplanDetail.objects.all().order_by('dialplan_id', 'sequence')
     serializer_class = DialplanDetailSerializer

@@ -46,7 +46,7 @@ from .serializers import (
 
 class RecordingViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SipProfileDomains to be viewed or edited.
+    API endpoint that allows Recordings to be viewed or edited.
     """
     queryset = Recording.objects.all().order_by('domain_id', 'name')
     serializer_class = RecordingSerializer

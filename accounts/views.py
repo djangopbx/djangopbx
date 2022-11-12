@@ -46,7 +46,7 @@ from .serializers import (
 
 class ExtensionViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SipProfileDomains to be viewed or edited.
+    API endpoint that allows Extensions to be viewed or edited.
     """
     queryset = Extension.objects.all().order_by('domain_id', 'extension')
     serializer_class = ExtensionSerializer
@@ -60,7 +60,7 @@ class ExtensionViewSet(viewsets.ModelViewSet):
 
 class GatewayViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows SipProfileDomains to be viewed or edited.
+    API endpoint that allows Gateways to be viewed or edited.
     """
     queryset = Gateway.objects.all().order_by('domain_id', 'gateway')
     serializer_class = GatewaySerializer
