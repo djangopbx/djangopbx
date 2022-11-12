@@ -32,9 +32,30 @@ from django.utils.translation import gettext, gettext_lazy as _
 from .models import (
     Extension, ExtensionUser, Gateway,
 )
+from django.forms.widgets import Select
+from django.forms import ModelForm
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from import_export import resources
 from pbx.commonfunctions import DomainFilter, DomainUtils
+from musiconhold.musiconholdfunctions import MohSource
+from switch.switchfunctions import SipProfileChoice
+
+class ExtensionAdminForm(ModelForm):
+    class Meta:
+        model = Extension
+        widgets = {
+            "hold_music": Select(choices=MohSource().choices()),
+        }
+        fields = '__all__'
+
+
+class GatewayAdminForm(ModelForm):
+    class Meta:
+        model = Gateway
+        widgets = {
+            "profile": Select(choices=SipProfileChoice().choices()),
+        }
+        fields = '__all__'
 
 
 class ExtensionUserInLine(admin.TabularInline):
@@ -55,7 +76,7 @@ class ExtensionResource(resources.ModelResource):
 
 class ExtensionAdmin(ImportExportModelAdmin):
     resource_class = ExtensionResource
-
+    form = ExtensionAdminForm
     save_on_top = True
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
@@ -147,7 +168,7 @@ class GatewayResource(resources.ModelResource):
 
 class GatewayAdmin(ImportExportModelAdmin):
     resource_class = GatewayResource
-
+    form = GatewayAdminForm
     save_on_top = True
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']

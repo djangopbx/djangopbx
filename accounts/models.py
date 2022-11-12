@@ -97,7 +97,7 @@ class Extension(models.Model):
     call_group                              = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Call Group'))
     call_screen_enabled                     = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CFALSE, verbose_name=_('Call Screen'))
     user_record                             = models.CharField(max_length=8, choices=RecordChoice.choices, default=RecordChoice.CDISABLED, blank=True, null=True, verbose_name=_('Record'))
-    hold_music                              = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Hold Music'))  # need a dynamic select
+    hold_music                              = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Hold Music'))
     auth_acl                                = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Auth ACL'))
     cidr                                    = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('CIDR'))
     sip_force_contact                       = models.CharField(max_length=64, choices=SipForceContactChoice.choices, default=SipForceContactChoice.CNONE, blank=True, null=True, verbose_name=_('SIP Force Contact'))

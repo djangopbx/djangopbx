@@ -37,6 +37,12 @@ from io import StringIO
 import switch.models
 from tenants.pbxsettings import PbxSettings
 
+
+class SipProfileChoice():
+    def choices(self):
+        return [(c.name, c.name) for c in switch.models.SipProfile.objects.filter(enabled = 'true')]
+
+
 class SwitchFunctions():
     def import_sip_profiles(self, profile_remove = False):
         path_of_xml = settings.BASE_DIR / 'switch/resources/templates/conf/sip_profiles'
