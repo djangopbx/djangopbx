@@ -37,10 +37,10 @@ from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from .models import (
-    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable,
+    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable, AccessControl, AccessControlNode
 )
 from .serializers import (
-    SipProfileDomainSerializer, SipProfileSettingSerializer, SipProfileSerializer, SwitchVariableSerializer,
+    SipProfileDomainSerializer, SipProfileSettingSerializer, SipProfileSerializer, SwitchVariableSerializer, AccessControlSerializer, AccessControlNodeSerializer,
 )
 
 
@@ -94,6 +94,34 @@ class SwitchVariableViewSet(viewsets.ModelViewSet):
     serializer_class = SwitchVariableSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category', 'name']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class AccessControlViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows AccessControls to be viewed or edited.
+    """
+    queryset = AccessControl.objects.all().order_by('name')
+    serializer_class = AccessControlSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class AccessControlNodeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows AccessControlNodes to be viewed or edited.
+    """
+    queryset = AccessControlNode.objects.all().order_by('description')
+    serializer_class = AccessControlNodeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['description']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

@@ -29,7 +29,7 @@
 
 from  rest_framework  import serializers
 from .models import (
-    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable,
+    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable, AccessControl, AccessControlNode
 )
 
 
@@ -55,4 +55,17 @@ class SwitchVariableSerializer(serializers.ModelSerializer):
     class Meta:
         model = SwitchVariable
         fields =['url', 'id', 'category', 'name', 'value', 'command', 'hostname', 'enabled', 'sequence', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class AccessControlSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccessControl
+        fields =['url', 'id', 'name', 'default', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class AccessControlNodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccessControlNode
+        fields =['url', 'id', 'access_control_id', 'type', 'cidr', 'domain', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+
 

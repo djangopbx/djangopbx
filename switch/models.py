@@ -57,6 +57,10 @@ class SwitchVariableCommandChoice(models.TextChoices):
     CEXECSET = 'exec-set', 'exec-set'
 
 
+class AccessControlDefaultChoice(models.TextChoices):
+    CALLOW = 'allow',      'allow'
+    CDENY  = 'deny', 'deny'
+
 #
 # model classes
 #
@@ -135,3 +139,40 @@ class SwitchVariable(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class AccessControl(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Access Control'))
+    name         = models.CharField(max_length=64, verbose_name=_('Name'))
+    default      = models.CharField(max_length=8, choices=AccessControlDefaultChoice.choices, default=AccessControlDefaultChoice.CDENY, verbose_name=_('Default'))
+    description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+
+    class Meta:
+        db_table = 'pbx_access_controls'
+
+    def __str__(self):
+        return self.name
+
+
+class AccessControlNode(models.Model):
+    id                = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Access Control None'))
+    access_control_id = models.ForeignKey('AccessControl', on_delete=models.CASCADE, verbose_name=_('Access Control'))
+    type              = models.CharField(max_length=8, choices=AccessControlDefaultChoice.choices, default=AccessControlDefaultChoice.CDENY,verbose_name=_('Type'))
+    cidr              = models.CharField(max_length=64, blank=True, null=True, verbose_name='CIDR')
+    domain            = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Domain'))
+    description       = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
+    created           = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
+    updated           = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
+    synchronised      = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
+    updated_by        = models.CharField(max_length=64, verbose_name=_('Updated by'))
+
+    class Meta:
+        db_table = 'pbx_access_control_nodes'
+
+    def __str__(self):
+        return str(self.id)
+

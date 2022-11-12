@@ -33,7 +33,7 @@ from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import messages
 from .models import (
-    SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable,
+    SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable, AccessControl, AccessControlNode,
 )
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from import_export import resources
@@ -177,8 +177,47 @@ class SwitchVariableAdmin(ImportExportModelAdmin):
         return super(SwitchVariableAdmin, self).changelist_view(request, extra_context)
 
 
+class AccessControlNodeInLine(admin.TabularInline):
+    model = AccessControlNode
+    extra = 1
+    fieldsets = [
+        (None,          {'fields': ['type', 'cidr', 'domain', 'description' ]}),
+    ]
+    ordering = [
+        'description'
+    ]
+
+
+class AccessControlResource(resources.ModelResource):
+    class Meta:
+        model = AccessControl
+        import_id_fields = ('id', )
+
+
+class AccessControlAdmin(ImportExportModelAdmin):
+    resource_class = AccessControlResource
+    class Media:
+        css = {
+            'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
+        }
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['name', 'default', 'descrption']
+    fieldsets = [
+        (None,  {'fields': ['name', 'default', 'description']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('name', 'default', 'description')
+    ordering = [
+        'name'
+    ]
+    inlines = [AccessControlNodeInLine]
+
+
+
 admin.site.register(SipProfile, SipProfileAdmin)
 admin.site.register(SipProfileSetting, SipProfileSettingAdmin)
 admin.site.register(SipProfileDomain, SipProfileDomainAdmin)
 admin.site.register(SwitchVariable, SwitchVariableAdmin)
+admin.site.register(AccessControl, AccessControlAdmin)
 

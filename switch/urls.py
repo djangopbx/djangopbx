@@ -36,6 +36,8 @@ router.register(r'sip_profile_domains', views.SipProfileDomainViewSet)
 router.register(r'sip_profile_settings', views.SipProfileSettingViewSet)
 router.register(r'sip_profiles', views. SipProfileViewSet)
 router.register(r'switch_variables', views. SwitchVariableViewSet)
+router.register(r'access_controls', views. AccessControlViewSet)
+router.register(r'access_control_nodes', views. AccessControlNodeViewSet)
 
 urlpatterns = [
 ]

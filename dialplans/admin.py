@@ -35,7 +35,7 @@ from django.forms.widgets import TextInput, NumberInput, Select
 from django.forms import ModelForm
 from django_ace import AceWidget
 from pbx.commonwidgets import ListTextWidget
-from pbx.commonfunctions import DomainFilter
+from pbx.commonfunctions import DomainFilter, DomainUtils
 
 from .dialplanfunctions import SwitchDp, DpApps
 
@@ -181,6 +181,8 @@ class DialplanAdmin(ImportExportModelAdmin):
         app_uuids = DpApps().get_dp_apps_uuids()
         obj.updated_by = request.user.username
         obj.app_id = app_uuids[obj.category]
+        if not change:
+            obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
 
 
