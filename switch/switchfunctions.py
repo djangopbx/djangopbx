@@ -227,3 +227,47 @@ class SwitchFunctions():
 
         else:
             return 1
+
+
+    def write_sip_profiles(self):
+        plist = switch.models.SipProfile.objects.filter(enabled = 'true').order_by('name')
+        xml = ''
+        prev_var_cat = ''
+        hostname = socket.gethostname()
+
+        conflist = PbxSettings().default_settings('switch', 'sip_profiles', 'dir')
+        if conflist:
+            confdir = conflist[0]
+            for p in plist:
+                root = etree.Element('profile', name=p.name)
+                root.set('name', p.name)
+                gateways = etree.SubElement(root, 'gateways')
+                etree.SubElement(gateways, 'X-PRE-PROCESS', cmd='include', data='external/*.xml')
+                domains = etree.SubElement(root, 'domains')
+                dlist = switch.models.SipProfileDomain.objects.filter(sip_profile_id = p.id).order_by('name')
+                for d in dlist:
+                    etree.SubElement(domains, 'domain', name=d.name, alias=d.alias, parse=d.parse)
+                settings = etree.SubElement(root, 'settings')
+                slist = switch.models.SipProfileSetting.objects.filter(sip_profile_id = p.id).order_by('name')
+                for s in slist:
+                    if s.value is None:
+                        s_value = ''
+                    else:
+                        s_value = s.value
+                    etree.SubElement(settings, 'param', name=s.name, value=s_value)
+                etree.indent(root)
+                xml =  str(etree.tostring(root), "utf-8")
+                del settings
+                del domains
+                del gateways
+                del root
+
+
+                os.makedirs('%s/%s' % (confdir, p.name), mode=0o755, exist_ok = True)
+                f = open('%s/%s.xml' % (confdir, p.name), 'w')
+                f.write(xml)
+                f.close()
+
+            return 0
+        else:
+            return 1
