@@ -219,6 +219,19 @@ class AccessControlResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
+@admin.action(permissions=['change'], description='Write acl.conf.xml file')
+def write_acl_file(modeladmin, request, queryset):
+    r = SwitchFunctions().write_acl_xml()
+    if r == 0:
+        messages.add_message(request, messages.INFO, _('acl.conf.xml file written.'))
+    if r == 1:
+        messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->conf')
+    if r == 2:
+        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+    if r == 3:
+        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+
+
 class AccessControlAdmin(ImportExportModelAdmin):
     resource_class = AccessControlResource
     class Media:
@@ -237,6 +250,16 @@ class AccessControlAdmin(ImportExportModelAdmin):
         'name'
     ]
     inlines = [AccessControlNodeInLine]
+    actions = [write_acl_file]
+
+    # This is a workaround to allow the admin action to be run without selecting any objects.
+    # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
+    def changelist_view(self, request, extra_context=None):
+        if 'action' in request.POST and request.POST['action'] == 'write_acl_file':
+            post = request.POST.copy()
+            post.update({ACTION_CHECKBOX_NAME: 'eb30bc83-ccb8-4f27-a1d6-9340ae7de325'})
+            request._set_post(post)
+        return super(AccessControlAdmin, self).changelist_view(request, extra_context)
 
 
 

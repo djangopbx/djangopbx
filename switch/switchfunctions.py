@@ -279,3 +279,42 @@ class SwitchFunctions():
             return 0
         else:
             return 1
+
+
+    def write_acl_xml(self):
+        alist = switch.models.AccessControl.objects.all().order_by('name')
+        xml = ''
+
+        conflist = PbxSettings().default_settings('switch', 'conf', 'dir')
+        if conflist:
+            confdir = conflist[0]
+
+            root = etree.Element('configuration', name='acl.conf', description='Network Lists')
+            networklists = etree.SubElement(root, 'network-lists')
+
+            for a in alist:
+                netlist = etree.SubElement(networklists, 'list', name=a.name, default=a.default)
+                nlist = switch.models.AccessControlNode.objects.filter(access_control_id = a.id).order_by('-type')
+                for n in nlist:
+                    if not n.domain is None:
+                        etree.SubElement(netlist, 'node', type=n.type, domain=n.domain)
+                    if not n.cidr is None:
+                        etree.SubElement(netlist, 'node', type=n.type, cidr=n.cidr)
+            etree.indent(root)
+            xml =  str(etree.tostring(root), "utf-8")
+
+            try:
+                os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok = True)
+            except OSError:
+                return 2
+
+            try:
+                with open('%s/autoload_configs/acl.conf.xml' % confdir, 'w') as f:
+                    f.write(xml)
+            except OSError:
+                return 3
+
+            return 0
+        else:
+            return 1
+
