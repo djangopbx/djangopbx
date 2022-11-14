@@ -189,9 +189,9 @@ class SwitchFunctions():
         prev_var_cat = ''
         hostname = socket.gethostname()
 
-        switchconflist = PbxSettings().default_settings('switch', 'conf', 'dir')
-        if switchconflist:
-            switchconfdir = switchconflist[0]
+        conflist = PbxSettings().default_settings('switch', 'conf', 'dir')
+        if conflist:
+            confdir = conflist[0]
             for v in vlist:
                 if not v.category == 'Provision':
                     if not prev_var_cat == v.category:
@@ -217,13 +217,18 @@ class SwitchFunctions():
 
 #                xml += "\n"
 
-            if os.path.exists(switchconfdir):
-                f = open(switchconfdir + '/vars.xml', 'w')
-                f.write(xml)
-                f.close()
-                return 0
-            else:
+            try:
+                os.makedirs(confdir, mode=0o755, exist_ok = True)
+            except OSError:
                 return 2
+
+            try:
+                with open('%s/vars.xml' % confdir, 'w') as f:
+                    f.write(xml)
+            except OSError:
+                return 3
+
+            return 0
 
         else:
             return 1
@@ -232,8 +237,6 @@ class SwitchFunctions():
     def write_sip_profiles(self):
         plist = switch.models.SipProfile.objects.filter(enabled = 'true').order_by('name')
         xml = ''
-        prev_var_cat = ''
-        hostname = socket.gethostname()
 
         conflist = PbxSettings().default_settings('switch', 'sip_profiles', 'dir')
         if conflist:
@@ -262,11 +265,16 @@ class SwitchFunctions():
                 del gateways
                 del root
 
+                try:
+                    os.makedirs('%s/%s' % (confdir, p.name), mode=0o755, exist_ok = True)
+                except OSError:
+                    return 2
 
-                os.makedirs('%s/%s' % (confdir, p.name), mode=0o755, exist_ok = True)
-                f = open('%s/%s.xml' % (confdir, p.name), 'w')
-                f.write(xml)
-                f.close()
+                try:
+                    with open('%s/%s.xml' % (confdir, p.name), 'w') as f:
+                        f.write(xml)
+                except OSError:
+                    return 3
 
             return 0
         else:

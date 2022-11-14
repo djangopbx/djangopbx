@@ -116,9 +116,13 @@ class SipProfileResource(resources.ModelResource):
 def write_sip_profile_files(modeladmin, request, queryset):
     r = SwitchFunctions().write_sip_profiles()
     if r == 0:
-        messages.add_message(request, messages.INFO, _('sip profile files written'))
+        messages.add_message(request, messages.INFO, _('sip profile files written.'))
     if r == 1:
         messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->sip_profiles')
+    if r == 2:
+        messages.add_message(request, messages.WARN, _('Configuration directory could not be created.'))
+    if r == 3:
+        messages.add_message(request, messages.WARN, _('Error writing to file.'))
 
 
 class SipProfileAdmin(ImportExportModelAdmin):
@@ -161,11 +165,13 @@ class SwitchVariableResource(resources.ModelResource):
 def write_switch_vars_file(modeladmin, request, queryset):
     r = SwitchFunctions().save_var_xml()
     if r == 0:
-        messages.add_message(request, messages.INFO, _('vars.xml file written'))
+        messages.add_message(request, messages.INFO, _('vars.xml file written.'))
     if r == 1:
         messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->conf')
     if r == 2:
-        messages.add_message(request, messages.WARN, _('Configuration directory does not exist:'))
+        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+    if r == 3:
+        messages.add_message(request, messages.WARN, _('Error writing to file.'))
 
 
 class SwitchVariableAdmin(ImportExportModelAdmin):
