@@ -251,7 +251,7 @@ class SwitchFunctions():
                 for d in dlist:
                     etree.SubElement(domains, 'domain', name=d.name, alias=d.alias, parse=d.parse)
                 settings = etree.SubElement(root, 'settings')
-                slist = switch.models.SipProfileSetting.objects.filter(sip_profile_id = p.id).order_by('name')
+                slist = switch.models.SipProfileSetting.objects.filter(sip_profile_id = p.id, enabled = 'true').order_by('name')
                 for s in slist:
                     if s.value is None:
                         s_value = ''
