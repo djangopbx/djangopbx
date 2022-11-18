@@ -27,19 +27,24 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import logging
 from django.apps import apps
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from .xmlhandlerfunctions import XmlHandlerFunctions
 
+logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def index(request):
-
+    debug = False
     if request.META['REMOTE_ADDR'] not in apps.get_app_config('xmlhandler').xml_config_allowed_addresses:
         return HttpResponseNotFound()
 
     if request.method == 'POST':
+        if debug:
+            logger.info('XML Handler request: {}'.format(request.POST))
+
         domain_name     = request.POST.get('sip_from_host')
         if not domain_name:
             domain_name = request.POST.get('domain_name')
