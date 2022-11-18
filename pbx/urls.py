@@ -61,6 +61,7 @@ from switch.urls import router as switchrouter
 from dialplans.urls import router as dialplansrouter
 from recordings.urls import router as recordingsrouter
 from accounts.urls import router as accountsrouter
+from voicemail.urls import router as voicemailrouter
 
 router = routers.DefaultRouter()
 router.registry.extend(tenantsrouter.registry)
@@ -69,6 +70,7 @@ router.registry.extend(switchrouter.registry)
 router.registry.extend(dialplansrouter.registry)
 router.registry.extend(recordingsrouter.registry)
 router.registry.extend(accountsrouter.registry)
+router.registry.extend(voicemailrouter.registry)
 
 urlpatterns = [
     path(''       , include('portal.urls')),

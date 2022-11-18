@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'recordings.apps.RecordingsConfig',
     'accounts.apps.AccountsConfig',
     'xmlhandler.apps.XmlhandlerConfig',
+    'voicemail.apps.VoicemailConfig',
 ]
 
 MIDDLEWARE = [
