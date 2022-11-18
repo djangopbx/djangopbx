@@ -90,18 +90,6 @@ class DpFunctions():
         match = regex.match(uuid)
         return bool(match)
 
-    def dialplan_xml_public_single(self, xml_list, hostname, destination_number):
-        xml_list.extend(dialplans.models.Dialplan.objects.filter((Q(category = 'Inbound route',  number = destination_number) | Q(context__contains='public', domain_id__isnull=True)), (Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
-        return xml_list
-
-    def dialplan_xml_public(self, xml_list, call_context, hostname):
-        xml_list.extend(dialplans.models.Dialplan.objects.filter((Q(hostname = hostname) | Q(hostname__isnull=True)), context = call_context, enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
-        return xml_list
-
-    def dialplan_xml_domain(self, xml_list, call_context, hostname):
-        xml_list.extend(dialplans.models.Dialplan.objects.filter((Q(context = call_context) | Q(context = '${domain_name}')), (Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
-        return xml_list
-
 
 class SwitchDp():
     tag_type_choices = [

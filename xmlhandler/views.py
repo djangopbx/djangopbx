@@ -45,15 +45,16 @@ def index(request):
         if debug:
             logger.info('XML Handler request: {}'.format(request.POST))
 
-        domain_name     = request.POST.get('sip_from_host')
-        if not domain_name:
-            domain_name = request.POST.get('domain_name')
-        if not domain_name:
-            domain_name = request.POST.get('variable_domain_name')
-        if not domain_name:
-            domain_name = request.POST.get('variable_sip_from_host')
+        #domain_name     = request.POST.get('sip_from_host')
+        #if not domain_name:
+        #    domain_name = request.POST.get('domain_name')
+        #if not domain_name:
+        #    domain_name = request.POST.get('variable_domain_name')
+        #if not domain_name:
+        #    domain_name = request.POST.get('variable_sip_from_host')
 
-        purpose            = request.POST.get('purpose')
+        domain             = request.POST.get('domain')
+        #purpose            = request.POST.get('purpose')
         profile            = request.POST.get('profile')
         key                = request.POST.get('key')
         user               = request.POST.get('user')
@@ -75,7 +76,7 @@ def index(request):
             destination_number = hunt_destination_number
 
         if section == 'directory':
-            xml = XmlHandlerFunctions().GetDirectory()
+            xml = XmlHandlerFunctions().GetDirectory(domain, user)
         if section == 'dialplan':
             xml = XmlHandlerFunctions().GetDialplan(call_context, context_type, hostname, destination_number )
 

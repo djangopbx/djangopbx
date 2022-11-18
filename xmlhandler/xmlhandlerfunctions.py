@@ -28,7 +28,10 @@
 #
 
 from django.core.cache import cache
-from dialplans.dialplanfunctions import DpFunctions
+from django.db.models import Q
+from dialplans.models import Dialplan
+from accounts.models import Extension
+
 
 class XmlHandlerFunctions():
 
@@ -68,7 +71,7 @@ class XmlHandlerFunctions():
 '''
 
 
-    def GetDirectory(self):
+    def GetDirectory(self, domain, user):
         pass
 
 
@@ -92,14 +95,14 @@ class XmlHandlerFunctions():
         xml_list.append(self.XmlHeader('dialplan', call_context))
 
         if context_name == 'public' and context_type == 'single':
-            xml_list = DpFunctions().dialplan_xml_public_single(xml_list, hostname, destination_number)
+            xml_list.extend(Dialplan.objects.filter((Q(category = 'Inbound route',  number = destination_number) | Q(context__contains='public', domain_id__isnull=True)), (Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
             if len(xml_list) == 1:
                 xml_list = self.NotFoundPublic(xml_list)
         else:
             if context_name == "public" or ('@' in context_name):
-                xml_list = DpFunctions().dialplan_xml_public(xml_list, call_context, hostname)
+                xml_list.extend(Dialplan.objects.filter((Q(hostname = hostname) | Q(hostname__isnull=True)), context = call_context, enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
             else:
-                xml_list = DpFunctions().dialplan_xml_domain(xml_list, call_context, hostname)
+                xml_list.extend(Dialplan.objects.filter((Q(context = call_context) | Q(context = '${domain_name}')), (Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
 
         if len(xml_list) == 0:
             return self.NotFoundXml()
