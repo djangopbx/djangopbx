@@ -54,7 +54,7 @@ SECRET_KEY = 'django-insecure-aaabbbcccdddeeefff9876543210'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.6.64']
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.6.64']
 
 
 # Application definition
@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'musiconhold.apps.MusiconholdConfig',
     'recordings.apps.RecordingsConfig',
     'accounts.apps.AccountsConfig',
+    'xmlhandler.apps.XmlhandlerConfig',
 ]
 
 MIDDLEWARE = [
@@ -91,6 +92,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT': 300,
+        'KEY_PREFIX': 'pbx_',
+    }
+}
 
 ROOT_URLCONF = 'pbx.urls'
 

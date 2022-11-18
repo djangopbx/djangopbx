@@ -48,7 +48,7 @@ class MohFunctions():
             root = etree.Element('configuration', name='local_stream.conf', description='stream files from local dir')
 
             for m in mlist:
-                mdir = etree.SubElement(root, 'directory', name='moh/%s' % m.rate, path=m.path)
+                mdir = etree.SubElement(root, 'directory', name=m.name, path=m.path)
                 param = etree.SubElement(mdir, 'param', name='rate', value=str(m.rate))
                 param = etree.SubElement(mdir, 'param', name='shuffle', value=m.shuffle)
                 param = etree.SubElement(mdir, 'param', name='channels', value=str(m.channels))

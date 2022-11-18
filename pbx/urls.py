@@ -72,6 +72,7 @@ router.registry.extend(accountsrouter.registry)
 
 urlpatterns = [
     path(''       , include('portal.urls')),
+    path('xmlhandler/', include('xmlhandler.urls')),
     path('portal/', include('portal.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
