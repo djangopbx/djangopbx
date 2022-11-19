@@ -30,7 +30,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-from pbx.commonfunctions import DomainFilter
+from pbx.commonfunctions import DomainFilter, DomainUtils
 
 from .models import (
     Recording,
@@ -61,6 +61,8 @@ class RecordingAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
+        if not change:
+            obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
 
 

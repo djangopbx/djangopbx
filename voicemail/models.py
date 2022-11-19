@@ -62,6 +62,9 @@ class Voicemail(models.Model):
     class Meta:
         db_table = 'pbx_voicemails'
 
+    def __str__(self):
+        return str(self.vm_id)
+
 
 class VoicemailGreeting(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))

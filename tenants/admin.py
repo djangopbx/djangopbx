@@ -31,7 +31,6 @@ from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import admin
 from django.db import models
 from django.forms import ModelForm
-from . import filters
 
 from .models import (
     Profile, ProfileSetting, Domain, DomainSetting, DefaultSetting,
@@ -50,6 +49,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 
 from dialplans.dialplanfunctions import SwitchDp
+from pbx.commonfunctions import DomainFilter, DomainUtils
 
 
 class UserResource(resources.ModelResource):
@@ -168,7 +168,7 @@ class DomainSettingAdmin(ImportExportModelAdmin):
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['category', 'subcategory', 'value_type', 'value']
     list_display = ('category', 'subcategory', 'value_type', 'value', 'enabled')
-    list_filter = (filters.SelectedDomainFilter, DomainSettingsDomainFilter, 'enabled')
+    list_filter = (DomainFilter, DomainSettingsDomainFilter, 'enabled')
     list_display_links = ('category', 'subcategory', 'value_type', 'value')
     fieldsets = [
         (None, {'fields': ['domain_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
@@ -291,7 +291,7 @@ class ProfileAdmin(ImportExportModelAdmin):
     ]
 
     list_display = ('username', 'domain_id', 'email', 'enabled')
-    list_filter  = ('username', 'domain_id', 'email', 'enabled')
+    list_filter  = (DomainFilter, 'username', 'domain_id', 'email', 'enabled')
     inlines = [ProfileSettingInLine]
 
     def save_formset(self, request, form, formset, change):
@@ -305,6 +305,8 @@ class ProfileAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
+        if not change:
+            obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
 
 
