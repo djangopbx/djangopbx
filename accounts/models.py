@@ -31,7 +31,7 @@ from django.db import models
 import uuid
 from django.utils.translation import gettext_lazy as _
 from pbx.commonchoices import(
-    EnabledTrueFalseChoice, EnabledTrueFalseNoneChoice, PrimaryTrueFalseChoice, EnabledDisabledChoice,
+    EnabledTrueFalseChoice, EnabledTrueFalseNoneChoice, PrimaryTrueFalseChoice, EnabledDisabledChoice, ConfirmChoice,
 )
 
 
@@ -149,6 +149,26 @@ class ExtensionUser(models.Model):
 
     class Meta:
         db_table = 'pbx_extension_users'
+
+    def __str__(self):
+        return str(self.id)
+
+
+class FollowMeDestination(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Extension User'))
+    extension_id = models.ForeignKey('Extension', db_column='extension_uuid', blank=True, null=True, on_delete=models.CASCADE, verbose_name=_('Extension'))
+    destination  = models.CharField(max_length=32, verbose_name=_('Destination'))
+    delay        = models.DecimalField(max_digits=3, decimal_places=0,  default=0, verbose_name=_('Delay'))
+    timeout      = models.DecimalField(max_digits=3, decimal_places=0,  default=30, verbose_name=_('Timeout'))
+    prompt       = models.CharField(max_length=8, blank=True, null=True, choices=ConfirmChoice.choices, default=ConfirmChoice.CNONE, verbose_name=_('Prompt'))
+    sequence     = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, default=10, verbose_name=_('Order'))
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+
+    class Meta:
+        db_table = 'pbx_follow_me_destinations'
 
     def __str__(self):
         return str(self.id)

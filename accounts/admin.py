@@ -30,7 +30,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
 from .models import (
-    Extension, ExtensionUser, Gateway,
+    Extension, FollowMeDestination, ExtensionUser, Gateway,
 )
 from django.forms.widgets import Select
 from django.forms import ModelForm
@@ -68,6 +68,16 @@ class ExtensionUserInLine(admin.TabularInline):
     ordering = ['user_uuid']
 
 
+class FollowMeDestinationInLine(admin.TabularInline):
+    model = FollowMeDestination
+
+    extra = 4
+    fieldsets = [
+        (None,          {'fields': ['destination', 'delay', 'timeout', 'prompt']}),
+    ]
+    ordering = ['destination']
+
+
 class ExtensionResource(resources.ModelResource):
     class Meta:
         model = Extension
@@ -76,6 +86,11 @@ class ExtensionResource(resources.ModelResource):
 
 class ExtensionAdmin(ImportExportModelAdmin):
     resource_class = ExtensionResource
+    class Media:
+        css = {
+            'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
+        }
+
     form = ExtensionAdminForm
     save_on_top = True
 
@@ -141,7 +156,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
     )
 
     ordering = ['extension']
-    inlines = [ExtensionUserInLine]
+    inlines = [ExtensionUserInLine, FollowMeDestinationInLine]
 
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
