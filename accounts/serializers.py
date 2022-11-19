@@ -29,7 +29,7 @@
 
 from  rest_framework  import serializers
 from .models import (
-    Extension,  Gateway,
+    Extension, FollowMeDestination, Gateway,
 )
 
 
@@ -90,6 +90,13 @@ class ExtensionSerializer(serializers.ModelSerializer):
                 'follow_me_enabled',
                 #'follow_me_destinations',
                 'do_not_disturb',
+                'created', 'updated', 'synchronised', 'updated_by']
+
+
+class FollowMeDestinationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FollowMeDestination
+        fields =['url', 'id', 'extension_id', 'destination', 'delay', 'timeout', 'prompt', 'sequence',
                 'created', 'updated', 'synchronised', 'updated_by']
 
 

@@ -32,8 +32,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'Voicemails', views.VoicemailViewSet)
-router.register(r'VoicemailGreetingss', views.VoicemailGreetingViewSet)
+router.register(r'voicemails', views.VoicemailViewSet)
+router.register(r'voicemail_greetingss', views.VoicemailGreetingViewSet)
 
 urlpatterns = [
 ]

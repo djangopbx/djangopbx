@@ -32,8 +32,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'Dialplans', views.DialplanViewSet)
-router.register(r'Dialplan_details', views.DialplanDetailViewSet)
+router.register(r'dialplans', views.DialplanViewSet)
+router.register(r'dialplan_details', views.DialplanDetailViewSet)
 
 urlpatterns = [
 ]

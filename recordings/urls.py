@@ -32,7 +32,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'Recordings', views.RecordingViewSet)
+router.register(r'recordings', views.RecordingViewSet)
 
 urlpatterns = [
 ]

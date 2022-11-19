@@ -37,10 +37,10 @@ from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from .models import (
-    Extension, Gateway,
+    Extension, FollowMeDestination, Gateway,
 )
 from .serializers import (
-    ExtensionSerializer, GatewaySerializer,
+    ExtensionSerializer, FollowMeDestinationSerializer, GatewaySerializer,
 )
 
 
@@ -52,6 +52,20 @@ class ExtensionViewSet(viewsets.ModelViewSet):
     serializer_class = ExtensionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['domain_id', 'toll_allow', 'call_group', 'user_context', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class FollowMeDestinationViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows FollowMeDestination to be viewed or edited.
+    """
+    queryset = FollowMeDestination.objects.all().order_by('extension_id', 'destination')
+    serializer_class = FollowMeDestinationSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['extension_id', 'destination']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

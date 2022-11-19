@@ -27,48 +27,13 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.shortcuts import render
-from rest_framework import viewsets
-from rest_framework import permissions
-from django_filters.rest_framework import DjangoFilterBackend
+from django.urls import path
+from rest_framework import routers
+from . import views
 
+router = routers.DefaultRouter()
+router.register(r'music_on_hold', views.MusicOnHoldViewSet)
+router.register(r'music_on_hold_files', views.MohFileViewSet)
 
-from pbx.restpermissions import (
-    AdminApiAccessPermission
-)
-from .models import (
-    MusicOnHold, MohFile,
-)
-from .serializers import (
-    MusicOnHoldSerializer, MohFileSerializer
-)
-
-
-class MusicOnHoldViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows Music on Hold sources to be viewed or edited.
-    """
-    queryset = MusicOnHold.objects.all().order_by('domain_id', 'name')
-    serializer_class = MusicOnHoldSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['domain_id', 'name']
-    permission_classes = [
-        permissions.IsAuthenticated,
-        AdminApiAccessPermission,
-    ]
-
-
-class MohFileViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows Music on Hold Files to be viewed or edited.
-    """
-    queryset = MohFile.objects.all().order_by('moh_id', 'file_name')
-    serializer_class = MohFileSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['moh_id', 'file_name']
-    permission_classes = [
-        permissions.IsAuthenticated,
-        AdminApiAccessPermission,
-    ]
-
-
+urlpatterns = [
+]
