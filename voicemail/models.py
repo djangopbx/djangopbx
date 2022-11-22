@@ -41,7 +41,7 @@ def user_directory_path(instance, filename):
 
 class Voicemail(models.Model):
     id                    = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Voicemail'))
-    extension_id           = models.ForeignKey('accounts.Extension', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Extension'))
+    extension_id           = models.ForeignKey('accounts.Extension', related_name='voicemail', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Extension'))
     password              = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Password'))
     greeting_id           = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, default=1, verbose_name=_('Greeting ID'))
     alternate_greeting_id = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, verbose_name=_('Alternate Greeting ID'))
