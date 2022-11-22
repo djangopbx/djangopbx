@@ -32,6 +32,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 from .models import (
     Extension, FollowMeDestination, ExtensionUser, Gateway,
 )
+from voicemail.models import Voicemail
 from django.forms.widgets import Select
 from django.forms import ModelForm
 from import_export.admin import ImportExportModelAdmin, ExportMixin
@@ -169,10 +170,17 @@ class ExtensionAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        if not change:
+        if change:
+            super().save_model(request, obj, form, change)
+        else:
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']
-        super().save_model(request, obj, form, change)
+            super().save_model(request, obj, form, change)
+            Voicemail.objects.create(
+                extension_id = obj,
+                enabled = 'false',
+                updated_by = request.user.username
+            )
 
 
 class GatewayResource(resources.ModelResource):

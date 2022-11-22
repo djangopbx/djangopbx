@@ -36,7 +36,7 @@ from .models import (
 class VoicemailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Voicemail
-        fields =['url', 'id', 'domain_id', 'vm_id', 'password', 'greeting_id', 'alternate_greeting_id', 'mail_to', 'sms_to', 'cc', 'attach_file', 'local_after_email', 'enabled', 'description',
+        fields =['url', 'id', 'extension_id', 'password', 'greeting_id', 'alternate_greeting_id', 'mail_to', 'sms_to', 'cc', 'attach_file', 'local_after_email', 'enabled', 'description',
                 'created', 'updated', 'synchronised', 'updated_by']
 
 

@@ -36,14 +36,12 @@ from pbx.commonchoices import EnabledTrueFalseChoice
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/fs/voicemail/<domain name>/<id>/<filename>
-    return 'fs/voicemail/{0}/{1}/{2}'.format(instance.voicemail_id.domain_id.name, instance.voicemail_id.vm_id, filename)
+    return 'fs/voicemail/{0}/{1}/{2}'.format(instance.voicemail_id.extension_id.domain_id.name, instance.voicemail_id.extension_id.extension, filename)
 
 
 class Voicemail(models.Model):
     id                    = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Voicemail'))
-    domain_id             = models.ForeignKey('tenants.Domain', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))
-
-    vm_id                 = models.DecimalField(max_digits=16, decimal_places=0, default = 201, verbose_name=_('Voicemail ID'))
+    extension_id           = models.ForeignKey('accounts.Extension', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Extension'))
     password              = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Password'))
     greeting_id           = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, default=1, verbose_name=_('Greeting ID'))
     alternate_greeting_id = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, verbose_name=_('Alternate Greeting ID'))
@@ -63,7 +61,7 @@ class Voicemail(models.Model):
         db_table = 'pbx_voicemails'
 
     def __str__(self):
-        return str(self.vm_id)
+        return str(self.extension_id)
 
 
 class VoicemailGreeting(models.Model):

@@ -48,7 +48,7 @@ class VoicemailViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Voicemails to be viewed or edited.
     """
-    queryset = Voicemail.objects.all().order_by('domain_id', 'vm_id')
+    queryset = Voicemail.objects.all().order_by('extension_id')
     serializer_class = VoicemailSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['domain_id', 'vm_id']

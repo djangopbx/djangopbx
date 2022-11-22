@@ -396,7 +396,7 @@ class XmlHandlerFunctions():
         if e == None:
             return self.NotFoundXml()
 
-        v = Voicemail.objects.filter(domain_id__name = domain, vm_id = user, enabled = 'true').first()
+        v = Voicemail.objects.filter(extension_id__extension = user, enabled = 'true').first()
         eu = ExtensionUser.objects.filter(extension_id = e.id, default_user = 'true').first()
 
         x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')

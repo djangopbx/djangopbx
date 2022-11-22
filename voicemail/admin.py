@@ -76,17 +76,24 @@ class VoicemailAdmin(ImportExportModelAdmin):
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
-        (None,  {'fields': ['vm_id', 'password', 'greeting_id', 'alternate_greeting_id',
+        # Voicemail records are automatically created when an extension is added.
+        # To allow adding a voicemail record maually:
+        # 1. Add extension_id to the field set below, just before password.
+        # 2. Comment out the def has_add_permission.
+        (None,  {'fields': ['password', 'greeting_id', 'alternate_greeting_id',
                         'mail_to', 'sms_to', 'cc', 'attach_file', 'local_after_email', 'enabled', 'description']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
-    list_display = ('vm_id', 'mail_to', 'attach_file', 'local_after_email', 'enabled', 'description')
-    list_filter = (DomainFilter, 'enabled')
+    list_display = ('extension_id', 'mail_to', 'attach_file', 'local_after_email', 'enabled', 'description')
+    list_filter = ('enabled',)
 
     ordering = [
-        'vm_id'
+        'extension_id'
     ]
     inlines = [VoicemailGreetingInLine]
+
+    def has_add_permission(self, request):
+        return False
 
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
@@ -99,8 +106,6 @@ class VoicemailAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        if not change:
-            obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
 
 
