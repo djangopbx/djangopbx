@@ -73,8 +73,8 @@ class Extension(models.Model):
 
     id                                      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Extension'))
     domain_id                               = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))
-    extension                               = models.CharField(max_length=32, verbose_name=_('Extension'))
-    number_alias                            = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Number Alias'))
+    extension                               = models.CharField(max_length=32, db_index=True, verbose_name=_('Extension'))
+    number_alias                            = models.CharField(max_length=16, db_index=True, blank=True, null=True, verbose_name=_('Number Alias'))
     password                                = models.CharField(max_length=32, verbose_name=_('Password'))
     accountcode                             = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Account Code'))
     effective_caller_id_name                = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Effective Caller ID Name'))
