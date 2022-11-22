@@ -63,7 +63,7 @@ class ExtensionUserInLine(admin.TabularInline):
 
     extra = 1
     fieldsets = [
-        (None,          {'fields': ['user_uuid',]}),
+        (None,          {'fields': ['user_uuid', 'default_user',]}),
     ]
     ordering = ['user_uuid']
 

@@ -32,4 +32,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('dialplan.xml', views.dialplan, name='dialplan'),
+    path('directory.xml', views.directory, name='directory'),
 ]

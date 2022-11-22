@@ -41,6 +41,9 @@ def index(request):
     if request.META['REMOTE_ADDR'] not in apps.get_app_config('xmlhandler').xml_config_allowed_addresses:
         return HttpResponseNotFound()
 
+    context_type          = apps.get_app_config('xmlhandler').context_type
+    number_as_presence_id = apps.get_app_config('xmlhandler').number_as_presence_id
+
     if request.method == 'POST':
         if debug:
             logger.info('XML Handler request: {}'.format(request.POST))
@@ -64,7 +67,6 @@ def index(request):
         caller_id_number   = request.POST.get('Caller-Caller-ID-Number', '')
         hunt_context       = request.POST.get('Hunt-Context')
         section            = request.POST.get('section', '')
-        context_type       = request.POST.get('context_type', 'multiple') # check context_type name - unable to find it thus far
         hostname           = request.POST.get('FreeSWITCH-Switchname', '')
         hunt_destination_number = request.POST.get('Hunt-Destination-Number')
 
@@ -76,11 +78,37 @@ def index(request):
             destination_number = hunt_destination_number
 
         if section == 'directory':
-            xml = XmlHandlerFunctions().GetDirectory(domain, user)
+            xml = XmlHandlerFunctions().GetDirectory(domain, user, number_as_presence_id)
         if section == 'dialplan':
             xml = XmlHandlerFunctions().GetDialplan(call_context, context_type, hostname, destination_number )
+    else:
+        return HttpResponseNotFound()
 
     return HttpResponse(xml, content_type='application/xml')
 
 
+def dialplan(request):
+    if request.META['REMOTE_ADDR'] not in apps.get_app_config('xmlhandler').xml_config_allowed_addresses:
+        return HttpResponseNotFound()
+
+    if request.method == 'GET':
+        hostname = request.POST.get('hostname', 'None')
+        xml = XmlHandlerFunctions().GetDialplanStatic(hostname)
+    else:
+        return HttpResponseNotFound()
+
+    return HttpResponse(xml, content_type='application/xml')
+
+
+def directory(request):
+    if request.META['REMOTE_ADDR'] not in apps.get_app_config('xmlhandler').xml_config_allowed_addresses:
+        return HttpResponseNotFound()
+
+    number_as_presence_id = apps.get_app_config('xmlhandler').number_as_presence_id
+    if request.method == 'GET':
+        xml = XmlHandlerFunctions().GetDirectoryStatic(number_as_presence_id)
+    else:
+        return HttpResponseNotFound()
+
+    return HttpResponse(xml, content_type='application/xml')
 

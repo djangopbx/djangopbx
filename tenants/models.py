@@ -47,7 +47,7 @@ class Profile(models.Model):
     class Meta:
         db_table = "pbx_users"
 
-    user_uuid      = models.UUIDField(db_index=True, unique=True, default=uuid.uuid4, editable=False)
+    user_uuid    = models.UUIDField(db_index=True, unique=True, default=uuid.uuid4, editable=False)
     domain_id    = models.ForeignKey('Domain', models.SET_NULL, blank=True, null=True, verbose_name=_('Domain'))
     username     = models.CharField(max_length=150, db_index=True, unique=True, verbose_name=_('User ID'))
     email        = models.CharField(max_length=254, null=True, verbose_name=_('Email'))

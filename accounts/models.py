@@ -142,6 +142,7 @@ class ExtensionUser(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Extension User'))
     extension_id   = models.ForeignKey('Extension', db_column='extension_uuid', blank=True, null=True, on_delete=models.CASCADE, verbose_name=_('Extension'))
     user_uuid      = models.ForeignKey('tenants.Profile', models.SET_NULL, to_field='user_uuid', db_column='user_uuid', blank=True, null=True, verbose_name=_('User'))
+    default_user   = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Default'))
     created        = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
     updated        = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
     synchronised   = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))

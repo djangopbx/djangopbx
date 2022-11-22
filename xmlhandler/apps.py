@@ -41,4 +41,5 @@ class XmlhandlerConfig(AppConfig):
     pbx_version = '1.0'
     pbx_license = 'MIT License'
     xml_config_allowed_addresses = ['127.0.0.1', '::1']
-
+    context_type = 'multiple'  # Can be multiple or single
+    number_as_presence_id = False
