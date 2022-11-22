@@ -258,15 +258,14 @@ class XmlHandlerFunctions():
 
 
     def GetDirectoryStatic(self, number_as_presence_id, cacheable = False):
-        x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
-        x_section = etree.SubElement(x_root, "section", name='directory')
+        x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
         es = Extension.objects.select_related('domain_id').prefetch_related('extensionuser', 'voicemail').filter(enabled = 'true').order_by('domain_id')
         last_domain = 'None'
         print(es.query)
         for e in es:
             if not last_domain == e.domain_id.name:
                 last_domain = e.domain_id.name
-                x_users = self.DirectoryAddDomain(e.domain_id.name, x_section)
+                x_users = self.DirectoryAddDomain(e.domain_id.name, x_root)
             v = e.voicemail.filter(enabled = 'true').first()
             eu = e.extensionuser.filter(default_user = 'true').first()
             self.DirectoryAddUser(e.domain_id.name, e.extension, number_as_presence_id, x_users, e, eu, v, cacheable)
@@ -319,7 +318,7 @@ class XmlHandlerFunctions():
 
     def GetDialplanStatic(self, hostname):
         xml_list = list()
-        xml_list.append('<?xml version="1.0" encoding="utf-8"?>\n<include>\n')
+        xml_list.append('<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<include>\n')
         dps = Dialplan.objects.filter((Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').order_by('context', 'sequence')
         start = True
         dp_count = 0
