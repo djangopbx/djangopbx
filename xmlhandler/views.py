@@ -84,6 +84,9 @@ def index(request):
     else:
         return HttpResponseNotFound()
 
+    if debug:
+        logger.info('XML Handler response: {}'.format(xml))
+
     return HttpResponse(xml, content_type='application/xml')
 
 

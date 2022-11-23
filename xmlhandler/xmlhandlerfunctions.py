@@ -252,7 +252,6 @@ class XmlHandlerFunctions():
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
-        print(xml)
         cache.set(directory_cache_key, xml)
         return xml
 
@@ -261,7 +260,6 @@ class XmlHandlerFunctions():
         x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
         es = Extension.objects.select_related('domain_id').prefetch_related('extensionuser', 'voicemail').filter(enabled = 'true').order_by('domain_id')
         last_domain = 'None'
-        print(es.query)
         for e in es:
             if not last_domain == e.domain_id.name:
                 last_domain = e.domain_id.name
@@ -272,7 +270,6 @@ class XmlHandlerFunctions():
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
-        print(xml)
         return xml
 
 
