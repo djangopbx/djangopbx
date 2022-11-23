@@ -63,6 +63,7 @@ from recordings.urls import router as recordingsrouter
 from musiconhold.urls import router as musiconholdrouter
 from accounts.urls import router as accountsrouter
 from voicemail.urls import router as voicemailrouter
+from xmlcdr.urls import router as xmlcdrrouter
 
 router = routers.DefaultRouter()
 router.registry.extend(tenantsrouter.registry)
@@ -73,6 +74,7 @@ router.registry.extend(recordingsrouter.registry)
 router.registry.extend(musiconholdrouter.registry)
 router.registry.extend(accountsrouter.registry)
 router.registry.extend(voicemailrouter.registry)
+router.registry.extend(xmlcdrrouter.registry)
 
 urlpatterns = [
     path(''       , include('portal.urls')),

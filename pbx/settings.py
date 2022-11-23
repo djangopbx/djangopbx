@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'xmlhandler.apps.XmlhandlerConfig',
     'voicemail.apps.VoicemailConfig',
+    'xmlcdr.apps.XmlcdrConfig',
 ]
 
 MIDDLEWARE = [
