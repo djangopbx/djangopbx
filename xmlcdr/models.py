@@ -104,4 +104,4 @@ class XmlCdr(models.Model):
         db_table = 'pbx_xml_cdr'
 
     def __str__(self):
-        return str(id)
+        return str(self.extension_id)

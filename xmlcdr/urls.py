@@ -27,7 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework import routers
 from . import views
 
@@ -35,4 +35,6 @@ router = routers.DefaultRouter()
 router.register(r'xmlcdrs', views.XmlCdrViewSet)
 
 urlpatterns = [
+    re_path(r'^xml_cdr_import/.*$', views.xml_cdr_import, name='xmlcdrimport'),
+
 ]

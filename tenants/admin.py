@@ -153,7 +153,7 @@ class DomainSettingInLine(admin.TabularInline):
     fieldsets = [
         (None,          {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
     ]
-    ordering = ['category', 'sequence']
+    ordering = ['category', 'subcategory', 'sequence']
 
 
 class DomainSettingResource(resources.ModelResource):
@@ -174,7 +174,7 @@ class DomainSettingAdmin(ImportExportModelAdmin):
         (None, {'fields': ['domain_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
-    ordering = ['category', 'sequence']
+    ordering = ['category', 'subcategory', 'sequence']
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
@@ -241,7 +241,7 @@ class ProfileSettingInLine(admin.TabularInline):
     fieldsets = [
         (None,          {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
     ]
-    ordering = ['category', 'sequence']
+    ordering = ['category', 'subcategory', 'sequence']
 
 
 class ProfileSettingResource(resources.ModelResource):
@@ -263,7 +263,7 @@ class ProfileSettingAdmin(ImportExportModelAdmin):
         (None, {'fields': ['user_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
-    ordering = ['category', 'sequence']
+    ordering = ['category', 'subcategory', 'sequence']
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
@@ -332,7 +332,7 @@ class DefaultSettingAdmin(ImportExportModelAdmin):
         (None, {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
-    ordering = ['category', 'sequence']
+    ordering = ['category', 'subcategory', 'sequence']
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username

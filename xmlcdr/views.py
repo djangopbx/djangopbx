@@ -27,10 +27,14 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import logging
+from django.http import HttpResponse, HttpResponseNotFound
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
+from tenants.pbxsettings import PbxSettings
 
 
 from pbx.restpermissions import (
@@ -42,6 +46,24 @@ from .models import (
 from .serializers import (
     XmlCdrSerializer,
 )
+
+from .xmlcdrfunctions import XmlCdrFunctions
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def xml_cdr_import(request):
+    debug = False
+    allowed_addresses = PbxSettings().default_settings('cdr', 'allowed_address', 'array')
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+        return HttpResponseNotFound()
+
+    if request.method == 'POST':
+        if debug:
+            logger.info('XML CDR request: {}'.format(request.POST))
+        XmlCdrFunctions().xml_cdr_import(request.GET.get('uuid', 'a_none'), request.POST.get('cdr', '<?xml version=\"1.0\"?><none switchname=\"django-pbx-dev1\">'))
+
+    return HttpResponse('')
 
 
 class XmlCdrViewSet(viewsets.ModelViewSet):

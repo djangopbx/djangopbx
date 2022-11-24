@@ -31,8 +31,27 @@ from django.contrib import admin
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from import_export import resources
+import json
+from django.forms import ModelForm
+from django_ace import AceWidget
 
 from .models import XmlCdr
+
+
+class PrettyJSONWidget(AceWidget):
+    def format_value(self, value):
+        value = json.dumps(json.loads(value), indent=4, sort_keys=True)
+        return value
+
+class JsonEditAdminForm(ModelForm):
+    class Meta:
+        model = XmlCdr
+        widgets = {
+            "xml": AceWidget(usesofttabs=False, showprintmargin=False, width="800px", height="400px", mode='xml', theme='cobalt', readonly=True),
+            "json": PrettyJSONWidget(usesofttabs=False, showprintmargin=False, width="800px", height="400px", mode=None, theme='cobalt', readonly=True),
+        }
+        fields = '__all__'
+
 
 
 class XmlCdrResource(resources.ModelResource):
@@ -43,6 +62,8 @@ class XmlCdrResource(resources.ModelResource):
 
 class XmlCdrAdmin(ImportExportModelAdmin):
     resource_class = XmlCdrResource
+    form = JsonEditAdminForm
+
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
         (None,  {'fields': ['domain_id',
@@ -81,6 +102,14 @@ class XmlCdrAdmin(ImportExportModelAdmin):
                         'last_app',
                         'last_arg',
                         'missed_call',
+                        'digits_dialed',
+                        'pin_number',
+                        'hangup_cause',
+                        'hangup_cause_q850',
+                        'sip_hangup_disposition']}),
+
+        ('Conference',   {'fields': ['conference_name', 'conference_uuid', 'conference_member_id'], 'classes': ['collapse']}),
+        ('Call Centre',   {'fields': [
                         'cc_side',
                         'cc_member_uuid',
                         'cc_queue_joined_epoch',
@@ -95,18 +124,9 @@ class XmlCdrAdmin(ImportExportModelAdmin):
                         'cc_queue_canceled_epoch',
                         'cc_cancel_reason',
                         'cc_cause',
-                        'waitsec',
-                        'conference_name',
-                        'conference_uuid',
-                        'conference_member_id',
-                        'digits_dialed',
-                        'pin_number',
-                        'hangup_cause',
-                        'hangup_cause_q850',
-                        'sip_hangup_disposition',
-                        'xml',
-                        'json']}),
-
+                        'waitsec',], 'classes': ['collapse']}),
+        ('JSON',   {'fields': ['json'], 'classes': ['collapse']}),
+        ('XML',   {'fields': ['xml'], 'classes': ['collapse']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('extension_id', 'caller_id_name', 'caller_id_number', 'caller_destination', 'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause')
