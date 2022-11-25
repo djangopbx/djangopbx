@@ -94,6 +94,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
 
     form = ExtensionAdminForm
     save_on_top = True
+    save_as = True
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['extension', 'effective_caller_id_name', 'outbound_caller_id_name', 'effective_caller_id_number', 'outbound_caller_id_number', 'context']
@@ -192,7 +193,7 @@ class GatewayResource(resources.ModelResource):
 class GatewayAdmin(ImportExportModelAdmin):
     resource_class = GatewayResource
     form = GatewayAdminForm
-    save_on_top = True
+    save_as = True
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['gateway', 'from_domain', 'proxy', 'realm', 'description']

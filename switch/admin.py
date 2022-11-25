@@ -127,6 +127,7 @@ def write_sip_profile_files(modeladmin, request, queryset):
 
 class SipProfileAdmin(ImportExportModelAdmin):
     resource_class = SipProfileResource
+    save_as = True
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline

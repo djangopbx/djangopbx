@@ -138,6 +138,7 @@ class DialplanAdmin(ImportExportModelAdmin):
     form = XmlEditAdminForm
     change_form_template = "dialplans/dialplan_changeform.html"
     save_on_top = True
+    save_as = True
 
     readonly_fields = ['app_id', 'created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['name', 'number', 'category', 'xml']

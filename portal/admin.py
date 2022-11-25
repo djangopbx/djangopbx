@@ -102,6 +102,7 @@ class MenuResource(resources.ModelResource):
 
 class MenuAdmin(ImportExportModelAdmin):
     resource_class = MenuResource
+    save_as = True
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
