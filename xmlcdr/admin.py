@@ -102,7 +102,7 @@ class XmlCdrAdmin(ImportExportModelAdmin):
                         'last_app',
                         'last_arg',
                         'missed_call',
-                        'digits_dialed',
+                        #'digits_dialed',
                         'pin_number',
                         'hangup_cause',
                         'hangup_cause_q850',
