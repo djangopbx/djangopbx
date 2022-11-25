@@ -66,6 +66,14 @@ class XmlCdrFunctions():
         return number
 
 
+    def str2float(self, tmpstr):
+        try:
+            number = round(float(tmpstr), 2)
+        except:
+            number = 0.0
+        return number
+
+
     def xml_cdr_import(self, t_uuid, xml):
         if not xml:
             logger.warn('XML CDR request: Contained no data.')
@@ -339,7 +347,7 @@ class XmlCdrFunctions():
 
         xcdr.leg                       = leg
         xcdr.pdd_ms                    = self.str2int(cdr_dict['cdr']['variables'].get('progress_mediamsec')) + self.str2int(cdr_dict['cdr']['variables'].get('progressmsec'))
-        xcdr.rtp_audio_in_mos          = self.str2int(cdr_dict['cdr']['variables'].get('rtp_audio_in_mos'))
+        xcdr.rtp_audio_in_mos          = self.str2float(cdr_dict['cdr']['variables'].get('rtp_audio_in_mos'))
         xcdr.last_app                  = cdr_dict['cdr']['variables'].get('last_app')
         xcdr.last_arg                  = self.uq(cdr_dict['cdr']['variables'].get('last_arg'))
 
@@ -378,8 +386,6 @@ class XmlCdrFunctions():
         if format == 'xml':
             xcdr.xml  = xml
         if format == 'json':
-            print('weeeeeeeeeee')
-            #json_data = json.dumps(cdr_dict, indent = 4)
             xcdr.json = cdr_dict['cdr']
 
         xcdr.updated_by = 'system'
