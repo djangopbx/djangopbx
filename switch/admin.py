@@ -61,6 +61,10 @@ class SipProfileDomainAdmin(ImportExportModelAdmin):
         'name'
     ]
 
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
 
 class SipProfileDomainInLine(admin.TabularInline):
     model = SipProfileDomain
@@ -93,6 +97,10 @@ class SipProfileSettingAdmin(ImportExportModelAdmin):
     ordering = [
         'name'
     ]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
 
 
 class SipProfileSettingInLine(admin.TabularInline):
@@ -147,6 +155,19 @@ class SipProfileAdmin(ImportExportModelAdmin):
     inlines = [SipProfileDomainInLine, SipProfileSettingInLine]
     actions = [write_sip_profile_files]
 
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for instance in instances:
+            instance.updated_by = request.user.username
+            instance.save()
+        formset.save_m2m()
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
     # This is a workaround to allow the admin action to be run without selecting any objects.
     # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
     def changelist_view(self, request, extra_context=None):
@@ -193,6 +214,10 @@ class SwitchVariableAdmin(ImportExportModelAdmin):
     ]
 
     actions = [write_switch_vars_file]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
 
     # This is a workaround to allow the admin action to be run without selecting any objects.
     # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
@@ -253,6 +278,19 @@ class AccessControlAdmin(ImportExportModelAdmin):
     ]
     inlines = [AccessControlNodeInLine]
     actions = [write_acl_file]
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for instance in instances:
+            instance.updated_by = request.user.username
+            instance.save()
+        formset.save_m2m()
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
 
     # This is a workaround to allow the admin action to be run without selecting any objects.
     # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
