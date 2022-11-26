@@ -61,6 +61,12 @@ class AccessControlDefaultChoice(models.TextChoices):
     CALLOW = 'allow',      'allow'
     CDENY  = 'deny', 'deny'
 
+
+class EmailTemplateTypeChoice(models.TextChoices):
+    CHTML     = 'html', 'HTML'
+    CTEXT = 'text', 'Text'
+
+
 #
 # model classes
 #
@@ -175,4 +181,27 @@ class AccessControlNode(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class EmailTemplate(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Email Template'))
+    domain_id    = models.ForeignKey('tenants.Domain', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))
+    language     = models.CharField(max_length=8, default='en-gb', verbose_name=_('Language'))
+    category     = models.CharField(max_length=32, verbose_name=_('Category'))
+    subcategory  = models.CharField(max_length=32, default='default', verbose_name=_('Sub category'))
+    subject      = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Subject'))
+    type         = models.CharField(max_length=8, choices=EmailTemplateTypeChoice.choices, default=EmailTemplateTypeChoice.CHTML, verbose_name=_('Type'))
+    body         = models.TextField(blank=True, null=True, verbose_name=_('Body'))
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
+    description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+
+    class Meta:
+        db_table = 'pbx_email_templates'
+
+    def __str__(self):
+        return f"{self.language}->{self.category}->{self.subcategory}->{self.type}"
 

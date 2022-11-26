@@ -33,12 +33,13 @@ from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import messages
 from .models import (
-    SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable, AccessControl, AccessControlNode,
+    SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable, AccessControl, AccessControlNode, EmailTemplate,
 )
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from import_export import resources
 from switch.switchfunctions import SwitchFunctions
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
+
 
 class SipProfileDomainResource(resources.ModelResource):
     class Meta:
@@ -263,10 +264,39 @@ class AccessControlAdmin(ImportExportModelAdmin):
         return super(AccessControlAdmin, self).changelist_view(request, extra_context)
 
 
+class EmailTemplateResource(resources.ModelResource):
+    class Meta:
+        model = EmailTemplate
+        import_id_fields = ('id', )
+
+
+class EmailTemplateAdmin(ImportExportModelAdmin):
+    resource_class = EmailTemplateResource
+
+    save_as = True
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['language', 'category', 'subcategory', 'descrption']
+    fieldsets = [
+        (None,  {'fields': ['domain_id', 'language', 'category', 'subcategory', 'subject', 'type', 'body', 'enabled', 'description']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('language', 'category', 'subcategory', 'subject', 'type', 'enabled', 'description')
+    list_filter = ('domain_id', 'language', 'category', 'type', 'enabled')
+
+    ordering = [
+        'language', 'category', 'subcategory',
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
+
 
 admin.site.register(SipProfile, SipProfileAdmin)
 admin.site.register(SipProfileSetting, SipProfileSettingAdmin)
 admin.site.register(SipProfileDomain, SipProfileDomainAdmin)
 admin.site.register(SwitchVariable, SwitchVariableAdmin)
 admin.site.register(AccessControl, AccessControlAdmin)
+admin.site.register(EmailTemplate, EmailTemplateAdmin)
 
