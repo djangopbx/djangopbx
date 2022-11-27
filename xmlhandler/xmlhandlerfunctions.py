@@ -134,6 +134,10 @@ class XmlHandlerFunctions():
         etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
         etree.SubElement(x_params, "param", name='jsonrpc-allowed-event-channels', value='demo,conference,presence')
         x_variables = etree.SubElement(x_user, "variables")
+
+        etree.SubElement(x_variables, "variable", name='default_language', value='$${default_language}')
+        etree.SubElement(x_variables, "variable", name='default_dialect', value='$${default_dialect}')
+
         etree.SubElement(x_variables, "variable", name='domain_uuid', value=str(e.domain_id.id))
         etree.SubElement(x_variables, "variable", name='domain_name', value=domain)
         etree.SubElement(x_variables, "variable", name='extension_uuid', value=str(e.id))

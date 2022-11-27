@@ -68,7 +68,7 @@ class PbxSettings():
 
     def user_settings(self, uuidstr, cat, subcat, settingtype = 'text', defaultsetting = '', usedefault = False):
         settingList = ProfileSetting.objects.values_list('value', flat=True).filter(
-                id = uuid.UUID(uuidstr),
+                user_id = uuid.UUID(uuidstr),
                 category = cat,
                 subcategory = subcat,
                 value_type = settingtype,

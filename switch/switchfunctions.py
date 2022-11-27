@@ -185,7 +185,7 @@ class SwitchFunctions():
 
     def save_var_xml(self):
         vlist = switch.models.SwitchVariable.objects.filter(enabled = 'true').order_by('category', 'sequence')
-        xml = ''
+        xml = '<include>'
         prev_var_cat = ''
         hostname = socket.gethostname()
 
@@ -215,7 +215,7 @@ class SwitchFunctions():
 
                     prev_var_cat = v.category
 
-#                xml += "\n"
+            xml += "</include>"
 
             try:
                 os.makedirs(confdir, mode=0o755, exist_ok = True)
