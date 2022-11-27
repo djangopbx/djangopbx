@@ -90,7 +90,7 @@ class Extension(models.Model):
     limit_max                               = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, default=5, verbose_name=_('Limit Max'))
     limit_destination                       = models.CharField(max_length=32, blank=True, null=True, default="error/user_busy", verbose_name=_('Limit Destination'))
     missed_call_app                         = models.CharField(max_length=32, blank=True, null=True, choices=MissedCallAppChoice.choices, default=MissedCallAppChoice.CNONE, verbose_name=_('Missed Call'))
-    missed_call_data                        = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Missed Call Data'))
+    missed_call_data                        = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Missed Call Data'), help_text=_('Typically an email address or comma separated addresses'))
     user_context                            = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Context'))
     toll_allow                              = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Toll Allow'))
     call_timeout                            = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, default=300, verbose_name=_('Call Timeout'))
