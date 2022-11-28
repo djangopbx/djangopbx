@@ -28,6 +28,7 @@
 #
 
 import logging
+from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
@@ -54,7 +55,15 @@ logger = logging.getLogger(__name__)
 @csrf_exempt
 def xml_cdr_import(request):
     debug = False
-    allowed_addresses = PbxSettings().default_settings('cdr', 'allowed_address', 'array')
+    aa_cache_key = 'xmlcdr:allowed_addresses'
+    aa = cache.get(aa_cache_key)
+    if aa:
+        allowed_addresses = aa.split(',')
+    else:
+        allowed_addresses = PbxSettings().default_settings('cdr', 'allowed_address', 'array')
+        aa = ','.join(allowed_addresses)
+        cache.set(aa_cache_key, aa)
+
     if request.META['REMOTE_ADDR'] not in allowed_addresses:
         return HttpResponseNotFound()
 

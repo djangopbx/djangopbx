@@ -28,9 +28,10 @@
 #
 
 import logging
-from django.apps import apps
+from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
+from tenants.pbxsettings import PbxSettings
 from .xmlhandlerfunctions import XmlHandlerFunctions
 
 logger = logging.getLogger(__name__)
@@ -38,11 +39,17 @@ logger = logging.getLogger(__name__)
 @csrf_exempt
 def index(request):
     debug = False
-    if request.META['REMOTE_ADDR'] not in apps.get_app_config('xmlhandler').xml_config_allowed_addresses:
-        return HttpResponseNotFound()
+    cache_key = 'xmlhandler:allowed_addresses'
+    aa = cache.get(cache_key)
+    if aa:
+        allowed_addresses = aa.split(',')
+    else:
+        allowed_addresses = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
+        aa = ','.join(allowed_addresses)
+        cache.set(cache_key, aa)
 
-    context_type          = apps.get_app_config('xmlhandler').context_type
-    number_as_presence_id = apps.get_app_config('xmlhandler').number_as_presence_id
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+        return HttpResponseNotFound()
 
     if request.method == 'POST':
         if debug:
@@ -58,6 +65,7 @@ def index(request):
 
         domain             = request.POST.get('domain')
         #purpose            = request.POST.get('purpose')
+        action             = request.POST.get('action')
         profile            = request.POST.get('profile')
         key                = request.POST.get('key')
         user               = request.POST.get('user')
@@ -70,6 +78,8 @@ def index(request):
         hostname           = request.POST.get('FreeSWITCH-Switchname', '')
         hunt_destination_number = request.POST.get('Hunt-Destination-Number')
 
+        #if action:
+        #    print('Action: %s' % action)
 
         if hunt_context:
             call_context = hunt_context
@@ -78,9 +88,31 @@ def index(request):
             destination_number = hunt_destination_number
 
         if section == 'directory':
-            xml = XmlHandlerFunctions().GetDirectory(domain, user, number_as_presence_id)
+            number_as_presence_id = False
+            cache_key = 'xmlhandler:number_as_presence_id'
+            napid = cache.get(cache_key)
+            if not napid:
+                napid = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')[0]
+                cache.set(cache_key, napid)
+
+            if napid == 'true':
+                    number_as_presence_id = True
+            event_calling_function = request.POST.get('Event-Calling-Function', '')
+            if event_calling_function == 'switch_load_network_lists':
+                xml = XmlHandlerFunctions().GetAcl(domain)
+            elif event_calling_function == 'switch_xml_locate_domain':
+                xml = XmlHandlerFunctions().GetDomain(domain)
+            else:
+                xml = XmlHandlerFunctions().GetDirectory(domain, user, number_as_presence_id)
+
         if section == 'dialplan':
+            cache_key = 'xmlhandler:context_type'
+            context_type = cache.get(cache_key)
+            if not context_type:
+                context_type = PbxSettings().default_settings('xmlhandler', 'context_type', 'text')[0]
+                cache.set(cache_key, context_type)
             xml = XmlHandlerFunctions().GetDialplan(call_context, context_type, hostname, destination_number )
+
     else:
         return HttpResponseNotFound()
 

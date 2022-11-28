@@ -10,7 +10,7 @@ DjangoPBX basically does two things.
 1. It provides a portal for end users and device configuration.
 2. It generates FreeSITCH configuration from the data you provide in the Admin interface.
 
-FreeSWITCH configuration can be delivered dynamically with mod-xml_curl
+FreeSWITCH configuration can be delivered in 3 ways: dynamically with mod-xml_curl
 ```xml
 <configuration name="xml_curl.conf" description="cURL XML Gateway">
   <bindings>
@@ -34,6 +34,7 @@ statically by writing out the XML files to the filing system.
 
 ## Key features
 * Simple, straight forward and un-complicated.
+* Use of Python leads to more robust applications through exception handling and strong types.
 * Uses the proven Django Application Framework, so upgrades and database migrations are handled for you.
 * Easily extended by adding new application modules.
 * Full REST API provided by the Django REST Framework.

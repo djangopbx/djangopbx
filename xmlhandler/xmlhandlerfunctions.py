@@ -73,16 +73,27 @@ class XmlHandlerFunctions():
 </document>
 '''
 
-    def DirectoryAddDomain(self, domain, x_section):
+    def DirectoryAddDomain(self, domain, x_section, params = True, variables = True):
         x_domain = etree.SubElement(x_section, "domain", name=domain)
-        x_params = etree.SubElement(x_domain, "params")
-        etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
-        etree.SubElement(x_params, "param", name='jsonrpc-allowed-event-channels', value='demo,conference,presence')
+        if params:
+            x_params = etree.SubElement(x_domain, "params")
+            etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
+            etree.SubElement(x_params, "param", name='jsonrpc-allowed-event-channels', value='demo,conference,presence')
+        if variables:
+            x_variables = etree.SubElement(x_domain, "variables")
+            etree.SubElement(x_variables, "variable", name='default_language', value='$${default_language}')
+            etree.SubElement(x_variables, "variable", name='default_dialect', value='$${default_dialect}')
         x_groups = etree.SubElement(x_domain, "groups")
         x_group = etree.SubElement(x_groups, "group", name='default')
         x_users = etree.SubElement(x_group, "users")
         return x_users
 
+
+    def DirectoryAddUserAcl(self, domain, x_users, e):
+        x_user =  etree.SubElement(x_users, "user", id=e.extension)
+        if e.cidr:
+            x_user.set("cidr", e.cidr)
+        return
 
     def DirectoryAddUser(self, domain, user, number_as_presence_id, x_users, e, eu, v, cacheable):
         flag_vm_enabled = True
@@ -131,12 +142,10 @@ class XmlHandlerFunctions():
         etree.SubElement(x_params, "param", name='dial-string', value=dial_string)
         etree.SubElement(x_params, "param", name='verto-context', value=domain)
         etree.SubElement(x_params, "param", name='verto-dialplan', value='XML')
-        etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
-        etree.SubElement(x_params, "param", name='jsonrpc-allowed-event-channels', value='demo,conference,presence')
+        #etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
+        #etree.SubElement(x_params, "param", name='jsonrpc-allowed-event-channels', value='demo,conference,presence')
         x_variables = etree.SubElement(x_user, "variables")
 
-        etree.SubElement(x_variables, "variable", name='default_language', value='$${default_language}')
-        etree.SubElement(x_variables, "variable", name='default_dialect', value='$${default_dialect}')
 
         etree.SubElement(x_variables, "variable", name='domain_uuid', value=str(e.domain_id.id))
         etree.SubElement(x_variables, "variable", name='domain_name', value=domain)
@@ -243,7 +252,9 @@ class XmlHandlerFunctions():
 
         e = Extension.objects.filter((Q(extension = user) | Q(number_alias = user)), domain_id__name = domain, enabled = 'true').first()
         if e == None:
-            return self.NotFoundXml()
+            xml = self.NotFoundXml()
+            cache.set(directory_cache_key, xml)
+            return xml
 
         v = Voicemail.objects.filter(extension_id__extension = user, enabled = 'true').first()
         eu = ExtensionUser.objects.filter(extension_id = e.id, default_user = 'true').first()
@@ -257,6 +268,39 @@ class XmlHandlerFunctions():
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(directory_cache_key, xml)
+        return xml
+
+
+    def GetAcl(self, domain):
+        es = Extension.objects.select_related('domain_id').filter(domain_id__name = domain, enabled = 'true').exclude(cidr__isnull = True).exclude(cidr__exact = '').order_by('domain_id')
+
+        x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
+        x_section = etree.SubElement(x_root, "section", name='directory')
+
+        last_domain = 'None'
+        for e in es:
+            if not last_domain == e.domain_id.name:
+                last_domain = e.domain_id.name
+                x_users = self.DirectoryAddDomain(e.domain_id.name, x_section, False, False)
+            self.DirectoryAddUserAcl(domain, x_users, e)
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return xml
+
+
+    def GetDomain(self, domain):
+        ds = Domain.objects.filter(enabled = 'true').order_by('name')
+
+        x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
+        x_section = etree.SubElement(x_root, "section", name='directory')
+
+        last_domain = 'None'
+        for d in ds:
+            self.DirectoryAddDomain(e.domain_id.name, x_section, False, False)
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
         return xml
 
 
