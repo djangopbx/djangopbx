@@ -106,7 +106,7 @@ class DialplanDetailsInLine(admin.TabularInline):
     model = DialplanDetail
     form = DialplanDetailsInlineAdminForm
 
-    extra = 1
+    extra = 4
     fieldsets = [
         (None,          {'fields': ['tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence' ]}),
     ]
@@ -144,7 +144,7 @@ class DialplanAdmin(ImportExportModelAdmin):
     search_fields = ['name', 'number', 'category', 'xml']
 
     list_display = ('name', 'number', 'context', 'sequence', 'enabled')
-    list_filter = (DomainFilter, 'name', 'number', 'context', 'enabled', 'category', 'destination')
+    list_filter = (DomainFilter, 'category', 'context', 'enabled', 'destination')
 
     fieldsets = (
         (None,  {'fields': ['category', ('name', 'sequence'), ('number', 'destination'), ('hostname', 'domain_id'), ('context', 'enabled'), ('description', 'dp_continue')]}),
@@ -184,6 +184,7 @@ class DialplanAdmin(ImportExportModelAdmin):
         obj.app_id = app_uuids[obj.category]
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
+            obj.context = request.session['domain_name']
         super().save_model(request, obj, form, change)
 
 

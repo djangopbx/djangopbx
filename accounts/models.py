@@ -215,5 +215,5 @@ class Gateway(models.Model):
         db_table = 'pbx_gateways'
 
     def __str__(self):
-        return self.gateway
+        return f'{self.gateway}->{self.id}'
 

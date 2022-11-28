@@ -399,7 +399,7 @@ class SwitchDp():
 
 
         etree.indent(root)
-        return str(etree.tostring(root), "utf-8")
+        return str(etree.tostring(root), "utf-8").replace('&lt;', '<')
 
 
     def create_dpd_from_xml(self, dp_uuid, username):
