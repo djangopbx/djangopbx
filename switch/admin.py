@@ -106,7 +106,7 @@ class SipProfileSettingAdmin(ImportExportModelAdmin):
 class SipProfileSettingInLine(admin.TabularInline):
     model = SipProfileSetting
     classes = ['collapse']
-    extra = 1
+    extra = 2
     fieldsets = [
         (None,          {'fields': ['name', 'value', 'enabled', 'description' ]}),
     ]
