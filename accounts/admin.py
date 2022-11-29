@@ -29,6 +29,7 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
+from django.contrib import messages
 from .models import (
     Extension, FollowMeDestination, ExtensionUser, Gateway,
 )
@@ -40,6 +41,8 @@ from import_export import resources
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from musiconhold.musiconholdfunctions import MohSource
 from switch.switchfunctions import SipProfileChoice
+from .accountfunctions import AccountFunctions
+
 
 class ExtensionAdminForm(ModelForm):
     class Meta:
@@ -189,6 +192,23 @@ class GatewayResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
+@admin.action(permissions=['change'], description='Write gateway.conf.xml file')
+def write_gateway_file(modeladmin, request, queryset):
+    rc = 0
+    for obj in queryset:
+        r = AccountFunctions().write_gateway_xml(obj)
+        if r > 0:
+            rc += r
+    if rc > 0:
+        messages.add_message(request, messages.INFO, _('%s gateway file(s) written.' % rc))
+    if r == -1:
+        messages.add_message(request, messages.WARN, _('Default setting does not exist: switch->conf'))
+    if r == -2:
+        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+    if r == -3:
+        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+
+
 class GatewayAdmin(ImportExportModelAdmin):
     resource_class = GatewayResource
     form = GatewayAdminForm
@@ -239,6 +259,8 @@ class GatewayAdmin(ImportExportModelAdmin):
     )
 
     ordering = ['gateway']
+    actions = [write_gateway_file]
+
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username

@@ -245,7 +245,7 @@ class SwitchFunctions():
                 root = etree.Element('profile', name=p.name)
                 root.set('name', p.name)
                 gateways = etree.SubElement(root, 'gateways')
-                etree.SubElement(gateways, 'X-PRE-PROCESS', cmd='include', data='external/*.xml')
+                etree.SubElement(gateways, 'X-PRE-PROCESS', cmd='include', data='%s/*.xml' % p.name)
                 domains = etree.SubElement(root, 'domains')
                 dlist = switch.models.SipProfileDomain.objects.filter(sip_profile_id = p.id).order_by('name')
                 for d in dlist:
