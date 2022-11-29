@@ -1,0 +1,146 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+{% load custom_template_tag %}
+
+    {% block content %}
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 100%;">
+            <div class="card-header">
+                <i class="fa fa-server"></i> {% translate 'General Infromation' %}
+            </div>
+            <div class="card-body cardbody1">
+                <table class="table table-sm table-borderless">
+                <tr><td class="text-nowrap"><b>Host Name:</b></td><td> {{ d.hostname }}</td></tr>
+                <tr><td class="text-nowrap"><b>OS:</b></td><td> {{ d.osname }}</td></tr>
+                <tr><td class="text-nowrap"><b>Kernel:</b></td><td> {{ d.kernel }}</td></tr>
+                <tr><td class="text-nowrap"><b>Uptime:</b></td><td> {{ d.uptime }}</td></tr>
+                <tr><td class="text-nowrap"><b>Load Average:</b></td><td class="cardbody2"> <b>1&nbsp;min</b>&nbsp;{{ d.load1 }}, <b>5&nbsp;min</b>&nbsp;{{ d.load5 }}, <b>15&nbsp;min</b>&nbsp;{{ d.load15 }}</td></tr>
+                </table>
+            </div>
+            </div>
+
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 100%;">
+            <div class="card-header">
+                <i class="fa fa-thermometer-half"></i> {% translate 'CPU Usage' %}
+            </div>
+            <div class="card-body cardbody1">
+                <table class="table table-sm table-borderless">
+                <tr><td class="text-nowrap"><b>Count:</b></td><td> {{ d.cpucount }}</td></tr>
+                <tr><td class="text-nowrap"><b>Type:</b></td><td> {{ d.cputype }}</td></tr>
+                <tr><td class="text-nowrap"><b>Usage:</b></td><td> {{ d.cpuusage }}%</td></tr>
+                <tr><td class="text-nowrap"><b> &nbsp&nbsp; Per CPU:</b></td>
+                <td class="cardbody2"> 
+                {% setvar 1 as cpunum %}
+                {% for cpu in d.cpuall %}
+                    <b>{{ cpunum }}</b>:&nbsp;{{ cpu }}% &nbsp;
+                    {% incvar cpunum as cpunum %}
+                {% endfor %}
+
+                </td></tr>
+                </table>
+            </div>
+            </div>
+
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 90%;">
+            <div class="card-header">
+                <i class="fa fa-database"></i> {% translate 'Disks' %}
+            </div>
+            <div class="card-body cardbody1">
+                <table class="table table-sm table-striped table-borderless">
+                <tr><th>Device</th><th>Total</th><th>Used</th><th>Free</th><th>Use %</th><th>Type</th><th>Mount</th></tr>
+                {% for disk, details in d.disks.items %}
+                    <tr><td class="text-nowrap"><b>{{ disk }}</b></td>
+                    <td>{{ details|get_item:'total' }}</td>
+                    <td>{{ details|get_item:'used' }}</td>
+                    <td>{{ details|get_item:'free' }}</td>
+                    <td>{{ details|get_item:'use' }}</td>
+                    <td>{{ details|get_item:'type' }}</td>
+                    <td>{{ details|get_item:'mount' }}</td></tr>
+                {% endfor %}
+
+                </table>
+            </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 100%;">
+            <div class="card-header">
+                <i class="fa fa-random"></i> {% translate 'Network' %}
+            </div>
+            <div class="card-body cardbody1">
+                <h6><i class="fa fa-cloud"></i> {% translate 'All Traffic' %}</h6>
+                <table class="table table-sm table-borderless table-responsive">
+                <tr><td class="text-nowrap"><b>Bytes Sent:</b></td><td> {{ d.nettotalbytessent }}</td>
+                <td class="text-nowrap"><b>Bytes Recv:</b></td><td> {{ d.nettotalbytesrecv }}</td></tr>
+                <tr><td class="text-nowrap"><b>Packets Sent:</b></td><td> {{ d.nettotalpacketssent }}</td>
+                <td class="text-nowrap"><b>Packets Recv:</b></td><td> {{ d.nettotalpacketsrecv }}</td></tr>
+                </table>
+                <h6><i class="fa fa-plug"></i> {% translate 'By Interface' %}</h6>
+                <table class="table table-sm table-borderless table-responsive">
+                {% for key, value in d.nic.items %}
+                    <tr><td class="text-nowrap"><b>{{ key }}:</b></td>
+                    <td> 
+                    <table class="table table-sm table-borderless table-responsive cardbody2">
+                    <tr><th>{% translate 'Sent' %}</th><th></th><th>{% translate 'Rate/s' %}</th><th>{% translate 'Recv' %}</th><th></th><th>{% translate 'Rate/s' %}</th></tr>
+                    <tr><td class="text-nowrap"><b>{% translate 'Bytes' %} :</b></td><td> {{ value|get_item:'bytessent' }}</td>
+                    <td> {{ value|get_item:'bytesendrate' }}</td>
+                    <td class="text-nowrap"><b>{% translate 'Bytes' %} :</b></td><td> {{ value|get_item:'bytesrecv' }}</td>
+                    <td> {{ value|get_item:'byterecvrate' }}</td></tr>
+                    <tr><td class="text-nowrap"><b>{% translate 'Packets' %} :</b></td><td> {{ value|get_item:'packetssent' }}</td>
+                    <td> {{ value|get_item:'packetsendrate' }}</td>
+                    <td class="text-nowrap"><b>{% translate 'Packets' %} :</b></td><td> {{ value|get_item:'packetsrecv' }}</td>
+                    <td> {{ value|get_item:'packetrecvrate' }}</td></tr>
+
+                    </table>
+                    </td>
+                    </tr>
+                {% endfor %}
+                </table>
+
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 100%;">
+            <div class="card-header">
+                <i class="fa fa-hourglass"></i> {% translate 'Disk I/O' %}
+            </div>
+            <div class="card-body cardbody1">
+                <table class="table table-sm table-striped table-borderless">
+                {% for key, value in d.diskio.items %}
+                <tr><td class="text-nowrap"><b>{{ key }}:</b></td><td> {{ value }}</td></tr>
+                {% endfor %}
+
+                </table>
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 90%;">
+            <div class="card-header">
+                <i class="fa fa-briefcase"></i> {% translate 'Memory Usage' %}
+            </div>
+            <div class="card-body cardbody1">
+                <table class="table table-sm table-striped table-borderless">
+                {% for key, value in d.mem.items %}
+                <tr><td class="text-nowrap"><b>{{ key }}:</b></td><td> {{ value }}</td></tr>
+                {% endfor %}
+
+                </table>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}
+

@@ -81,6 +81,7 @@ urlpatterns = [
     path('xmlhandler/', include('xmlhandler.urls')),
     path('xmlcdr/', include('xmlcdr.urls')),
     path('portal/', include('portal.urls')),
+    path('dashboard/', include('dashboard.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
 
