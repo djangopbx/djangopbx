@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'voicemail.apps.VoicemailConfig',
     'xmlcdr.apps.XmlcdrConfig',
     'dashboard.apps.DashboardConfig',
+    'firewall.apps.FirewallConfig',
 ]
 
 MIDDLEWARE = [

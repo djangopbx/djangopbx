@@ -1,0 +1,118 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <i class="fa fa-key"></i> {% translate 'Add IP Address to Firewall' %}
+        </div>
+        <div class="card-body cardbody1">
+            <div class="container p-3 my-3 border">
+            <h5>{% translate 'Add to Block list (Bans unconditionally)' %}</h5>
+            <form action="{% url 'firewall:fwaddip' %}" method="post">
+                {% csrf_token %}
+                {{ BLform.non_field_errors }}
+                <div class="fieldWrapper">
+                    {{ BLform.ipv4.errors }}
+                    {{ BLform.ipv4len.errors }}
+                    <label for="{{ BLform.ipv4.id_for_label }}">{% translate 'IPv4 Address' %}:</label>
+                    {{ BLform.ipv4 }}
+                    <label for="{{ BLform.ipv4len.id_for_label }}">/</label>
+                    {{ BLform.ipv4len }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ BLform.ipv6.errors }}
+                    {{ BLform.ipv6len.errors }}
+                    <label for="{{ BLform.ipv6.id_for_label }}">{% translate 'IPv6 Address' %}:</label>
+                    {{ BLform.ipv6 }}
+                    <label for="{{ BLform.ipv6len.id_for_label }}">/</label>
+                    {{ BLform.ipv6len }}
+                    {{ BLform.setname }}
+                </div>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-danger" value="Add IP(s)">
+            </form>
+            </div>
+
+            <div class="container p-3 my-3 border">
+            <h5>{% translate 'Add to White list (Only Our Trusted Addresses)' %}</h5>
+            <form action="{% url 'firewall:fwaddip' %}" method="post">
+                {% csrf_token %}
+                {{ WLform.non_field_errors }}
+                <div class="fieldWrapper">
+                    {{ WLform.ipv4.errors }}
+                    {{ WLform.ipv4len.errors }}
+                    <label for="{{ WLform.ipv4.id_for_label }}">{% translate 'IPv4 Address' %}:</label>
+                    {{ WLform.ipv4 }}
+                    <label for="{{ WLform.ipv4len.id_for_label }}">/</label>
+                    {{ WLform.ipv4len }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ WLform.ipv6.errors }}
+                    {{ WLform.ipv6len.errors }}
+                    <label for="{{ WLform.ipv6.id_for_label }}">{% translate 'IPv6 Address' %}:</label>
+                    {{ WLform.ipv6 }}
+                    <label for="{{ WLform.ipv6len.id_for_label }}">/</label>
+                    {{ WLform.ipv6len }}
+                    {{ WLform.setname }}
+                </div>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-success" value="Add IP(s)">
+            </form>
+            </div>
+
+            <div class="container p-3 my-3 border">
+            <h5>{% translate 'Add to SIP Customer list (Trusted Customer Addresses)' %}</h5>
+            <form action="{% url 'firewall:fwaddip' %}" method="post">
+                {% csrf_token %}
+                {{ SCLform.non_field_errors }}
+                <div class="fieldWrapper">
+                    {{ SCLform.ipv4.errors }}
+                    {{ SCLform.ipv4len.errors }}
+                    <label for="{{ SCLform.ipv4.id_for_label }}">{% translate 'IPv4 Address' %}:</label>
+                    {{ SCLform.ipv4 }}
+                    <label for="{{ SCLform.ipv4len.id_for_label }}">/</label>
+                    {{ SCLform.ipv4len }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ SCLform.ipv6.errors }}
+                    {{ SCLform.ipv6len.errors }}
+                    <label for="{{ SCLform.ipv6.id_for_label }}">{% translate 'IPv6 Address' %}:</label>
+                    {{ SCLform.ipv6 }}
+                    <label for="{{ SCLform.ipv6len.id_for_label }}">/</label>
+                    {{ SCLform.ipv6len }}
+                    {{ SCLform.setname }}
+                </div>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-warning" value="Add IP(s)">
+            </form>
+            </div>
+
+            <div class="container p-3 my-3 border">
+            <h5>{% translate 'Add to SIP Gateway list (Only Supplier Gateways)' %}</h5>
+            <form action="{% url 'firewall:fwaddip' %}" method="post">
+                {% csrf_token %}
+                {{ SGLform.non_field_errors }}
+                <div class="fieldWrapper">
+                    {{ SGLform.ipv4.errors }}
+                    {{ SGLform.ipv4len.errors }}
+                    <label for="{{ SGLform.ipv4.id_for_label }}">{% translate 'IPv4 Address' %}:</label>
+                    {{ SGLform.ipv4 }}
+                    <label for="{{ SGLform.ipv4len.id_for_label }}">/</label>
+                    {{ SGLform.ipv4len }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ SGLform.ipv6.errors }}
+                    {{ SGLform.ipv6len.errors }}
+                    <label for="{{ SGLform.ipv6.id_for_label }}">{% translate 'IPv6 Address' %}:</label>
+                    {{ SGLform.ipv6 }}
+                    <label for="{{ SGLform.ipv6len.id_for_label }}">/</label>
+                    {{ SGLform.ipv6len }}
+                    {{ SGLform.setname }}
+                </div>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-primary" value="Add IP(s)">
+            </form>
+            </div>
+
+        </div>
+    </div>
+    {% endblock %}
+
