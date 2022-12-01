@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'xmlcdr.apps.XmlcdrConfig',
     'dashboard.apps.DashboardConfig',
     'firewall.apps.FirewallConfig',
+    'status.apps.StatusConfig',
 ]
 
 MIDDLEWARE = [

@@ -28,6 +28,10 @@ CSS for colours
 .cardbody4 {
     background-color: #fff6f6 !important;
 }
+.tablecolumn1 {
+    background-color: #f6f6ff !important;
+}
+
 /*
 CSS for log in screen
 */
@@ -163,32 +167,12 @@ table.formtable th {
     text-align: left;
 }
 
-table.mirestable td,
-table.mirestable th {
+table.pbxtable td,
+table.pbxtable th {
     padding: 5px;
     line-height: 13px;
     text-align: left;
     vertical-align:top;
-}
-
-table.sipdiagramtable {
-    font: normal 12px/14px 'Lucida Grande', Verdana, Helvetica, Arial, sans-serif;
-}
-
-table.sipdiagramtable td,
-table.sipdiagramtable th {
-    padding: 5px;
-    line-height: 13px;
-    text-align: left;
-    vertical-align:top;
-}
-
-table.sipdiagramtable tr.odd {
-    background-color: #F9F9F9;
-}
-
-table.sipdiagramtable tr.even {
-    background-color: white;
 }
 
 .table-borderless th {

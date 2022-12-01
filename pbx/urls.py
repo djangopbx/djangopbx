@@ -83,6 +83,7 @@ urlpatterns = [
     path('portal/', include('portal.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('firewall/', include('firewall.urls')),
+    path('status/', include('status.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
 

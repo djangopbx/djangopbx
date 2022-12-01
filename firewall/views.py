@@ -34,10 +34,20 @@ from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaulttags import register
 from django.contrib import messages
 
-import subprocess
 import json
 
 from .forms import LogViewerForm, IpAddressForm
+from pbx.commonfunctions import shcommand
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
+@register.filter
+def get_item_humanize(dictionary, key):
+    return intcomma(dictionary.get(key))
 
 
 @register.filter
@@ -45,14 +55,6 @@ def ip_prefix(ip):
     if type(ip) is dict:
         return ip['prefix']['addr'] + '/' + str(ip['prefix']['len'])
     return ip
-
-
-def shcommand(cmd):
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    stdout, stderr = proc.communicate()
-    if stderr:
-        return stdout.decode() + stderr.decode()
-    return stdout.decode('utf-8', 'ignore')
 
 
 def _find_objects(ruleset, type):

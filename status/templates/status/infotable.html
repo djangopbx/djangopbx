@@ -6,20 +6,16 @@
     <div class="card" style="margin-left: 5%; width: 90%;">
         <div class="card-header">
             <div class="row">
-            <div class="col-lg-6"><i class="fa fa-fire"></i> {% translate 'Firewall Counters' %}</div>
+            <div class="col-lg-6"><i class="fa fa-info"></i> {% translate title %}</div>
             <div class="col-lg-6 text-right"><form action="{% url refresher %}" method="get"><input type="submit" class="btn btn-info" value="Refresh"></form></div>
             </div>
         </div>
         <div class="card-body cardbody1">
-        <table class="pbxtable">
-        <tr>
-            <th><u>Counter</u></th><th><u>Packets</u></th><th><u>Bytes</u></th>
-        </tr>
-        {% for counter in counters %}
+        <table class="table table-sm">
+        {% for key, value in info.items %}
             <tr>
-                <td>{{ counter|get_item_humanize:'name' }}</td>
-                <td>{{ counter|get_item_humanize:'packets' }}</td>
-                <td>{{ counter|get_item_humanize:'bytes' }}</td>
+                <td class="tablecolumn1"><b>{{ key|safe }}</b></td>
+                <td class="table-light">{{ value }}</td>
             </tr>
         {% endfor %}
         </table>

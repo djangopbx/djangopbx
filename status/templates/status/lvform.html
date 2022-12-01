@@ -1,0 +1,19 @@
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <i class="fa fa-file"></i> {% translate 'Log File Viewer' %}
+        </div>
+        <div class="card-body cardbody1">
+            <form action="{% url refresher %}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input style="margin-top: 10px;" type="submit" class="btn btn-info" value="Refresh">
+            </form>
+
+        </div>
+    </div>
+
+    {% endblock %}
+

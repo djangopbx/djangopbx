@@ -1,0 +1,18 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+    {% block extrastyle %}
+        <link media="screen" rel="stylesheet" type="text/css" href="{% static "django_ace/widget.css" %}" />
+    {% endblock %}
+    {% block extrabodyscript %}
+    <script src="{% static 'django_ace/ace/ace.js' %}"></script>
+    <script src="{% static 'django_ace/widget.js' %}"></script>
+    <script src="{% static 'django_ace/ace/mode-text.js' %}"></script>
+    <script src="{% static 'django_ace/ace/theme-cobalt.js' %}"></script>
+    {% endblock %}
+
+
+    {% block content %}
+    {% include "status/lvform.html" %}
+    {% endblock %}
+

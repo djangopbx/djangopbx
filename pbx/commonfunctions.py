@@ -34,6 +34,30 @@
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import admin
 from tenants.models import Domain
+import subprocess
+import os
+import re
+
+
+def get_version(package):
+    """
+    Return package version as listed in `__version__` in `init.py`.
+    """
+    try:
+        with open(os.path.join(package, '__init__.py'))  as i:
+            init_py = i.read()
+        v = re.search("__version__ = ['\"]([^'\"]+)['\"]", init_py).group(1)
+    except:
+        v = '0.0.0'
+    return v
+
+
+def shcommand(cmd):
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout, stderr = proc.communicate()
+    if stderr:
+        return stdout.decode() + stderr.decode()
+    return stdout.decode('utf-8', 'ignore')
 
 
 class DomainUtils():
