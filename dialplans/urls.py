@@ -35,5 +35,7 @@ router = routers.DefaultRouter()
 router.register(r'dialplans', views.DialplanViewSet)
 router.register(r'dialplan_details', views.DialplanDetailViewSet)
 
+app_name = 'dialplans'
 urlpatterns = [
+    path('newibroute/', views.newibroute, name='newibroute'),
 ]

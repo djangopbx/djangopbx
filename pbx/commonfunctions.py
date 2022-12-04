@@ -60,6 +60,38 @@ def shcommand(cmd):
     return stdout.decode('utf-8', 'ignore')
 
 
+def str2regex(dst, pre=''):
+    out = ''
+    # excape the +
+    if dst[0] == '+':
+        dst = '^\+(%s)$' % dst[1:]
+    # add prefix
+    if len(pre) > 0:
+        if len(pre) < 4:
+            if '+' in dst:
+                pre = '\+?$s?' % pre
+            else:
+                pre = '(?:%s)?' % pre
+    # conver N,X,Z sytax to regex
+    dst = dst.replace('N', '[2-9]')
+    dst = dst.replace('X', '[0-9]')
+    dst = dst.replace('Z', '[1-9]')
+
+    # check for ^ and $ at start and end of string respectively
+    if not dst[0] == '^':
+        dst = '^%s' % dst
+
+    if not dst[-1] == '$':
+        dst = '%s$' % dst
+
+    # add the brackets
+    if '(' not in dst:
+        dst = dst.replace('^', '^%s(' % pre)
+        dst = dst.replace('$', ')$')
+
+    return dst
+
+
 class DomainUtils():
 
     def domain_from_session(self, request):

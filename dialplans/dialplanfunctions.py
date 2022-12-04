@@ -40,6 +40,8 @@ from io import StringIO
 import dialplans.models
 from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
+from accounts.models import Extension
+from switch.models import SwitchVariable
 
 
 class DpFunctions():
@@ -609,6 +611,25 @@ class SwitchDp():
                 dp.save()
 
 
+    def dp_add(self, domain_id, dp_app_uuid, dp_name, dp_number, dp_destination, dp_context, dp_category, dp_continue, dp_order, dp_enabled, dp_description, dp_updated_by):
+        d = Domain.objects.get(pk = uuid.UUID(domain_id))
+
+        dp = dialplans.models.Dialplan.objects.create(
+            domain_id = d,
+            app_id = dp_app_uuid,
+            name = dp_name,
+            number = dp_number,
+            destination = dp_destination,
+            context = dp_context,
+            category = dp_category,
+            dp_continue = dp_continue,
+            sequence = dp_order,
+            enabled = dp_enabled,
+            description = dp_description,
+            updated_by = dp_updated_by
+        )
+        return dp
+
 
     def dp_detail_add(self, dddp, ddtag, ddtype, dddata, ddbreak, ddinline, ddgroup, ddorder, username = 'system'):
         dpd = dialplans.models.DialplanDetail.objects.create(
@@ -622,7 +643,7 @@ class SwitchDp():
             sequence = ddorder,
             updated_by = username
         )
-
+        return dpd
 
 
     def dp_app_exists(self, dp_domain_uuid, dp_app_uuid):
@@ -680,3 +701,31 @@ class DpApps():
 
         return dp_category_uuids
 
+
+class DpDestAction():
+
+    def get_dp_action_choices(self, domain_uuid):
+        dp_actions = []
+        e_list = []
+        v_list = []
+        es = Extension.objects.select_related('domain_id').prefetch_related('voicemail').filter(domain_id = uuid.UUID(domain_uuid),enabled = 'true').order_by('extension')
+        for e in es:
+            e_list.append(('transfer:%s XML %s' % (e.extension, e.domain_id), '%s %s' % (e.extension, e.description)))
+            v = e.voicemail.filter(enabled = 'true').first()
+            if v:
+                v_list.append(('transfer:99%s XML %s' % (e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description)))
+
+        if len(e_list) > 0:
+            dp_actions.append((_('Extensions'), e_list))
+        if len(v_list) > 0:
+            dp_actions.append((_('Voicemails'), v_list))
+
+        t_list = []
+        sv = SwitchVariable.objects.filter(category = 'Tones', enabled = 'true').order_by('name')
+        for t in sv:
+            t_list.append(('playback:tone_stream://%s' % t.value, t.name))
+
+        if len(t_list) > 0:
+            dp_actions.append((_('Tones'), t_list))
+
+        return dp_actions

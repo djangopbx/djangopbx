@@ -42,8 +42,8 @@ class EnabledTrueFalseNoneChoice(models.TextChoices):
 
 
 class EnabledTrueFalseChoice(models.TextChoices):
-    CTRUE  = 'true',  _('True')
     CFALSE = 'false', _('False')
+    CTRUE  = 'true',  _('True')
 
 
 class PrimaryTrueFalseChoice(models.IntegerChoices):

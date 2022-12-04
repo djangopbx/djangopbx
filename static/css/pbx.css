@@ -18,18 +18,23 @@ CSS for colours
 */
 .cardbody1 {
     background-color: #fffff6 !important;
+    font-size: 11pt;
 }
 .cardbody2 {
     background-color: #fff6ff !important;
+    font-size: 11pt;
 }
 .cardbody3 {
     background-color: #f6ffff !important;
+    font-size: 11pt;
 }
 .cardbody4 {
     background-color: #fff6f6 !important;
+    font-size: 11pt;
 }
 .tablecolumn1 {
     background-color: #f6f6ff !important;
+    font-size: 11pt;
 }
 
 /*

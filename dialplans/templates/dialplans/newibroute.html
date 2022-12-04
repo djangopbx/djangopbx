@@ -1,0 +1,27 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <i class="fas fa-exchange-alt"></i> {% translate 'New Inbound Route' %}
+        </div>
+        <div class="card-body cardbody1">
+            {%if dp_uuid %}
+            <a href="/admin/dialplans/dialplan/{{ dp_uuid }}/change/">{% translate 'Go to Dialplan:' %} {{ dp_uuid }}</a>
+            {% endif %}
+            <div class="container p-3 my-3 border">
+            <form action="{% url refresher %}" method="post">
+                {% csrf_token %}
+                <table class="pbxtable">
+                {{ form.as_table }}
+                </table>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-info" value="{% translate 'Add Inbound Route' %}">
+            </form>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
