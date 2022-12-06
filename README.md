@@ -36,6 +36,7 @@ statically by writing out the XML files to the filing system.
 * Simple, straight forward and un-complicated.
 * Use of Python leads to more robust applications through exception handling and strong types.
 * Uses the proven Django Application Framework, so upgrades and database migrations are handled for you.
+* Multi language, all user text is passed through the Django translation mechanism.
 * Easily extended by adding new application modules.
 * Full REST API provided by the Django REST Framework.
 
