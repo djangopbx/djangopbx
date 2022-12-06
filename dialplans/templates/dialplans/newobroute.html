@@ -5,11 +5,11 @@
     {% block content %}
     <div class="card" style="margin-left: 5%; width: 90%;">
         <div class="card-header">
-            <i class="fas fa-exchange-alt"></i> {% translate 'New Inbound Route' %}
+            <i class="fas fa-exchange-alt"></i> {% translate 'New Outbound Route' %}
         </div>
         <div class="card-body cardbody1">
             {%if dp_uuid %}
-            <a href="/admin/dialplans/dialplan/{{ dp_uuid }}/change/">{% translate 'Go to Inbound route:' %} {{ dp_uuid }}</a>
+            <a href="/admin/dialplans/dialplan/{{ dp_uuid }}/change/">{% translate 'Go to Outbound route:' %} {{ dp_uuid }}</a>
             {% endif %}
             <div class="container p-3 my-3 border">
             <form action="{% url refresher %}" method="post">
@@ -17,7 +17,7 @@
                 <table class="pbxformtable">
                 {{ form.as_table }}
                 </table>
-                <input style="margin-top: 10px;" type="submit" class="btn btn-info btn-sm" value="{% translate 'Add Inbound Route' %}">
+                <input style="margin-top: 10px;" type="submit" class="btn btn-info btn-sm" value="{% translate 'Add Outbound Route' %}">
             </form>
             </div>
         </div>

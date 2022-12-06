@@ -46,9 +46,10 @@ from .serializers import (
     DialplanSerializer, DialplanDetailSerializer,
 )
 
-from .forms import NewIbRouteForm
+from .forms import NewIbRouteForm, NewObRouteForm
 from .dialplanfunctions import SwitchDp, DpDestAction
 from pbx.commonfunctions import str2regex
+from accounts.accountfunctions import AccountFunctions
 
 
 class DialplanViewSet(viewsets.ModelViewSet):
@@ -140,3 +141,118 @@ def newibroute(request):
         form.fields['action'].choices = DpDestAction().get_dp_action_choices(request.session['domain_uuid'])
 
     return render(request, 'dialplans/newibroute.html', {'dp_uuid': dp_uuid, 'form': form, 'refresher': 'dialplans:newibroute',})
+
+
+@staff_member_required
+def newobroute(request):
+    dp_uuid = False
+    gws = [('', '')]
+    gws.extend(AccountFunctions().list_gateways(request.session['domain_uuid']))
+    # need to add bridgels in here
+    gws.extend([('enum', 'enum'), ('freetdm', 'freetdm'), ('transfer:$1 XML ${domain_name}', 'transfer'), ('xmpp', 'xmpp')])
+
+    if request.method == 'POST':
+
+        form = NewObRouteForm(request.POST)
+        form.fields['gateway1'].choices = gws
+        form.fields['gateway2'].choices = gws
+        form.fields['gateway3'].choices = gws
+
+        if form.is_valid():
+
+            routename     = form.cleaned_data['routename']
+            gateway1      = form.cleaned_data['gateway1']
+            gateway2      = form.cleaned_data['gateway2']
+            gateway3      = form.cleaned_data['gateway3']
+            dpexpression  = form.cleaned_data['dpexpression']
+            prefix        = form.cleaned_data['prefix']
+            limit         = form.cleaned_data['limit']
+            accountcode   = form.cleaned_data['accountcode']
+            tollallow     = form.cleaned_data['tollallow']
+            pinnumbers    = form.cleaned_data['pinnumbers']
+            dporder       = form.cleaned_data['dporder']
+            enabled       = form.cleaned_data['enabled']
+            description   = form.cleaned_data['description']
+
+            dp = SwitchDp().dp_add(request.session['domain_uuid'], '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3', routename, dpexpression[:31], 'false', request.session['domain_name'], 'Outbound route', 'false', dporder, enabled, description, request.user.username)
+
+            gateway1_bridge_data = False
+            gateway2_bridge_data = False
+            gateway3_bridge_data = False
+
+            if gateway1:
+                gateway1_type = AccountFunctions().gateway_type(gateway1)
+                gateway1_bridge_data = AccountFunctions().gateway_bridge_data(gateway1, gateway1_type, prefix)
+            if gateway2:
+                gateway2_type = AccountFunctions().gateway_type(gateway2)
+                gateway2_bridge_data = AccountFunctions().gateway_bridge_data(gateway2, gateway2_type, prefix)
+            if gateway3:
+                gateway3_type = AccountFunctions().gateway_type(gateway3)
+                gateway3_bridge_data = AccountFunctions().gateway_bridge_data(gateway3, gateway3_type, prefix)
+
+
+            dp_uuid = str(dp.id)
+            x_root = etree.Element('extension', name= dp.name)
+            x_root.set('continue', dp.dp_continue)
+            x_root.set('uuid', dp_uuid)
+            etree.SubElement(x_root, 'condition', field='${user_exists}', expression='false')
+            if tollallow:
+                etree.SubElement(x_root, 'condition', field='${toll_allow}', expression='^%s$' % tollallow)
+            x_condition = etree.SubElement(x_root, 'condition', field='destination_number', expression=dpexpression)
+            etree.SubElement(x_condition, 'action', application='export', data='call_direction=outbound', inline='true')
+            etree.SubElement(x_condition, 'action', application='unset', data='call_timeout')
+            if gateway1_type == 'transfer':
+                dialplan_detail_type = 'transfer'
+            else:
+                dialplan_detail_type = 'bridge'
+                if accountcode:
+                    etree.SubElement(x_condition, 'action', application='set', data='sip_h_X-accountcode=%s' % accountcode)
+                else:
+                    etree.SubElement(x_condition, 'action', application='set', data='sip_h_X-accountcode=%{accountcode}')
+
+                etree.SubElement(x_condition, 'action', application='set', data='hangup_after_bridge=true')
+                if dpexpression == '(^911$|^933$)' or dpexpression == '(^999$|^112$)':
+                    etree.SubElement(x_condition, 'action', application='set', data='effective_caller_id_name=${emergency_caller_id_name}')
+                else:
+                    etree.SubElement(x_condition, 'action', application='set', data='effective_caller_id_name=${outbound_caller_id_name}')
+
+                etree.SubElement(x_condition, 'action', application='set', data='inherit_codec=true')
+                etree.SubElement(x_condition, 'action', application='set', data='ignore_display_updates=true')
+                etree.SubElement(x_condition, 'action', application='set', data='callee_id_number=$1')
+                etree.SubElement(x_condition, 'action', application='set', data='continue_on_fail=true')
+
+            if gateway1_type == 'enum' or gateway2_type == 'enum':
+                etree.SubElement(x_condition, 'action', application='enum', data='%s$1 e164.org' % prefix)
+
+            if limit > 0:
+                etree.SubElement(x_condition, 'action', application='limit', data='hash ${domain_name} outbound %s !USER_BUSY' % limit)
+            if prefix:
+                etree.SubElement(x_condition, 'action', application='set', data='outbound_prefix=%s' % prefix)
+            if pinnumbers == 'true':
+                etree.SubElement(x_condition, 'action', application='set', data='pin_number=database')
+                etree.SubElement(x_condition, 'action', application='python', data='pin_number')
+            etree.SubElement(x_condition, 'action', application='sleep', data='${sleep}')
+
+            if gateway1_bridge_data:
+                etree.SubElement(x_condition, 'action', application=dialplan_detail_type, data=gateway1_bridge_data)
+
+            if gateway2_bridge_data:
+                etree.SubElement(x_condition, 'action', application='bridge', data=gateway2_bridge_data)
+
+            if gateway3_bridge_data:
+                etree.SubElement(x_condition, 'action', application='bridge', data=gateway3_bridge_data)
+
+            etree.indent(x_root)
+            dp.xml = str(etree.tostring(x_root), "utf-8").replace('&lt;', '<')
+            dp.save()
+            messages.add_message(request, messages.INFO, _('Outbound route added'))
+        else:
+            messages.add_message(request, messages.INFO, _('Supplied data is invalid'))
+    else:
+        form = NewObRouteForm()
+        form.fields['gateway1'].choices = gws
+        form.fields['gateway2'].choices = gws
+        form.fields['gateway3'].choices = gws
+
+    return render(request, 'dialplans/newobroute.html', {'dp_uuid': dp_uuid, 'form': form, 'refresher': 'dialplans:newobroute',})
+

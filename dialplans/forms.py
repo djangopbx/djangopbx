@@ -34,16 +34,31 @@ from .dialplanfunctions import DpDestAction
 
 class NewIbRouteForm(forms.Form):
 
-    prefix             = forms.CharField(label = _('Prefix'), max_length=16, required = False)
-    destination        = forms.CharField(label = _('Destination'), max_length=128, required = True)
+    prefix             = forms.CharField(label = _('Prefix'), max_length=16, required = False, help_text = _('Adds and optional prefix to the destination.'))
+    destination        = forms.CharField(label = _('Destination'), max_length=128, required = True, help_text = _('Type a DID number, Regex, or use the N,X,Z notation.'))
     calleridname       = forms.CharField(label = _('Caller ID Name'), max_length=128, required = False)
-    calleridnumber     = forms.CharField(label = _('Caller ID Prefix'), max_length=128, required = False)
+    calleridnumber     = forms.CharField(label = _('Caller ID Prefix'), max_length=128, required = False, help_text = _('This is a short prefix that can be added to the inbound caller ID name.  It helps to identify the trunk if more than one is configured.'))
     context            = forms.CharField(label = _('Context'), max_length=128, initial = 'public', required = True)
-    #action             = forms.ChoiceField(widget=forms.Select, choices=DpDestAction().get_dp_action_choices(request.session('domain_uuid')))
-    action             = forms.ChoiceField(widget=forms.Select)
+    action             = forms.ChoiceField(label = _('Action'), widget=forms.Select)
     calleridnameprefix = forms.CharField(label = _('Caller ID Name Prefix'), max_length=128, required = False)
-    record             = forms.ChoiceField(widget=forms.Select, choices=EnabledTrueFalseChoice.choices)
+    record             = forms.ChoiceField(label = _('Record'), widget=forms.Select, choices=EnabledTrueFalseChoice.choices)
     accountcode        = forms.CharField(label = _('Account Code'), max_length=128, required = False)
-    enabled            = forms.ChoiceField(widget=forms.Select, choices=EnabledTrueFalseChoice.choices)
+    enabled            = forms.ChoiceField(label = _('Enabled'), widget=forms.Select, choices=EnabledTrueFalseChoice.choices)
     description        = forms.CharField(label = _('Description'), max_length=128, required = False)
 
+
+class NewObRouteForm(forms.Form):
+
+    routename          = forms.CharField(label = _('Route Name'), max_length=128, required = True, help_text = _('Type a name for the route that will help you to identify it in the dialplan.'))
+    gateway1           = forms.ChoiceField(label = _('Gateway 1'), widget=forms.Select, required = True, help_text = _('Select the gateway to use with this outbound route.'))
+    gateway2           = forms.ChoiceField(label = _('Gateway 2'), widget=forms.Select, required = False, help_text = _('Select another gateway as an alternative to use if the first one fails.'))
+    gateway3           = forms.ChoiceField(label = _('Gateway 3'), widget=forms.Select, required = False, help_text = _('Select another gateway as an alternative to use if the second one fails.'))
+    dpexpression       = forms.CharField(label = _('Dialplan Expression'), max_length=128, required = True)
+    prefix             = forms.CharField(label = _('Prefix'), max_length=16, required = False)
+    limit              = forms.IntegerField(label = 'Limit', min_value = 0, max_value = 128, initial = 0)
+    accountcode        = forms.CharField(label = _('Account Code'), max_length=128, required = False)
+    tollallow          = forms.CharField(label = _('Toll Allow'), max_length=32, required = False)
+    pinnumbers         = forms.ChoiceField(label = _('PIN Numbers'), widget=forms.Select, choices=EnabledTrueFalseChoice.choices)
+    dporder            = forms.IntegerField(label = 'Order', min_value = 10, max_value = 999, initial = 100, help_text = _('Select the order number. The order number determines the order of the outbound routes when there is more than one.'))
+    enabled            = forms.ChoiceField(label = _('Enabled'), widget=forms.Select, choices=EnabledTrueFalseChoice.choices)
+    description        = forms.CharField(label = _('Description'), max_length=128, required = False)

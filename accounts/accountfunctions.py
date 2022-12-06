@@ -39,6 +39,53 @@ from tenants.pbxsettings import PbxSettings
 
 
 class AccountFunctions():
+
+    def list_gateways(self, domain_id = None):
+        if domain_id:
+            return Gateway.objects.filter(domain_id = uuid.UUID(domain_id), enabled = 'true').values_list('id', 'gateway').order_by('gateway')
+        else:
+            return Gateway.objects.filter(enabled = 'true').values_list('id', 'gateway').order_by('gateway')
+
+
+    def gateway_type(self, gateway):
+        gateway_type = 'gateway'
+        if gateway[:6] == 'bridge':
+            gateway_type = 'bridge'
+        if gateway[:4] == 'enum':
+            gateway_type = 'enum'
+        if gateway[:7] == 'freetdm':
+            gateway_type = 'freetdm'
+        if gateway[: 8] == 'transfer':
+            gateway_type = 'transfer'
+        if gateway[:4] == 'xmpp':
+            gateway_type = 'xmpp'
+        return gateway_type
+
+
+    def gateway_bridge_data(self, gateway, gateway_type, prefix):
+        if gateway_type == 'gateway':
+            bridge_data = 'sofia/gateway/%s/%s$1' % (gateway, prefix)
+
+        if gateway_type == 'freetdm':
+            bridge_data = '%s/1/a/%s$1' % (gateway, prefix)
+
+        if gateway_type == 'xmpp':
+            bridge_data = 'dingaling/gtalk/+%s$1@voice.google.com' % prefix
+
+        if gateway_type == 'bridge':
+            parts = gateway.split(':')
+            bridge_data = parts[1]
+
+        if gateway_type == 'enum':
+            bridge_data = '${enum_auto_route}'
+
+        if gateway_type == 'transfer':
+            parts = gateway.split(':')
+            bridge_data = parts[1]
+
+        return bridge_data
+
+
     def write_gateway_xml(self, gw):
         xml = ''
 

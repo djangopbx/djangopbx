@@ -13,6 +13,10 @@ body {
   top: 0;
   z-index: 99999;
 }
+.helptext {
+    font-size: 8pt;
+    padding-top: 5px;
+}
 /*
 CSS for colours
 */
@@ -178,6 +182,28 @@ table.pbxtable th {
     line-height: 13px;
     text-align: left;
     vertical-align:top;
+}
+
+
+table.pbxformtable tr {
+    border-bottom: 1pt solid #f0f0f0;
+}
+
+table.pbxformtable td {
+    padding: 5px;
+    line-height: 13px;
+    text-align: left;
+    background-color: #fefefe !important;
+    vertical-align:top;
+}
+
+table.pbxformtable th {
+    padding: 5px;
+    line-height: 13px;
+    text-align: left;
+    vertical-align:top;
+    background-color: #fefefe !important;
+    background-color: #f6f6ff !important;
 }
 
 .table-borderless th {

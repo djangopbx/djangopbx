@@ -401,14 +401,16 @@ class SwitchDp():
 
 
         etree.indent(root)
-        return str(etree.tostring(root), "utf-8").replace('&lt;', '<')
+        return str(etree.tostring(root), "utf-8").replace('&lt;', '<').replace('&gt;', '>')
 
 
     def create_dpd_from_xml(self, dp_uuid, username):
         dp = dialplans.models.Dialplan.objects.get(pk=dp_uuid)
-
+        regex = re.compile('expression=\"(.*)\"',re.MULTILINE)
+        # FreeSWITCH doesn't seem to mind < and > in an XML attribute although technically wrong, but lxml does mind.
+        xml = regex.sub(lambda m: m.group().replace('<',"&lt;").replace('>',"&gt;"), dp.xml)
         parser = etree.XMLParser(remove_comments=True)
-        tree   = etree.parse(StringIO(dp.xml), parser)
+        tree   = etree.parse(StringIO(xml), parser)
         extension = tree.getroot()
 
         if not etree.iselement(extension):
