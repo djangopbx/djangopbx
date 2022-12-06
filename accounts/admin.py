@@ -31,7 +31,7 @@ from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import messages
 from .models import (
-    Extension, FollowMeDestination, ExtensionUser, Gateway,
+    Extension, FollowMeDestination, ExtensionUser, Gateway, Bridge,
 )
 from voicemail.models import Voicemail
 from django.forms.widgets import Select
@@ -269,6 +269,38 @@ class GatewayAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class BridgeResource(resources.ModelResource):
+    class Meta:
+        model = Bridge
+        import_id_fields = ('id', )
+
+
+class BridgeAdmin(ImportExportModelAdmin):
+    resource_class = BridgeResource
+    save_as = True
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['name', 'destination', 'description']
+
+    list_display = ('name', 'destination', 'enabled', 'description')
+    list_filter = (DomainFilter, 'enabled')
+
+    fieldsets = (
+        (None,  {'fields': ['name', 'destination', 'enabled', 'description']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    )
+
+    ordering = ['name']
+
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        if not change:
+            obj.domain_id = DomainUtils().domain_from_session(request)
+        super().save_model(request, obj, form, change)
+
+
 
 admin.site.register(Extension, ExtensionAdmin)
 admin.site.register(Gateway, GatewayAdmin)
+admin.site.register(Bridge, BridgeAdmin)

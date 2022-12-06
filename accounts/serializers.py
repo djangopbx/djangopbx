@@ -29,7 +29,7 @@
 
 from  rest_framework  import serializers
 from .models import (
-    Extension, FollowMeDestination, Gateway,
+    Extension, FollowMeDestination, Gateway, Bridge,
 )
 
 
@@ -133,4 +133,12 @@ class GatewaySerializer(serializers.ModelSerializer):
                 'enabled',
                 'description',
                 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class BridgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bridge
+        fields =['url', 'id', 'domain_id', 'name', 'destination', 'enabled', 'description',
+                'created', 'updated', 'synchronised', 'updated_by']
+
 

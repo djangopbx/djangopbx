@@ -35,6 +35,7 @@ router = routers.DefaultRouter()
 router.register(r'extensions', views.ExtensionViewSet)
 router.register(r'follow_me_destinations', views.FollowMeDestinationViewSet)
 router.register(r'gateways', views.GatewayViewSet)
+router.register(r'bridges', views.BridgeViewSet)
 
 urlpatterns = [
 ]

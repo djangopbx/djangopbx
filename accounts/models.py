@@ -217,3 +217,22 @@ class Gateway(models.Model):
     def __str__(self):
         return f'{self.gateway}->{self.id}'
 
+
+class Bridge(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Bridge'))
+    domain_id    = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))
+    name         = models.CharField(max_length=32, verbose_name=_('Name'))
+    destination  = models.CharField(max_length=256, verbose_name=_('Destination'))
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
+    description  = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Description'))
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+
+    class Meta:
+        db_table = 'pbx_bridges'
+
+    def __str__(self):
+        return str(self.name)
+

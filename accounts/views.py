@@ -37,10 +37,10 @@ from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from .models import (
-    Extension, FollowMeDestination, Gateway,
+    Extension, FollowMeDestination, Gateway, Bridge,
 )
 from .serializers import (
-    ExtensionSerializer, FollowMeDestinationSerializer, GatewaySerializer,
+    ExtensionSerializer, FollowMeDestinationSerializer, GatewaySerializer, BridgeSerializer,
 )
 
 
@@ -80,6 +80,20 @@ class GatewayViewSet(viewsets.ModelViewSet):
     serializer_class = GatewaySerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['domain_id', 'from_domain', 'proxy', 'realm', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class BridgeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Bridges to be viewed or edited.
+    """
+    queryset = Bridge.objects.all().order_by('domain_id', 'name')
+    serializer_class = BridgeSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['domain_id', 'enabled']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
