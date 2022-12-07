@@ -32,9 +32,11 @@ import uuid
 import socket
 from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager
+from django.db.models import CharField, Value as V
+from django.db.models.functions import Concat
 from lxml import etree
 from io import StringIO
-from .models import Gateway
+from .models import Gateway, Bridge
 from tenants.pbxsettings import PbxSettings
 
 
@@ -45,6 +47,12 @@ class AccountFunctions():
             return Gateway.objects.filter(domain_id = uuid.UUID(domain_id), enabled = 'true').values_list('id', 'gateway').order_by('gateway')
         else:
             return Gateway.objects.filter(enabled = 'true').values_list('id', 'gateway').order_by('gateway')
+
+    def list_bridges(self, domain_id = None):
+        if domain_id:
+            return Bridge.objects.filter(domain_id = uuid.UUID(domain_id), enabled = 'true').annotate(full_dest=Concat(V('bridge:'), 'destination', output_field=CharField())).values_list('full_dest', 'name').order_by('name')
+        else:
+            return Bridge.objects.filter(enabled = 'true').annotate(full_dest=Concat(V('bridge:'), 'destination', output_field=CharField())).values_list('full_dest', 'name').order_by('name')
 
 
     def gateway_type(self, gateway):

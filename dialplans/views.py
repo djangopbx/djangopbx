@@ -146,10 +146,20 @@ def newibroute(request):
 @staff_member_required
 def newobroute(request):
     dp_uuid = False
-    gws = [('', '')]
-    gws.extend(AccountFunctions().list_gateways(request.session['domain_uuid']))
-    # need to add bridgels in here
-    gws.extend([('enum', 'enum'), ('freetdm', 'freetdm'), ('transfer:$1 XML ${domain_name}', 'transfer'), ('xmpp', 'xmpp')])
+    gws = []
+    gw_list = [('', '')]
+    gw_list.extend(AccountFunctions().list_gateways(request.session['domain_uuid']))
+    if len(gw_list) > 0:
+            gws.append((_('Gateways'), gw_list))
+
+    bg_list = []
+    bg_list.extend(AccountFunctions().list_bridges(request.session['domain_uuid']))
+    if len(bg_list) > 0:
+            gws.append((_('Bridges'), bg_list))
+
+    other_list = [('enum', 'enum'), ('freetdm', 'freetdm'), ('transfer:$1 XML ${domain_name}', 'transfer'), ('xmpp', 'xmpp')]
+    gws.append((_('Other'), other_list))
+
 
     if request.method == 'POST':
 
