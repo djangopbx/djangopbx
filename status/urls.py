@@ -36,5 +36,7 @@ app_name = 'status'
 urlpatterns = [
     path('fslogviewer/', views.fslogviewer, name='fslogviewer'),
     path('djangopbx/', views.djangopbx, name='djangopbx'),
+    path('modules/', views.modules, name='modules'),
+    path('modules/<uuid:moduuid>/<str:action>/', views.modules, name='modules'),
 ]
 

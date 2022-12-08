@@ -1,0 +1,34 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <div class="row">
+            <div class="col-lg-6"><i class="fa fa-info"></i> {% translate title %}</div>
+            <div class="col-lg-6 text-right"><form action="{% url refresher %}" method="get"><input type="submit" class="btn btn-info" value="Refresh"></form></div>
+            </div>
+        </div>
+        <div class="card-body cardbody1">
+        <table class="pbxformtable">
+            <tr>
+            {% for h in th %}
+            <th>{{ h }}</th>
+            {% endfor %}
+            </tr>
+        {% for key, value in info.items %}
+            <tr>
+                <th><b>{{ key|safe }}</b></th>
+                {% for v in value %}
+                <td>{{ v|safe }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </table>
+
+        </div>
+    </div>
+
+    {% endblock %}
+

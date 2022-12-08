@@ -191,6 +191,7 @@ table.pbxformtable tr {
 
 table.pbxformtable td {
     padding: 5px;
+    padding-left: 20px;
     line-height: 13px;
     text-align: left;
     background-color: #fefefe !important;
@@ -199,6 +200,7 @@ table.pbxformtable td {
 
 table.pbxformtable th {
     padding: 5px;
+    padding-left: 20px;
     line-height: 13px;
     text-align: left;
     vertical-align:top;

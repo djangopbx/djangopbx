@@ -27,13 +27,17 @@
 #
 
 from django.shortcuts import render
+from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
+from django.contrib import messages
 from pbx.commonfunctions import shcommand, get_version
 from pbx.fseventsocket import EventSocket
 from .forms import LogViewerForm
+from switch.models import Modules
 import re
 import sys
+
 
 @staff_member_required
 def fslogviewer(request):
@@ -61,3 +65,38 @@ def djangopbx(request):
     info['Python Version'] = sys.version
 
     return render(request, 'status/infotable.html', {'refresher': 'status:djangopbx', 'info': info, 'title': 'DjangoPBX'})
+
+
+@staff_member_required
+def modules(request, moduuid=None, action=None):
+    info = {}
+    th = [_('Module Name'), _('Status'), _('Action'), _('Description')]
+    running = _('Running')
+    stopped = _('Stopped')
+    start = _('Start')
+    stop = _('Stop')
+    if action == 'stop':
+        cmd = 'unload'
+    else:
+        cmd = 'load'
+
+    es = EventSocket()
+    if es.connect('127.0.0.1', 8021, 'ClueCon'):
+        if moduuid:
+            m = Modules.objects.get(pk=moduuid)
+            m_status = es.send('api %s %s' % (cmd, m.name))
+            if '+OK' in m_status:
+                messages.add_message(request, messages.INFO, _('Module %s OK' % cmd))
+            else:
+                messages.add_message(request, messages.WARN, _('Module %s Failed' % cmd))
+
+        mods = Modules.objects.filter(enabled = 'true').order_by('category', 'label')
+        for m in mods:
+            m_status = es.send('api module_exists %s' % m.name)
+            if m_status == 'true':
+                info['<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)] = [running, '<a href=\"/status/modules/%s/stop/\">%s</a>' % (str(m.id), stop), m.description]
+            else:
+                info['<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)] = [stopped, '<a href=\"/status/modules/%s/start/\">%s</a>' % (str(m.id), start), m.description]
+
+    return render(request, 'status/infotablemulti.html', {'refresher': 'status:modules', 'info': info, 'th': th, 'title': 'Modules Status'})
+

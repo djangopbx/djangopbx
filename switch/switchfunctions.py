@@ -318,3 +318,37 @@ class SwitchFunctions():
         else:
             return 1
 
+
+    def save_modules_xml(self):
+        vlist = switch.models.Modules.objects.filter(enabled = 'true').order_by('sequence', 'category')
+        xml = '<configuration name=\"modules.conf\" description=\"Modules\">\n'
+        prev_cat = ''
+        hostname = socket.gethostname()
+
+        conflist = PbxSettings().default_settings('switch', 'conf', 'dir')
+        if conflist:
+            confdir = conflist[0]
+            for v in vlist:
+                if not prev_cat == v.category:
+                    xml += "\n    <!-- " + v.category + " -->\n"
+
+                xml += '    <load moduled=\"%s\"/>\n' % v.name
+                prev_cat = v.category
+
+            xml += "</configuration>"
+
+            try:
+                os.makedirs(confdir, mode=0o755, exist_ok = True)
+            except OSError:
+                return 2
+
+            try:
+                with open('%s/autoload_configs/modules.conf.xml' % confdir, 'w') as f:
+                    f.write(xml)
+            except OSError:
+                return 3
+
+            return 0
+
+        else:
+            return 1

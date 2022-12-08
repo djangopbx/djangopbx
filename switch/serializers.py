@@ -29,7 +29,7 @@
 
 from  rest_framework  import serializers
 from .models import (
-    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable, AccessControl, AccessControlNode
+    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable, AccessControl, AccessControlNode, EmailTemplate, Modules
 )
 
 
@@ -68,4 +68,15 @@ class AccessControlNodeSerializer(serializers.ModelSerializer):
         model = AccessControlNode
         fields =['url', 'id', 'access_control_id', 'type', 'cidr', 'domain', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 
+
+class EmailTemplateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailTemplate
+        fields =['url', 'id', 'domain_id', 'language', 'category', 'subcategory', 'subject', 'type', 'body', 'enabled', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+
+
+class ModulesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Modules
+        fields =['url', 'id', 'label', 'name', 'category', 'name', 'sequence', 'enabled', 'default_enabled', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 

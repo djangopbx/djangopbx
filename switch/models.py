@@ -67,6 +67,23 @@ class EmailTemplateTypeChoice(models.TextChoices):
     CTEXT = 'text', 'Text'
 
 
+class SwitchModuleCategoryChoice(models.TextChoices):
+    C1 = 'Streams / Files', _('Streams / Files')
+    C2 = 'File Format Interfaces', _('File Format Interfaces')
+    C3 = 'Auto', _('Auto')
+    C4 = 'Say', _('Say')
+    C5 = 'Loggers', _('Loggers')
+    C6 = 'Languages', _('Languages')
+    C7 = 'XML Interfaces', _('XML Interfaces')
+    C8 = 'Speech Recognition / Text to Speech', _('Speech Recognition / Text to Speech')
+    C9 = 'Codecs', _('Codecs')
+    CA = 'Endpoints', _('Endpoints')
+    CB = 'Applications', _('Applications')
+    CC = 'Dialplan Interfaces', _('Dialplan Interfaces')
+    CD = 'Event Handlers', _('Event Handlers')
+    CE = 'Other', _('Other')
+
+
 #
 # model classes
 #
@@ -204,4 +221,22 @@ class EmailTemplate(models.Model):
 
     def __str__(self):
         return f"{self.language}->{self.category}->{self.subcategory}->{self.type}"
+
+
+class Modules(models.Model):
+    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Module'))
+    label           = models.CharField(max_length=64, verbose_name=_('Label'))
+    name            = models.CharField(max_length=64, verbose_name=_('Name'))
+    category        = models.CharField(max_length=64, choices=SwitchModuleCategoryChoice.choices, default=SwitchModuleCategoryChoice.CB, verbose_name=_('Category'))
+    sequence        = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))
+    enabled         = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
+    default_enabled = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Default Enabled'))
+    description     = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
+    created         = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
+    updated         = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
+    synchronised    = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
+    updated_by      = models.CharField(max_length=64, verbose_name=_('Updated by'))
+
+    class Meta:
+        db_table = 'pbx_modules'
 

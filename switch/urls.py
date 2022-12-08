@@ -38,6 +38,8 @@ router.register(r'sip_profiles', views. SipProfileViewSet)
 router.register(r'switch_variables', views. SwitchVariableViewSet)
 router.register(r'access_controls', views. AccessControlViewSet)
 router.register(r'access_control_nodes', views. AccessControlNodeViewSet)
+router.register(r'email_templates', views. EmailTemplateViewSet)
+router.register(r'switch_modules', views. ModulesViewSet)
 
 urlpatterns = [
 ]

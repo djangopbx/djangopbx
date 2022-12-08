@@ -33,7 +33,8 @@ from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import messages
 from .models import (
-    SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable, AccessControl, AccessControlNode, EmailTemplate,
+    SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable,
+    AccessControl, AccessControlNode, EmailTemplate, Modules
 )
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from import_export import resources
@@ -330,6 +331,57 @@ class EmailTemplateAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class ModulesResource(resources.ModelResource):
+    class Meta:
+        model = Modules
+        import_id_fields = ('id', )
+
+
+@admin.action(permissions=['change'], description='Write Switch moduls.conf.xml file')
+def write_switch_modules_file(modeladmin, request, queryset):
+    r = SwitchFunctions().save_modules_xml()
+    if r == 0:
+        messages.add_message(request, messages.INFO, _('modules.conf.xml file written.'))
+    if r == 1:
+        messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->conf')
+    if r == 2:
+        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+    if r == 3:
+        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+
+
+class ModulesAdmin(ImportExportModelAdmin):
+    resource_class = ModulesResource
+    save_as = True
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['category', 'name', 'category', 'descrption']
+    fieldsets = [
+        (None,  {'fields': ['category', 'label', 'sequence', 'name', 'enabled', 'default_enabled', 'description']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('category', 'label', 'name', 'enabled', 'default_enabled', 'description')
+    list_filter = ('category', 'enabled', 'default_enabled')
+
+    ordering = [
+        'category', 'sequence', 'name'
+    ]
+
+    actions = [write_switch_modules_file]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
+    # This is a workaround to allow the admin action to be run without selecting any objects.
+    # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
+    def changelist_view(self, request, extra_context=None):
+        if 'action' in request.POST and request.POST['action'] == 'write_switch_modules_file':
+            post = request.POST.copy()
+            post.update({ACTION_CHECKBOX_NAME: 'cc30bc83-ccb8-4f27-a1d6-9340ae7de325'})
+            request._set_post(post)
+        return super(ModulesAdmin, self).changelist_view(request, extra_context)
+
+
 
 admin.site.register(SipProfile, SipProfileAdmin)
 admin.site.register(SipProfileSetting, SipProfileSettingAdmin)
@@ -337,4 +389,5 @@ admin.site.register(SipProfileDomain, SipProfileDomainAdmin)
 admin.site.register(SwitchVariable, SwitchVariableAdmin)
 admin.site.register(AccessControl, AccessControlAdmin)
 admin.site.register(EmailTemplate, EmailTemplateAdmin)
+admin.site.register(Modules, ModulesAdmin)
 

@@ -37,10 +37,11 @@ from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from .models import (
-    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable, AccessControl, AccessControlNode
+    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable, AccessControl, AccessControlNode, EmailTemplate, Modules
 )
 from .serializers import (
-    SipProfileDomainSerializer, SipProfileSettingSerializer, SipProfileSerializer, SwitchVariableSerializer, AccessControlSerializer, AccessControlNodeSerializer,
+    SipProfileDomainSerializer, SipProfileSettingSerializer, SipProfileSerializer, SwitchVariableSerializer,
+    AccessControlSerializer, AccessControlNodeSerializer,  EmailTemplateSerializer, ModulesSerializer,
 )
 
 
@@ -122,6 +123,34 @@ class AccessControlNodeViewSet(viewsets.ModelViewSet):
     serializer_class = AccessControlNodeSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['description']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class EmailTemplateViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Email templates to be viewed or edited.
+    """
+    queryset = EmailTemplate.objects.all().order_by('language', 'category', 'subcategory')
+    serializer_class = EmailTemplateSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['language', 'category', 'subcategory', 'type']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ModulesViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Switch Modules to be viewed or edited.
+    """
+    queryset = Modules.objects.all().order_by('sequence', 'category', 'name')
+    serializer_class = ModulesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
