@@ -1,0 +1,6 @@
+{% extends "portal.html" %}
+{% load i18n static %}
+
+    {% block content %}
+        {% include 'pbx_filtertable_listing.html' with pbxlistingname='CDR Records' %}
+    {% endblock %}

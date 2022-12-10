@@ -6,6 +6,7 @@ body {
     -o-background-size: cover;
     background-size: cover;
 }
+
 /* Allows alert to be shown over nav-bar */
 #top-alert {
   background-color: #f6fff6;
@@ -17,6 +18,7 @@ body {
     font-size: 8pt;
     padding-top: 5px;
 }
+
 /*
 CSS for colours
 */
@@ -37,6 +39,7 @@ CSS for colours
     font-size: 11pt;
 }
 .tablecolumn1 {
+    width: 10%;
     background-color: #f6f6ff !important;
     font-size: 11pt;
 }
@@ -204,7 +207,6 @@ table.pbxformtable th {
     line-height: 13px;
     text-align: left;
     vertical-align:top;
-    background-color: #fefefe !important;
     background-color: #f6f6ff !important;
 }
 
@@ -223,7 +225,7 @@ table.paleblue {
 
 table.paleblue,
 table.paleblue +  ul.pagination {
-    font: normal 12px/14px 'Lucida Grande', Verdana, Helvetica, Arial, sans-serif;
+    font: normal 10pt/12pt 'Lucida Grande', Verdana, Helvetica, Arial, sans-serif;
 }
 
 table.paleblue a:link,
@@ -257,7 +259,7 @@ table.paleblue thead td {
     background: #FCFCFC url(../img/header-bg.png) left bottom repeat-x;
     border-bottom: 1px solid #DDD;
     padding: 2px 5px;
-    font-size: 12px;
+    font-size: 11pt;
     vertical-align: middle;
     color: #666;
 }
@@ -339,9 +341,40 @@ table.paleblue > tbody > tr > td > span.false {
     background-image: url(../img/false.gif);
 }
 
+
+div.cardbody1 > div > nav > ul.pagination > li.active {
+    border: 1px solid #0000ff;
+
+}
+
+div.cardbody1 > div > nav > ul.pagination > li {
+    display: flex;
+    background-color: #fffff6;
+    padding: 0px 5px;
+    margin-top: 5px;
+    text-align: center;
+    display: inline-block;
+    border: 1px solid #DDD;
+
+}
+
+div.cardbody1 > div > nav > ul.pagination > li > a{
+    color: #717171;
+}
+
+div.cardbody1 > div > nav > ul.pagination > li {
+    float: left;
+    margin-left: 5px;
+}
+
+div.cardbody1 > div > nav > ul.pagination > li:first-child {
+    margin-left: 0;
+}
+
 div.table-container {
     display: inline-block;
 }
+
 /*
 CSS for forms
 

@@ -27,7 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
+from django.urls import path, re_path
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
 from rest_framework import routers
@@ -41,10 +41,11 @@ router.register(r'menu_item_groups', views.MenuItemGroupViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path("domainselect/", views.DomainSelector.as_view(), name="domainselect"),
+    path('domainselect/', views.DomainSelector.as_view(), name='domainselect'),
     path(r'selectdomain/<domainuuid>/', views.selectdomain, name='selectdomain'),
     path(
-        "favicon.ico",
+        'favicon.ico',
         RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
     ),
+    re_path(r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>.*)/(?P<fdom>.*)/(?P<fpath>.*))$', views.servefsmedia, name='servefsmedia'),
 ]

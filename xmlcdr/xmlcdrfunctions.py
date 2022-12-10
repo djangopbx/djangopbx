@@ -34,6 +34,7 @@ import json
 import xmltodict
 import urllib.parse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 from .models import XmlCdr
 from tenants.models import Domain
@@ -340,9 +341,9 @@ class XmlCdrFunctions():
         xcdr.remote_media_ip           = self.uq(cdr_dict['cdr']['variables'].get('remote_media_ip'))
         xcdr.network_addr              = network_addr
         if record_path and record_name:
-            if os.path.extists('%s/%s' % (record_path, record_name)) and record_length > 0:
-                xcdr.record_path               = cdr_dict['cdr']['variables'].get('')
-                xcdr.record_name               = cdr_dict['cdr']['variables'].get('')
+            if os.path.exists('%s/%s' % (record_path, record_name)) and record_length > 0:
+                xcdr.record_path               = record_path
+                xcdr.record_name               = record_name
                 record_description = cdr_dict['cdr']['variables'].get('record_description', nonestr)
 
         xcdr.leg                       = leg
@@ -392,4 +393,27 @@ class XmlCdrFunctions():
         xcdr.save()
 
         return True
+
+
+    @staticmethod
+    def get_call_status(record):
+        call_result = 'None'
+        if record.direction == 'inbound' or record.direction == 'local':
+            if record.answer_stamp and record.bridge_uuid:
+                call_result = _('answered')
+            elif record.answer_stamp and not record.bridge_uuid:
+                call_result = _('voicemail')
+            elif not record.answer_stamp and not record.bridge_uuid and not record.sip_hangup_disposition == 'send_refuse':
+                call_result = _('cancelled')
+            else:
+                call_result = _('failed')
+        elif record.direction == 'outbound':
+            if record.answer_stamp and record.bridge_uuid:
+                call_result = _('answered')
+            elif not record.answer_stamp and record.bridge_uuid:
+                call_result = _('cancelled')
+            else:
+                call_result = _('failed')
+
+        return call_result
 

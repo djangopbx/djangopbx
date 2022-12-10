@@ -54,7 +54,10 @@ def djangopbx(request):
     info['Version<br>&nbsp;'] = get_version('pbx')
     info['Git Branch'] = shcommand(['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'name-rev', '--name-only', 'HEAD'])
     info['Git Commit'] = shcommand(['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'rev-parse', 'HEAD'])
-    info['Git Origin<br>&nbsp;'] = shcommand(['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'config', '--get', 'remote.origin.url']).replace('.git', '')
+    git_origin = shcommand(['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'config', '--get', 'remote.origin.url']).replace('.git', '')
+    if '@' in git_origin:
+        git_origin = 'https://' + git_origin.split('@')[1]
+    info['Git Origin<br>&nbsp;'] = git_origin
     info['Project Path'] = settings.BASE_DIR
 
     es = EventSocket()
@@ -64,7 +67,7 @@ def djangopbx(request):
         info['Switch Version'] = '%s (%s)' % (z.groups()[0], z.groups()[1])
     info['Python Version'] = sys.version
 
-    return render(request, 'status/infotable.html', {'refresher': 'status:djangopbx', 'info': info, 'title': 'DjangoPBX'})
+    return render(request, 'infotable.html', {'refresher': 'status:djangopbx', 'info': info, 'title': 'DjangoPBX'})
 
 
 @staff_member_required
@@ -98,5 +101,5 @@ def modules(request, moduuid=None, action=None):
             else:
                 info['<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)] = [stopped, '<a href=\"/status/modules/%s/start/\">%s</a>' % (str(m.id), start), m.description]
 
-    return render(request, 'status/infotablemulti.html', {'refresher': 'status:modules', 'info': info, 'th': th, 'title': 'Modules Status'})
+    return render(request, 'infotablemulti.html', {'refresher': 'status:modules', 'info': info, 'th': th, 'title': 'Modules Status'})
 

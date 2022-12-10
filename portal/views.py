@@ -27,18 +27,22 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import os
+from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.utils.translation import gettext, gettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-
+from django.http import HttpResponse, HttpResponseNotFound
 import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions
+from django.http import FileResponse
+import base64
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -59,6 +63,7 @@ from .serializers import (
     MenuSerializer, MenuNavSerializer, MenuItemSerializer, MenuItemNavSerializer, MenuItemGroupSerializer,
 )
 
+from accounts.accountfunctions import AccountFunctions
 
 @login_required
 def index(request):
@@ -90,6 +95,10 @@ def index(request):
                 request.session['domain_name'] = pbx_domain_name
                 request.session['domain_uuid'] = pbx_domain_uuid
                 request.session['user_uuid']   = pbx_user_uuid
+                extension_list = []
+                for ext in AccountFunctions().list_user_extensions(pbx_domain_uuid, pbx_user_uuid):
+                    extension_list.append(str(ext))
+                request.session['extension_list'] = ','.join(extension_list)
 
             currentmenu = PbxSettings().settings(pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True)[0]
             m = Menu.objects.get(name = currentmenu)
@@ -104,7 +113,7 @@ def index(request):
             submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False).order_by('sequence')
         else:
             groupList = list(request.user.groups.values_list('name', flat=True))
-            menuitemList = MenuItemGroup.objects.values_list('menu_item_uuid', flat=True).filter(name__in=groupList, menu_id=m.id)
+            menuitemList = MenuItemGroup.objects.values_list('menu_item_id', flat=True).filter(name__in=groupList, menu_item_id__menu_id=m.id)
             menuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=True, id__in=menuitemList).order_by('sequence')
             submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False, id__in=menuitemList).order_by('sequence')
 
@@ -128,6 +137,24 @@ def selectdomain(request, domainuuid):
     request.session['domain_change'] = 'yes'
     messages.add_message(request, messages.INFO, _('Selected Domain changed to ') + d.name)
     return HttpResponseRedirect('/')
+
+
+@login_required
+def servefsmedia(request, fs, fdir, fdom, fpath, fullpath):
+    if not fs == 'fs':
+        return HttpResponseNotFound()
+    if fdir == 'recordings':
+        if not fdom == request.session['domain_name']:
+            return HttpResponseNotFound()
+    if fdir == 'voicemail':
+        if not fdom == request.session['domain_name']:
+            return HttpResponseNotFound()
+
+    file_location = '%s/%s' % (settings.MEDIA_ROOT, fullpath)
+    if not os.path.exists(file_location):
+            return HttpResponseNotFound()
+
+    return FileResponse(open(file_location, 'rb'))
 
 
 class DomainSelectorList(tables.Table):

@@ -214,7 +214,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = '/var/www/static/'
 
 # For model.FileField storage
-MEDIA_ROOT = '/var/lib/djangopbx'
+MEDIA_ROOT = '/home/django-pbx/media'
 
 # This setting defines the additional locations the staticfiles app will traverse if the FileSystemFinder finder is enabled
 # e.g. if you use the collectstatic or findstatic management command or use the static file serving view.
@@ -256,7 +256,8 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'Add'
 
 # Settings for django-tables2
-DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4.html"
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap-responsive.html"
+DJANGO_TABLES2_PAGE_RANGE = 8
 
 # for bootstrap4 alert integration with django messages
 from django.contrib.messages import constants as messages

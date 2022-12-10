@@ -27,14 +27,24 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import os
 import logging
 from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import permissions
+from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
+from django.utils.html import format_html
+import django_tables2 as tables
+from django_filters.views import FilterView
+import django_filters as filters
+from django_tables2.export.views import ExportMixin
+
 from tenants.pbxsettings import PbxSettings
 
 
@@ -51,6 +61,7 @@ from .serializers import (
 from .xmlcdrfunctions import XmlCdrFunctions
 
 logger = logging.getLogger(__name__)
+
 
 @csrf_exempt
 def xml_cdr_import(request):
@@ -87,4 +98,93 @@ class XmlCdrViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+
+class CdrViewerList(tables.Table):
+    class Meta:
+        model = XmlCdr
+        attrs = {"class": "paleblue"}
+        fields = ('id', 'extension_id', 'direction', 'caller_id_name', 'caller_id_number', 'destination_number', 'caller_destination', 'recording', 'start_stamp', 'duration', 'status')
+
+    start_stamp = tables.DateTimeColumn(verbose_name=_('Date Time'), attrs = {"td": {"style" : "white-space: nowrap;"}}, format = 'Y-m-d H:i:s')
+    status = tables.Column(verbose_name=_('Status'), empty_values=())
+    recording = tables.Column(verbose_name=_('Recording'), empty_values=())
+
+    #id = tables.Column(linkify=("selectcdr", [tables.A("id")]))
+    def render_id(self, value, record):
+        return format_html('<a href=\"/xmlcdr/selectcdr/{}/\">{}</a>', value, str(value)[0:8])
+
+    def render_status(self, value, record):
+        return XmlCdrFunctions.get_call_status(record)
+
+    def render_recording(self, value, record):
+        rec_result = _('No')
+        if record.record_name and record.record_path:
+            rec_result = _('Yes')
+
+        return rec_result
+
+
+class CdrViewerFilter(filters.FilterSet):
+    caller_id_name = filters.CharFilter(lookup_expr='icontains')
+    caller_id_number = filters.CharFilter(lookup_expr='icontains')
+    start_stamp = filters.DateTimeFilter(lookup_expr='gt')
+    end_stamp = filters.DateTimeFilter(lookup_expr='lt')
+    duration = filters.DateTimeFilter(lookup_expr='gt')
+
+    class Meta:
+        model = XmlCdr
+        fields = ['extension_id', 'direction', 'caller_id_name', 'caller_id_number', 'destination_number', 'caller_destination', 'start_stamp', 'end_stamp', 'duration']
+
+
+
+@method_decorator(login_required, name='dispatch')
+class CdrViewer(tables.SingleTableMixin, FilterView):
+    table_class = CdrViewerList
+    filterset_class = CdrViewerFilter
+    paginator_class = tables.LazyPaginator
+
+    table_pagination = {
+        "per_page": 25
+    }
+
+    def get_queryset(self):
+        extension_list = self.request.session['extension_list'].split(',')
+        if self.request.user.is_superuser:
+            qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'])
+        else:
+            qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'], extension_id__in=extension_list)
+        return qs
+
+
+@login_required
+def selectcdr(request, cdruuid=None):
+    extension_list = request.session['extension_list'].split(',')
+    info = {}
+    if request.user.is_superuser:
+        cdr = XmlCdr.objects.get(domain_id=request.session['domain_uuid'], id=cdruuid)
+    else:
+        cdr = XmlCdr.objects.get(domain_id=request.session['domain_uuid'], extension_id__in=extension_list, id=cdruuid)
+    info[cdr._meta.get_field('extension_id').verbose_name] = cdr.extension_id
+    info[cdr._meta.get_field('direction').verbose_name] = cdr.direction
+    info[cdr._meta.get_field('caller_id_name').verbose_name] = cdr.caller_id_name
+    info[cdr._meta.get_field('caller_id_number').verbose_name] = cdr.caller_id_number
+    info[cdr._meta.get_field('caller_destination').verbose_name] = cdr.caller_destination
+    info[cdr._meta.get_field('source_number').verbose_name] = cdr.source_number
+    info[cdr._meta.get_field('start_stamp').verbose_name] = cdr.start_stamp
+    info[cdr._meta.get_field('answer_stamp').verbose_name] = cdr.answer_stamp
+    info[cdr._meta.get_field('end_stamp').verbose_name] = cdr.end_stamp
+    info[cdr._meta.get_field('duration').verbose_name] = cdr.duration
+    info[cdr._meta.get_field('missed_call').verbose_name] = cdr.missed_call
+    info[cdr._meta.get_field('waitsec').verbose_name] = cdr.waitsec
+
+    if cdr.record_path and cdr.record_name:
+        file_ext = os.path.splitext(cdr.record_name)[1]
+        atype = 'audio/wav'
+        if file_ext == 'mp3':
+            atype = 'audio/mpeg'
+
+        info[_('Recording')] = '<audio controls><source src="%s/%s" type="%s"> %s</audio>' % (cdr.record_path, cdr.record_name, atype, _('Your browser does not support the audio tag.'))
+
+    return render(request, 'infotable.html', {'back': 'xmlcdr:cdrviewer', 'info': info, 'title': 'Call Detail Record'})
 
