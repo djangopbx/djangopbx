@@ -130,6 +130,7 @@ class XmlHandlerFunctions():
         etree.SubElement(x_params, "param", name='vm-enabled', value=vm_enabled)
         if flag_vm_enabled:
             etree.SubElement(x_params, "param", name='vm-password', value=v.password)
+
             if v.mail_to:
                 etree.SubElement(x_params, "param", name='vm-email-all-messages', value=vm_enabled)
                 etree.SubElement(x_params, "param", name='vm-attach-file', value=v.attach_file)
@@ -159,6 +160,11 @@ class XmlHandlerFunctions():
         etree.SubElement(x_variables, "variable", name='caller_id_number', value=sip_from_number)
 
         etree.SubElement(x_variables, "variable", name='presence_id', value=presence_id)
+        if flag_vm_enabled:
+            if v.greeting_id:
+                etree.SubElement(x_variables, "variable", name='voicemail_greeting_number', value=str(v.greeting_id))
+            if v.alternate_greeting_id:
+                etree.SubElement(x_variables, "variable", name='voicemail_alternate_greet_id', value=str(v.alternate_greeting_id))
 
         if e.call_group:
             etree.SubElement(x_variables, "variable", name='call_group', value=e.call_group)

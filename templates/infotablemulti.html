@@ -8,10 +8,10 @@
             <div class="row">
             <div class="col-lg-6"><i class="fa fa-info"></i> {% translate title %}</div>
             {% if refresher %}
-            <div class="col-lg-6 text-right"><form action="{% url refresher %}" method="get"><input type="submit" class="btn btn-info btn-sm" value="Refresh"></form></div>
+            <div class="col-lg-6 text-right"><form action="{% url refresher %}" method="get"><input type="submit" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></form></div>
             {% endif %}
             {% if back %}
-            <div class="col-lg-6 text-right"><form action="{% url back %}" method="get"><input type="submit" class="btn btn-info btn-sm" value="Back"></form></div>
+            <div class="col-lg-6 text-right"><form action="{% url back %}" method="get"><input type="submit" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></form></div>
             {% endif %}
             </div>
         </div>
@@ -31,7 +31,6 @@
             </tr>
         {% endfor %}
         </table>
-
         </div>
     </div>
 

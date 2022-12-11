@@ -55,7 +55,16 @@ class AccountFunctions():
             return Bridge.objects.filter(enabled = 'true').annotate(full_dest=Concat(V('bridge:'), 'destination', output_field=CharField())).values_list('full_dest', 'name').order_by('name')
 
     def list_user_extensions(self, domain_id, user_uuid):
+            return ExtensionUser.objects.filter(extension_id__domain_id = uuid.UUID(domain_id), user_uuid = uuid.UUID(user_uuid)).values_list('extension_id__extension', flat=True)
+
+    def list_superuser_extensions(self, domain_id):
+            return ExtensionUser.objects.filter(extension_id__domain_id = uuid.UUID(domain_id)).order_by('extension_id__extension').values_list('extension_id__extension', flat=True)
+
+    def list_user_extensions_uuid(self, domain_id, user_uuid):
             return ExtensionUser.objects.filter(extension_id__domain_id = uuid.UUID(domain_id), user_uuid = uuid.UUID(user_uuid)).values_list('extension_id', flat=True)
+
+    def list_superuser_extensions_uuid(self, domain_id):
+            return ExtensionUser.objects.filter(extension_id__domain_id = uuid.UUID(domain_id)).order_by('extension_id__extension').values_list('extension_id', flat=True)
 
 
     def gateway_type(self, gateway):

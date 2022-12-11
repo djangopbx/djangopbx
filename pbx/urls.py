@@ -85,6 +85,7 @@ urlpatterns = [
     path('firewall/', include('firewall.urls')),
     path('status/', include('status.urls')),
     path('dialplans/', include('dialplans.urls')),
+    path('voicemail/', include('voicemail.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
 

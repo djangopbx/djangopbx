@@ -30,21 +30,22 @@
 import uuid
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+from django.core.validators import MinValueValidator
 from pbx.commonwidgets import PbxFileField
 from pbx.commonchoices import EnabledTrueFalseChoice
 
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/fs/voicemail/<domain name>/<id>/<filename>
-    return 'fs/voicemail/{0}/{1}/{2}'.format(instance.voicemail_id.extension_id.domain_id.name, instance.voicemail_id.extension_id.extension, filename)
+    return 'fs/voicemail/default/{0}/{1}/{2}'.format(instance.voicemail_id.extension_id.domain_id.name, instance.voicemail_id.extension_id.extension, filename)
 
 
 class Voicemail(models.Model):
     id                    = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Voicemail'))
     extension_id           = models.ForeignKey('accounts.Extension', related_name='voicemail', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Extension'))
     password              = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Password'))
-    greeting_id           = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, default=1, verbose_name=_('Greeting ID'))
-    alternate_greeting_id = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, verbose_name=_('Alternate Greeting ID'))
+    greeting_id           = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, default=1, verbose_name=_('Greeting ID'), validators=[MinValueValidator(1)])
+    alternate_greeting_id = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, verbose_name=_('Alternate Greeting ID'), validators=[MinValueValidator(1)])
     mail_to               = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Mail to'))
     sms_to                = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('SMS to'))
     cc                    = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('CC'))

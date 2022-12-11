@@ -61,7 +61,7 @@ def djangopbx(request):
     info['Project Path'] = settings.BASE_DIR
 
     es = EventSocket()
-    if es.connect('127.0.0.1', 8021, 'ClueCon'):
+    if es.connect(*settings.EVSKT):
         fs_ver = es.send('api version')
         z = re.match('FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)', fs_ver)
         info['Switch Version'] = '%s (%s)' % (z.groups()[0], z.groups()[1])
@@ -84,7 +84,7 @@ def modules(request, moduuid=None, action=None):
         cmd = 'load'
 
     es = EventSocket()
-    if es.connect('127.0.0.1', 8021, 'ClueCon'):
+    if es.connect(*settings.EVSKT):
         if moduuid:
             m = Modules.objects.get(pk=moduuid)
             m_status = es.send('api %s %s' % (cmd, m.name))

@@ -463,10 +463,10 @@ class SwitchDp():
 
     def import_xml(self, domain_name, dp_remove = False, domain_uuid = ''):
         dp_details = False
-        sval = PbxSettings().default_settings('dialplan', 'dialplan_details', 'boolean', 'false')[0]
+        sval = PbxSettings().default_settings('dialplan', 'dialplan_details', 'boolean', 'false', True)[0]
         if sval == 'true':
             dp_details = True
-        sval = PbxSettings().default_settings('security', 'pin_length', 'numeric', 8)
+        sval = PbxSettings().default_settings('security', 'pin_length', 'numeric', '8', True)
         if sval:
             try:
                 pin_length = int(sval[0])

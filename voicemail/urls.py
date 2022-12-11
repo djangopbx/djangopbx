@@ -36,4 +36,7 @@ router.register(r'voicemails', views.VoicemailViewSet)
 router.register(r'voicemail_greetingss', views.VoicemailGreetingViewSet)
 
 urlpatterns = [
+    path('listvoicemails/', views.listvoicemails, name='listvoicemails'),
+    path('listvoicemails/<vmuuid>/<vmext>/<action>/', views.listvoicemails, name='listvoicemails'),
+
 ]

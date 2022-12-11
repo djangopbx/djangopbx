@@ -96,8 +96,12 @@ def index(request):
                 request.session['domain_uuid'] = pbx_domain_uuid
                 request.session['user_uuid']   = pbx_user_uuid
                 extension_list = []
-                for ext in AccountFunctions().list_user_extensions(pbx_domain_uuid, pbx_user_uuid):
+                for ext in AccountFunctions().list_user_extensions_uuid(pbx_domain_uuid, pbx_user_uuid):
                     extension_list.append(str(ext))
+                request.session['extension_list_uuid'] = ','.join(extension_list)
+                extension_list = []
+                for ext in AccountFunctions().list_user_extensions(pbx_domain_uuid, pbx_user_uuid):
+                    extension_list.append(ext)
                 request.session['extension_list'] = ','.join(extension_list)
 
             currentmenu = PbxSettings().settings(pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True)[0]
@@ -143,12 +147,13 @@ def selectdomain(request, domainuuid):
 def servefsmedia(request, fs, fdir, fdom, fpath, fullpath):
     if not fs == 'fs':
         return HttpResponseNotFound()
-    if fdir == 'recordings':
-        if not fdom == request.session['domain_name']:
-            return HttpResponseNotFound()
-    if fdir == 'voicemail':
-        if not fdom == request.session['domain_name']:
-            return HttpResponseNotFound()
+    if not request.user.is_superuser:
+        if fdir == 'recordings':
+            if not fdom == request.session['domain_name']:
+                return HttpResponseNotFound()
+        if fdir == 'voicemail':
+            if not fpath == request.session['domain_name']:
+                return HttpResponseNotFound()
 
     file_location = '%s/%s' % (settings.MEDIA_ROOT, fullpath)
     if not os.path.exists(file_location):

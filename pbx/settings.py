@@ -270,3 +270,5 @@ MESSAGE_TAGS = {
         messages.ERROR: 'alert-danger',
  }
 
+# event socket connection info
+EVSKT = ('127.0.0.1', 8021, 'ClueCon')

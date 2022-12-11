@@ -40,6 +40,33 @@ from .models import (
 )
 
 
+class MenuItemFilter(admin.SimpleListFilter):
+    title = _('Parent')
+    parameter_name = 'workarea'
+
+    def lookups(self, request, model_admin):
+        mitms = [(c.id, c.title) for c in MenuItem.objects.filter(parent_id__isnull = True).order_by('title')]
+        return [('all', _('All')), ('top', _('Top Level ( - )'))] + mitms
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup,
+                'query_string': cl.get_query_string({
+                    self.parameter_name: lookup,
+                }, []),
+                'display': title,
+            }
+
+    def queryset(self, request, queryset):
+        if self.value() == None:
+            return queryset.filter()
+        if self.value() == 'top':
+            return queryset.filter(parent_id__isnull = True)
+        if not self.value() == 'all':
+            return queryset.filter(parent_id = self.value())
+
+
 class MenuItemGroupInLine(admin.TabularInline):
     model = MenuItemGroup
     extra = 3
@@ -65,7 +92,7 @@ class MenuItemAdmin(ImportExportModelAdmin):
     ]
     inlines = [MenuItemGroupInLine]
     list_display = ('menu_id', 'parent_id', 'title', 'link', 'sequence', 'description')
-    list_filter = ('menu_id', 'parent_id', 'title')
+    list_filter = ('menu_id', MenuItemFilter,)
     list_display_links = ('menu_id', 'title')
     ordering = ['sequence']
 

@@ -149,7 +149,7 @@ class CdrViewer(tables.SingleTableMixin, FilterView):
     }
 
     def get_queryset(self):
-        extension_list = self.request.session['extension_list'].split(',')
+        extension_list = self.request.session['extension_list_uuid'].split(',')
         if self.request.user.is_superuser:
             qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'])
         else:
@@ -159,7 +159,19 @@ class CdrViewer(tables.SingleTableMixin, FilterView):
 
 @login_required
 def selectcdr(request, cdruuid=None):
-    extension_list = request.session['extension_list'].split(',')
+    cache_key = 'xmlcdr:record_path'
+    cdr_record_path = cache.get(cache_key)
+    if not cdr_record_path:
+        cdr_record_path = PbxSettings().default_settings('cdr', 'recordings', 'text', '/fs/recordings', True)[0]
+        cache.set(cache_key, cdr_record_path)
+
+    cache_key = 'switch:record_path'
+    switch_record_path = cache.get(cache_key)
+    if not switch_record_path:
+        switch_record_path = PbxSettings().default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True)[0]
+        cache.set(cache_key, switch_record_path)
+
+    extension_list = request.session['extension_list_uuid'].split(',')
     info = {}
     if request.user.is_superuser:
         cdr = XmlCdr.objects.get(domain_id=request.session['domain_uuid'], id=cdruuid)
@@ -184,7 +196,8 @@ def selectcdr(request, cdruuid=None):
         if file_ext == 'mp3':
             atype = 'audio/mpeg'
 
-        info[_('Recording')] = '<audio controls><source src="%s/%s" type="%s"> %s</audio>' % (cdr.record_path, cdr.record_name, atype, _('Your browser does not support the audio tag.'))
+        record_path_tmp = cdr.record_path.replace(switch_record_path, cdr_record_path)
+        info[_('Recording')] = '<audio controls><source src="%s/%s" type="%s"> %s</audio>' % (record_path_tmp, cdr.record_name, atype, _('Your browser does not support the audio tag.'))
 
     return render(request, 'infotable.html', {'back': 'xmlcdr:cdrviewer', 'info': info, 'title': 'Call Detail Record'})
 

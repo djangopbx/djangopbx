@@ -1,0 +1,11 @@
+<!-- voicemail provide user extension -->
+<context name="{v_context}">
+	<extension name="vmain_user" number="*97" continue="false" app_uuid="5d47ab13-f25d-4f62-a68e-2a7d945d05b7" order="330">
+		<condition field="destination_number" expression="^\*97$">
+			<action application="answer"/>
+			<action application="sleep" data="1000"/>
+			<action application="set" data="voicemail_authorized=${sip_authorized}"/>
+			<action application="voicemail" data="check default ${domain_name} ${caller_id_number}"/>
+		</condition>
+	</extension>
+</context>
