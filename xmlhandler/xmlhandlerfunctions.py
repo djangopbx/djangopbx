@@ -341,14 +341,14 @@ class XmlHandlerFunctions():
         xml_list.append(self.XmlHeader('dialplan', call_context))
 
         if context_name == 'public' and context_type == 'single':
-            xml_list.extend(Dialplan.objects.filter((Q(category = 'Inbound route',  number = destination_number) | Q(context__contains='public', domain_id__isnull=True)), (Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
+            xml_list.extend(Dialplan.objects.filter((Q(category = 'Inbound route',  xml__isnull = False, number = destination_number) | Q(context__contains='public', domain_id__isnull=True)), (Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
             if len(xml_list) == 1:
                 xml_list = self.NotFoundPublic(xml_list)
         else:
             if context_name == "public" or ('@' in context_name):
-                xml_list.extend(Dialplan.objects.filter((Q(hostname = hostname) | Q(hostname__isnull=True)), context = call_context, enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
+                xml_list.extend(Dialplan.objects.filter((Q(hostname = hostname) | Q(hostname__isnull=True)),  xml__isnull = False, context = call_context, enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
             else:
-                xml_list.extend(Dialplan.objects.filter((Q(context = call_context) | Q(context = '${domain_name}')), (Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
+                xml_list.extend(Dialplan.objects.filter((Q(context = call_context) | Q(context = '${domain_name}')), (Q(hostname = hostname) | Q(hostname__isnull=True)),  xml__isnull = False, enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
 
         if len(xml_list) == 0:
             return self.NotFoundXml()

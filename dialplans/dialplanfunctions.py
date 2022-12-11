@@ -295,7 +295,7 @@ class SwitchDp():
     ]
 
 
-    def generate_xml(self, dp_uuid, domain_uuid, domain_name):
+    def generate_xml(self, dp_uuid, domain_uuid, domain_name, ddList = None):
 
         dp = dialplans.models.Dialplan.objects.get(pk=dp_uuid)
 
@@ -303,17 +303,17 @@ class SwitchDp():
         root.set('continue', dp.dp_continue)
         root.set('uuid', str(dp.id))
 
-
-        ddList = dialplans.models.DialplanDetail.objects.filter(dialplan_id = dp.id).order_by(
-                'group',
-                Case(
-                 When(tag='condition', then=Value(1)),
-                 When(tag='action', then=Value(2)),
-                 When(tag='anti-action', then=Value(3)),
-                 default=Value(100)
-                ),
-                'sequence'
-                )
+        if not ddList:
+            ddList = dialplans.models.DialplanDetail.objects.filter(dialplan_id = dp.id).order_by(
+                    'group',
+                    Case(
+                     When(tag='condition', then=Value(1)),
+                     When(tag='action', then=Value(2)),
+                     When(tag='anti-action', then=Value(3)),
+                     default=Value(100)
+                    ),
+                    'sequence'
+                    )
 
         last_condition_type = 'default'
         first_action = True
@@ -462,6 +462,10 @@ class SwitchDp():
 
 
     def import_xml(self, domain_name, dp_remove = False, domain_uuid = ''):
+        dp_details = False
+        sval = PbxSettings().default_settings('dialplan', 'dialplan_details', 'boolean', 'false')[0]
+        if sval == 'true':
+            dp_details = True
         sval = PbxSettings().default_settings('security', 'pin_length', 'numeric', 8)
         if sval:
             try:
@@ -480,18 +484,18 @@ class SwitchDp():
 
                 xml = xml.replace('{v_context}', domain_name)
                 xml = xml.replace('{v_pin_number}', pin)
-                self.create_dp_from_xml(xml, dp_remove)
+                self.create_dp_from_xml(xml, dp_remove, dp_details)
 
             else:
                 continue
 
 
-    def create_dp_from_xml(self, xml, dp_remove = False):
+    def create_dp_from_xml(self, xml, dp_remove = False, dp_details = True):
         parser = etree.XMLParser(remove_comments=True)
         tree   = etree.parse(StringIO(xml), parser)
         root = tree.getroot()
         #root = etree.fromstring(xml) # Using method above so comments are removed.
-
+        ddlist = []
 
 
         if len(root):  # check root has children
@@ -580,7 +584,17 @@ class SwitchDp():
                         else:
                             ddbreak = ''
 
-                        self.dp_detail_add(dp,
+                        if dp_details:
+                            self.dp_detail_add(dp,
+                                'condition',
+                                extchild.get('field'),
+                                extchild.get('expression'),
+                                ddbreak,
+                                '',
+                                ddgroup,
+                                ddorder
+                            )
+                        ddlist.append(DialplanDetailStruct(str(dp.id),
                             'condition',
                             extchild.get('field'),
                             extchild.get('expression'),
@@ -588,7 +602,7 @@ class SwitchDp():
                             '',
                             ddgroup,
                             ddorder
-                        )
+                        ))
                         ddorder += 5
                         if len(extchild):  # check element has children
                             for actchild in extchild:
@@ -597,7 +611,17 @@ class SwitchDp():
                                 else:
                                     ddinline = ''
 
-                                self.dp_detail_add(dp,
+                                if dp_details:
+                                    self.dp_detail_add(dp,
+                                        actchild.tag,
+                                        actchild.get('application'),
+                                        actchild.get('data'),
+                                        '',
+                                        ddinline,
+                                        ddgroup,
+                                        ddorder
+                                    )
+                                ddlist.append(DialplanDetailStruct(str(dp.id),
                                     actchild.tag,
                                     actchild.get('application'),
                                     actchild.get('data'),
@@ -605,11 +629,12 @@ class SwitchDp():
                                     ddinline,
                                     ddgroup,
                                     ddorder
-                                )
+                                ))
+
                                 ddorder += 5
                             ddgroup += 1
 
-                dp.xml = self.generate_xml(dp.id, '', '')
+                dp.xml = self.generate_xml(dp.id, '', '', ddlist)
                 dp.save()
 
 
@@ -731,3 +756,16 @@ class DpDestAction():
             dp_actions.append((_('Tones'), t_list))
 
         return dp_actions
+
+
+class DialplanDetailStruct():
+
+    def __init__(self, dddp, ddtag, ddtype, dddata, ddbreak, ddinline, ddgroup, ddorder):
+        self.dialplan_id  = dddp
+        self.tag          = ddtag
+        self.type         = ddtype
+        self.data         = dddata
+        self.dp_break     = ddbreak
+        self.inline       = ddinline
+        self.group        = ddgroup
+        self.sequence     = ddorder
