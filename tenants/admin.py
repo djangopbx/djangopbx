@@ -171,7 +171,7 @@ class DomainSettingAdmin(ImportExportModelAdmin):
     list_filter = (DomainFilter, DomainSettingsDomainFilter, 'enabled')
     list_display_links = ('category', 'subcategory', 'value_type', 'value')
     fieldsets = [
-        (None, {'fields': ['domain_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
+        (None, {'fields': ['domain_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'description' ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
@@ -260,7 +260,7 @@ class ProfileSettingAdmin(ImportExportModelAdmin):
     list_filter = ('user_id', 'category', 'enabled')
     list_display_links = ('category', 'subcategory', 'value_type', 'value')
     fieldsets = [
-        (None, {'fields': ['user_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
+        (None, {'fields': ['user_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'description' ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
@@ -329,7 +329,7 @@ class DefaultSettingAdmin(ImportExportModelAdmin):
     list_filter = ('category', 'enabled')
     list_display_links = ('category', 'subcategory', 'value_type', 'value')
     fieldsets = [
-        (None, {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
+        (None, {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'description' ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
