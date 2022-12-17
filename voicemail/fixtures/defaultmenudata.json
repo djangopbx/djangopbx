@@ -1,0 +1,21 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "ff25c281-dd24-44c9-b014-2ebf2f19a6cc",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "73ce309c-95ee-45fe-9e69-919b61a855f8",
+        "title": "Voicemails",
+        "link": "/voicemail/listvoicemails",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "30910",
+        "description": "",
+        "created": "2022-12-11T18:43:19.833Z",
+        "updated": "2022-12-11T19:45:55.198Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

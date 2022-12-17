@@ -1,0 +1,135 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": null,
+        "title": "Call Routing",
+        "link": "dropdown",
+        "icon": "fas fa-exchange-alt",
+        "category": "internal",
+        "protected": "true",
+        "sequence": "20000",
+        "description": "",
+        "created": "2022-11-30T09:58:15.586Z",
+        "updated": "2022-11-30T10:06:38.613Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "23a7f6d7-a307-4e46-9876-f2c21bcf1c7e",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+        "title": "New Inbound Route",
+        "link": "/dialplans/newibroute",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "20020",
+        "description": "",
+        "created": "2022-12-01T15:26:09.950Z",
+        "updated": "2022-12-01T15:26:09.950Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "2fc55232-0f78-4a95-b0a9-c25637199579",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+        "title": "Time Contitions",
+        "link": "/dialplans/timeconditionviewer",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "20050",
+        "description": "",
+        "created": "2022-12-12T09:40:18.370Z",
+        "updated": "2022-12-12T09:40:18.370Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "4c4a93e7-63ca-42ae-a83b-74b8907e5d8d",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+        "title": "New Outbound Route",
+        "link": "/dialplans/newobroute",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "20040",
+        "description": "",
+        "created": "2022-12-01T15:27:14.858Z",
+        "updated": "2022-12-01T15:27:14.858Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "7257ad0a-625f-4b2b-9450-73b1d28827c2",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+        "title": "Inbound Routes",
+        "link": "/admin/dialplans/dialplan/?category=Inbound+route",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "20010",
+        "description": "",
+        "created": "2022-11-30T12:37:03.607Z",
+        "updated": "2022-11-30T15:48:29.295Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "837eecfc-fdb4-45cb-9422-07418178b6b6",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+        "title": "Outbound Routes",
+        "link": "/admin/dialplans/dialplan/?category=Outbound+route",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "20030",
+        "description": "",
+        "created": "2022-11-30T12:37:45.517Z",
+        "updated": "2022-12-01T15:26:42.217Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "c36269b7-ef2c-4a8a-a469-52bfc0b20108",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+        "title": "New Time Contition",
+        "link": "/dialplans/timecondition",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "20060",
+        "description": "",
+        "created": "2022-12-17T17:28:29.177Z",
+        "updated": "2022-12-17T17:28:29.177Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

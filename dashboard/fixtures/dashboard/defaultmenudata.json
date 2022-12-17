@@ -1,0 +1,40 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "1739efdd-1901-442a-8f23-cb2906c6edb8",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "1d13580a-3004-4f70-a159-5798103429b2",
+        "title": "Switch Dashboard",
+        "link": "/dashboard/swdashboard",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "1020",
+        "description": "",
+        "created": "2022-11-29T21:14:15.842Z",
+        "updated": "2022-11-29T21:14:15.842Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "bc559e8b-bb77-479c-88e2-a6f85d236c7c",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "1d13580a-3004-4f70-a159-5798103429b2",
+        "title": "OS Dashboard",
+        "link": "/dashboard/osdashboard",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "1010",
+        "description": "",
+        "created": "2022-11-29T21:14:15.840Z",
+        "updated": "2022-11-29T21:14:15.840Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

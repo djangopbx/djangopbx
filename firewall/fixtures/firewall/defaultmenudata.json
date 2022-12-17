@@ -1,0 +1,173 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "9e02d2b7-3853-4b58-806b-1507775083d4",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": null,
+        "title": "Firewall",
+        "link": "dropdown",
+        "icon": "fa fa-fire",
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87000",
+        "description": "",
+        "created": "2022-11-29T22:33:59.277Z",
+        "updated": "2022-11-30T14:26:34.284Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "055559fa-787f-4392-8dd8-bbdba4894a72",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Firewall SIP Customer List",
+        "link": "/firewall/fwsipcustomerlist",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87040",
+        "description": "",
+        "created": "2022-11-29T22:53:35.238Z",
+        "updated": "2022-11-29T22:53:35.238Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "5cedf30a-e2e5-4371-8fc9-c70bf965e286",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Firewall Configuration",
+        "link": "/firewall/fwconfigviewer",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87060",
+        "description": "",
+        "created": "2022-11-29T22:55:05.250Z",
+        "updated": "2022-11-29T22:55:05.250Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "79ef3b2e-2264-45c5-8f79-75083417de46",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Remove IP from Firewall",
+        "link": "/firewall/fwdelip",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87080",
+        "description": "",
+        "created": "2022-11-29T22:56:39.197Z",
+        "updated": "2022-11-29T22:56:39.197Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "7da538ea-83c3-43eb-8aa2-f959f64804dc",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Firewall Counters",
+        "link": "/firewall/fwlistcounters",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87010",
+        "description": "",
+        "created": "2022-11-29T22:48:44.986Z",
+        "updated": "2022-11-29T22:48:44.986Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "8de401d5-f7ae-466b-8b9f-cd3279119ac6",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Firewall White List",
+        "link": "/firewall/fwwhitelist",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87030",
+        "description": "",
+        "created": "2022-11-29T22:48:44.989Z",
+        "updated": "2022-11-29T22:51:52.252Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "a09d57ee-b11e-42ff-b24b-ea8811044184",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Firewall Block List",
+        "link": "/firewall/fwblocklist",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87020",
+        "description": "",
+        "created": "2022-11-29T22:48:44.988Z",
+        "updated": "2022-11-29T22:51:45.678Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "d181dcbc-a3b2-4e1d-8345-3998bdf9707f",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Firewall SIP Gateway List",
+        "link": "/firewall/fwsipgatewaylist",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87050",
+        "description": "",
+        "created": "2022-11-29T22:54:17.949Z",
+        "updated": "2022-11-29T22:54:17.949Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "d72de9e9-3e5a-48e8-9a0e-de97168ba8b5",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Add IP to Firewall",
+        "link": "/firewall/fwaddip",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87070",
+        "description": "",
+        "created": "2022-11-29T22:56:00.663Z",
+        "updated": "2022-11-29T22:56:00.663Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

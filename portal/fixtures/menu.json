@@ -1,0 +1,14 @@
+[
+{
+    "model": "portal.menu",
+    "pk": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+    "fields": {
+        "name": "Default",
+        "description": "",
+        "created": "2022-05-07T13:43:15.686Z",
+        "updated": "2022-11-29T22:48:44.983Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

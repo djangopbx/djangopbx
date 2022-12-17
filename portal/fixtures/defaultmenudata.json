@@ -1,0 +1,116 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "1d13580a-3004-4f70-a159-5798103429b2",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": null,
+        "title": "Home",
+        "link": "dropdown",
+        "icon": "fa fa-home",
+        "category": "internal",
+        "protected": "true",
+        "sequence": "1000",
+        "description": "",
+        "created": "2022-05-07T13:44:21.759Z",
+        "updated": "2022-11-29T22:50:22.272Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "73ce309c-95ee-45fe-9e69-919b61a855f8",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": null,
+        "title": "Applications",
+        "link": "dropdown",
+        "icon": "fas fa-paper-plane",
+        "category": "internal",
+        "protected": "true",
+        "sequence": "30000",
+        "description": "",
+        "created": "2022-12-07T18:36:57.907Z",
+        "updated": "2022-12-11T20:01:53.068Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "b9ac0610-d2a8-4baf-b5be-d0fba24fbc6e",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": null,
+        "title": "Utilities",
+        "link": "dropdown",
+        "icon": "fa fa-wrench",
+        "category": "internal",
+        "protected": "true",
+        "sequence": "88000",
+        "description": "",
+        "created": "2022-11-29T22:26:08.604Z",
+        "updated": "2022-11-29T22:33:59.265Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "043683c0-2436-4601-b5ff-4d6667935064",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": null,
+        "title": "Advanced",
+        "link": "dropdown",
+        "icon": "fa fa-cog",
+        "category": "internal",
+        "protected": "true",
+        "sequence": "100000",
+        "description": "",
+        "created": "2022-05-07T13:57:25.696Z",
+        "updated": "2022-11-29T22:33:59.269Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "7872454a-54f5-43bb-b9d2-10039c8ff839",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "043683c0-2436-4601-b5ff-4d6667935064",
+        "title": "Admin",
+        "link": "/admin/",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "100010",
+        "description": "",
+        "created": "2022-05-07T14:32:15.726Z",
+        "updated": "2022-11-29T22:33:59.271Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "acb1aac0-459f-4d52-acb3-f58ddc46bd3f",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "043683c0-2436-4601-b5ff-4d6667935064",
+        "title": "API",
+        "link": "/api/",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "100020",
+        "description": "",
+        "created": "2022-05-07T14:32:46.817Z",
+        "updated": "2022-11-29T22:33:59.273Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]
