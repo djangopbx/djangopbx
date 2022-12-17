@@ -23,19 +23,19 @@
     {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
 </head>
 <body class="{% block bodyclass %}{% endblock %}" data-utc-offset="{% now "Z" %}">
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
     {% block javascriptwarning %}
     <noscript>
      For full functionality of this site it is necessary to enable JavaScript.
     </noscript>
     {% endblock %}
-
     {% block bodyscript %}
     <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'script/htmx.min.js' %}"></script>
     {% endblock %}
     {% block extrabodyscript %}
     {% endblock %}
-
     {% block djangopbx-msg %}
     {% if messages %}
     <script type="text/javascript">
@@ -54,21 +54,16 @@
         {% endfor %}
     {% endif %}
     {% endblock %}
-
     {% block menu-nav %}
     {% endblock %}
-
     <!-- Container -->
     <div id="main_content" style="margin-top: 70px;" class="{% block contentclass %}{% endblock %}">
-
     {% block content %}
     {% endblock %}
-
     <footer class="container">
         <h5 style="text-align:center; margin-top: 10px; font-size: 12px">DjangoPBX &copy; Adrian Fretwell 2022</h5>
     </footer>
     </div>
     <!-- END Container -->
-
 </body>
 </html>

@@ -1,0 +1,71 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+<!--<script>
+htmx.logger = function(elt, event, data) {
+    if(console) {
+        console.log(event, elt, data);
+    }
+}
+</script>-->
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <i class="fa fa-calendar"></i> {% translate 'Time Condition' %}
+        </div>
+        <div class="card-body cardbody1">
+            {% if request.user.is_superuser %}
+                {%if dp_uuid %}
+                    <a href="/admin/dialplans/dialplan/{{ dp_uuid }}/change/">{% translate 'Go to Time condition in Admin:' %}</a>
+                {% endif %}
+            {% endif %}
+            <div class="container p-3 my-3 border">
+            <form action="{% url refresher %}" method="post">
+                {% csrf_token %}
+                {{ form.dp_id }}
+                {{ form.settings_count }}
+                {{ form.setting_condition_count }}
+                {{ form.tcregion }}
+                <table class="pbxformtable">
+                    <tr><th>{{ form.name.label }}</th><td>{{ form.name }}</td></tr>
+                    <tr><th>{{ form.number.label }}</th><td>{{ form.number }}</td></tr>
+                    <tr><th>{% translate 'Settings' %}</th></tr>
+                    {% for d in form.get_settings_fields %}
+                    {% for key, value in d.items %}
+                        {% if key == 'set' %}
+                            {% for vl in value %}
+                            <tr><th> </th>
+                            {% for v in vl %}
+                                <td>{{ v }}</td>
+                            {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><th> </th>
+                            {% for v in value %}
+                            <td>{{ v }}</td>
+                            {% endfor %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    <tr><th> </th><td><span class="helptext">{% translate 'Define custom conditions necessary to execute the destination selected above.' %}</span></td>
+                    {% endfor %}
+                    <tr><th>{% translate 'Presets' %}</th></tr>
+                    {% for preset_field in form.get_preset_fields %}
+                        <tr><th></th><td>{{ preset_field }} {{ preset_field.label }}</td></tr>
+                    {% endfor %}
+                    <tr><th>{% translate 'Alternate Destination' %}</th><td>{{ form.default_action }} </td></tr>
+                    <tr><th>{{ form.sequence.label }}</th><td>{{ form.sequence }}</td></tr>
+                    <tr><th>{{ form.enabled.label }}</th><td>{{ form.enabled }}</td></tr>
+                    <tr><th>{{ form.description.label }}</th><td>{{ form.description }}</td></tr>
+
+                </table>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-info btn-sm" value="{% translate 'Save' %}">
+            </form>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+

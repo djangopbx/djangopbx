@@ -70,6 +70,18 @@ class CallDirectionChoice(models.TextChoices):
     COUTBOUND = 'outbound', _('Outbound')
 
 
+class TimeConditionConditionChoice(models.TextChoices):
+    CYEAR     = 'year',          _('Year'),
+    CMON      = 'mon',           _('Month'),
+    CMDAY     = 'mday',          _('Day of Month'),
+    CWDAY     = 'wday',          _('Day of Week'),
+    CWEEK     = 'week',          _('Week of Year'),
+    CMWEEK    = 'mweek',         _('Week of Month'),
+    CHOUR     = 'hour',          _('Hour of Day'),
+    CMINOFDAY = 'minute-of-day', _('Time of Day'),
+    CDATETIME = 'date-time',     _('Date & Time')
+
+
 #
 # Model classes
 #

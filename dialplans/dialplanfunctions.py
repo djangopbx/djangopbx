@@ -294,6 +294,8 @@ class SwitchDp():
         ('wait_for_video_ready', 'App. wait_for_video_ready'),
     ]
 
+    time_condition_attrib = ['year', 'mon', 'mday', 'wday', 'week', 'mweek', 'hour', 'minute-of-day', 'date-time']
+
 
     def generate_xml(self, dp_uuid, domain_uuid, domain_name, ddList = None):
 
@@ -332,37 +334,13 @@ class SwitchDp():
 
             if dd.tag == "condition":
                 #determine the type of condition
-                if dd_type == "hour":
-                    condition_type = 'time'
-                elif dd_type == "minute":
-                    condition_type = 'time'
-                elif dd_type == "minute-of-day":
-                    condition_type = 'time'
-                elif dd_type == "mday":
-                    condition_type = 'time'
-                elif dd_type == "mweek":
-                    condition_type = 'time'
-                elif dd_type == "mon":
-                    condition_type = 'time'
-                elif dd_type == "time-of-day":
-                    condition_type = 'time'
-                elif dd_type == "yday":
-                    condition_type = 'time'
-                elif dd_type == "year":
-                    condition_type = 'time'
-                elif dd_type == "wday":
-                    condition_type = 'time'
-                elif dd_type == "week":
-                    condition_type = 'time'
-                elif dd_type == "date-time":
+                if dd_type in self.time_condition_attrib:
                     condition_type = 'time'
                 else:
                     condition_type = 'default'
 
-
                 if condition_type == 'default':
                     condition = etree.SubElement(root, "condition", field=dd_type, expression=dd_data)
-
                     last_condition_type = 'default'
 
                 if condition_type == 'time':
@@ -370,6 +348,7 @@ class SwitchDp():
                         condition.set(dd_type, dd_data)
                     else:
                         condition = etree.SubElement(root, "condition")
+                        condition.set(dd_type, dd_data)
                         last_condition_type = 'time'
 
                 if dd.dp_break:
@@ -429,16 +408,32 @@ class SwitchDp():
                         else:
                             ddbreak = ''
 
-                        self.dp_detail_add(dp,
-                            'condition',
-                            extchild.get('field'),
-                            extchild.get('expression'),
-                            ddbreak,
-                            '',
-                            ddgroup,
-                            ddorder,
-                            username
-                        )
+                        add_non_time_condition = True
+                        for m in extchild.attrib:
+                            if m in self.time_condition_attrib:
+                                add_non_time_condition = False
+                                self.dp_detail_add(dp,
+                                    'condition',
+                                    m,
+                                    extchild.get(m),
+                                    ddbreak,
+                                    '',
+                                    ddgroup,
+                                    ddorder,
+                                    username
+                                )
+
+                        if add_non_time_condition:
+                            self.dp_detail_add(dp,
+                                'condition',
+                                extchild.get('field'),
+                                extchild.get('expression'),
+                                ddbreak,
+                                '',
+                                ddgroup,
+                                ddorder,
+                                username
+                            )
                         ddorder += 10
                         if len(extchild):  # check element has children
                             for actchild in extchild:
@@ -710,6 +705,7 @@ class DpApps():
     def get_dp_apps_choices(self):
         dp_category_choices = [('Outbound route', _('Outbound route')),
                                 ('Inbound route', _('Inbound route')),
+                                ('Time condition', _('Time condition')),
         ]
         for acnf in apps.get_app_configs():
             if hasattr(acnf, 'pbx_dialplan'):
@@ -721,6 +717,7 @@ class DpApps():
     def get_dp_apps_uuids(self,):
         dp_category_uuids = {'Outbound route': '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3',
                             'Inbound route': 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4',
+                            'Time condition': '4b821450-926b-175a-af93-a03c441818b1',
         }
         for acnf in apps.get_app_configs():
             if hasattr(acnf, 'pbx_dialplan'):
@@ -769,3 +766,5 @@ class DialplanDetailStruct():
         self.inline       = ddinline
         self.group        = ddgroup
         self.sequence     = ddorder
+
+

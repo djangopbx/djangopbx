@@ -34,7 +34,19 @@ from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
+from django.http import HttpResponse, HttpResponseNotFound
 from lxml import etree
+import uuid
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.utils.html import format_html
+import django_tables2 as tables
+from django_filters.views import FilterView
+import django_filters as filters
+from lxml import etree
+from io import StringIO
+import json
+from .timeconditions import TimeConditions
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -46,10 +58,13 @@ from .serializers import (
     DialplanSerializer, DialplanDetailSerializer,
 )
 
-from .forms import NewIbRouteForm, NewObRouteForm
+from .forms import NewIbRouteForm, NewObRouteForm, TimeConditionForm
 from .dialplanfunctions import SwitchDp, DpDestAction
 from pbx.commonfunctions import str2regex
 from accounts.accountfunctions import AccountFunctions
+from tenants.pbxsettings import PbxSettings
+from tenants.models import Domain
+
 
 
 class DialplanViewSet(viewsets.ModelViewSet):
@@ -140,7 +155,7 @@ def newibroute(request):
         form = NewIbRouteForm()
         form.fields['action'].choices = DpDestAction().get_dp_action_choices(request.session['domain_uuid'])
 
-    return render(request, 'dialplans/newibroute.html', {'dp_uuid': dp_uuid, 'form': form, 'refresher': 'dialplans:newibroute',})
+    return render(request, 'dialplans/newibroute.html', {'dp_uuid': dp_uuid, 'form': form, 'refresher': 'newibroute',})
 
 
 @staff_member_required
@@ -264,5 +279,208 @@ def newobroute(request):
         form.fields['gateway2'].choices = gws
         form.fields['gateway3'].choices = gws
 
-    return render(request, 'dialplans/newobroute.html', {'dp_uuid': dp_uuid, 'form': form, 'refresher': 'dialplans:newobroute',})
+    return render(request, 'dialplans/newobroute.html', {'dp_uuid': dp_uuid, 'form': form, 'refresher': 'newobroute',})
+
+
+class TimeConditionViewerList(tables.Table):
+    class Meta:
+        model = Dialplan
+        attrs = {"class": "paleblue"}
+        fields = ('name', 'number', 'context', 'sequence', 'enabled', 'description')
+
+    def render_name(self, value, record):
+        return format_html('<a href=\"/dialplans/timecondition/{}/\">{}</a>', str(record.id), value)
+
+
+
+class TimeConditionViewerFilter(filters.FilterSet):
+    description = filters.CharFilter(lookup_expr='icontains')
+
+    class Meta:
+        model = Dialplan
+        fields = ['enabled', 'number', 'description']
+
+
+
+@method_decorator(login_required, name='dispatch')
+class TimeConditionViewer(tables.SingleTableMixin, FilterView):
+    table_class = TimeConditionViewerList
+    filterset_class = TimeConditionViewerFilter
+    paginator_class = tables.LazyPaginator
+    template_name = 'dialplans/timecondition_filter.html'
+
+    table_pagination = {
+        "per_page": 25
+    }
+
+
+    def get_queryset(self):
+        qs = Dialplan.objects.filter(domain_id=self.request.session['domain_uuid'], category='Time condition')
+        return qs
+
+
+@staff_member_required
+def timecondition(request, dpuuid = None):
+    xml_list = []
+    settings_dict = {}
+    if dpuuid:
+        tc = Dialplan.objects.get(pk = dpuuid)
+        if not tc:
+            return HttpResponseNotFound()
+    else:
+        tc = None
+        tc_id = 'New'
+        tc_name = _('New Time Condition')
+        tc_number = 000
+        tc_sequence = 300
+        tc_enabled = 'true'
+        tc_description = ''
+        tc_xml = '''<extension name="New_Time_Condition" continue="true" uuid="5e26f5ff-b9f2-42b5-baf2-3d589adb3659">
+    <condition field="destination_number" expression="^XXX$"/>
+    <condition none="0" break="never">
+        <action application="transfer" data="XXX XML a.b.c"/>
+    </condition>
+    <condition field="destination_number" expression="^XXX$">
+        <action application="transfer" data="XXX XML a.b.c"/>
+    </condition>
+</extension>
+'''
+
+    if request.method == 'POST':
+        dp_id = request.POST['dp_id']
+
+        try:
+            settings_count = int(request.POST['settings_count'])
+        except:
+            settings_count = 0
+
+        setting_condition_count = dict(json.loads(request.POST['setting_condition_count']))
+        number = request.POST['number']
+
+        # process each settings section
+        last_sequence = 0
+        for i in range(1, settings_count):
+            cond_add = False
+            xml_list.append('    <condition field=\"destination_number\" expression=\"^%s$\"/>' % number)
+            cnd = ['    <condition']
+            for j in range(1, setting_condition_count[str(i)] + 1):
+                c = request.POST['settings_c_%s_%s' % (i, j)]
+                if len(c) < 1:
+                    continue
+                cond_add = True
+                r = request.POST['settings_r_%s_%s' % (i, j)]
+                if len(r) > 0:
+                    v = '%s-%s' % (request.POST['settings_v_%s_%s' % (i, j)], r)
+                else:
+                    v = request.POST['settings_v_%s_%s' % (i, j)]
+                cnd.append('%s=\"%s\"' % (c, v))
+            cnd.append('break=\"never\">')
+            xml_list.append(' '.join(cnd))
+            cnd.clear()
+            a = request.POST['settings_a_%s' % i].split(':')
+            xml_list.append('        <action application=\"%s\" data=\"%s\"/>' % (a[0], a[1]))
+            xml_list.append('    </condition>')
+            if cond_add:
+                try:
+                    last_sequence = int(request.POST['settings_s_%s' % i])
+                except:
+                    last_sequence = 500
+
+                settings_dict[last_sequence] = '\n'.join(xml_list)
+            xml_list.clear()
+
+        # process the presets section
+        default_action = request.POST['default_action'].split(':')
+        region = request.POST['tcregion']
+        p_dict = {}
+        pd_list = PbxSettings().default_settings('time_conditions', 'preset_%s' % region, 'array')
+        for pd in pd_list:
+            p_dict.update(dict(json.loads(pd)))
+        cstr_list = []
+        for key, value in request.POST.items():
+            if key.startswith('preset_'):
+                preset_name = key[7:]
+                if preset_name in p_dict:
+                    xml_list.append('    <condition field=\"destination_number\" expression=\"^%s$\"/>' % number)
+                    preset_data = p_dict[preset_name]
+                    for pdkey, pdvalue in preset_data.items():
+                        cstr_list.append('%s=\"%s\"' % (pdkey, pdvalue))
+                    cstr = ' '.join(cstr_list)
+                    cstr_list.clear()
+                    xml_list.append('    <condition %s break=\"never\">' % cstr)
+                    xml_list.append('        <action application=\"set\" data=\"preset=%s\"/>' % preset_name)
+                    xml_list.append('        <action application=\"%s\" data=\"%s\"/>' % (default_action[0], default_action[1]))
+                    xml_list.append('    </condition>')
+
+        settings_dict[last_sequence + 10] = '\n'.join(xml_list)
+        xml_list.clear()
+
+        try:
+            dp_order = int(request.POST['sequence'])
+        except:
+            dp_order = 300
+        if not dp_id == 'New':
+            tc = Dialplan.objects.get(pk = dp_id)
+        if not tc:
+            domain = Domain.objects.get(pk = uuid.UUID(request.session['domain_uuid']))
+            tc = Dialplan.objects.create(
+                domain_id = domain,
+                app_id = '4b821450-926b-175a-af93-a03c441818b1',
+                name = request.POST['name'].replace(' ', '_').lower(),
+                number = request.POST['number'],
+                destination = 'false',
+                context = request.session['domain_name'],
+                category = 'Time condition',
+                dp_continue = 'true',
+                sequence = dp_order,
+                enabled = request.POST['enabled'],
+                description = request.POST['description'],
+                updated_by = request.user.username
+            )
+
+        xml_list.append('<extension name=\"%s\" continue=\"true\" uuid=\"%s\">' % (tc.name, str(tc.id)))
+        for section in sorted(settings_dict.keys()):
+            xml_list.append(settings_dict[section])
+
+        xml_list.append('    <condition field=\"destination_number\" expression=\"^%s$\">' % number)
+        xml_list.append('        <action application=\"%s\" data=\"%s\"/>' % (default_action[0], default_action[1]))
+        xml_list.append('    </condition>')
+        xml_list.append('</extension>')
+
+        tc_xml = '\n'.join(xml_list)
+        tc.xml = tc_xml
+        tc.save()
+        if dp_id == 'New':
+            messages.add_message(request, messages.INFO, _('Time Condition added'))
+        else:
+            messages.add_message(request, messages.INFO, _('Time Condition updated'))
+
+    if tc:
+        tc_id = str(tc.id)
+        tc_name = tc.name.replace('_', ' ')
+        tc_number = tc.number
+        tc_xml = tc.xml
+        tc_sequence = tc.sequence
+        tc_enabled = tc.enabled
+        tc_description = tc.description
+
+    parser = etree.XMLParser(remove_comments=True)
+    tree   = etree.parse(StringIO(tc_xml), parser)
+    root = tree.getroot()
+    form = TimeConditionForm(etreeroot = root,
+        domain_uuid = request.session['domain_uuid'],
+        initial = {'dp_id': tc_id, 'name': tc_name, 'number': tc_number, 'sequence': tc_sequence, 'enabled': tc_enabled, 'description': tc_description}
+        )
+
+    return render(request, 'dialplans/timecondition.html', {'dp_uuid': tc_id, 'form': form, 'refresher': 'timecondition'})
+
+
+@login_required
+def tcvrchoice(request):
+    tc = TimeConditions()
+    if '=' in request.META['QUERY_STRING']:
+        tvc = request.META['QUERY_STRING'].split('=')
+        return HttpResponse(tc.get_choices(tvc[0], tvc[1]))
+
+    return HttpResponse('<option value=\"\"></option>')
 

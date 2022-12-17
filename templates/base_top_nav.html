@@ -3,6 +3,7 @@
 {% load i18n static %}
 
     {% block menu-nav %}
+    {% spaceless %}
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
     <a href="/" class="navbar-brand"><img id="menu_logo" style="width: auto; max-width: 300px; height: auto; max-height: 27px; align:center; " src="{% static '/img/logo.png' %}">&nbsp;&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,13 +11,11 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-
     {% for item in request.session.portalmenu %}
         {% if item.link == "dropdown" %}
             <li class="nav-item dropdown">
              <a class="nav-link dropdown-toggle" href="#" id="{{ item.title }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% if item.icon %}<i class="{{ item.icon }}"></i> {% endif %}{% translate item.title %}</a>
              <div class="dropdown-menu" aria-labelledby="{{ item.title }}">
-
             {% for value in request.session.portalsubmenu %}
                 {% if value.parent_id_str == item.id_str %}
                     <a href="{{ value.link }}" class="dropdown-item">{% if value.icon %}<i class="{{ value.icon }}"></i> {% endif %}{% translate value.title %}</a>
@@ -29,7 +28,6 @@
             <a href="{{ item.link }}" class="dropdown-item">{% if item.icon %}<i class="{{ item.icon }}"></i> {% endif %}{% translate item.title %}</a>
             </li>
         {% endif %}
-
     {% endfor %}
     </ul>
     <ul class="navbar-nav ms-auto">
@@ -44,5 +42,6 @@
     </ul>
     </div>
     </nav>
+    {% endspaceless %}
     {% endblock %}
 

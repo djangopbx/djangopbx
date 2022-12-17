@@ -27,7 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework import routers
 from . import views
 
@@ -35,8 +35,12 @@ router = routers.DefaultRouter()
 router.register(r'dialplans', views.DialplanViewSet)
 router.register(r'dialplan_details', views.DialplanDetailViewSet)
 
-app_name = 'dialplans'
 urlpatterns = [
     path('newibroute/', views.newibroute, name='newibroute'),
     path('newobroute/', views.newobroute, name='newobroute'),
+    path('timeconditionviewer/', views.TimeConditionViewer.as_view(), name='timeconditionviewer'),
+    path('timecondition/', views.timecondition, name='timecondition'),
+    path('timecondition/<dpuuid>/', views.timecondition, name='timecondition'),
+    path('tcvrchoice', views.tcvrchoice, name='tcvrchoice'),
+
 ]
