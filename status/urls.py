@@ -32,7 +32,6 @@ from django.urls import path
 
 from . import views
 
-app_name = 'status'
 urlpatterns = [
     path('fslogviewer/', views.fslogviewer, name='fslogviewer'),
     path('djangopbx/', views.djangopbx, name='djangopbx'),

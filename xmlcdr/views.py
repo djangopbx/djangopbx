@@ -199,5 +199,5 @@ def selectcdr(request, cdruuid=None):
         record_path_tmp = cdr.record_path.replace(switch_record_path, cdr_record_path)
         info[_('Recording')] = '<audio controls><source src="%s/%s" type="%s"> %s</audio>' % (record_path_tmp, cdr.record_name, atype, _('Your browser does not support the audio tag.'))
 
-    return render(request, 'infotable.html', {'back': 'xmlcdr:cdrviewer', 'info': info, 'title': 'Call Detail Record'})
+    return render(request, 'infotable.html', {'back': 'cdrviewer', 'info': info, 'title': 'Call Detail Record'})
 

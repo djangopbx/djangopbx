@@ -67,14 +67,14 @@ def fwconfigviewer(request):
     form.fields['logtext'].initial = shcommand(['cat', '/etc/nftables.conf'])
     form.fields['logtext'].label = 'Firewall nftables Configuration (/etc/nftables.conf)'
 
-    return render(request, 'firewall/configfileviewer.html', {'refresher': 'firewall:fwconfigviewer', 'form': form})
+    return render(request, 'firewall/configfileviewer.html', {'refresher': 'fwconfigviewer', 'form': form})
 
 
 @staff_member_required
 def fwlistcounters(request):
     nftjdata = shcommand(['/usr/local/bin/fw-list-counters.sh'])
     data = json.loads(nftjdata)
-    return render(request, 'firewall/fwlistcounters.html', {'refresher': 'firewall:fwlistcounters', 'counters': _find_objects(data['nftables'], 'counter')})
+    return render(request, 'firewall/fwlistcounters.html', {'refresher': 'fwlistcounters', 'counters': _find_objects(data['nftables'], 'counter')})
 
 
 @staff_member_required
@@ -89,7 +89,7 @@ def fwblocklist(request):
     ipv6 = []
     if 'elem' in dataipv6['nftables'][1]['set']:
         ipv6 = dataipv6['nftables'][1]['set']['elem']
-    return render(request, 'firewall/fwiplist.html', {'title': 'Block List', 'refresher': 'firewall:fwblocklist', 'ipv4': ipv4, 'ipv6': ipv6})
+    return render(request, 'firewall/fwiplist.html', {'title': 'Block List', 'refresher': 'fwblocklist', 'ipv4': ipv4, 'ipv6': ipv6})
 
 
 @staff_member_required
@@ -104,7 +104,7 @@ def fwwhitelist(request):
     ipv6 = []
     if 'elem' in dataipv6['nftables'][1]['set']:
         ipv6 = dataipv6['nftables'][1]['set']['elem']
-    return render(request, 'firewall/fwiplist.html', {'title': 'White List', 'refresher': 'firewall:fwwhitelist', 'ipv4': ipv4, 'ipv6': ipv6})
+    return render(request, 'firewall/fwiplist.html', {'title': 'White List', 'refresher': 'fwwhitelist', 'ipv4': ipv4, 'ipv6': ipv6})
 
 
 @staff_member_required
@@ -119,7 +119,7 @@ def fwsipcustomerlist(request):
     ipv6 = []
     if 'elem' in dataipv6['nftables'][1]['set']:
         ipv6 = dataipv6['nftables'][1]['set']['elem']
-    return render(request, 'firewall/fwiplist.html', {'title': 'SIP Customer List', 'refresher': 'firewall:fwsipcustomerlist', 'ipv4': ipv4, 'ipv6': ipv6})
+    return render(request, 'firewall/fwiplist.html', {'title': 'SIP Customer List', 'refresher': 'fwsipcustomerlist', 'ipv4': ipv4, 'ipv6': ipv6})
 
 
 @staff_member_required
@@ -134,7 +134,7 @@ def fwsipgatewaylist(request):
     ipv6 = []
     if 'elem' in dataipv6['nftables'][1]['set']:
         ipv6 = dataipv6['nftables'][1]['set']['elem']
-    return render(request, 'firewall/fwiplist.html', {'title': 'SIP Gateway List', 'refresher': 'firewall:fwsipgatewaylist', 'ipv4': ipv4, 'ipv6': ipv6})
+    return render(request, 'firewall/fwiplist.html', {'title': 'SIP Gateway List', 'refresher': 'fwsipgatewaylist', 'ipv4': ipv4, 'ipv6': ipv6})
 
 
 @staff_member_required

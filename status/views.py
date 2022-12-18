@@ -45,7 +45,7 @@ def fslogviewer(request):
     form.fields['logtext'].initial = shcommand(['/usr/local/bin/fslogviewer.sh'])
     form.fields['logtext'].label = 'FreeSWITCH Log (/var/log/freeswitch/freeswitch.log)'
 
-    return render(request, 'status/logviewer.html', {'refresher': 'status:fslogviewer', 'form': form})
+    return render(request, 'status/logviewer.html', {'refresher': 'fslogviewer', 'form': form})
 
 
 @staff_member_required
@@ -67,7 +67,7 @@ def djangopbx(request):
         info['Switch Version'] = '%s (%s)' % (z.groups()[0], z.groups()[1])
     info['Python Version'] = sys.version
 
-    return render(request, 'infotable.html', {'refresher': 'status:djangopbx', 'info': info, 'title': 'DjangoPBX'})
+    return render(request, 'infotable.html', {'refresher': 'djangopbx', 'info': info, 'title': 'DjangoPBX'})
 
 
 @staff_member_required
@@ -101,5 +101,5 @@ def modules(request, moduuid=None, action=None):
             else:
                 info['<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)] = [stopped, '<a href=\"/status/modules/%s/start/\">%s</a>' % (str(m.id), start), m.description]
 
-    return render(request, 'infotablemulti.html', {'refresher': 'status:modules', 'info': info, 'th': th, 'title': 'Modules Status'})
+    return render(request, 'infotablemulti.html', {'refresher': 'modules', 'info': info, 'th': th, 'title': 'Modules Status'})
 

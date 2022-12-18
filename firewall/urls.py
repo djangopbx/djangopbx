@@ -34,7 +34,6 @@ from django.views.generic.base import RedirectView
 
 from . import views
 
-app_name = 'firewall'
 urlpatterns = [
     path('fwlistcounters/', views.fwlistcounters, name='fwlistcounters'),
     path('fwblocklist/', views.fwblocklist, name='fwblocklist'),

@@ -34,8 +34,6 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'xmlcdrs', views.XmlCdrViewSet)
 
-
-app_name = 'xmlcdr'
 urlpatterns = [
     re_path(r'^xml_cdr_import/.*$', views.xml_cdr_import, name='xmlcdrimport'),
     path('cdrviewer/', views.CdrViewer.as_view(), name='cdrviewer'),
