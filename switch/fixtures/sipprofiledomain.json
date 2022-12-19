@@ -1,0 +1,58 @@
+[
+{
+    "model": "switch.sipprofiledomain",
+    "pk": "1725c7a1-9890-43d2-8da8-dfd6746f1db9",
+    "fields": {
+        "sip_profile_id": "c23ede89-6936-4b72-b0a9-62ea6a922520",
+        "name": "all",
+        "alias": "false",
+        "parse": "true",
+        "created": "2022-05-10T11:39:34.259Z",
+        "updated": "2022-05-10T11:39:34.259Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.sipprofiledomain",
+    "pk": "6ed2d566-bb01-4164-832c-ad75f85da7ec",
+    "fields": {
+        "sip_profile_id": "1bd73317-4f7f-4567-b173-33043b6da928",
+        "name": "all",
+        "alias": "false",
+        "parse": "false",
+        "created": "2022-05-10T11:39:34.693Z",
+        "updated": "2022-05-10T11:39:34.693Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.sipprofiledomain",
+    "pk": "7e56196d-1a22-4069-a163-c77f5f96ae37",
+    "fields": {
+        "sip_profile_id": "d77813a5-7cf4-4148-be43-dec66bf33116",
+        "name": "all",
+        "alias": "false",
+        "parse": "false",
+        "created": "2022-05-10T11:39:34.907Z",
+        "updated": "2022-05-10T11:39:34.907Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.sipprofiledomain",
+    "pk": "b8724a84-6bd0-4e8d-86af-137d72781774",
+    "fields": {
+        "sip_profile_id": "ff1d96c9-5b4a-44bb-a7d6-43363986f421",
+        "name": "all",
+        "alias": "false",
+        "parse": "false",
+        "created": "2022-05-10T11:39:34.350Z",
+        "updated": "2022-05-10T11:39:34.350Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

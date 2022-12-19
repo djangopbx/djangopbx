@@ -1,0 +1,1294 @@
+[
+{
+    "model": "switch.modules",
+    "pk": "027bde5c-da2d-4974-b3d6-f5e51a768f5e",
+    "fields": {
+        "label": "ESF",
+        "name": "mod_esf",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Holds the multi cast paging application for SIP.",
+        "created": "2022-12-08T10:03:51.252Z",
+        "updated": "2022-12-08T10:03:51.252Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "097d7813-d690-4fd2-9e68-c7bc719666f8",
+    "fields": {
+        "label": "Amrwb",
+        "name": "mod_amrwb",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.076Z",
+        "updated": "2022-12-08T10:03:51.076Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "09eb06db-f9ff-4a11-9da8-01981677b8bb",
+    "fields": {
+        "label": "Codec2",
+        "name": "mod_codec2",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.270Z",
+        "updated": "2022-12-08T10:03:51.270Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "0a9dbcd7-3764-4a4d-ae83-2b244f6f45f0",
+    "fields": {
+        "label": "Portuguese",
+        "name": "mod_say_pt",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:50.911Z",
+        "updated": "2022-12-08T10:30:30.533Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "0ec6cf75-fccf-4bb0-aeff-5a08b29af925",
+    "fields": {
+        "label": "Hash",
+        "name": "mod_hash",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Resource limitation.",
+        "created": "2022-12-08T10:03:50.944Z",
+        "updated": "2022-12-08T10:03:50.944Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "18f80ba3-551f-488d-9722-2225135938fb",
+    "fields": {
+        "label": "Png",
+        "name": "mod_png",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.065Z",
+        "updated": "2022-12-08T10:03:51.065Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "1a12ffac-05cd-4b6a-9252-c53bce0f48d9",
+    "fields": {
+        "label": "SpanDSP",
+        "name": "mod_spandsp",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "FAX provides fax send and receive.",
+        "created": "2022-12-08T10:03:50.950Z",
+        "updated": "2022-12-08T11:00:14.280Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "230852b9-acc1-44e1-b185-1f5c56e01931",
+    "fields": {
+        "label": "BV",
+        "name": "mod_bv",
+        "category": "Codecs",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "BroadVoice16 and BroadVoice32 audio codecs.",
+        "created": "2022-12-08T10:03:51.010Z",
+        "updated": "2022-12-08T10:03:51.010Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "236bc67b-ff1c-45a7-90b5-97a1fcf3fd1f",
+    "fields": {
+        "label": "Json Cdr",
+        "name": "mod_json_cdr",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.021Z",
+        "updated": "2022-12-08T10:03:51.021Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "2478d5ad-b804-432c-8f81-d7ad7096cb86",
+    "fields": {
+        "label": "Commands",
+        "name": "mod_commands",
+        "category": "Applications",
+        "sequence": "100",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "API interface commands.",
+        "created": "2022-12-08T10:03:51.214Z",
+        "updated": "2022-12-08T10:03:51.214Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "268c094c-d7bc-4323-8493-2a42ce66b672",
+    "fields": {
+        "label": "Call Center",
+        "name": "mod_callcenter",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Call queuing with agents and tiers for call centers.",
+        "created": "2022-12-08T10:03:51.148Z",
+        "updated": "2022-12-08T10:03:51.148Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "2e66ece8-e71b-4083-b9a9-19fead5836e7",
+    "fields": {
+        "label": "Chinese",
+        "name": "mod_say_zh",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:51.038Z",
+        "updated": "2022-12-08T10:30:55.034Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "34d8e493-442f-4816-8bed-6a3bd4dcf619",
+    "fields": {
+        "label": "Native File",
+        "name": "mod_native_file",
+        "category": "File Format Interfaces",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "File interface for codec specific file formats.",
+        "created": "2022-12-08T10:03:51.154Z",
+        "updated": "2022-12-08T10:03:51.154Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "35f76a3d-e80a-4826-a80d-67d0316b11af",
+    "fields": {
+        "label": "CID Lookup",
+        "name": "mod_cidlookup",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "Lookup caller id info.",
+        "created": "2022-12-08T10:03:50.938Z",
+        "updated": "2022-12-08T10:03:50.938Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "3ab1ecec-0b18-43e7-ac4f-7167066bc22f",
+    "fields": {
+        "label": "Dialplan Plan Tools",
+        "name": "mod_dptools",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Provides a number of apps and utilities for the dialplan.",
+        "created": "2022-12-08T10:03:51.198Z",
+        "updated": "2022-12-08T10:03:51.198Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "3b22d613-bb1e-4f1b-8fb9-d4b2925f5786",
+    "fields": {
+        "label": "TTS Commandline",
+        "name": "mod_tts_commandline",
+        "category": "Speech Recognition / Text to Speech",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Commandline text to speech engine.",
+        "created": "2022-12-08T10:03:51.245Z",
+        "updated": "2022-12-08T10:03:51.245Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "3dc73c75-0307-49eb-8fea-e7087d469576",
+    "fields": {
+        "label": "G.729",
+        "name": "mod_g729",
+        "category": "Codecs",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "true",
+        "description": "G729 codec supports passthrough mode",
+        "created": "2022-12-08T10:03:51.293Z",
+        "updated": "2022-12-08T10:03:51.293Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "3e95f4c0-b96a-4741-a27a-cdc88e9da13e",
+    "fields": {
+        "label": "G.723.1",
+        "name": "mod_g723_1",
+        "category": "Codecs",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "G.723.1 codec.",
+        "created": "2022-12-08T10:03:51.181Z",
+        "updated": "2022-12-08T10:03:51.181Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "453c067a-8912-4c61-b65d-ee8f0addf4b4",
+    "fields": {
+        "label": "Say Fa",
+        "name": "mod_say_fa",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:50.900Z",
+        "updated": "2022-12-08T10:03:50.900Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "480a1c51-6600-4d6c-ae96-82aa108c73ef",
+    "fields": {
+        "label": "Opus",
+        "name": "mod_opus",
+        "category": "Codecs",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "OPUS ultra-low delay audio codec",
+        "created": "2022-12-08T10:03:51.170Z",
+        "updated": "2022-12-08T10:03:51.170Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "487aadb9-dd0b-4a57-8cee-b8e544bd90c8",
+    "fields": {
+        "label": "Pgsql",
+        "name": "mod_pgsql",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.137Z",
+        "updated": "2022-12-08T10:03:51.137Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "54bf7dff-73db-44ac-88fc-15709020ec6d",
+    "fields": {
+        "label": "Dahdi Codec",
+        "name": "mod_dahdi_codec",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:50.916Z",
+        "updated": "2022-12-08T10:03:50.916Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "5a4f24fe-ff9c-461d-ac41-4a5995a384c0",
+    "fields": {
+        "label": "Russian",
+        "name": "mod_say_ru",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:51.082Z",
+        "updated": "2022-12-08T10:30:38.039Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "5f3bbbb7-6c16-4492-a1f5-d5d85df2a57f",
+    "fields": {
+        "label": "Italian",
+        "name": "mod_say_it",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:51.043Z",
+        "updated": "2022-12-08T10:30:12.721Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "5f7f35e3-3ab4-4bf7-9ac9-034162d025d2",
+    "fields": {
+        "label": "Console",
+        "name": "mod_console",
+        "category": "Loggers",
+        "sequence": "400",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Send logs to the console.",
+        "created": "2022-12-08T10:03:50.955Z",
+        "updated": "2022-12-08T10:03:50.955Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "6010e23b-dc13-4de8-9ad6-0e578859fc59",
+    "fields": {
+        "label": "French",
+        "name": "mod_say_fr",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:51.187Z",
+        "updated": "2022-12-08T10:29:46.076Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "60d9ad53-7dce-4289-9a61-462968a131a7",
+    "fields": {
+        "label": "Imagick",
+        "name": "mod_imagick",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:50.972Z",
+        "updated": "2022-12-08T10:03:50.972Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "6429591b-37b4-4e30-845e-367edf6ffac2",
+    "fields": {
+        "label": "SMS",
+        "name": "mod_sms",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Chat messages",
+        "created": "2022-12-08T10:03:51.192Z",
+        "updated": "2022-12-08T10:03:51.192Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "727ce9dd-3dc0-4b45-b8ba-b8ea1abdc583",
+    "fields": {
+        "label": "Tone Stream",
+        "name": "mod_tone_stream",
+        "category": "Streams / Files",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Generate tone streams.",
+        "created": "2022-12-08T10:03:51.282Z",
+        "updated": "2022-12-08T10:03:51.282Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "76237faf-03ab-4489-bef4-16bd14ef2bc9",
+    "fields": {
+        "label": "CDR CSV",
+        "name": "mod_cdr_csv",
+        "category": "Event Handlers",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "CSV call detail record handler.",
+        "created": "2022-12-08T10:03:51.109Z",
+        "updated": "2022-12-08T10:03:51.109Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "782994d9-c0dc-4db9-801b-ee682827eec0",
+    "fields": {
+        "label": "Shout",
+        "name": "mod_shout",
+        "category": "Streams / Files",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "MP3 files and shoutcast streams.",
+        "created": "2022-12-08T10:03:51.258Z",
+        "updated": "2022-12-08T10:03:51.258Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "7948490d-e91b-4334-aaa5-fb667d484e50",
+    "fields": {
+        "label": "Isac",
+        "name": "mod_isac",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:50.894Z",
+        "updated": "2022-12-08T10:03:50.894Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "7b97826e-f81c-42c7-a4a4-4c3b838ad6e7",
+    "fields": {
+        "label": "HT-TAPI",
+        "name": "mod_httapi",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "HT-TAPI Hypertext Telephony API",
+        "created": "2022-12-08T10:03:51.115Z",
+        "updated": "2022-12-08T10:03:51.115Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "7c851a76-2916-4d56-9b36-ba7c6ab9a8d4",
+    "fields": {
+        "label": "G.729",
+        "name": "mod_bcg729",
+        "category": "Codecs",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "false",
+        "description": "bcg729 royalty free implementation",
+        "created": "2022-12-08T10:03:51.287Z",
+        "updated": "2022-12-08T10:03:51.287Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "7d19e133-a8ff-4441-8d05-dbdac6e35d8f",
+    "fields": {
+        "label": "Local Stream",
+        "name": "mod_local_stream",
+        "category": "Streams / Files",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "For local streams (play all the files in a directory).",
+        "created": "2022-12-08T10:03:51.226Z",
+        "updated": "2022-12-08T10:03:51.226Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "7dbf30f2-ee03-4e88-bfc6-c48a9be2bfc4",
+    "fields": {
+        "label": "Hungarian",
+        "name": "mod_say_hu",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:50.933Z",
+        "updated": "2022-12-08T10:30:04.487Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "83b705c1-108c-4fbe-a499-01208eb2df5e",
+    "fields": {
+        "label": "Hebrew",
+        "name": "mod_say_he",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:51.093Z",
+        "updated": "2022-12-08T10:29:55.168Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "8f01883d-36c9-45c8-bb1f-d4cd89668a2b",
+    "fields": {
+        "label": "FIFO",
+        "name": "mod_fifo",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "FIFO provides custom call queues including call park.",
+        "created": "2022-12-08T10:03:51.176Z",
+        "updated": "2022-12-08T10:03:51.176Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "8f8026b8-9f1b-48d9-be60-1dec20cfa6c4",
+    "fields": {
+        "label": "Say Pl",
+        "name": "mod_say_pl",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:50.888Z",
+        "updated": "2022-12-08T10:03:50.888Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "92906071-a9cb-4a74-aebb-96e24bf5ecd9",
+    "fields": {
+        "label": "Sound File",
+        "name": "mod_sndfile",
+        "category": "File Format Interfaces",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Multi-format file format transcoder (WAV, etc).",
+        "created": "2022-12-08T10:03:51.071Z",
+        "updated": "2022-12-08T10:03:51.071Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "9da3e8a6-f03d-423d-a760-33adbed59588",
+    "fields": {
+        "label": "ENUM",
+        "name": "mod_enum",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Route PSTN numbers over internet according to ENUM servers, such as e164.org.",
+        "created": "2022-12-08T10:03:50.928Z",
+        "updated": "2022-12-08T10:03:50.928Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "9db530db-2b72-4553-a78a-e72b87754109",
+    "fields": {
+        "label": "Event Socket",
+        "name": "mod_event_socket",
+        "category": "Event Handlers",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Sends events via a single socket.",
+        "created": "2022-12-08T10:03:50.983Z",
+        "updated": "2022-12-08T10:03:50.983Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "9dbf4754-d884-4c9d-8f14-58318fc99315",
+    "fields": {
+        "label": "Distributor",
+        "name": "mod_distributor",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "Round robin call distribution.",
+        "created": "2022-12-08T10:03:50.960Z",
+        "updated": "2022-12-08T10:03:50.960Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "a345427e-7f27-422a-b50e-15853c1cef73",
+    "fields": {
+        "label": "XML Curl",
+        "name": "mod_xml_curl",
+        "category": "XML Interfaces",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "XML based call detail record handler.",
+        "created": "2022-12-08T10:32:20.251Z",
+        "updated": "2022-12-08T10:32:20.251Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "a398c56f-1e48-4222-a515-7c41a71a226f",
+    "fields": {
+        "label": "Directory",
+        "name": "mod_directory",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "Dial by name directory.",
+        "created": "2022-12-08T10:03:51.203Z",
+        "updated": "2022-12-08T10:03:51.203Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "a6c04de7-2333-4f2b-86ca-90408a1502d6",
+    "fields": {
+        "label": "Silk",
+        "name": "mod_silk",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.005Z",
+        "updated": "2022-12-08T10:03:51.005Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "aaa8d151-5446-48ba-978a-2349547904a1",
+    "fields": {
+        "label": "Conference",
+        "name": "mod_conference",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Conference room module.",
+        "created": "2022-12-08T10:03:50.994Z",
+        "updated": "2022-12-08T10:03:50.994Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "b0571505-dcba-430d-9112-5df1a93d6fb6",
+    "fields": {
+        "label": "Esl",
+        "name": "mod_esl",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.104Z",
+        "updated": "2022-12-08T10:03:51.104Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "b1219e59-b94c-48d9-8f16-dbac6caaed6f",
+    "fields": {
+        "label": "Dutch",
+        "name": "mod_say_nl",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:51.120Z",
+        "updated": "2022-12-08T10:30:21.607Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "b5444d54-e985-45a6-8a90-daad30c3d1ea",
+    "fields": {
+        "label": "Thai",
+        "name": "mod_say_th",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:50.922Z",
+        "updated": "2022-12-08T10:30:46.889Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "b6f36184-2897-4d18-82b9-77d74c153a5e",
+    "fields": {
+        "label": "Lua",
+        "name": "mod_lua",
+        "category": "Languages",
+        "sequence": "200",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "Lua script.",
+        "created": "2022-12-08T10:03:51.264Z",
+        "updated": "2022-12-08T10:09:27.901Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "bae4cd7e-dcfd-4199-9ecb-3c61924fa278",
+    "fields": {
+        "label": "German",
+        "name": "mod_say_de",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:51.054Z",
+        "updated": "2022-12-08T10:28:33.470Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "bcfbf0a4-250b-4b0a-af45-a7f594c4e758",
+    "fields": {
+        "label": "Flite",
+        "name": "mod_flite",
+        "category": "Speech Recognition / Text to Speech",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Text to Speech engine.",
+        "created": "2022-12-08T10:03:51.060Z",
+        "updated": "2022-12-08T10:03:51.060Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "bed666cd-699f-4da6-965b-22683f975e66",
+    "fields": {
+        "label": "Python",
+        "name": "mod_python3",
+        "category": "Languages",
+        "sequence": "200",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Python script.",
+        "created": "2022-12-08T10:09:02.193Z",
+        "updated": "2022-12-08T10:09:02.193Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "c0443f1f-3983-4275-82ca-fb472d667f23",
+    "fields": {
+        "label": "Sofia",
+        "name": "mod_sofia",
+        "category": "Endpoints",
+        "sequence": "300",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "SIP module.",
+        "created": "2022-12-08T10:03:51.232Z",
+        "updated": "2022-12-08T10:03:51.232Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "c15ac571-4f1a-4424-91e0-1254d8c47846",
+    "fields": {
+        "label": "Expr",
+        "name": "mod_expr",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Expression evaluation library.",
+        "created": "2022-12-08T10:03:50.977Z",
+        "updated": "2022-12-08T10:03:50.977Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "c3b8d66f-4207-4d61-b09e-c2ed75659c3e",
+    "fields": {
+        "label": "AMR",
+        "name": "mod_amr",
+        "category": "Codecs",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "AMR codec.",
+        "created": "2022-12-08T10:03:51.126Z",
+        "updated": "2022-12-08T10:03:51.126Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "c44b5e80-3644-49f1-9f25-e2624ccf0feb",
+    "fields": {
+        "label": "Voicemail",
+        "name": "mod_voicemail",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Voicemail",
+        "created": "2022-12-08T10:10:18.750Z",
+        "updated": "2022-12-08T10:10:18.750Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "c4d97dbf-5a1d-40c7-82cb-175659920bd8",
+    "fields": {
+        "label": "B64",
+        "name": "mod_b64",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.049Z",
+        "updated": "2022-12-08T10:03:51.049Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "c7c2395c-9727-45c4-a41f-68d83ff9fa51",
+    "fields": {
+        "label": "Mp4v",
+        "name": "mod_mp4v",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.087Z",
+        "updated": "2022-12-08T10:03:51.087Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "c9ac140b-3cc1-4fe8-8578-4b98f97299cc",
+    "fields": {
+        "label": "Say Hr",
+        "name": "mod_say_hr",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.098Z",
+        "updated": "2022-12-08T10:03:51.098Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "d0fffef6-3645-42f6-a0d9-87ec210794fb",
+    "fields": {
+        "label": "Loopback",
+        "name": "mod_loopback",
+        "category": "Endpoints",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "A loopback channel driver to make an outbound call as an inbound call.",
+        "created": "2022-12-08T10:03:50.988Z",
+        "updated": "2022-12-08T10:03:50.988Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "d437ffb8-0b04-4d2e-b2ff-6024efafc88f",
+    "fields": {
+        "label": "Valet Parking",
+        "name": "mod_valet_parking",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Call parking",
+        "created": "2022-12-08T10:03:51.276Z",
+        "updated": "2022-12-08T10:03:51.276Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "dbd85a8f-9722-46f4-a86c-08a75c342504",
+    "fields": {
+        "label": "Spanish",
+        "name": "mod_say_es",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": null,
+        "created": "2022-12-08T10:03:50.999Z",
+        "updated": "2022-12-08T10:29:35.374Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "dd33634d-c55d-4e29-ae39-3cc0e6df31e8",
+    "fields": {
+        "label": "Theora",
+        "name": "mod_theora",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.027Z",
+        "updated": "2022-12-08T10:03:51.027Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "de9d2274-04d1-4d1a-9303-a2bc698e87d1",
+    "fields": {
+        "label": "H26x",
+        "name": "mod_h26x",
+        "category": "Codecs",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Video codecs",
+        "created": "2022-12-08T10:03:51.131Z",
+        "updated": "2022-12-08T10:03:51.132Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "eba6eec5-d9ec-426f-a019-4639ae658e03",
+    "fields": {
+        "label": "Memcached",
+        "name": "mod_memcache",
+        "category": "Applications",
+        "sequence": "150",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "API for memcached.",
+        "created": "2022-12-08T10:03:51.143Z",
+        "updated": "2022-12-08T10:03:51.143Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "eef01333-34dc-4a37-bc8f-a32db86cafa4",
+    "fields": {
+        "label": "Rtc",
+        "name": "mod_rtc",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:50.966Z",
+        "updated": "2022-12-08T10:03:50.966Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "efe44a7b-c074-4ae2-a6ec-33c396167b52",
+    "fields": {
+        "label": "Verto",
+        "name": "mod_verto",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:50.906Z",
+        "updated": "2022-12-08T10:03:50.906Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "f00fba98-dd1a-4123-a007-ea3e5b885816",
+    "fields": {
+        "label": "English",
+        "name": "mod_say_en",
+        "category": "Say",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "",
+        "created": "2022-12-08T10:03:51.165Z",
+        "updated": "2022-12-08T10:03:51.165Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "f28af77b-da46-4bcc-b0db-69b77f7862fe",
+    "fields": {
+        "label": "Say Ja",
+        "name": "mod_say_ja",
+        "category": "Auto",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "",
+        "created": "2022-12-08T10:03:51.220Z",
+        "updated": "2022-12-08T10:03:51.220Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "f50df5a0-8a6e-4441-b64b-cbcd60062e3f",
+    "fields": {
+        "label": "XML CDR",
+        "name": "mod_xml_cdr",
+        "category": "XML Interfaces",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "XML based call detail record handler.",
+        "created": "2022-12-08T10:03:51.209Z",
+        "updated": "2022-12-08T10:03:51.209Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "f6d0b94a-cf72-445a-a591-80fb210a9ab3",
+    "fields": {
+        "label": "DB",
+        "name": "mod_db",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Database key / value storage functionality, dialing and limit backend.",
+        "created": "2022-12-08T10:03:51.016Z",
+        "updated": "2022-12-08T10:03:51.016Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "fc1ec1ed-9d78-4c1b-9efa-8b1ba2f34c4f",
+    "fields": {
+        "label": "Dialplan XML",
+        "name": "mod_dialplan_xml",
+        "category": "Dialplan Interfaces",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Provides dialplan functionality in XML.",
+        "created": "2022-12-08T10:03:51.032Z",
+        "updated": "2022-12-08T10:03:51.032Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "fd1646d2-52ed-4cb7-906b-391e9d725019",
+    "fields": {
+        "label": "FSV",
+        "name": "mod_fsv",
+        "category": "Applications",
+        "sequence": "800",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Video application (Recording and playback).",
+        "created": "2022-12-08T10:03:51.159Z",
+        "updated": "2022-12-08T10:03:51.159Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
+    "pk": "fe35abb6-3a6a-4f15-937a-eef52cb722a9",
+    "fields": {
+        "label": "Log File",
+        "name": "mod_logfile",
+        "category": "Loggers",
+        "sequence": "400",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Send logs to the local file system.",
+        "created": "2022-12-08T10:03:51.239Z",
+        "updated": "2022-12-08T10:03:51.239Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

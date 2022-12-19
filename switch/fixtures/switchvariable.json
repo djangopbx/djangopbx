@@ -1,0 +1,1316 @@
+[
+{
+    "model": "switch.switchvariable",
+    "pk": "00652c28-ad5f-47bb-b7ab-4d60fa64fee2",
+    "fields": {
+        "category": "Defaults",
+        "name": "default_areacode",
+        "value": "208",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "60",
+        "description": null,
+        "created": "2022-05-10T11:39:25.265Z",
+        "updated": "2022-05-10T11:39:25.265Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "02abbebb-b260-4fa0-b3c7-db3d44d11c26",
+    "fields": {
+        "category": "Defaults",
+        "name": "use_profile",
+        "value": "internal",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "80",
+        "description": null,
+        "created": "2022-05-10T11:39:25.268Z",
+        "updated": "2022-05-10T11:39:25.268Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "0d877924-555e-4e0a-9122-2a7b1353a14e",
+    "fields": {
+        "category": "Ringtones",
+        "name": "cy-ring",
+        "value": "%(1500,3000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "300",
+        "description": null,
+        "created": "2022-05-10T11:39:25.303Z",
+        "updated": "2022-05-10T11:39:25.303Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "14ef9e06-ffc9-4c68-834f-43963a85f3bd",
+    "fields": {
+        "category": "Ringtones",
+        "name": "ru-ring",
+        "value": "%(800,3200,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "500",
+        "description": null,
+        "created": "2022-05-10T11:39:25.332Z",
+        "updated": "2022-05-10T11:39:25.332Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "1f8d82bc-bfb8-440e-b7af-62dd7c02eabd",
+    "fields": {
+        "category": "Ringtones",
+        "name": "hk-ring",
+        "value": "%(400,200,440,480);%(400,3000,440,480)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "390",
+        "description": null,
+        "created": "2022-05-10T11:39:25.316Z",
+        "updated": "2022-05-10T11:39:25.316Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "1fc13450-c252-410d-a8cf-2b3fcd4d44e9",
+    "fields": {
+        "category": "Codecs",
+        "name": "media_mix_inbound_outbound_codecs",
+        "value": "true",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "30",
+        "description": null,
+        "created": "2022-05-10T11:39:25.258Z",
+        "updated": "2022-05-10T11:39:25.258Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "22e855a8-93c2-4e3a-bfac-d626a93a3619",
+    "fields": {
+        "category": "Ringtones",
+        "name": "pt-ring",
+        "value": "%(1000,5000,400)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "380",
+        "description": null,
+        "created": "2022-05-10T11:39:25.314Z",
+        "updated": "2022-05-10T11:39:25.315Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "25fbf401-4685-49f0-b069-de008271a2cc",
+    "fields": {
+        "category": "Ringtones",
+        "name": "hu-ring",
+        "value": "%(1250,3750,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "400",
+        "description": null,
+        "created": "2022-05-10T11:39:25.317Z",
+        "updated": "2022-05-10T11:39:25.317Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "264b2977-8440-4e47-bf77-548516e63a01",
+    "fields": {
+        "category": "IP Address",
+        "name": "external_rtp_ip",
+        "value": "$${local_ip_v4}",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "230",
+        "description": null,
+        "created": "2022-05-10T11:39:25.292Z",
+        "updated": "2022-05-10T11:39:25.292Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "2685414b-797c-4aaf-b5de-f29e975287f7",
+    "fields": {
+        "category": "Ringtones",
+        "name": "ro-ring",
+        "value": "%(1850,4150,475,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "470",
+        "description": null,
+        "created": "2022-05-10T11:39:25.328Z",
+        "updated": "2022-05-10T11:39:25.328Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "29d1a1dc-6276-4c04-98da-48ce2c6104e6",
+    "fields": {
+        "category": "Ringtones",
+        "name": "us-ring",
+        "value": "%(2000,4000,440,480)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "540",
+        "description": null,
+        "created": "2022-05-10T11:39:25.339Z",
+        "updated": "2022-05-10T11:39:25.339Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "2cdfc89d-0932-4515-9542-b4027a6ae807",
+    "fields": {
+        "category": "SIP Profile: Internal",
+        "name": "internal_ssl_enable",
+        "value": "false",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "710",
+        "description": null,
+        "created": "2022-05-10T11:39:25.364Z",
+        "updated": "2022-05-10T11:39:25.364Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "3031d773-f2ef-4b44-8891-35739d98d603",
+    "fields": {
+        "category": "SIP Profile: External",
+        "name": "external_ssl_enable",
+        "value": "false",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "670",
+        "description": null,
+        "created": "2022-05-10T11:39:25.359Z",
+        "updated": "2022-05-10T11:39:25.359Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "31fa14c3-59e3-4286-aa22-59b1b172e83e",
+    "fields": {
+        "category": "Ringtones",
+        "name": "ca-ring",
+        "value": "%(2000,4000,440,480)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "280",
+        "description": null,
+        "created": "2022-05-10T11:39:25.300Z",
+        "updated": "2022-05-10T11:39:25.300Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "333c0304-b5df-4573-9c01-b6f221a8e660",
+    "fields": {
+        "category": "Ringtones",
+        "name": "pk-ring",
+        "value": "%(1000,2000,400)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "450",
+        "description": null,
+        "created": "2022-05-10T11:39:25.325Z",
+        "updated": "2022-05-10T11:39:25.325Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "34c007f6-145d-4c1a-b649-0027ce2a7721",
+    "fields": {
+        "category": "Defaults",
+        "name": "default_exitcode",
+        "value": "011",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "190",
+        "description": null,
+        "created": "2022-05-10T11:39:25.286Z",
+        "updated": "2022-05-10T11:39:25.286Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "34dfde5e-46fe-496a-8e66-eb01dfeb5ef4",
+    "fields": {
+        "category": "Defaults",
+        "name": "default_language",
+        "value": "en",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "90",
+        "description": null,
+        "created": "2022-05-10T11:39:25.270Z",
+        "updated": "2022-05-10T11:39:25.270Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "3a47ec38-f976-4bc1-847a-db1047139d2e",
+    "fields": {
+        "category": "SIP Profile: Internal",
+        "name": "internal_sip_port",
+        "value": "5060",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "690",
+        "description": null,
+        "created": "2022-05-10T11:39:25.362Z",
+        "updated": "2022-05-10T11:39:25.362Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "3b8f0eaf-bcfd-4668-8240-81919c86878f",
+    "fields": {
+        "category": "Ringtones",
+        "name": "cz-ring",
+        "value": "%(1000,4000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "310",
+        "description": null,
+        "created": "2022-05-10T11:39:25.304Z",
+        "updated": "2022-05-10T11:39:25.304Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "3f0ad833-190d-4aa1-b3d7-fb1a1f7687e7",
+    "fields": {
+        "category": "Ringtones",
+        "name": "dz-ring",
+        "value": "%(1500,3500,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "340",
+        "description": null,
+        "created": "2022-05-10T11:39:25.309Z",
+        "updated": "2022-05-10T11:39:25.309Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "4536e173-9ff3-48b2-aed0-c0fafbd38efa",
+    "fields": {
+        "category": "Ringtones",
+        "name": "be-ring",
+        "value": "%(1000,3000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "270",
+        "description": null,
+        "created": "2022-05-10T11:39:25.298Z",
+        "updated": "2022-05-10T11:39:25.298Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "4659920c-48bf-4012-b638-97bf0aa31c26",
+    "fields": {
+        "category": "SIP",
+        "name": "unroll_loops",
+        "value": "true",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "630",
+        "description": null,
+        "created": "2022-05-10T11:39:25.352Z",
+        "updated": "2022-05-10T11:39:25.352Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "48c418c5-8392-4c5b-94e3-61ec11bf1bcd",
+    "fields": {
+        "category": "Ringtones",
+        "name": "fi-ring",
+        "value": "%(1000,4000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "360",
+        "description": null,
+        "created": "2022-05-10T11:39:25.312Z",
+        "updated": "2022-05-10T11:39:25.312Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "494fcad1-d971-48e8-aa7b-32198a794dcf",
+    "fields": {
+        "category": "SIP Profile: Internal",
+        "name": "internal_tls_port",
+        "value": "5061",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "700",
+        "description": null,
+        "created": "2022-05-10T11:39:25.363Z",
+        "updated": "2022-05-10T11:39:25.363Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "4dc0bb3e-3a91-42ef-92d0-9f9f403acbe2",
+    "fields": {
+        "category": "Tones",
+        "name": "vacant-us-tone",
+        "value": "%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "560",
+        "description": null,
+        "created": "2022-05-10T11:39:25.341Z",
+        "updated": "2022-05-10T11:39:25.342Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "52679adf-906c-429b-a2ff-5e375401477b",
+    "fields": {
+        "category": "IP Address",
+        "name": "external_sip_ip",
+        "value": "$${local_ip_v4}",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "240",
+        "description": null,
+        "created": "2022-05-10T11:39:25.293Z",
+        "updated": "2022-05-10T11:39:25.293Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "5a8da709-c5b8-4496-afdd-551e91d8af6f",
+    "fields": {
+        "category": "Ringtones",
+        "name": "bong-ring",
+        "value": "v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "550",
+        "description": null,
+        "created": "2022-05-10T11:39:25.340Z",
+        "updated": "2022-05-10T11:39:25.340Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "5c59d5d7-8b97-4d86-8dd3-aa3b296853c2",
+    "fields": {
+        "category": "XMPP",
+        "name": "xmpp_client_profile",
+        "value": "xmppc",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "200",
+        "description": null,
+        "created": "2022-05-10T11:39:25.287Z",
+        "updated": "2022-05-10T11:39:25.287Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "5fc0017a-0cb6-4fab-be4d-06e1976a1c57",
+    "fields": {
+        "category": "Defaults",
+        "name": "ajax_refresh_rate",
+        "value": "3000",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "120",
+        "description": null,
+        "created": "2022-05-10T11:39:25.275Z",
+        "updated": "2022-05-10T11:39:25.275Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "693b1e41-265c-4187-94ce-bc78faca8098",
+    "fields": {
+        "category": "Ringtones",
+        "name": "in-ring",
+        "value": "%(400,200,425,375);%(400,2000,425,375)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "420",
+        "description": null,
+        "created": "2022-05-10T11:39:25.321Z",
+        "updated": "2022-05-10T11:39:25.321Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "6a52a38c-2aee-418a-bf71-638e32050d5e",
+    "fields": {
+        "category": "Ringtones",
+        "name": "pl-ring",
+        "value": "%(1000,4000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "460",
+        "description": null,
+        "created": "2022-05-10T11:39:25.327Z",
+        "updated": "2022-05-10T11:39:25.327Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "6b0bfff1-4011-40dc-96fd-3013a455db79",
+    "fields": {
+        "category": "XMPP",
+        "name": "bind_server_ip",
+        "value": "auto",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "220",
+        "description": null,
+        "created": "2022-05-10T11:39:25.290Z",
+        "updated": "2022-05-10T11:39:25.291Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "73135f9d-1070-41b2-a75a-80a1405a4ca2",
+    "fields": {
+        "category": "Ringtones",
+        "name": "au-ring",
+        "value": "%(400,200,383,417);%(400,2000,383,417)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "260",
+        "description": null,
+        "created": "2022-05-10T11:39:25.297Z",
+        "updated": "2022-05-10T11:39:25.297Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "78880410-49a1-4495-8963-57057223e4d2",
+    "fields": {
+        "category": "Defaults",
+        "name": "sleep",
+        "value": "0",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "150",
+        "description": null,
+        "created": "2022-05-10T11:39:25.279Z",
+        "updated": "2022-05-10T11:39:25.279Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "7e8848fb-ace6-48f3-9a69-e21e51e96e39",
+    "fields": {
+        "category": "Ringtones",
+        "name": "jp-ring",
+        "value": "%(1000,2000,420,380)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "430",
+        "description": null,
+        "created": "2022-05-10T11:39:25.322Z",
+        "updated": "2022-05-10T11:39:25.322Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "819745ac-edd7-4342-94d1-07d6e5f23b00",
+    "fields": {
+        "category": "Defaults",
+        "name": "sit",
+        "value": "%(274,0,913.8);%(274,0,1370.6);%(380,0,1776.7)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "70",
+        "description": null,
+        "created": "2022-05-10T11:39:25.267Z",
+        "updated": "2022-05-10T11:39:25.267Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "82555625-0650-49eb-990c-78ded1ca6c6c",
+    "fields": {
+        "category": "Ringtones",
+        "name": "it-ring",
+        "value": "%(1000,4000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "490",
+        "description": null,
+        "created": "2022-05-10T11:39:25.331Z",
+        "updated": "2022-05-10T11:39:25.331Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "84320a82-2ffb-4f92-86c1-7390e21f9aea",
+    "fields": {
+        "category": "Ringtones",
+        "name": "rs-ring",
+        "value": "%(1000,4000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "480",
+        "description": null,
+        "created": "2022-05-10T11:39:25.329Z",
+        "updated": "2022-05-10T11:39:25.329Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "92e0c815-f0c0-45eb-9768-21a0f6de4527",
+    "fields": {
+        "category": "Tones",
+        "name": "bong-us-tone",
+        "value": "v=-7;%(100,0,941.0,1477.0);v=-7;>=2;+=.1;%(1400,0,350,440)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "600",
+        "description": null,
+        "created": "2022-05-10T11:39:25.348Z",
+        "updated": "2022-05-10T11:39:25.348Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "9332b90e-017d-495f-8bd5-dcc6adcc6391",
+    "fields": {
+        "category": "Tones",
+        "name": "vacant-uk-tone",
+        "value": "%(330,15,950);%(330,15,1400);%(330,1000,1800)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "570",
+        "description": null,
+        "created": "2022-05-10T11:39:25.343Z",
+        "updated": "2022-05-10T11:39:25.343Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "94dff3af-f5a2-4a90-aa2b-e750497b5a0e",
+    "fields": {
+        "category": "Defaults",
+        "name": "transfer_ringback",
+        "value": "$${uk-ring}",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "140",
+        "description": "",
+        "created": "2022-05-10T11:39:25.278Z",
+        "updated": "2022-11-29T18:23:05.788Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "978314c6-7cae-4783-ad18-862e8ae2eb41",
+    "fields": {
+        "category": "SIP Profile: External",
+        "name": "external_tls_port",
+        "value": "5081",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "660",
+        "description": null,
+        "created": "2022-05-10T11:39:25.357Z",
+        "updated": "2022-05-10T11:39:25.357Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "98f38118-26ee-412d-a415-e2b7e3dc3464",
+    "fields": {
+        "category": "Defaults",
+        "name": "ringback",
+        "value": "$${uk-ring}",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "130",
+        "description": "",
+        "created": "2022-05-10T11:39:25.276Z",
+        "updated": "2022-11-29T18:22:54.913Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "9c65a985-5ad0-4ad3-885b-ccb412adf836",
+    "fields": {
+        "category": "Music on Hold",
+        "name": "hold_music",
+        "value": "local_stream://default",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "250",
+        "description": null,
+        "created": "2022-05-10T11:39:25.295Z",
+        "updated": "2022-05-10T11:39:25.295Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "9e2971aa-3f15-4fe3-af3c-57e892985211",
+    "fields": {
+        "category": "Ringtones",
+        "name": "fr-ring",
+        "value": "%(1500,3500,440)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "370",
+        "description": null,
+        "created": "2022-05-10T11:39:25.313Z",
+        "updated": "2022-05-10T11:39:25.313Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "a4a15c7f-4e90-4e9d-a5bc-d6898b7beccc",
+    "fields": {
+        "category": "SIP Profile: Internal",
+        "name": "internal_ssl_dir",
+        "value": "$${conf_dir}/tls",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "720",
+        "description": null,
+        "created": "2022-05-10T11:39:25.366Z",
+        "updated": "2022-05-10T11:39:25.366Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "a4eb601b-d91c-46e9-9ead-3627d3c8d12a",
+    "fields": {
+        "category": "SIP",
+        "name": "hangup_on_subscriber_absent",
+        "value": "true",
+        "command": "set",
+        "hostname": null,
+        "enabled": "false",
+        "sequence": "610",
+        "description": null,
+        "created": "2022-05-10T11:39:25.349Z",
+        "updated": "2022-05-10T11:39:25.349Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "a7bfe1ab-488d-4c73-a9ba-f81c07676b2e",
+    "fields": {
+        "category": "Codecs",
+        "name": "outbound_codec_prefs",
+        "value": "G729,PCMA",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "20",
+        "description": "",
+        "created": "2022-05-10T11:39:25.256Z",
+        "updated": "2022-11-29T17:22:53.998Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "a9f1bee8-a283-4fe1-8519-12c58d2dc420",
+    "fields": {
+        "category": "Ringtones",
+        "name": "ko-ring",
+        "value": "%(1000,2000,440,480)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "440",
+        "description": null,
+        "created": "2022-05-10T11:39:25.324Z",
+        "updated": "2022-05-10T11:39:25.324Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "ad1b2ef9-e67e-436f-85bc-008f6ac8a9e8",
+    "fields": {
+        "category": "Defaults",
+        "name": "default_country",
+        "value": "US",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "170",
+        "description": null,
+        "created": "2022-05-10T11:39:25.283Z",
+        "updated": "2022-05-10T11:39:25.283Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "b22faae3-bb13-44cd-9b07-c880afe8cd7d",
+    "fields": {
+        "category": "Defaults",
+        "name": "console_loglevel",
+        "value": "info",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "50",
+        "description": null,
+        "created": "2022-05-10T11:39:25.263Z",
+        "updated": "2022-05-10T11:39:25.263Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "b3911936-90f6-41fb-9f57-98619499b3a8",
+    "fields": {
+        "category": "Ringtones",
+        "name": "cn-ring",
+        "value": "%(1000,4000,450)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "290",
+        "description": null,
+        "created": "2022-05-10T11:39:25.301Z",
+        "updated": "2022-05-10T11:39:25.301Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "b5683ebf-8cf1-4a2a-9254-826bf15ae2ec",
+    "fields": {
+        "category": "Ringtones",
+        "name": "eg-ring",
+        "value": "%(2000,1000,475,375)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "350",
+        "description": null,
+        "created": "2022-05-10T11:39:25.310Z",
+        "updated": "2022-05-10T11:39:25.310Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "b9a6b9d8-a68f-4c18-9c90-232bc46df3b5",
+    "fields": {
+        "category": "Defaults",
+        "name": "record_ext",
+        "value": "wav",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "160",
+        "description": null,
+        "created": "2022-05-10T11:39:25.281Z",
+        "updated": "2022-05-10T11:39:25.281Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "bb52b2f5-7641-42d2-87d2-3d8e077d6ff2",
+    "fields": {
+        "category": "Tones",
+        "name": "busy-au-tone",
+        "value": "v=-13;%(375,375,420);v=-23;%(375,375,420)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "590",
+        "description": null,
+        "created": "2022-05-10T11:39:25.346Z",
+        "updated": "2022-05-10T11:39:25.346Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "c010eb1e-ac88-4b36-bad6-26ac50cda64c",
+    "fields": {
+        "category": "Codecs",
+        "name": "global_codec_prefs",
+        "value": "G729,PCMA",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "10",
+        "description": "",
+        "created": "2022-05-10T11:39:25.202Z",
+        "updated": "2022-11-29T17:22:35.941Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "c74302d2-08ac-4680-b098-b8401ed30480",
+    "fields": {
+        "category": "SIP Profile: External",
+        "name": "external_ssl_dir",
+        "value": "$${conf_dir}/tls",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "680",
+        "description": null,
+        "created": "2022-05-10T11:39:25.360Z",
+        "updated": "2022-05-10T11:39:25.360Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "c8390d39-0ad7-44df-b723-52164d19e9b7",
+    "fields": {
+        "category": "Defaults",
+        "name": "default_countrycode",
+        "value": "1",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "180",
+        "description": null,
+        "created": "2022-05-10T11:39:25.284Z",
+        "updated": "2022-05-10T11:39:25.284Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "c83fa13f-d6bc-442f-bf74-28b380c08cf9",
+    "fields": {
+        "category": "Ringtones",
+        "name": "de-ring",
+        "value": "%(1000,4000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "320",
+        "description": null,
+        "created": "2022-05-10T11:39:25.306Z",
+        "updated": "2022-05-10T11:39:25.306Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "cc2c2c0b-027a-4f3e-b239-d093a086c9c9",
+    "fields": {
+        "category": "Tones",
+        "name": "busy-us-tone",
+        "value": "%(500,500,480,620)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "580",
+        "description": null,
+        "created": "2022-05-10T11:39:25.345Z",
+        "updated": "2022-05-10T11:39:25.345Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "d2d0057b-fe1e-4c8b-8785-7c1475c771fe",
+    "fields": {
+        "category": "Ringtones",
+        "name": "uk-ring",
+        "value": "%(400,200,400,450);%(400,2000,400,450)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "530",
+        "description": null,
+        "created": "2022-05-10T11:39:25.337Z",
+        "updated": "2022-05-10T11:39:25.337Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "d6fe603c-4d51-4f1e-97fb-761633be27d6",
+    "fields": {
+        "category": "Ringtones",
+        "name": "dk-ring",
+        "value": "%(1000,4000,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "330",
+        "description": null,
+        "created": "2022-05-10T11:39:25.307Z",
+        "updated": "2022-05-10T11:39:25.307Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "d97d15fa-9f91-4e5b-be49-3c7fac860343",
+    "fields": {
+        "category": "Sound",
+        "name": "sound_prefix",
+        "value": "$${sounds_dir}/en/us/callie",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "730",
+        "description": null,
+        "created": "2022-05-10T11:39:25.368Z",
+        "updated": "2022-05-10T11:39:25.368Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "e33fba27-80e8-40f1-a34d-808367326855",
+    "fields": {
+        "category": "XMPP",
+        "name": "xmpp_server_profile",
+        "value": "xmpps",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "210",
+        "description": null,
+        "created": "2022-05-10T11:39:25.289Z",
+        "updated": "2022-05-10T11:39:25.289Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "e586bf55-a665-42e4-a835-708cc510bac0",
+    "fields": {
+        "category": "SIP",
+        "name": "hangup_on_call_reject",
+        "value": "true",
+        "command": "set",
+        "hostname": null,
+        "enabled": "false",
+        "sequence": "620",
+        "description": null,
+        "created": "2022-05-10T11:39:25.351Z",
+        "updated": "2022-05-10T11:39:25.351Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "e802c10c-c80c-44a3-94ff-a80d2100fd6e",
+    "fields": {
+        "category": "Defaults",
+        "name": "default_voice",
+        "value": "callie",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "110",
+        "description": null,
+        "created": "2022-05-10T11:39:25.273Z",
+        "updated": "2022-05-10T11:39:25.273Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "eb30bc83-ccb8-4f27-a1d6-9340ae7de325",
+    "fields": {
+        "category": "Defaults",
+        "name": "call_debug",
+        "value": "false",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "40",
+        "description": null,
+        "created": "2022-05-10T11:39:25.261Z",
+        "updated": "2022-05-10T11:39:25.261Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "eb64acf4-fab4-41d4-bca1-6b5c7a2cb5f4",
+    "fields": {
+        "category": "SIP",
+        "name": "sip_tls_version",
+        "value": "tlsv1,tlsv1.1,tlsv1.2",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "640",
+        "description": null,
+        "created": "2022-05-10T11:39:25.354Z",
+        "updated": "2022-05-10T11:39:25.354Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "ee9ec502-db02-488a-b1e2-99de728f9c89",
+    "fields": {
+        "category": "Ringtones",
+        "name": "sa-ring",
+        "value": "%(1200,4600,425)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "510",
+        "description": null,
+        "created": "2022-05-10T11:39:25.334Z",
+        "updated": "2022-05-10T11:39:25.334Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "f197a3c6-e7d7-4c34-a5ee-ee5333775955",
+    "fields": {
+        "category": "Ringtones",
+        "name": "il-ring",
+        "value": "%(1000,3000,400)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "410",
+        "description": null,
+        "created": "2022-05-10T11:39:25.319Z",
+        "updated": "2022-05-10T11:39:25.319Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "fbe9e7f4-4f0b-4272-8755-90f36339cd22",
+    "fields": {
+        "category": "Ringtones",
+        "name": "tr-ring",
+        "value": "%(2000,4000,450)",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "520",
+        "description": null,
+        "created": "2022-05-10T11:39:25.335Z",
+        "updated": "2022-05-10T11:39:25.335Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "fd0caeb3-67e6-45d7-b239-80f32620614d",
+    "fields": {
+        "category": "Defaults",
+        "name": "default_dialect",
+        "value": "us",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "100",
+        "description": null,
+        "created": "2022-05-10T11:39:25.271Z",
+        "updated": "2022-05-10T11:39:25.271Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "ff120c77-f028-42db-97ea-287ea888ad1e",
+    "fields": {
+        "category": "SIP Profile: External",
+        "name": "external_sip_port",
+        "value": "5080",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "650",
+        "description": null,
+        "created": "2022-05-10T11:39:25.355Z",
+        "updated": "2022-05-10T11:39:25.355Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

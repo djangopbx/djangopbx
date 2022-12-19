@@ -1,0 +1,28 @@
+[
+{
+    "model": "switch.accesscontrol",
+    "pk": "ab59d0f5-39c2-46b0-8b45-8b6471339733",
+    "fields": {
+        "name": "domains",
+        "default": "deny",
+        "description": null,
+        "created": "2022-11-12T13:07:19.265Z",
+        "updated": "2022-11-12T13:09:13.235Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.accesscontrol",
+    "pk": "ca89e51c-547b-4677-b1dd-0ff92df8716b",
+    "fields": {
+        "name": "lan",
+        "default": "deny",
+        "description": null,
+        "created": "2022-11-12T13:05:45.378Z",
+        "updated": "2022-11-12T13:05:45.378Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

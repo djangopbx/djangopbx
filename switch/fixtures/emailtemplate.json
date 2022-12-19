@@ -1,0 +1,135 @@
+[
+{
+    "model": "switch.emailtemplate",
+    "pk": "1b6ccd30-19e7-4358-91fe-82d9708cb1aa",
+    "fields": {
+        "domain_id": null,
+        "language": "en-gb",
+        "category": "voicemail",
+        "subcategory": "default",
+        "subject": "Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}",
+        "type": "html",
+        "body": "<html>\r\n<body>\r\nFrom ${caller_id_name} <a href=\"tel:${caller_id_number}\">${caller_id_number}</a><br />\r\n<br />\r\nTo ${voicemail_name_formatted}<br />\r\nReceived ${message_date}<br />\r\nLength ${message_duration}<br />\r\nMessage ${message}<br />\r\n</body>\r\n</html>",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T16:01:20.031Z",
+        "updated": "2022-11-26T16:01:20.031Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.emailtemplate",
+    "pk": "3f6ccafb-4697-44a9-9195-2aa44c67a495",
+    "fields": {
+        "domain_id": null,
+        "language": "en-us",
+        "category": "missed",
+        "subcategory": "default",
+        "subject": "Missed Call from {caller_id_name} <{caller_id_number}>",
+        "type": "html",
+        "body": "<html>\r\n<body>\r\nMissed Call from {caller_id_name} <<a href=\"tel:{caller_id_number}\">{caller_id_number}</a>> to {sip_to_user} ext {dialed_user}\r\n</body>\r\n</html>",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-27T20:11:18.867Z",
+        "updated": "2022-11-27T20:11:18.867Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.emailtemplate",
+    "pk": "7332b884-0f5c-4905-b5dd-14680a381a41",
+    "fields": {
+        "domain_id": null,
+        "language": "en-gb",
+        "category": "voicemail",
+        "subcategory": "transcritpion",
+        "subject": "Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}",
+        "type": "text",
+        "body": "Voicemail from ${caller_id_name} <${caller_id_number}>\r\n\r\nTo ${voicemail_name_formatted}\r\nReceived ${message_date}\r\nLength ${message_duration}\r\nMessage ${message}\r\n\r\nTranscription\r\n${message_text}",
+        "enabled": "false",
+        "description": null,
+        "created": "2022-11-26T16:07:44.448Z",
+        "updated": "2022-11-26T16:07:44.448Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.emailtemplate",
+    "pk": "be0bc4fb-c756-4c7a-9c03-0ce8df78f067",
+    "fields": {
+        "domain_id": null,
+        "language": "en-gb",
+        "category": "missed",
+        "subcategory": "default",
+        "subject": "Missed Call from ${caller_id_name} <${caller_id_number}>",
+        "type": "text",
+        "body": "Missed Call from ${caller_id_name} <${caller_id_number}> to ${sip_to_user} ext ${dialed_user}",
+        "enabled": "false",
+        "description": null,
+        "created": "2022-11-26T16:00:00.562Z",
+        "updated": "2022-11-26T16:02:14.762Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.emailtemplate",
+    "pk": "c958731b-9dad-42ad-b0f5-f7b3ef5035b4",
+    "fields": {
+        "domain_id": null,
+        "language": "en-gb",
+        "category": "voicemail",
+        "subcategory": "default",
+        "subject": "Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}",
+        "type": "text",
+        "body": "Voicemail from ${caller_id_name} <${caller_id_number}>\r\n\r\nTo ${voicemail_name_formatted}\r\nReceived ${message_date}\r\nLength ${message_duration}\r\nMessage ${message}",
+        "enabled": "false",
+        "description": null,
+        "created": "2022-11-26T16:03:02.885Z",
+        "updated": "2022-11-26T16:03:02.885Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.emailtemplate",
+    "pk": "ed03b8cf-1275-4a84-a91f-310ab3f7f160",
+    "fields": {
+        "domain_id": null,
+        "language": "en-gb",
+        "category": "missed",
+        "subcategory": "default",
+        "subject": "Missed Call from {caller_id_name} <{caller_id_number}>",
+        "type": "html",
+        "body": "<html>\r\n<body>\r\nMissed Call from {caller_id_name} <<a href=\"tel:{caller_id_number}\">{caller_id_number}</a>> to {sip_to_user} ext {dialed_user}\r\n</body>\r\n</html>",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T15:51:25.604Z",
+        "updated": "2022-11-27T19:29:18.739Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.emailtemplate",
+    "pk": "efb5f711-9615-48f9-ab9f-929de1110b2b",
+    "fields": {
+        "domain_id": null,
+        "language": "en-gb",
+        "category": "voicemail",
+        "subcategory": "transcritpion",
+        "subject": "Voicemail from ${caller_id_name} <${caller_id_number}> ${message_duration}",
+        "type": "html",
+        "body": "<html>\r\n<body>\r\nVoicemail from ${caller_id_name} <a href=\"tel:${caller_id_number}\">${caller_id_number}</a><br />\r\n<br />\r\nTo ${voicemail_name_formatted}<br />\r\nReceived ${message_date}<br />\r\nLength ${message_duration}<br />\r\nMessage ${message}<br />\r\n<br />\r\nTranscription<br />\r\n${message_text}\r\n</body>\r\n</html>",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T16:06:52.128Z",
+        "updated": "2022-11-26T16:09:04.863Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

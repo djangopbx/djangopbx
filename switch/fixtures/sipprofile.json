@@ -1,0 +1,58 @@
+[
+{
+    "model": "switch.sipprofile",
+    "pk": "1bd73317-4f7f-4567-b173-33043b6da928",
+    "fields": {
+        "name": "internal-ipv6",
+        "hostname": null,
+        "enabled": "false",
+        "description": "The Internal IPV6 profile binds to the IP version 6 address and is similar to the Internal profile.",
+        "created": "2022-05-10T11:39:34.690Z",
+        "updated": "2022-05-10T11:39:34.691Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.sipprofile",
+    "pk": "c23ede89-6936-4b72-b0a9-62ea6a922520",
+    "fields": {
+        "name": "external-ipv6",
+        "hostname": null,
+        "enabled": "false",
+        "description": "The External IPV6 profile binds to the IP version 6 address and is similar to the External profile.",
+        "created": "2022-05-10T11:39:34.203Z",
+        "updated": "2022-05-10T11:39:34.203Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.sipprofile",
+    "pk": "d77813a5-7cf4-4148-be43-dec66bf33116",
+    "fields": {
+        "name": "external",
+        "hostname": null,
+        "enabled": "true",
+        "description": "The External profile external provides anonymous calling in the public context. By default the External profile binds to port 5080. Calls can be sent using a SIP URL:voip.domain.com:5080",
+        "created": "2022-05-10T11:39:34.904Z",
+        "updated": "2022-11-29T19:33:45.250Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.sipprofile",
+    "pk": "ff1d96c9-5b4a-44bb-a7d6-43363986f421",
+    "fields": {
+        "name": "internal",
+        "hostname": null,
+        "enabled": "true",
+        "description": "The Internal profile by default requires registration which is used by the endpoints. By default the Internal profile binds to port 5060.",
+        "created": "2022-05-10T11:39:34.348Z",
+        "updated": "2022-11-29T18:20:08.724Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

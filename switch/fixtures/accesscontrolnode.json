@@ -1,0 +1,32 @@
+[
+{
+    "model": "switch.accesscontrolnode",
+    "pk": "b985735b-8cd8-452b-8a90-3d5b97bd3ced",
+    "fields": {
+        "access_control_id": "ca89e51c-547b-4677-b1dd-0ff92df8716b",
+        "type": "allow",
+        "cidr": "192.168.42.42/32",
+        "domain": null,
+        "description": null,
+        "created": "2022-11-12T13:05:45.382Z",
+        "updated": "2022-11-12T13:05:45.382Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.accesscontrolnode",
+    "pk": "fbc11971-45a3-403f-92fd-9780dd99f771",
+    "fields": {
+        "access_control_id": "ab59d0f5-39c2-46b0-8b45-8b6471339733",
+        "type": "allow",
+        "cidr": null,
+        "domain": "192.168.222.222",
+        "description": null,
+        "created": "2022-11-12T13:07:19.268Z",
+        "updated": "2022-11-12T13:07:19.268Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]
