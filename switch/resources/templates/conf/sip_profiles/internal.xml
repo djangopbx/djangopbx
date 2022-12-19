@@ -1,0 +1,66 @@
+<profile name="internal">
+  <gateways>
+    <X-PRE-PROCESS cmd="include" data="internal/*.xml"/>
+  </gateways>
+  <domains>
+    <domain name="all" alias="false" parse="false"/>
+  </domains>
+  <settings>
+    <param name="aggressive-nat-detection" value="true"/>
+    <param name="apply-inbound-acl" value="domains"/>
+    <param name="apply-nat-acl" value="nat.auto"/>
+    <param name="auth-all-packets" value="false"/>
+    <param name="auth-calls" value="true"/>
+    <param name="auth-subscriptions" value="true"/>
+    <param name="challenge-realm" value="auto_to"/>
+    <param name="context" value="test1.djangopbx.com"/>
+    <param name="debug" value="0"/>
+    <param name="dialplan" value="XML"/>
+    <param name="dtmf-duration" value="2000"/>
+    <param name="dtmf-type" value="rfc2833"/>
+    <param name="enable-compact-headers" value="true"/>
+    <param name="ext-rtp-ip" value="$${external_rtp_ip}"/>
+    <param name="ext-sip-ip" value="$${external_sip_ip}"/>
+    <param name="forward-unsolicited-mwi-notify" value="false"/>
+    <param name="hold-music" value="$${hold_music}"/>
+    <param name="inbound-codec-negotiation" value="generous"/>
+    <param name="inbound-codec-prefs" value="$${global_codec_prefs}"/>
+    <param name="inbound-reg-force-matching-username" value="true"/>
+    <param name="local-network-acl" value="localnet.auto"/>
+    <param name="log-auth-failures" value="true"/>
+    <param name="manage-presence" value="true"/>
+    <param name="manage-shared-appearance" value="true"/>
+    <param name="NDLB-force-rport" value="safe"/>
+    <param name="nonce-ttl" value="60"/>
+    <param name="outbound-codec-prefs" value="$${global_codec_prefs}"/>
+    <param name="presence-privacy" value="$${presence_privacy}"/>
+    <param name="presence-probe-on-register" value="true"/>
+    <param name="record-path" value="$${recordings_dir}"/>
+    <param name="record-template" value="${domain_name}/archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}/${uuid}.${record_ext}"/>
+    <param name="rfc2833-pt" value="101"/>
+    <param name="rtp-hold-timeout-sec" value="1800"/>
+    <param name="rtp-ip" value="$${local_ip_v4}"/>
+    <param name="rtp-timeout-sec" value="300"/>
+    <param name="rtp-timer-name" value="soft"/>
+    <param name="sip-capture" value="no"/>
+    <param name="sip-ip" value="$${local_ip_v4}"/>
+    <param name="sip-port" value="$${internal_sip_port}"/>
+    <param name="sip-trace" value="no"/>
+    <param name="tls" value="$${internal_ssl_enable}"/>
+    <param name="tls-bind-params" value="transport=tls"/>
+    <param name="tls-cert-dir" value="$${internal_ssl_dir}"/>
+    <param name="tls-only" value="false"/>
+    <param name="tls-passphrase" value=""/>
+    <param name="tls-sip-port" value="$${internal_tls_port}"/>
+    <param name="tls-verify-date" value="true"/>
+    <param name="tls-verify-depth" value="2"/>
+    <param name="tls-verify-in-subjects" value=""/>
+    <param name="tls-version" value="$${sip_tls_version}"/>
+    <param name="track-calls" value="false"/>
+    <param name="user-agent-string" value="DCM"/>
+    <param name="username" value="DCM"/>
+    <param name="watchdog-enabled" value="no"/>
+    <param name="watchdog-event-timeout" value="30000"/>
+    <param name="watchdog-step-timeout" value="30000"/>
+  </settings>
+</profile>

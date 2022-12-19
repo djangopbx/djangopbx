@@ -2,6 +2,7 @@
   <settings>
     <!--<param name="xml-handler-script" value="dp"/>-->
     <!--<param name="xml-handler-bindings" value="dialplan"/>-->
+    <!--<param name="xml-handler-bindings" value="configuration::xml_conf,dialplan::xml_dp,directory::xml_dir"/>-->
 
     <!--
 	The following options identifies a py module that is launched

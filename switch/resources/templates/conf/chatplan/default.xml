@@ -3,7 +3,7 @@
         <context name="default">
                 <extension name="demo">
                         <condition field="to" expression="^(.*)$">
-                                <!-- <action application="lua" data="test.lua"/> -->
+                                <!-- <action application="python" data="test"/> -->
                                 <!-- <action application="reply" data="Hello, you said: ${_body}"/> -->
                         </condition>
                 </extension>
@@ -11,7 +11,7 @@
         <context name="public">
                 <extension name="demo">
                         <condition field="to" expression="^(.*)$">
-                                <!-- <action application="lua" data="app.lua sms outbound"/> -->
+                                <!-- <action application="python" data="sms outbound"/> -->
                         </condition>
                 </extension>
         </context>

@@ -36,14 +36,14 @@
   <!--#comment
       vars.xml contains all the #set directives for the preprocessor.
   -->
-  <X-PRE-PROCESS cmd="include" data="vars.xml"/>
+  <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/vars.xml"/>
 
   <section name="configuration" description="Various Configuration">
-    <X-PRE-PROCESS cmd="include" data="autoload_configs/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/autoload_configs/*.xml"/>
   </section>
 
   <section name="dialplan" description="Regex/XML Dialplan">
-    <X-PRE-PROCESS cmd="include" data="dialplan/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/dialplan/*.xml"/>
   </section>
 
   <section name="chatplan" description="Regex/XML Chatplan">
@@ -53,16 +53,20 @@
   <!-- mod_dingaling is reliant on the vcard data in the "directory" section. -->
   <!-- mod_sofia is reliant on the user data for authorization -->
   <section name="directory" description="User Directory">
-    <X-PRE-PROCESS cmd="include" data="directory/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/directory/*.xml"/>
   </section>
 
-  <!-- languages section -->
+  <!-- languages section (under development still) -->
   <section name="languages" description="Language Management">
-    <X-PRE-PROCESS cmd="include" data="languages/de/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="languages/en/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="languages/fr/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="languages/ru/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="languages/he/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="languages/pt/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="lang/de/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="lang/en/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="lang/fr/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="lang/ru/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="lang/he/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="lang/es/es_ES.xml"/>
+    <X-NO-PRE-PROCESS cmd="include" data="lang/es/es_MX.xml"/>
+    <X-PRE-PROCESS cmd="include" data="lang/pt/pt_BR.xml"/>
+    <X-NO-PRE-PROCESS cmd="include" data="lang/pt/pt_PT.xml"/>
+    <X-NO-PRE-PROCESS cmd="include" data="lang/sv/*.xml"/>
   </section>
 </document>
