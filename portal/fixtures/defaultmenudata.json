@@ -20,6 +20,25 @@
 },
 {
     "model": "portal.menuitem",
+    "pk": "1ef968ae-5640-418f-a888-876dc489ca8b",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "1d13580a-3004-4f70-a159-5798103429b2",
+        "title": "Dashboard",
+        "link": "/dashboard/usrdashboard",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "1030",
+        "description": "",
+        "created": "2022-12-19T13:05:17.348Z",
+        "updated": "2022-12-19T13:06:25.081Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
     "pk": "73ce309c-95ee-45fe-9e69-919b61a855f8",
     "fields": {
         "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
