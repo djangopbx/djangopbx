@@ -1,0 +1,938 @@
+[
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0230141a-8d79-47bc-9616-0c9b51b1f302",
+    "fields": {
+        "app_uuid": null,
+        "category": "dialplan",
+        "subcategory": "dialplan_details",
+        "value_type": "boolean",
+        "value": "false",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-12-11T12:40:24.029Z",
+        "updated": "2022-12-11T12:40:24.029Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0b7960a1-8775-450d-b4bf-a9d02593768e",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"presidents_day\":{\"wday\":\"2\",\"mon\":\"2\",\"mday\":\"15-21\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:28:00.298Z",
+        "updated": "2022-12-12T07:28:00.298Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "220809f5-e36e-4425-b0c1-a735a6fd741b",
+    "fields": {
+        "app_uuid": null,
+        "category": "cdr",
+        "subcategory": "b_leg",
+        "value_type": "array",
+        "value": "inbound",
+        "sequence": "20",
+        "enabled": "false",
+        "description": null,
+        "created": "2022-11-24T07:12:29.943Z",
+        "updated": "2022-11-24T07:13:03.320Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "24800284-9603-48c5-8744-0651a6f90a98",
+    "fields": {
+        "app_uuid": null,
+        "category": "switch",
+        "subcategory": "scripts",
+        "value_type": "dir",
+        "value": "/usr/share/freeswitch/scripts",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-05-08T09:19:52.980Z",
+        "updated": "2022-05-08T09:19:52.980Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "276559f4-e39b-498d-972d-cf5c013e623c",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"memorial_day\":{\"mday\":\"25-31\",\"wday\":\"2\",\"mon\":\"5\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:28:19.687Z",
+        "updated": "2022-12-12T07:28:19.687Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2fc04948-cf78-425e-bae9-d08388cb313e",
+    "fields": {
+        "app_uuid": null,
+        "category": "switch",
+        "subcategory": "sip_profiles",
+        "value_type": "dir",
+        "value": "/home/django-pbx/freeswitch/sip_profiles",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-13T16:21:53.009Z",
+        "updated": "2022-11-13T16:21:53.009Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "31223af7-1f22-4495-a22f-7c92927f784c",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"veterans_day\":{\"mday\":\"11\",\"mon\":\"11\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:29:52.513Z",
+        "updated": "2022-12-12T07:29:52.513Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "33e4939e-e68a-45de-9d9a-60c15ef62f59",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"new_years_day\":{\"mday\":\"1\",\"mon\":\"1\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:27:29.963Z",
+        "updated": "2022-12-12T07:27:29.963Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "34e84d05-f5a6-4f93-ba6f-664486652f9e",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"new_years_day\":{\"mday\":\"1\",\"mon\":\"1\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:32:38.332Z",
+        "updated": "2022-12-12T07:32:38.332Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "34f7b640-e156-4c54-9346-32e42f3e4afc",
+    "fields": {
+        "app_uuid": null,
+        "category": "xmlhandler",
+        "subcategory": "number_as_presence_id",
+        "value_type": "boolean",
+        "value": "false",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-28T08:42:42.270Z",
+        "updated": "2022-11-28T08:42:42.270Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3a9e11d5-fb6e-4918-a0cb-2279af0a3238",
+    "fields": {
+        "app_uuid": null,
+        "category": "cdr",
+        "subcategory": "allowed_address",
+        "value_type": "array",
+        "value": "::1",
+        "sequence": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-24T09:42:30.596Z",
+        "updated": "2022-11-24T09:42:30.596Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3c4c33e8-6e8b-45e5-91d8-0b6f37866a56",
+    "fields": {
+        "app_uuid": null,
+        "category": "email",
+        "subcategory": "smtp_from",
+        "value_type": "text",
+        "value": "djangopbx@my.provider.com",
+        "sequence": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T12:45:51.571Z",
+        "updated": "2022-11-26T12:45:51.571Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3c623ce7-5447-4b17-8230-cb1d73b1f74e",
+    "fields": {
+        "app_uuid": null,
+        "category": "security",
+        "subcategory": "pin_length",
+        "value_type": "numeric",
+        "value": "6",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-05-19T09:45:15.500Z",
+        "updated": "2022-05-19T09:45:15.500Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3c92e215-0f6c-486a-9d56-c0d743b17e7d",
+    "fields": {
+        "app_uuid": null,
+        "category": "email",
+        "subcategory": "method",
+        "value_type": "text",
+        "value": "smtp",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T12:44:32.289Z",
+        "updated": "2022-11-26T12:44:32.289Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3d15c02b-8079-4b42-bc70-394f701fdf26",
+    "fields": {
+        "app_uuid": null,
+        "category": "email",
+        "subcategory": "smtp_from_name",
+        "value_type": "text",
+        "value": "DjangoPBX",
+        "sequence": "30",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T12:46:36.297Z",
+        "updated": "2022-11-26T12:46:36.297Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "408c7805-651d-4982-a9ab-0901869faf35",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"boxing_day\":{\"mday\":\"26\",\"mon\":\"12\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:32:26.140Z",
+        "updated": "2022-12-12T07:32:26.140Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "42102f0e-2798-4f8c-8e29-88c856c5f235",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"christmas_day\":{\"mday\":\"25\",\"mon\":\"12\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:32:14.053Z",
+        "updated": "2022-12-12T07:32:14.053Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "441f4e2f-a61e-41d5-8e78-83263efb621d",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"family_day\":{\"wday\":\"2\",\"mon\":\"2\",\"mday\":\"8-14\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:30:45.979Z",
+        "updated": "2022-12-12T07:30:45.979Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "45b8636d-eb26-4a66-9754-957234af4ec6",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"labour_day\":{\"wday\":\"2\",\"mon\":\"9\",\"mday\":\"1-7\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:32:52.708Z",
+        "updated": "2022-12-12T07:32:52.708Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "46618749-b241-4da2-bba1-4f2d23247f48",
+    "fields": {
+        "app_uuid": null,
+        "category": "xmlhandler",
+        "subcategory": "context_type",
+        "value_type": "text",
+        "value": "multiple",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-28T08:41:26.139Z",
+        "updated": "2022-11-28T08:41:26.139Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "5102e278-dab3-4fa3-9f22-b142c2760ff6",
+    "fields": {
+        "app_uuid": null,
+        "category": "switch",
+        "subcategory": "recordings",
+        "value_type": "dir",
+        "value": "/var/lib/freeswitch/recordings",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-24T15:54:44.974Z",
+        "updated": "2022-12-11T22:17:16.503Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "52698a87-6319-4c13-b78e-801f997b4949",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"thanksgiving_day\":{\"wday\":\"2\",\"mon\":\"10\",\"mday\":\"8-14\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:31:50.057Z",
+        "updated": "2022-12-12T07:31:50.057Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "53aafd9f-87c8-4d2f-81d4-71b533cf28e5",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_england",
+        "value_type": "array",
+        "value": "{\"boxing_day\":{\"mday\":\"26\",\"mon\":\"12\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "England Holiday",
+        "created": "2022-12-12T07:26:25.920Z",
+        "updated": "2022-12-12T07:26:25.920Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "549f5f25-ca5d-48e8-a55d-b6ef8d25a681",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_england",
+        "value_type": "array",
+        "value": "{\"christmas_day\":{\"mday\":\"25\",\"mon\":\"12\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "England Holiday",
+        "created": "2022-12-12T07:26:12.517Z",
+        "updated": "2022-12-12T07:26:12.517Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "5e6a4498-5e16-4d05-a38a-5348777dfe88",
+    "fields": {
+        "app_uuid": null,
+        "category": "cdr",
+        "subcategory": "b_leg",
+        "value_type": "array",
+        "value": "outbound",
+        "sequence": "10",
+        "enabled": "false",
+        "description": null,
+        "created": "2022-11-24T07:11:50.543Z",
+        "updated": "2022-11-24T07:11:50.543Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "602c34d8-312c-4e6b-9d77-a2d9f19f0aa5",
+    "fields": {
+        "app_uuid": null,
+        "category": "email",
+        "subcategory": "smtp_user_name",
+        "value_type": "text",
+        "value": "me@myprovider.com",
+        "sequence": "50",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "696bb467-7ec7-4d2b-bb08-5f6e82c694ad",
+    "fields": {
+        "app_uuid": null,
+        "category": "xmlhandler",
+        "subcategory": "allowed_address",
+        "value_type": "array",
+        "value": "127.0.0.1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-28T08:39:27.574Z",
+        "updated": "2022-11-28T08:39:27.574Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "6a5f3a24-39af-41e1-b156-383b0488c77c",
+    "fields": {
+        "app_uuid": null,
+        "category": "email",
+        "subcategory": "smtp_port",
+        "value_type": "text",
+        "value": "587",
+        "sequence": "80",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T12:51:57.422Z",
+        "updated": "2022-11-26T12:51:57.422Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "6ebd2aa7-f678-4593-af59-70a651d8e30e",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"columbus_day\":{\"wday\":\"2\",\"mon\":\"10\",\"mday\":\"8-14\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:28:57.081Z",
+        "updated": "2022-12-12T07:28:57.081Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "79d8bdac-7e62-4e4e-aa03-75d598003483",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"labor_day\":{\"wday\":\"2\",\"mon\":\"9\",\"mday\":\"1-7\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:28:44.155Z",
+        "updated": "2022-12-12T07:28:44.156Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7c2d2728-dfe3-4b32-a8f0-fb30c6aca588",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_england",
+        "value_type": "array",
+        "value": "{\"new_years_day\":{\"mday\":\"1\",\"mon\":\"1\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "England Holiday",
+        "created": "2022-12-11T23:53:06.292Z",
+        "updated": "2022-12-12T07:21:58.282Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "83dc1e9b-d096-466e-bb81-744b84ce1c36",
+    "fields": {
+        "app_uuid": null,
+        "category": "cdr",
+        "subcategory": "format",
+        "value_type": "text",
+        "value": "json",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-24T10:22:37.350Z",
+        "updated": "2022-11-24T10:22:37.350Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "8856ca1c-c4e3-467c-9350-c647d6c9f14a",
+    "fields": {
+        "app_uuid": null,
+        "category": "email",
+        "subcategory": "smtp_host",
+        "value_type": "text",
+        "value": "my.provider.com",
+        "sequence": "40",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T12:47:36.708Z",
+        "updated": "2022-11-26T12:47:36.708Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "8b3b0f7f-2ebc-4a2e-b9eb-519f77bfdabc",
+    "fields": {
+        "app_uuid": null,
+        "category": "cdr",
+        "subcategory": "b_leg",
+        "value_type": "array",
+        "value": "local",
+        "sequence": "30",
+        "enabled": "false",
+        "description": null,
+        "created": "2022-11-24T07:12:54.017Z",
+        "updated": "2022-11-24T07:12:54.017Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "94b92239-b26e-4c5b-8b8c-711113c408ff",
+    "fields": {
+        "app_uuid": null,
+        "category": "cdr",
+        "subcategory": "recordings",
+        "value_type": "text",
+        "value": "/fs/recordings",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-12-11T22:17:51.061Z",
+        "updated": "2022-12-11T22:17:51.061Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a7e2143d-6f06-4b7c-b350-c007ec401e60",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"canada_day\":{\"mday\":\"1\",\"mon\":\"7\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:31:22.359Z",
+        "updated": "2022-12-12T07:31:22.359Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ab0fa058-d458-44d9-8738-1391074c7152",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "region",
+        "value_type": "text",
+        "value": "england",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "What region to use by default when choosing Time Conditions",
+        "created": "2022-12-12T07:33:54.799Z",
+        "updated": "2022-12-12T07:33:54.799Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ac82598f-6802-4342-933c-55680a21909d",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_england",
+        "value_type": "array",
+        "value": "{\"may_day\":{\"mon\":\"5\",\"mday\":\"1-7\",\"wday\":\"2\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "England Holiday",
+        "created": "2022-12-12T07:24:29.059Z",
+        "updated": "2022-12-12T07:24:29.059Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "aed8db71-29aa-49c8-b2e7-70bce7c50d1f",
+    "fields": {
+        "app_uuid": null,
+        "category": "email",
+        "subcategory": "smtp_auth",
+        "value_type": "text",
+        "value": "true",
+        "sequence": "70",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T12:50:36.295Z",
+        "updated": "2022-11-26T12:50:36.295Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "afd3bd94-457a-4da8-9381-d6a341773868",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"martin_luther_king_jr_day\":{\"wday\":\"2\",\"mon\":\"1\",\"mday\":\"15-21\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:29:37.353Z",
+        "updated": "2022-12-12T07:29:37.353Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b09452d3-6f50-4b4c-a953-9232444ca3af",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"victoria_day\":{\"wday\":\"2\",\"mon\":\"5\",\"mday\":\"18-24\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:31:02.101Z",
+        "updated": "2022-12-12T07:31:02.101Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b385a23f-07ae-4f34-b695-49ceafaba133",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_england",
+        "value_type": "array",
+        "value": "{\"august_bank_holiday\":{\"mon\":\"8\",\"mday\":\"25-31\",\"wday\":\"2\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "England Holiday",
+        "created": "2022-12-12T07:25:48.512Z",
+        "updated": "2022-12-12T07:25:48.512Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b5b7499d-b0c1-4cd2-954d-f075b1cb6ceb",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"christmas_day\":{\"mday\":\"25\",\"mon\":\"12\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:29:21.735Z",
+        "updated": "2022-12-12T07:29:21.735Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b6d9b369-ebbe-45c3-b6ca-e2c242ca3cad",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"thanksgiving_day\":{\"wday\":\"5-6\",\"mon\":\"11\",\"mday\":\"22-28\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:29:09.032Z",
+        "updated": "2022-12-12T07:29:09.032Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ba5d4434-b28e-4fd4-86cb-94c20c07f1a0",
+    "fields": {
+        "app_uuid": null,
+        "category": "xmlhandler",
+        "subcategory": "allowed_address",
+        "value_type": "array",
+        "value": "::1",
+        "sequence": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-28T08:39:53.203Z",
+        "updated": "2022-11-28T08:39:53.203Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c2063da9-abfd-401d-8a7d-c275e33cd4b3",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_usa",
+        "value_type": "array",
+        "value": "{\"independence_day\":{\"mday\":\"4\",\"mon\":\"7\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "USA Holiday",
+        "created": "2022-12-12T07:28:32.132Z",
+        "updated": "2022-12-12T07:28:32.132Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d0258e32-6bae-4b4c-bcbe-7c8476481a8c",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_england",
+        "value_type": "array",
+        "value": "{\"spring_bank_holiday\":{\"mon\":\"5\",\"mday\":\"25-31\",\"wday\":\"2\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "England Holiday",
+        "created": "2022-12-12T07:25:32.074Z",
+        "updated": "2022-12-12T07:25:32.074Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d57fd9a0-4104-4192-9923-7cc74f8e2dad",
+    "fields": {
+        "app_uuid": null,
+        "category": "cdr",
+        "subcategory": "allowed_address",
+        "value_type": "array",
+        "value": "127.0.0.1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-24T09:41:43.909Z",
+        "updated": "2022-11-24T09:41:43.909Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "e7692488-2cdd-4e30-8b9f-dfbace4f2001",
+    "fields": {
+        "app_uuid": null,
+        "category": "email",
+        "subcategory": "smtp_password",
+        "value_type": "text",
+        "value": "mypassword",
+        "sequence": "60",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-11-26T12:50:01.951Z",
+        "updated": "2022-11-26T12:50:01.951Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ea05d45a-681e-4942-8777-36cc1b792aaf",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"bc_day\":{\"wday\":\"2\",\"mon\":\"8\",\"mday\":\"1-7\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:31:38.927Z",
+        "updated": "2022-12-12T07:31:38.927Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f32e019c-90b6-4a9c-9174-4ce41ba9109f",
+    "fields": {
+        "app_uuid": null,
+        "category": "switch",
+        "subcategory": "conf",
+        "value_type": "dir",
+        "value": "/home/django-pbx/freeswitch",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2022-05-10T12:58:55.606Z",
+        "updated": "2022-11-13T16:06:52.847Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "fc394d09-ce47-4d05-a019-7cbabd596dff",
+    "fields": {
+        "app_uuid": null,
+        "category": "time_conditions",
+        "subcategory": "preset_canada",
+        "value_type": "array",
+        "value": "{\"remembrance_day\":{\"mday\":\"11\",\"mon\":\"11\"}}",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Canada Holiday",
+        "created": "2022-12-12T07:32:01.373Z",
+        "updated": "2022-12-12T07:32:01.373Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]
