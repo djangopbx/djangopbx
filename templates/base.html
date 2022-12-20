@@ -22,8 +22,7 @@
     {% endblock %}
     {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
 </head>
-<body class="{% block bodyclass %}{% endblock %}" data-utc-offset="{% now "Z" %}">
-    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+<body class="{% block bodyclass %}{% endblock %}" data-utc-offset="{% now "Z" %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% block javascriptwarning %}
     <noscript>
      For full functionality of this site it is necessary to enable JavaScript.
