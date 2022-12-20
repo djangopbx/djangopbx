@@ -39,14 +39,8 @@ logger = logging.getLogger(__name__)
 @csrf_exempt
 def index(request):
     debug = False
-    cache_key = 'xmlhandler:allowed_addresses'
-    aa = cache.get(cache_key)
-    if aa:
-        allowed_addresses = aa.split(',')
-    else:
-        allowed_addresses = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
-        aa = ','.join(allowed_addresses)
-        cache.set(cache_key, aa)
+    xmlhf = XmlHandlerFunctions()
+    allowed_addresses = xmlhf.get_allowed_addresses()
 
     if request.META['REMOTE_ADDR'] not in allowed_addresses:
         return HttpResponseNotFound()
@@ -99,11 +93,11 @@ def index(request):
                     number_as_presence_id = True
             event_calling_function = request.POST.get('Event-Calling-Function', '')
             if event_calling_function == 'switch_load_network_lists':
-                xml = XmlHandlerFunctions().GetAcl(domain)
+                xml = xmlhf.GetAcl(domain)
             elif event_calling_function == 'switch_xml_locate_domain':
-                xml = XmlHandlerFunctions().GetDomain(domain)
+                xml = xmlhf.GetDomain(domain)
             else:
-                xml = XmlHandlerFunctions().GetDirectory(domain, user, number_as_presence_id)
+                xml = xmlhf.GetDirectory(domain, user, number_as_presence_id)
 
         if section == 'dialplan':
             cache_key = 'xmlhandler:context_type'
@@ -111,7 +105,7 @@ def index(request):
             if not context_type:
                 context_type = PbxSettings().default_settings('xmlhandler', 'context_type', 'text')[0]
                 cache.set(cache_key, context_type)
-            xml = XmlHandlerFunctions().GetDialplan(call_context, context_type, hostname, destination_number )
+            xml = xmlhf.GetDialplan(call_context, context_type, hostname, destination_number )
 
     else:
         return HttpResponseNotFound()
@@ -123,12 +117,15 @@ def index(request):
 
 
 def dialplan(request):
-    if request.META['REMOTE_ADDR'] not in apps.get_app_config('xmlhandler').xml_config_allowed_addresses:
+    xmlhf = XmlHandlerFunctions()
+    allowed_addresses = xmlhf.get_allowed_addresses()
+
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
         return HttpResponseNotFound()
 
     if request.method == 'GET':
         hostname = request.POST.get('hostname', 'None')
-        xml = XmlHandlerFunctions().GetDialplanStatic(hostname)
+        xml = xmlhf.GetDialplanStatic(hostname)
     else:
         return HttpResponseNotFound()
 
@@ -136,12 +133,15 @@ def dialplan(request):
 
 
 def directory(request):
-    if request.META['REMOTE_ADDR'] not in apps.get_app_config('xmlhandler').xml_config_allowed_addresses:
+    xmlhf = XmlHandlerFunctions()
+    allowed_addresses = xmlhf.get_allowed_addresses()
+
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
         return HttpResponseNotFound()
 
     number_as_presence_id = apps.get_app_config('xmlhandler').number_as_presence_id
     if request.method == 'GET':
-        xml = XmlHandlerFunctions().GetDirectoryStatic(number_as_presence_id)
+        xml = xmlhf.GetDirectoryStatic(number_as_presence_id)
     else:
         return HttpResponseNotFound()
 

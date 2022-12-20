@@ -31,9 +31,9 @@ from django.core.cache import cache
 from lxml import etree
 from django.db.models import Q
 from dialplans.models import Dialplan
+from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, ExtensionUser, FollowMeDestination
 from voicemail.models import Voicemail
-
 
 
 class XmlHandlerFunctions():
@@ -72,6 +72,18 @@ class XmlHandlerFunctions():
   </section>
 </document>
 '''
+
+    def get_allowed_addresses(self):
+        cache_key = 'xmlhandler:allowed_addresses'
+        aa = cache.get(cache_key)
+        if aa:
+            allowed_addresses = aa.split(',')
+        else:
+            allowed_addresses = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
+            aa = ','.join(allowed_addresses)
+            cache.set(cache_key, aa)
+        return allowed_addresses
+
 
     def DirectoryAddDomain(self, domain, x_section, params = True, variables = True):
         x_domain = etree.SubElement(x_section, "domain", name=domain)
