@@ -40,7 +40,11 @@ from tenants.pbxsettings import PbxSettings
 
 class SipProfileChoice():
     def choices(self):
-        return [(c.name, c.name) for c in switch.models.SipProfile.objects.filter(enabled = 'true')]
+        # This try/except is a workaround to prevent a relation not found error on initial migrate
+        try:
+            return [(c.name, c.name) for c in switch.models.SipProfile.objects.filter(enabled = 'true')]
+        except:
+            return [('None', 'None')]
 
 
 class SwitchFunctions():

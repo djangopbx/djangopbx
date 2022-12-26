@@ -34,7 +34,12 @@ from lxml import etree
 
 class MohSource():
     def choices(self, prefix='local_stream://'):
-        return [('%s%s' % (prefix, c.name), c.name) for c in MusicOnHold.objects.distinct('name')]
+        # This try/except is a workaround to prevent a relation not found error on initial migrate
+        try:
+            return [('%s%s' % (prefix, c.name), c.name) for c in MusicOnHold.objects.distinct('name')]
+        except:
+            return [('None', 'None')]
+
 
 class MohFunctions():
     def write_local_stream_xml(self):
