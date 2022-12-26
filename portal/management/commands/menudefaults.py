@@ -54,20 +54,21 @@ class Command(BaseCommand):
             # remove not yet implemented
 
         portal_path = apps.get_app_config('portal').path
-        defaults_file = '%s/fixtures/defaultmenudata.json' % portal_path
-        loaded_file = '%s/fixtures/defaultmenudata.loaded' % portal_path
-        if not os.path.exists(loaded_file):
-            if os.path.exists(defaults_file):
-                print('Loading Menu for: %s' % defaults_file)
-                call_command('loaddata', defaults_file, stdout=out, verbosity=0)
-                Path(loaded_file).touch()
 
         defaults_file = '%s/fixtures/defaultmenu.json' % portal_path
         loaded_file = '%s/fixtures/defaultmenu.loaded' % portal_path
         if not os.path.exists(loaded_file):
             if os.path.exists(defaults_file):
                 print('Loading Menu for: %s' % defaults_file)
-                call_command('loaddata', defaults_file, stdout=out, verbosity=0)
+                call_command('loaddata', defaults_file, verbosity=0)
+                Path(loaded_file).touch()
+
+        defaults_file = '%s/fixtures/defaultmenudata.json' % portal_path
+        loaded_file = '%s/fixtures/defaultmenudata.loaded' % portal_path
+        if not os.path.exists(loaded_file):
+            if os.path.exists(defaults_file):
+                print('Loading Menu for: %s' % defaults_file)
+                call_command('loaddata', defaults_file, verbosity=0)
                 Path(loaded_file).touch()
 
         for acnf in apps.get_app_configs():
@@ -82,6 +83,6 @@ class Command(BaseCommand):
                 continue
             if os.path.exists(defaults_file):
                 print('Loading Menu for: %s' % defaults_file)
-                call_command('loaddata', defaults_file, stdout=out, verbosity=0)
+                call_command('loaddata', defaults_file, verbosity=0)
                 Path(loaded_file).touch()
 
