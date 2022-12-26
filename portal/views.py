@@ -110,6 +110,7 @@ def index(request):
             request.session['domain_name'] = 'None'
             request.session['domain_uuid'] = 'f4b3b3d2-6287-489c-aa00-64529e46f2d7'
             request.session['user_uuid']   = 'ffffffff-aaaa-489c-aa00-1234567890ab'
+            request.session['extension_list'] = 'None,None'
             m = Menu.objects.get(name = 'Default')
 
         if request.user.is_superuser:
