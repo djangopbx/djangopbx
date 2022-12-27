@@ -359,7 +359,7 @@ class ModulesAdmin(ImportExportModelAdmin):
         (None,  {'fields': ['category', 'label', 'sequence', 'name', 'enabled', 'default_enabled', 'description']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
-    list_display = ('category', 'label', 'name', 'enabled', 'default_enabled', 'description')
+    list_display = ('category', 'label', 'name', 'sequence', 'enabled', 'default_enabled', 'description')
     list_filter = ('category', 'enabled', 'default_enabled')
 
     ordering = [
