@@ -325,7 +325,7 @@ class SwitchFunctions():
 
     def save_modules_xml(self):
         vlist = switch.models.Modules.objects.filter(enabled = 'true').order_by('sequence', 'category')
-        xml = '<configuration name=\"modules.conf\" description=\"Modules\">\n'
+        xml = '<configuration name=\"modules.conf\" description=\"Modules\">\n  <modules>\n'
         prev_cat = ''
         hostname = socket.gethostname()
 
@@ -336,10 +336,10 @@ class SwitchFunctions():
                 if not prev_cat == v.category:
                     xml += "\n    <!-- " + v.category + " -->\n"
 
-                xml += '    <load moduled=\"%s\"/>\n' % v.name
+                xml += '    <load module=\"%s\"/>\n' % v.name
                 prev_cat = v.category
 
-            xml += "</configuration>"
+            xml += "  </modules>\n</configuration>\n"
 
             try:
                 os.makedirs(confdir, mode=0o755, exist_ok = True)

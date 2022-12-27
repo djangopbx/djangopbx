@@ -1,68 +1,72 @@
 <configuration name="modules.conf" description="Modules">
+  <modules>
 
     <!-- Applications -->
-    <load moduled="mod_commands"/>
-    <load moduled="mod_memcache"/>
-
-    <!-- Languages -->
-    <load moduled="mod_python3"/>
-
-    <!-- Endpoints -->
-    <load moduled="mod_sofia"/>
+    <load module="mod_commands"/>
 
     <!-- Loggers -->
-    <load moduled="mod_console"/>
-    <load moduled="mod_logfile"/>
+    <load module="mod_console"/>
+    <load module="mod_logfile"/>
 
     <!-- Applications -->
-    <load moduled="mod_enum"/>
-    <load moduled="mod_hash"/>
-    <load moduled="mod_expr"/>
-    <load moduled="mod_conference"/>
-    <load moduled="mod_db"/>
-    <load moduled="mod_callcenter"/>
-    <load moduled="mod_fsv"/>
-    <load moduled="mod_fifo"/>
-    <load moduled="mod_sms"/>
-    <load moduled="mod_dptools"/>
-    <load moduled="mod_spandsp"/>
-    <load moduled="mod_esf"/>
-    <load moduled="mod_valet_parking"/>
-    <load moduled="mod_voicemail"/>
+    <load module="mod_memcache"/>
+    <load module="mod_enum"/>
 
-    <!-- Codecs -->
-    <load moduled="mod_bv"/>
-    <load moduled="mod_bcg729"/>
-    <load moduled="mod_amr"/>
-    <load moduled="mod_g723_1"/>
-    <load moduled="mod_h26x"/>
-
-    <!-- Dialplan Interfaces -->
-    <load moduled="mod_dialplan_xml"/>
+    <!-- Languages -->
+    <load module="mod_python3"/>
 
     <!-- Endpoints -->
-    <load moduled="mod_loopback"/>
+    <load module="mod_sofia"/>
+
+    <!-- Applications -->
+    <load module="mod_sms"/>
+    <load module="mod_expr"/>
+    <load module="mod_conference"/>
+    <load module="mod_db"/>
+    <load module="mod_callcenter"/>
+    <load module="mod_fsv"/>
+    <load module="mod_fifo"/>
+    <load module="mod_hash"/>
+    <load module="mod_dptools"/>
+    <load module="mod_spandsp"/>
+    <load module="mod_esf"/>
+    <load module="mod_valet_parking"/>
+    <load module="mod_voicemail"/>
+
+    <!-- Codecs -->
+    <load module="mod_bcg729"/>
+    <load module="mod_bv"/>
+    <load module="mod_h26x"/>
+    <load module="mod_amr"/>
+    <load module="mod_g723_1"/>
+
+    <!-- Dialplan Interfaces -->
+    <load module="mod_dialplan_xml"/>
+
+    <!-- Endpoints -->
+    <load module="mod_loopback"/>
 
     <!-- Event Handlers -->
-    <load moduled="mod_event_socket"/>
+    <load module="mod_event_socket"/>
 
     <!-- File Format Interfaces -->
-    <load moduled="mod_sndfile"/>
-    <load moduled="mod_native_file"/>
+    <load module="mod_sndfile"/>
+    <load module="mod_native_file"/>
 
     <!-- Say -->
-    <load moduled="mod_say_en"/>
+    <load module="mod_say_en"/>
 
     <!-- Speech Recognition / Text to Speech -->
-    <load moduled="mod_tts_commandline"/>
-    <load moduled="mod_flite"/>
+    <load module="mod_tts_commandline"/>
+    <load module="mod_flite"/>
 
     <!-- Streams / Files -->
-    <load moduled="mod_local_stream"/>
-    <load moduled="mod_tone_stream"/>
-    <load moduled="mod_shout"/>
+    <load module="mod_shout"/>
+    <load module="mod_tone_stream"/>
+    <load module="mod_local_stream"/>
 
     <!-- XML Interfaces -->
-    <load moduled="mod_xml_curl"/>
-    <load moduled="mod_xml_cdr"/>
+    <load module="mod_xml_curl"/>
+    <load module="mod_xml_cdr"/>
+  </modules>
 </configuration>
