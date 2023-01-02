@@ -89,8 +89,11 @@ class XmlCdrFunctions():
         else:
             leg = 'b'
 
-
-        cdr_dict = xmltodict.parse(xml)
+        try:
+            cdr_dict = xmltodict.parse(xml)
+        except:
+            logger.warn('XML CDR request {}: Error parsing xml.'.format(t_uuid))
+            cdr_dict = {}
 
         if not 'cdr' in cdr_dict:  # check root has children
             logger.warn('XML CDR request {}: Contained no cdr element.'.format(t_uuid))
