@@ -262,7 +262,21 @@ class XmlHandlerFunctions():
         return
 
 
-    def GetDirectory(self, domain, user, number_as_presence_id, cacheable = True):
+    def GetDirectory(self, domain, user, cacheable = True):
+        cache_key = 'xmlhandler:number_as_presence_id'
+        number_as_presence_id = cache.get(cache_key)
+        if not number_as_presence_id:
+            try:
+                number_as_presence_id = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')[0]
+            except:
+                number_as_presence_id = 'false'
+            cache.set(cache_key, number_as_presence_id)
+
+        if number_as_presence_id == 'true':
+            number_as_presence_id = True
+        else:
+            number_as_presence_id = False
+
         directory_cache_key = 'directory:%s@%s' % (user, domain)
         xml = cache.get(directory_cache_key)
         if xml:
@@ -307,15 +321,14 @@ class XmlHandlerFunctions():
         return xml
 
 
-    def GetDomain(self, domain):
+    def GetDomain(self):
         ds = Domain.objects.filter(enabled = 'true').order_by('name')
 
         x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
         x_section = etree.SubElement(x_root, "section", name='directory')
 
-        last_domain = 'None'
         for d in ds:
-            self.DirectoryAddDomain(e.domain_id.name, x_section, False, False)
+            self.DirectoryAddDomain(d.name, x_section, False, False)
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
@@ -323,6 +336,16 @@ class XmlHandlerFunctions():
 
 
     def GetDirectoryStatic(self, number_as_presence_id, cacheable = False):
+        try:
+            number_as_presence_id = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')[0]
+        except:
+            number_as_presence_id = 'false'
+
+        if number_as_presence_id == 'true':
+            number_as_presence_id = True
+        else:
+            number_as_presence_id = False
+
         x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
         es = Extension.objects.select_related('domain_id').prefetch_related('extensionuser', 'voicemail').filter(enabled = 'true').order_by('domain_id')
         last_domain = 'None'
@@ -339,7 +362,7 @@ class XmlHandlerFunctions():
         return xml
 
 
-    def GetDialplan(self, caller_context, context_type, hostname, destination_number):
+    def GetDialplan(self, caller_context, hostname, destination_number):
         xml_list = list()
         call_context = caller_context
         if caller_context == '':
@@ -347,6 +370,12 @@ class XmlHandlerFunctions():
         context_name = call_context
         if call_context == 'public' or call_context[:7] == 'public@' or call_context[-7:] == '.public':
             context_name = 'public'
+
+        cache_key = 'xmlhandler:context_type'
+        context_type = cache.get(cache_key)
+        if not context_type:
+            context_type = PbxSettings().default_settings('xmlhandler', 'context_type', 'text')[0]
+            cache.set(cache_key, context_type)
 
         dialplan_cache_key = 'dialplan:%s' % call_context
         if context_name == 'public' and context_type == "single":

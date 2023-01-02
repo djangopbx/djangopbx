@@ -31,7 +31,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('dialplan.xml', views.dialplan, name='dialplan'),
-    path('directory.xml', views.directory, name='directory'),
+    path('dialplan/', views.dialplan, name='dialplan'),
+    path('directory/', views.directory, name='directory'),
+    path('static/dialplan.xml', views.staticdialplan, name='staticdialplan'),
+    path('static/directory.xml', views.staticdirectory, name='staticdirectory'),
 ]

@@ -1,13 +1,21 @@
 <configuration name="xml_curl.conf" description="cURL XML Gateway">
   <bindings>
-    <binding name="example">
+    <binding name="directory">
+      <param name="gateway-url" value="http://127.0.0.1:8080/xmlhandler/directory/" bindings="directory"/>
+      <param name="timeout" value="10"/>
+    </binding>
+    <binding name="dialplan">
+      <param name="gateway-url" value="http://127.0.0.1:8080/xmlhandler/dialplan/" bindings="dialplan"/>
+      <param name="timeout" value="10"/>
+    </binding>
+    <!--<binding name="example"> -->
       <!-- Allow to bind on a particular IP for requests sent -->
-      <param name="bind-local" value="127.0.0.1" />
+      <!--<param name="bind-local" value="127.0.0.1" />-->
       <!-- The url to a gateway cgi that can generate xml similar to
 	   what's in this file only on-the-fly (leave it commented if you dont
 	   need it) -->
       <!-- one or more |-delim of configuration|directory|dialplan -->
-      <param name="gateway-url" value="http://127.0.0.1:80/xmlhandler/" bindings="dialplan|directory"/> -->
+      <!-- <param name="gateway-url" value="http://www.freeswitch.org/gateway.xml" bindings="dialplan"/> -->
       <!-- set this to provide authentication credentials to the server -->
       <!--<param name="gateway-credentials" value="muser:mypass"/>-->
       <!--<param name="auth-scheme" value="basic"/>-->
@@ -44,6 +52,6 @@
 
       <!-- one or more of these imply you want to pick the exact variables that are transmitted -->
       <!--<param name="enable-post-var" value="Unique-ID"/>-->
-    </binding>
+    <!--</binding> -->
   </bindings>
 </configuration>

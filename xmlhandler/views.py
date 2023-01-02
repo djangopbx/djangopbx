@@ -28,15 +28,14 @@
 #
 
 import logging
-from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-from tenants.pbxsettings import PbxSettings
 from .xmlhandlerfunctions import XmlHandlerFunctions
 
 logger = logging.getLogger(__name__)
 
-@csrf_exempt
+
+'''
 def index(request):
     debug = False
     xmlhf = XmlHandlerFunctions()
@@ -82,30 +81,16 @@ def index(request):
             destination_number = hunt_destination_number
 
         if section == 'directory':
-            number_as_presence_id = False
-            cache_key = 'xmlhandler:number_as_presence_id'
-            napid = cache.get(cache_key)
-            if not napid:
-                napid = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')[0]
-                cache.set(cache_key, napid)
-
-            if napid == 'true':
-                    number_as_presence_id = True
             event_calling_function = request.POST.get('Event-Calling-Function', '')
             if event_calling_function == 'switch_load_network_lists':
                 xml = xmlhf.GetAcl(domain)
             elif event_calling_function == 'switch_xml_locate_domain':
                 xml = xmlhf.GetDomain(domain)
             else:
-                xml = xmlhf.GetDirectory(domain, user, number_as_presence_id)
+                xml = xmlhf.GetDirectory(domain, user)
 
         if section == 'dialplan':
-            cache_key = 'xmlhandler:context_type'
-            context_type = cache.get(cache_key)
-            if not context_type:
-                context_type = PbxSettings().default_settings('xmlhandler', 'context_type', 'text')[0]
-                cache.set(cache_key, context_type)
-            xml = xmlhf.GetDialplan(call_context, context_type, hostname, destination_number )
+            xml = xmlhf.GetDialplan(call_context, hostname, destination_number )
 
     else:
         return HttpResponseNotFound()
@@ -114,9 +99,75 @@ def index(request):
         logger.info('XML Handler response: {}'.format(xml))
 
     return HttpResponse(xml, content_type='application/xml')
+'''
 
-
+@csrf_exempt
 def dialplan(request):
+    debug = True
+    xmlhf = XmlHandlerFunctions()
+    allowed_addresses = xmlhf.get_allowed_addresses()
+
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+        return HttpResponseNotFound()
+
+    if not request.method == 'POST':
+        return HttpResponseNotFound()
+
+    if debug:
+        logger.info('XML Handler request: {}'.format(request.POST))
+
+    call_context            = request.POST.get('Caller-Context', '')
+    hostname                = request.POST.get('FreeSWITCH-Switchname', '')
+    destination_number      = request.POST.get('Caller-Destination-Number', '')
+    hunt_context            = request.POST.get('Hunt-Context')
+    hunt_destination_number = request.POST.get('Hunt-Destination-Number')
+
+    if hunt_context:
+        call_context = hunt_context
+
+    if hunt_destination_number:
+        destination_number = hunt_destination_number
+
+    xml = xmlhf.GetDialplan(call_context, hostname, destination_number )
+    if debug:
+        logger.info('XML Handler response: {}'.format(xml))
+
+    return HttpResponse(xml, content_type='application/xml')
+
+
+@csrf_exempt
+def directory(request):
+    debug = True
+    xmlhf = XmlHandlerFunctions()
+    allowed_addresses = xmlhf.get_allowed_addresses()
+
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+        return HttpResponseNotFound()
+
+    if not request.method == 'POST':
+        return HttpResponseNotFound()
+
+    if debug:
+        logger.info('XML Handler request: {}'.format(request.POST))
+
+    domain                 = request.POST.get('domain')
+    user                   = request.POST.get('user')
+    event_calling_function = request.POST.get('Event-Calling-Function', '')
+
+    if event_calling_function == 'switch_load_network_lists':
+        xml = xmlhf.GetAcl(domain)
+    elif event_calling_function == 'switch_xml_locate_domain':
+        xml = xmlhf.GetDomain(domain)
+    else:
+        xml = xmlhf.GetDirectory(domain, user)
+
+    if debug:
+        logger.info('XML Handler response: {}'.format(xml))
+
+    return HttpResponse(xml, content_type='application/xml')
+
+
+def staticdialplan(request):
     xmlhf = XmlHandlerFunctions()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
@@ -124,7 +175,7 @@ def dialplan(request):
         return HttpResponseNotFound()
 
     if request.method == 'GET':
-        hostname = request.POST.get('hostname', 'None')
+        hostname = request.GET.get('hostname', 'None')
         xml = xmlhf.GetDialplanStatic(hostname)
     else:
         return HttpResponseNotFound()
@@ -132,16 +183,15 @@ def dialplan(request):
     return HttpResponse(xml, content_type='application/xml')
 
 
-def directory(request):
+def staticdirectory(request):
     xmlhf = XmlHandlerFunctions()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
     if request.META['REMOTE_ADDR'] not in allowed_addresses:
         return HttpResponseNotFound()
 
-    number_as_presence_id = apps.get_app_config('xmlhandler').number_as_presence_id
     if request.method == 'GET':
-        xml = xmlhf.GetDirectoryStatic(number_as_presence_id)
+        xml = xmlhf.GetDirectoryStatic()
     else:
         return HttpResponseNotFound()
 
