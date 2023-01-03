@@ -150,14 +150,27 @@ def directory(request):
     if debug:
         logger.info('XML Handler request: {}'.format(request.POST))
 
+    purpose                = request.POST.get('purpose', '')
+    action                 = request.POST.get('action', '')
     domain                 = request.POST.get('domain')
     user                   = request.POST.get('user')
     event_calling_function = request.POST.get('Event-Calling-Function', '')
+    event_calling_file     = request.POST.get('Event-Calling-File', '')
 
-    if event_calling_function == 'switch_load_network_lists':
-        xml = xmlhf.GetAcl(domain)
+    if purpose == 'gateways':
+        xml = xmlhf.GetDomain()
+    elif action == 'message-countl':
+        xml = xmlhf.GetDirectory(domain, user)
+    elif action == 'group_call':
+        xml = xmlhf.GetGroupCall()
+    elif action == 'reverse-auth-lookup':
+        xml = xmlhf.GetReverseAuthLookup()
     elif event_calling_function == 'switch_xml_locate_domain':
-        xml = xmlhf.GetDomain(domain)
+        xml = xmlhf.GetDomain()
+    elif event_calling_function == 'switch_load_network_lists':
+        xml = xmlhf.GetAcl(domain)
+    elif event_calling_function == 'populate_database' and event_calling_file == 'mod_directory.c':
+        xml = xmlhf.GetPopulateDirectory(domain)
     else:
         xml = xmlhf.GetDirectory(domain, user)
 

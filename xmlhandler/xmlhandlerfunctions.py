@@ -31,6 +31,7 @@ from django.core.cache import cache
 from lxml import etree
 from django.db.models import Q
 from dialplans.models import Dialplan
+from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, ExtensionUser, FollowMeDestination
 from voicemail.models import Voicemail
@@ -73,6 +74,15 @@ class XmlHandlerFunctions():
 </document>
 '''
 
+
+    def XrootDynamic(self):
+        return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
+
+
+    def XrootStatic(self):
+        return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
+
+
     def get_allowed_addresses(self):
         cache_key = 'xmlhandler:allowed_addresses'
         aa = cache.get(cache_key)
@@ -86,7 +96,7 @@ class XmlHandlerFunctions():
 
 
     def DirectoryAddDomain(self, domain, x_section, params = True, variables = True):
-        x_domain = etree.SubElement(x_section, "domain", name=domain)
+        x_domain = etree.SubElement(x_section, "domain", name=domain, alias='true')
         if params:
             x_params = etree.SubElement(x_domain, "params")
             etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
@@ -262,6 +272,30 @@ class XmlHandlerFunctions():
         return
 
 
+    def DirectoryPopulate(self, domain, x_users, e):
+        x_user =  etree.SubElement(x_users, "user", id=e.extension)
+        sip_from_number = e.extension
+        if e.number_alias:
+            x_user.set("number-alias", e.number_alias)
+            sip_from_number = e.number_alias
+
+        x_params = etree.SubElement(x_user, "params")
+        etree.SubElement(x_params, "param", name='directory-visible', value=e.directory_visible)
+        etree.SubElement(x_params, "param", name='directory-exten-visible', value=e.directory_exten_visible)
+        x_variables = etree.SubElement(x_user, "variables")
+        etree.SubElement(x_variables, "variable", name='directory-visible', value=e.directory_visible)
+        etree.SubElement(x_variables, "variable", name='directory-exten-visible', value=e.directory_exten_visible)
+        return
+
+
+    def DirectoryReverseAuth(self, domain, user, x_users, password):
+        x_user =  etree.SubElement(x_users, "user", id=e.extension)
+        x_params =  etree.SubElement(x_user, "params")
+        etree.SubElement(x_params, "param", name='reverse-auth-user', value=user)
+        etree.SubElement(x_params, "param", name='reverse-auth-pass', value=password)
+        return
+
+
     def GetDirectory(self, domain, user, cacheable = True):
         cache_key = 'xmlhandler:number_as_presence_id'
         number_as_presence_id = cache.get(cache_key)
@@ -291,7 +325,7 @@ class XmlHandlerFunctions():
         v = Voicemail.objects.filter(extension_id__extension = user, enabled = 'true').first()
         eu = ExtensionUser.objects.filter(extension_id = e.id, default_user = 'true').first()
 
-        x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
+        x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
 
         x_users = self.DirectoryAddDomain(domain, x_section)
@@ -306,7 +340,7 @@ class XmlHandlerFunctions():
     def GetAcl(self, domain):
         es = Extension.objects.select_related('domain_id').filter(domain_id__name = domain, enabled = 'true').exclude(cidr__isnull = True).exclude(cidr__exact = '').order_by('domain_id')
 
-        x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
+        x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
 
         last_domain = 'None'
@@ -324,11 +358,60 @@ class XmlHandlerFunctions():
     def GetDomain(self):
         ds = Domain.objects.filter(enabled = 'true').order_by('name')
 
-        x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
+        x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
 
         for d in ds:
             self.DirectoryAddDomain(d.name, x_section, False, False)
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return xml
+
+
+    def GetGroupCall(self):
+        return self.NotFoundXml()
+
+
+    def GetReverseAuthLookup(self, domain, user):
+        directory_cache_key = 'directory:reverseauth:%s@%s' % (user, domain)
+        xml = cache.get(directory_cache_key)
+        if xml:
+            return xml
+
+        e = Extension.objects.filter((Q(extension = user) | Q(number_alias = user)), domain_id__name = domain, enabled = 'true').first()
+        if e == None:
+            xml = self.NotFoundXml()
+            cache.set(directory_cache_key, xml)
+            return xml
+
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='directory')
+
+        x_users = self.DirectoryAddDomain(domain, x_section)
+        self.DirectoryReverseAuth(domain, user, x_users, e.password)
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(directory_cache_key, xml)
+        return xml
+
+
+    def GetPopulateDirectory(self, domain = None):
+        if domain:
+            es = Extension.objects.select_related('domain_id').filter((Q(directory_visible = 'true') | Q(directory_exten_visible = 'true')), domain_id__name = domain, enabled = 'true').order_by('domain_id')
+        else:
+            es = Extension.objects.select_related('domain_id').filter((Q(directory_visible = 'true') | Q(directory_exten_visible = 'true')), enabled = 'true').order_by('domain_id')
+
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='directory')
+
+        last_domain = 'None'
+        for e in es:
+            if not last_domain == e.domain_id.name:
+                last_domain = e.domain_id.name
+                x_users = self.DirectoryAddDomain(e.domain_id.name, x_section, False, False)
+            self.DirectoryPopulate(domain, x_users, e)
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
@@ -346,7 +429,7 @@ class XmlHandlerFunctions():
         else:
             number_as_presence_id = False
 
-        x_root = etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
+        x_root = self.XrootStatic()
         es = Extension.objects.select_related('domain_id').prefetch_related('extensionuser', 'voicemail').filter(enabled = 'true').order_by('domain_id')
         last_domain = 'None'
         for e in es:
