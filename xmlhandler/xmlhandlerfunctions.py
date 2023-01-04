@@ -74,7 +74,6 @@ class XmlHandlerFunctions():
 </document>
 '''
 
-
     def XrootDynamic(self):
         return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
 
@@ -95,7 +94,9 @@ class XmlHandlerFunctions():
         return allowed_addresses
 
 
-    def DirectoryAddDomain(self, domain, x_section, params = True, variables = True):
+class DirectoryHandler(XmlHandlerFunctions):
+
+    def DirectoryAddDomain(self, domain, x_section, params = True, variables = True, groups = True):
         x_domain = etree.SubElement(x_section, "domain", name=domain, alias='true')
         if params:
             x_params = etree.SubElement(x_domain, "params")
@@ -105,11 +106,12 @@ class XmlHandlerFunctions():
             x_variables = etree.SubElement(x_domain, "variables")
             etree.SubElement(x_variables, "variable", name='default_language', value='$${default_language}')
             etree.SubElement(x_variables, "variable", name='default_dialect', value='$${default_dialect}')
-        x_groups = etree.SubElement(x_domain, "groups")
-        x_group = etree.SubElement(x_groups, "group", name='default')
-        x_users = etree.SubElement(x_group, "users")
-        return x_users
-
+        if groups:
+            x_groups = etree.SubElement(x_domain, "groups")
+            x_group = etree.SubElement(x_groups, "group", name='default')
+            x_users = etree.SubElement(x_group, "users")
+            return x_users
+        return x_domain
 
     def DirectoryAddUserAcl(self, domain, x_users, e):
         x_user =  etree.SubElement(x_users, "user", id=e.extension)
@@ -297,6 +299,13 @@ class XmlHandlerFunctions():
 
 
     def GetDirectory(self, domain, user, cacheable = True):
+        if not domain:
+            xml = self.NotFoundXml()
+            return xml
+        if not user:
+            xml = self.NotFoundXml()
+            return xml
+
         cache_key = 'xmlhandler:number_as_presence_id'
         number_as_presence_id = cache.get(cache_key)
         if not number_as_presence_id:
@@ -337,11 +346,15 @@ class XmlHandlerFunctions():
         return xml
 
 
-    def GetAcl(self, domain):
-        es = Extension.objects.select_related('domain_id').filter(domain_id__name = domain, enabled = 'true').exclude(cidr__isnull = True).exclude(cidr__exact = '').order_by('domain_id')
+    def GetAcl(self, domain = None):
+        if domain:
+            es = Extension.objects.select_related('domain_id').filter(domain_id__name = domain, enabled = 'true').exclude(cidr__isnull = True).exclude(cidr__exact = '').order_by('domain_id')
+        else:
+            es = Extension.objects.select_related('domain_id').filter(enabled = 'true').exclude(cidr__isnull = True).exclude(cidr__exact = '').order_by('domain_id')
 
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
+
 
         last_domain = 'None'
         for e in es:
@@ -357,23 +370,62 @@ class XmlHandlerFunctions():
 
     def GetDomain(self):
         ds = Domain.objects.filter(enabled = 'true').order_by('name')
-
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
 
         for d in ds:
-            self.DirectoryAddDomain(d.name, x_section, False, False)
+            self.DirectoryAddDomain(d.name, x_section, False, False, False)
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         return xml
 
 
-    def GetGroupCall(self):
-        return self.NotFoundXml()
+    def GetGroupCall(self, domain):
+        if not domain:
+            xml = self.NotFoundXml()
+            return xml
+
+        directory_cache_key = 'directory:groups:%s' % domain
+        xml = cache.get(directory_cache_key)
+        if xml:
+            return xml
+
+        es = Extension.objects.select_related('domain_id').filter(domain_id__name = domain, enabled = 'true').exclude(call_group__isnull = True).exclude(call_group = '').order_by('call_group')
+        cg_dict = {}
+        for e in es:
+            if ',' in e.call_group:
+                call_groups = e.call_group.lower().replace(' ', '').split(',')
+            else:
+                call_groups = [e.call_group.lower().replace(' ', '')]
+            for cg in call_groups:
+                if cg in cg_dict:
+                    cg_dict[cg].append(e.extension)
+                else:
+                    cg_dict[cg] = [e.extension]
+
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='directory')
+        x_domain = self.DirectoryAddDomain(domain, x_section, False, False, False)
+        x_groups = etree.SubElement(x_domain, "groups")
+        for key, value in cg_dict.items():
+            x_group = etree.SubElement(x_groups, "group", name=key)
+            for extn in value:
+                etree.SubElement(x_group, "user", id=extn, type='pointer')
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(directory_cache_key, xml)
+        return xml
 
 
     def GetReverseAuthLookup(self, domain, user):
+        if not domain:
+            xml = self.NotFoundXml()
+            return xml
+        if not user:
+            xml = self.NotFoundXml()
+            return xml
         directory_cache_key = 'directory:reverseauth:%s@%s' % (user, domain)
         xml = cache.get(directory_cache_key)
         if xml:
@@ -444,6 +496,8 @@ class XmlHandlerFunctions():
         xml = str(etree.tostring(x_root), "utf-8")
         return xml
 
+
+class DialplanHandler(XmlHandlerFunctions):
 
     def GetDialplan(self, caller_context, hostname, destination_number):
         xml_list = list()
@@ -516,3 +570,4 @@ class XmlHandlerFunctions():
             return xml
 
         return self.NotFoundXml()
+

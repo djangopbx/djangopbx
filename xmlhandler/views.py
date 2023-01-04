@@ -30,7 +30,7 @@
 import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-from .xmlhandlerfunctions import XmlHandlerFunctions
+from .xmlhandlerfunctions import DirectoryHandler, DialplanHandler
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +104,7 @@ def index(request):
 @csrf_exempt
 def dialplan(request):
     debug = True
-    xmlhf = XmlHandlerFunctions()
+    xmlhf = DialplanHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
     if request.META['REMOTE_ADDR'] not in allowed_addresses:
@@ -135,10 +135,26 @@ def dialplan(request):
     return HttpResponse(xml, content_type='application/xml')
 
 
+def staticdialplan(request):
+    xmlhf = XmlHandlerFunctions()
+    allowed_addresses = xmlhf.get_allowed_addresses()
+
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+        return HttpResponseNotFound()
+
+    if request.method == 'GET':
+        hostname = request.GET.get('hostname', 'None')
+        xml = xmlhf.GetDialplanStatic(hostname)
+    else:
+        return HttpResponseNotFound()
+
+    return HttpResponse(xml, content_type='application/xml')
+
+
 @csrf_exempt
 def directory(request):
     debug = True
-    xmlhf = XmlHandlerFunctions()
+    xmlhf = DirectoryHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
     if request.META['REMOTE_ADDR'] not in allowed_addresses:
@@ -162,7 +178,7 @@ def directory(request):
     elif action == 'message-countl':
         xml = xmlhf.GetDirectory(domain, user)
     elif action == 'group_call':
-        xml = xmlhf.GetGroupCall()
+        xml = xmlhf.GetGroupCall(domain)
     elif action == 'reverse-auth-lookup':
         xml = xmlhf.GetReverseAuthLookup()
     elif event_calling_function == 'switch_xml_locate_domain':
@@ -176,22 +192,6 @@ def directory(request):
 
     if debug:
         logger.info('XML Handler response: {}'.format(xml))
-
-    return HttpResponse(xml, content_type='application/xml')
-
-
-def staticdialplan(request):
-    xmlhf = XmlHandlerFunctions()
-    allowed_addresses = xmlhf.get_allowed_addresses()
-
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
-        return HttpResponseNotFound()
-
-    if request.method == 'GET':
-        hostname = request.GET.get('hostname', 'None')
-        xml = xmlhf.GetDialplanStatic(hostname)
-    else:
-        return HttpResponseNotFound()
 
     return HttpResponse(xml, content_type='application/xml')
 
