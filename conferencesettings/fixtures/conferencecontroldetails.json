@@ -1,0 +1,557 @@
+[
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "0f5b86d2-9f9e-48b9-b7df-455421f172b0",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "9",
+        "action": "energy up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.743Z",
+        "updated": "2023-01-04T21:50:23.743Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "10ecae24-8df5-4a8e-8a14-c461e81e8645",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "3",
+        "action": "vol talk up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.521Z",
+        "updated": "2023-01-04T21:44:32.521Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "1922ebb5-4f61-4ad1-af31-efcd875cf7b5",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "5",
+        "action": "vol listen zero",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.989Z",
+        "updated": "2023-01-04T21:48:07.989Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "238e35f8-2ee3-4d44-b979-71d1f73a5094",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "7",
+        "action": "energy dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:45:48.122Z",
+        "updated": "2023-01-04T21:45:48.122Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "2cd68c8d-997d-4d27-bf9f-0c0e0fd3f0e2",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "6",
+        "action": "vol listen up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.525Z",
+        "updated": "2023-01-04T21:44:32.525Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "2dc8fa35-136b-4a41-9f32-5e06cef6dd84",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "5",
+        "action": "vol listen zero",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.524Z",
+        "updated": "2023-01-04T21:44:32.524Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "3946cfb3-c916-4db4-8b11-0efcde1b05b8",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "2",
+        "action": "vol talk zero",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.732Z",
+        "updated": "2023-01-04T21:50:23.732Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "53a8c162-2985-4a70-9b44-a1d7f7137468",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "n",
+        "action": "deaf mute",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.979Z",
+        "updated": "2023-01-04T21:48:51.408Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "5a24fc94-f956-4e17-a211-7105523abe0e",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "3",
+        "action": "vol talk up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.986Z",
+        "updated": "2023-01-04T21:48:07.986Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "5ac11e58-ea44-436c-be61-6414aae073da",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "n",
+        "action": "deaf mute",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.748Z",
+        "updated": "2023-01-04T21:50:23.748Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "6a94f813-abc5-4a26-a261-7965543969f8",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "4",
+        "action": "vol listen dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.522Z",
+        "updated": "2023-01-04T21:44:32.522Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "6b1637b8-32c4-46d2-a0b1-d758719a2d8d",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "4",
+        "action": "vol listen dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.735Z",
+        "updated": "2023-01-04T21:50:23.735Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "6d5bf3fc-f688-4f42-9b94-ad0543443d58",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "0",
+        "action": "mute",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:51:00.498Z",
+        "updated": "2023-01-04T21:51:30.965Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "75dff9a2-324a-4f56-a99b-923f7444209b",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "7",
+        "action": "energy dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.992Z",
+        "updated": "2023-01-04T21:48:07.992Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "7b8ebf08-796d-4586-837f-7ca804b4711b",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "1",
+        "action": "vol talk dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.730Z",
+        "updated": "2023-01-04T21:50:23.730Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "823d12b9-36be-47d9-a49d-bc15a6418a6f",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "n",
+        "action": "hangup",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.746Z",
+        "updated": "2023-01-04T21:50:23.746Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "8630d0d3-735f-4e80-95e2-3911a323a664",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "6",
+        "action": "vol listen up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.991Z",
+        "updated": "2023-01-04T21:48:07.991Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "8e159f32-c461-4e5e-8593-5d97d79057e6",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "0",
+        "action": "execute_application",
+        "data": "python mute non_moderator",
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.517Z",
+        "updated": "2023-01-04T21:44:32.517Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "8fc53f1b-08ec-462b-b1c4-9d020f8b70c2",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "8",
+        "action": "energy equ",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.994Z",
+        "updated": "2023-01-04T21:48:07.994Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "95ad0896-779f-45ab-8327-eb48ce8cedac",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "9",
+        "action": "energy up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:45:48.125Z",
+        "updated": "2023-01-04T21:45:48.125Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "95dae52a-5dfa-437e-986f-893da10a9f4b",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "9",
+        "action": "energy up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.995Z",
+        "updated": "2023-01-04T21:48:07.995Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "a4d0b0b0-866e-4c2c-b494-736aba3cf4a1",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "n",
+        "action": "mute",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.512Z",
+        "updated": "2023-01-04T21:47:16.852Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "b594f6df-e43b-47a9-9212-ea4f9a73dd0e",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "5",
+        "action": "vol listen zero",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.737Z",
+        "updated": "2023-01-04T21:50:23.737Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "bc748c78-d9f3-4c7f-acfe-1d140639154f",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "2",
+        "action": "vol talk zero",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.984Z",
+        "updated": "2023-01-04T21:48:07.984Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "bc790a43-93ab-4068-aca1-a37e44012ce0",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "1",
+        "action": "vol talk dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.518Z",
+        "updated": "2023-01-04T21:44:32.518Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "c18eea5b-c4a2-4f9b-9f79-b54c313c4e83",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "n",
+        "action": "hangup",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.514Z",
+        "updated": "2023-01-04T21:47:16.854Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "c94f7991-4fd6-4890-ba2a-6bcaf7776883",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "n",
+        "action": "mute",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.998Z",
+        "updated": "2023-01-04T21:48:07.998Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "d36e7817-cdd7-49d6-a6b7-ee74f4366b2a",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "8",
+        "action": "energy equ",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:45:48.124Z",
+        "updated": "2023-01-04T21:45:48.124Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "d590406d-e258-426b-bd41-c1bffb6a0b4d",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "3",
+        "action": "vol talk up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.733Z",
+        "updated": "2023-01-04T21:50:23.733Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "da432331-db3f-4548-adaa-68599577de18",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "*",
+        "action": "deaf mute",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.515Z",
+        "updated": "2023-01-04T21:44:32.515Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "e530ff67-5e6d-43b4-acb1-08bcb485d0e2",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "1",
+        "action": "vol talk dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.982Z",
+        "updated": "2023-01-04T21:48:07.982Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "e82952ab-017d-45fe-89a1-42feb1913c23",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "8",
+        "action": "energy equ",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.741Z",
+        "updated": "2023-01-04T21:50:23.741Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "e900cd68-1edf-4fad-897d-23ce78587d7c",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "6",
+        "action": "vol listen up",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.738Z",
+        "updated": "2023-01-04T21:50:23.738Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "fbfe2392-e6ba-44c2-9910-dce60dd14109",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "n",
+        "action": "hangup",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.997Z",
+        "updated": "2023-01-04T21:48:07.997Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "fc55c686-118d-4812-834d-ef0e1a742cc5",
+    "fields": {
+        "conf_ctrl_id": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+        "digits": "7",
+        "action": "energy dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:50:23.740Z",
+        "updated": "2023-01-04T21:50:23.740Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "fccdce76-acfd-459d-b468-d70976356f89",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "2",
+        "action": "vol talk zero",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.520Z",
+        "updated": "2023-01-04T21:44:32.520Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "ff7632a3-8869-4b5b-becc-f0d7b773819e",
+    "fields": {
+        "conf_ctrl_id": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+        "digits": "4",
+        "action": "vol listen dn",
+        "data": null,
+        "enabled": "true",
+        "created": "2023-01-04T21:48:07.987Z",
+        "updated": "2023-01-04T21:48:07.987Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

@@ -1,0 +1,41 @@
+[
+{
+    "model": "conferencesettings.conferencecontrols",
+    "pk": "43035977-3602-413c-945f-ecf9006cd62e",
+    "fields": {
+        "name": "moderator",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T21:44:32.509Z",
+        "updated": "2023-01-04T21:47:16.849Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontrols",
+    "pk": "7f8990f0-327c-4cc4-bcb4-39365ea836fb",
+    "fields": {
+        "name": "page",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T21:50:23.728Z",
+        "updated": "2023-01-04T21:51:30.963Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontrols",
+    "pk": "c79e5bb0-ba70-4042-adb4-efcbb9258a6c",
+    "fields": {
+        "name": "default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T21:48:07.977Z",
+        "updated": "2023-01-04T21:48:51.404Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

@@ -1,0 +1,93 @@
+[
+{
+    "model": "conferencesettings.conferenceprofiles",
+    "pk": "509e1dbd-3686-490c-887c-93d67ed254fe",
+    "fields": {
+        "name": "sla",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:31:16.737Z",
+        "updated": "2023-01-05T10:32:29.454Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofiles",
+    "pk": "5c4f02be-6f83-4603-9b15-755735b80f47",
+    "fields": {
+        "name": "cdquality",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.494Z",
+        "updated": "2023-01-04T22:07:45.460Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofiles",
+    "pk": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+    "fields": {
+        "name": "wait-mod",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.168Z",
+        "updated": "2023-01-05T10:37:18.312Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofiles",
+    "pk": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+    "fields": {
+        "name": "page",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.132Z",
+        "updated": "2023-01-05T10:30:02.613Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofiles",
+    "pk": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+    "fields": {
+        "name": "default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.671Z",
+        "updated": "2023-01-04T22:04:24.511Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofiles",
+    "pk": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+    "fields": {
+        "name": "wideband",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.769Z",
+        "updated": "2023-01-05T10:35:24.770Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofiles",
+    "pk": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+    "fields": {
+        "name": "ultrawideband",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.835Z",
+        "updated": "2023-01-05T10:34:39.379Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

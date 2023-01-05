@@ -1,0 +1,2027 @@
+[
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "023abebc-bb97-4535-a0a9-c2b15a1a71f4",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "energy-level",
+        "value": "15",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.184Z",
+        "updated": "2023-01-05T10:36:09.184Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "0300d940-e264-4dd4-b9a5-7afb8f6d9ac0",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "moh-sound",
+        "value": "local_stream://default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.522Z",
+        "updated": "2023-01-04T22:05:54.522Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "03bb3110-1f1d-464c-8cb3-08551785c31d",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "exit-sound",
+        "value": "tone_stream://%(500,0,300,200,100,50,25)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.853Z",
+        "updated": "2023-01-05T10:33:49.853Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "071fc824-0136-499a-a1c3-b2157bf203db",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "kicked-sound",
+        "value": "conference/conf-kicked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.858Z",
+        "updated": "2023-01-05T10:33:49.858Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "07716ce1-0b80-4ca6-9798-f5cc9e6fbf4c",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "kicked-sound",
+        "value": "conference/conf-kicked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.792Z",
+        "updated": "2023-01-05T10:35:04.792Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "081131aa-2d98-4e6c-93e2-f747768b0495",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "caller-id-number",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.505Z",
+        "updated": "2023-01-04T22:05:54.505Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "0c15a93f-d71a-4e52-8749-c95b18735c66",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "kicked-sound",
+        "value": "conference/conf-kicked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.192Z",
+        "updated": "2023-01-05T10:36:09.192Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "0ceb8a2f-9b41-4ac9-aa7a-204b1c1fc83a",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "domain",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.147Z",
+        "updated": "2023-01-05T10:23:18.147Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "0f1adf26-b582-4642-9940-017620537cd0",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "enter-sound",
+        "value": "tone_stream://%(200,0,500,600,700)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.642Z",
+        "updated": "2023-01-04T22:03:09.642Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "107c8a48-f913-47e7-a548-484f4dfd0362",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "is-locked-sound",
+        "value": "conference/conf-is-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.856Z",
+        "updated": "2023-01-05T10:33:49.856Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "10bc7005-cad2-4fed-9547-5f313227456e",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "exit-sound",
+        "value": "tone_stream://%(500,0,300,200,100,50,25)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.786Z",
+        "updated": "2023-01-05T10:35:04.786Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "13d093d8-5a90-4301-b5ae-d43e9e789436",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "auto-gain-level",
+        "value": "0",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.773Z",
+        "updated": "2023-01-05T10:35:04.773Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "14711876-f1bd-4c00-a95f-81e8c569b502",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "cdr-log-dir",
+        "value": "auto",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.180Z",
+        "updated": "2023-01-05T10:36:09.180Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "1517876d-dbbf-4b7c-b60a-3649837fec6e",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "is-unlocked-sound",
+        "value": "conference/conf-is-unlocked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.790Z",
+        "updated": "2023-01-05T10:35:04.790Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "16076ee7-af33-44f8-bd77-cf49b28b7027",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "alone-sound",
+        "value": "conference/conf-alone.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.837Z",
+        "updated": "2023-01-05T10:33:49.837Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "18a36207-dd58-4f60-a1ba-6885c02f8f03",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "caller-controls",
+        "value": "default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.776Z",
+        "updated": "2023-01-05T10:35:04.776Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "1e9febd6-e843-4a45-b218-cb979f7c396f",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "moderator-controls",
+        "value": "moderator",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.794Z",
+        "updated": "2023-01-05T10:35:04.794Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "2055303f-fa0f-4f43-a339-88d34cea6260",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "energy-level",
+        "value": "300",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.149Z",
+        "updated": "2023-01-05T10:28:55.840Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "213fa46b-ddde-4be6-a399-3342fc23ba9d",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "comfort-noise",
+        "value": "true",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.182Z",
+        "updated": "2023-01-05T10:36:09.182Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "21b54428-5234-48a0-8cfb-eebb84eb0011",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "kicked-sound",
+        "value": "conference/conf-kicked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.158Z",
+        "updated": "2023-01-05T10:23:18.158Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "22abe7f7-28fd-4add-8625-68f42dffaaae",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "interval",
+        "value": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.854Z",
+        "updated": "2023-01-05T10:34:39.382Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "2a35cab9-8914-4b7c-8994-6eecb466140b",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "moderator-controls",
+        "value": "moderator",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.652Z",
+        "updated": "2023-01-04T22:03:09.652Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "2d743bd6-1322-4478-9549-420328516c13",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "interval",
+        "value": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.787Z",
+        "updated": "2023-01-05T10:35:04.788Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "2e2c9278-f1a6-4e78-b1cb-fe281d09a3b7",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "comfort-noise",
+        "value": "true",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.146Z",
+        "updated": "2023-01-05T10:23:18.146Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "30d52c2a-263f-4611-b255-4e82ce5cadd2",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "caller-id-number",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.143Z",
+        "updated": "2023-01-05T10:23:18.143Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "348ff060-dadf-41a9-aef0-c0cf6254f122",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "domain",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.848Z",
+        "updated": "2023-01-05T10:33:49.848Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "354e5116-34b0-408c-a5ed-d84579b2f94e",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "moh-sound",
+        "value": "local_stream://default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.196Z",
+        "updated": "2023-01-05T10:36:09.196Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "3794c39f-0bf9-476b-babf-3e92577bb50d",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "auto-gain-level",
+        "value": "0",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.172Z",
+        "updated": "2023-01-05T10:36:09.172Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "384c6dc2-6724-4d6a-9ad7-016833bb8863",
+    "fields": {
+        "conf_profile_id": "509e1dbd-3686-490c-887c-93d67ed254fe",
+        "name": "domain",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:31:16.746Z",
+        "updated": "2023-01-05T10:31:16.746Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "4268bd0e-6bf2-42df-9909-166bdc59b8c3",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "interval",
+        "value": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.189Z",
+        "updated": "2023-01-05T10:36:09.189Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "42763fa6-9bcd-4702-9ec3-1b9ca4623c80",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "is-locked-sound",
+        "value": "conference/conf-is-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.789Z",
+        "updated": "2023-01-05T10:35:04.789Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "47c756a1-32ee-4872-964a-5654039dcd6a",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "auto-gain-level",
+        "value": "0",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.839Z",
+        "updated": "2023-01-05T10:33:49.839Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "4c4b40c2-cecf-44d7-8753-92a8b9cff82a",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "unmuted-sound",
+        "value": "conference/conf-unmuted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.868Z",
+        "updated": "2023-01-05T10:33:49.868Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "4c8aaa24-1806-4675-92ae-9286c265ee3f",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "pin-sound",
+        "value": "conference/conf-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.198Z",
+        "updated": "2023-01-05T10:36:09.198Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "4fe8349a-5808-4b95-a00f-287775f5362d",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "muted-sound",
+        "value": "conference/conf-muted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.796Z",
+        "updated": "2023-01-05T10:35:04.796Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "503516dc-26e5-4481-b747-57a71aeb9661",
+    "fields": {
+        "conf_profile_id": "509e1dbd-3686-490c-887c-93d67ed254fe",
+        "name": "interval",
+        "value": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:31:16.749Z",
+        "updated": "2023-01-05T10:31:16.749Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "50a866ac-119b-4782-ac0f-a36f8bd5a77b",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "muted-sound",
+        "value": "conference/conf-muted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.197Z",
+        "updated": "2023-01-05T10:36:09.197Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "534ad4d2-1fe9-4372-af3e-70a73f4c3dd0",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "bad-pin-sound",
+        "value": "conference/conf-bad-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.500Z",
+        "updated": "2023-01-04T22:05:54.500Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "553cad58-d391-461c-99c8-b2c909cb8274",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "alone-sound",
+        "value": "conference/conf-alone.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.772Z",
+        "updated": "2023-01-05T10:35:04.772Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "5824e14b-952b-4046-87fd-2d6709830d8a",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "locked-sound",
+        "value": "conference/conf-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.650Z",
+        "updated": "2023-01-04T22:03:09.650Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "59250c71-e0c1-4014-9cdc-067c11b62e14",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "cdr-log-dir",
+        "value": "auto",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.682Z",
+        "updated": "2023-01-04T22:00:00.682Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "5e5813a7-97b5-4629-a2d4-46a0e3e616a1",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "locked-sound",
+        "value": "conference/conf-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.793Z",
+        "updated": "2023-01-05T10:35:04.793Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "5e992401-6584-477c-ae0b-47becd251ef2",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "is-locked-sound",
+        "value": "conference/conf-is-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.646Z",
+        "updated": "2023-01-04T22:03:09.646Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "5ed5a59f-5360-4304-ba63-ef0bb7931fff",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "is-unlocked-sound",
+        "value": "conference/conf-is-unlocked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.648Z",
+        "updated": "2023-01-04T22:03:09.648Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "5f8622ec-43ba-415d-8c1b-70070d8c339c",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "moh-sound",
+        "value": "local_stream://default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.863Z",
+        "updated": "2023-01-05T10:33:49.863Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "60b08400-aacc-4d1e-9b1f-89ddd67405c5",
+    "fields": {
+        "conf_profile_id": "509e1dbd-3686-490c-887c-93d67ed254fe",
+        "name": "caller-controls",
+        "value": "none",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:31:16.740Z",
+        "updated": "2023-01-05T10:32:29.468Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "64fe9912-450c-4537-901e-6ec95cc71777",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "caller-controls",
+        "value": "default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.842Z",
+        "updated": "2023-01-05T10:33:49.842Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "65cb7133-d0c6-457e-9aa8-f89885bb1d84",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "enter-sound",
+        "value": "tone_stream://%(200,0,500,600,700)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.186Z",
+        "updated": "2023-01-05T10:36:09.186Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "66560517-2a95-4cda-b07d-d5fa0176775d",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "comfort-noise",
+        "value": "true",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.781Z",
+        "updated": "2023-01-05T10:35:04.781Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "66ca808d-b97b-403d-95ac-f1fbee6f08ef",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "muted-sound",
+        "value": "conference/conf-muted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.524Z",
+        "updated": "2023-01-04T22:05:54.524Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "68c22549-773e-4a06-bfd8-fea7ad80494b",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "interval",
+        "value": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.514Z",
+        "updated": "2023-01-04T22:06:36.991Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "6c41b207-62f0-4e98-8676-ae77d1ee6a95",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "caller-id-name",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.503Z",
+        "updated": "2023-01-04T22:05:54.503Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "6f7b9454-1688-4347-901f-9c41475d04e9",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "domain",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.509Z",
+        "updated": "2023-01-04T22:05:54.509Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "7230eabf-d2da-41e9-8750-f9d0cbf3ffbe",
+    "fields": {
+        "conf_profile_id": "509e1dbd-3686-490c-887c-93d67ed254fe",
+        "name": "rate",
+        "value": "16000",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:31:16.759Z",
+        "updated": "2023-01-05T10:32:29.474Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "760ceb1d-e36d-4908-a19d-bc5d84db8f88",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "energy-level",
+        "value": "15",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.510Z",
+        "updated": "2023-01-04T22:05:54.510Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "7bc9a9a4-58e4-4f0c-85d5-aff5fbcbad0b",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "locked-sound",
+        "value": "conference/conf-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.860Z",
+        "updated": "2023-01-05T10:33:49.860Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "7cddf6e7-a156-433b-b263-44cd7b6c985f",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "bad-pin-sound",
+        "value": "conference/conf-bad-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.677Z",
+        "updated": "2023-01-04T22:00:00.677Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "7d4aab92-1e19-4a30-ba61-7af98141006d",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "pin-sound",
+        "value": "conference/conf-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.798Z",
+        "updated": "2023-01-05T10:35:04.798Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "807c4df7-ce31-4802-9fa6-3da945d98846",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "caller-id-number",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.681Z",
+        "updated": "2023-01-04T22:00:00.681Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "821e7f5c-86e9-4823-b2fa-f0397fd55e1c",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "unmuted-sound",
+        "value": "conference/conf-unmuted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.168Z",
+        "updated": "2023-01-05T10:23:18.168Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "84833fb0-62ab-4186-8a38-2a45ecb1e20c",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "caller-id-name",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.843Z",
+        "updated": "2023-01-05T10:33:49.844Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "857e5fc9-9d0f-498e-8e00-35782a907d0e",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "caller-controls",
+        "value": "default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.678Z",
+        "updated": "2023-01-04T22:00:00.678Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "85864c56-bc6a-44e8-9d2a-0bd7081b3c30",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "caller-id-number",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.179Z",
+        "updated": "2023-01-05T10:36:09.179Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "876e2988-d955-4795-a920-5e85d5ef3086",
+    "fields": {
+        "conf_profile_id": "509e1dbd-3686-490c-887c-93d67ed254fe",
+        "name": "moh-sound",
+        "value": "silence",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:31:16.751Z",
+        "updated": "2023-01-05T10:32:29.472Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "889e0437-86a3-40ab-a03c-35893d88dc91",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "unmuted-sound",
+        "value": "conference/conf-unmuted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.527Z",
+        "updated": "2023-01-04T22:05:54.527Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "8ba11aee-7216-49aa-8cc9-df7ffc39bd36",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "moderator-controls",
+        "value": "moderator",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.161Z",
+        "updated": "2023-01-05T10:23:18.161Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "8c0e726b-5c98-4f5c-80c6-505589adab03",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "enter-sound",
+        "value": "tone_stream://%(200,0,500,600,700)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.851Z",
+        "updated": "2023-01-05T10:33:49.852Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "8d67d9d0-f878-4d33-891b-f06751a9a045",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "muted-sound",
+        "value": "conference/conf-muted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.164Z",
+        "updated": "2023-01-05T10:23:18.164Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "8e42bde4-d919-4cb5-9328-398a68c07aac",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "pin-sound",
+        "value": "conference/conf-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.525Z",
+        "updated": "2023-01-04T22:05:54.525Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "92909f8c-11ed-4786-9266-2d7c1a5fa868",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "domain",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.684Z",
+        "updated": "2023-01-04T22:00:00.684Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "93407be3-c1ed-4da2-ab60-78c26e218407",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "is-locked-sound",
+        "value": "conference/conf-is-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.516Z",
+        "updated": "2023-01-04T22:05:54.516Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "9516433a-e863-4ce8-90ab-05576fa13ee2",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "alone-sound",
+        "value": "conference/conf-alone.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.497Z",
+        "updated": "2023-01-04T22:05:54.497Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "98fe053d-b81f-4819-bf29-0abe45d1c9d3",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "caller-id-name",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.680Z",
+        "updated": "2023-01-04T22:00:00.680Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "99320886-be19-4235-9eba-29f31a676c66",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "alone-sound",
+        "value": "conference/conf-alone.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.674Z",
+        "updated": "2023-01-04T22:00:00.674Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "9a49a7ec-ab42-4e95-8e76-10af43d6e994",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "conference-flags",
+        "value": "wait-mod",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:37:18.315Z",
+        "updated": "2023-01-05T10:37:18.315Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "9a93436e-171a-4dde-84f3-ca925c6fce57",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "moderator-controls",
+        "value": "moderator",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.861Z",
+        "updated": "2023-01-05T10:33:49.861Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "9b422d43-fedf-4fb1-a3e7-8c0978e1f0eb",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "caller-id-name",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.177Z",
+        "updated": "2023-01-05T10:36:09.177Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "9d926bfa-89e6-4031-9440-a5f7999074ca",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "bad-pin-sound",
+        "value": "conference/conf-bad-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.174Z",
+        "updated": "2023-01-05T10:36:09.174Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "a2613005-47a5-46a2-941e-089f796d7b9b",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "locked-sound",
+        "value": "conference/conf-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.193Z",
+        "updated": "2023-01-05T10:36:09.193Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "a2fbc0f8-4d8a-4527-aa4b-55d35c37d546",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "auto-gain-level",
+        "value": "0",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.499Z",
+        "updated": "2023-01-04T22:05:54.499Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "a5fbe9d7-daf4-4611-8948-ea956ba7e389",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "energy-level",
+        "value": "15",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.850Z",
+        "updated": "2023-01-05T10:33:49.850Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "a6d0f669-4099-4af5-a3a2-c716c573312c",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "rate",
+        "value": "8000",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:04:24.515Z",
+        "updated": "2023-01-04T22:04:24.515Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "a749f6b7-a067-4501-906d-c442a1744a10",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "unmuted-sound",
+        "value": "conference/conf-unmuted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.800Z",
+        "updated": "2023-01-05T10:35:04.800Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "a8b75e16-d683-4464-b599-27ee021533bc",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "exit-sound",
+        "value": "tone_stream://%(500,0,300,200,100,50,25)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.513Z",
+        "updated": "2023-01-04T22:05:54.513Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "a90fb6a4-12ce-4633-b7de-b5950b0161c8",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "caller-id-number",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.845Z",
+        "updated": "2023-01-05T10:33:49.845Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "abe02cb7-3905-4044-b21d-8bc06d631a10",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "comfort-noise",
+        "value": "true",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.847Z",
+        "updated": "2023-01-05T10:33:49.847Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "ad861120-de75-4e0a-8f1d-f6b569725ef3",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "domain",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.183Z",
+        "updated": "2023-01-05T10:36:09.183Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "aedde34e-793f-470a-b229-c67838c3b8a0",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "is-locked-sound",
+        "value": "conference/conf-is-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.155Z",
+        "updated": "2023-01-05T10:23:18.155Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "afc075b1-da84-4a8b-b38f-8dcb35bc7a8a",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "energy-level",
+        "value": "15",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.783Z",
+        "updated": "2023-01-05T10:35:04.784Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "afcc385c-75e4-4f73-9863-d50e4ba6c060",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "moh-sound",
+        "value": "local_stream://default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.795Z",
+        "updated": "2023-01-05T10:35:04.795Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "b395f026-4a2e-45af-8bbb-5dcdfa19f303",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "muted-sound",
+        "value": "conference/conf-muted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.864Z",
+        "updated": "2023-01-05T10:33:49.864Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "b6bd276b-e626-4a62-a347-1ac00cb6a948",
+    "fields": {
+        "conf_profile_id": "509e1dbd-3686-490c-887c-93d67ed254fe",
+        "name": "comfort-noise",
+        "value": "true",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:31:16.745Z",
+        "updated": "2023-01-05T10:31:16.745Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "b87d6204-9ca4-45f8-b387-f76b691386db",
+    "fields": {
+        "conf_profile_id": "509e1dbd-3686-490c-887c-93d67ed254fe",
+        "name": "energy-level",
+        "value": "200",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:31:16.748Z",
+        "updated": "2023-01-05T10:32:29.470Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "ba617c06-5d67-4dc7-9d8c-49539ad48853",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "rate",
+        "value": "8000",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.200Z",
+        "updated": "2023-01-05T10:36:09.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "bad16075-84bc-4d34-8efa-a98b0cfcdefc",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "is-unlocked-sound",
+        "value": "conference/conf-is-unlocked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.517Z",
+        "updated": "2023-01-04T22:05:54.517Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "bbfbcb07-d414-45ec-8fbf-326876a45c20",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "caller-id-number",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.779Z",
+        "updated": "2023-01-05T10:35:04.779Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "bc13120d-6d85-477e-a5fa-bc60c410cf04",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "moderator-controls",
+        "value": "moderator",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.521Z",
+        "updated": "2023-01-04T22:05:54.521Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "c1f3da62-2981-48df-a353-9ad4ea448d96",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "energy-level",
+        "value": "15",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.686Z",
+        "updated": "2023-01-04T22:00:00.686Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "c46a841e-2aa6-426d-803f-e48d48ec3326",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "enter-sound",
+        "value": "tone_stream://%(200,0,500,600,700)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.512Z",
+        "updated": "2023-01-04T22:05:54.512Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "ca22d4eb-8ce4-445c-8dc0-3e437148e39d",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "exit-sound",
+        "value": "tone_stream://%(500,0,300,200,100,50,25)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.187Z",
+        "updated": "2023-01-05T10:36:09.187Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "ca6a63e8-2f39-46d9-886d-d04a9f41acf5",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "rate",
+        "value": "48000",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.526Z",
+        "updated": "2023-01-04T22:06:36.993Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d181c9b5-83f0-4253-96de-54c51a9c025b",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "rate",
+        "value": "32000",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.866Z",
+        "updated": "2023-01-05T10:34:39.384Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d1fe5060-86df-425e-a411-fb73dee58fb6",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "unmuted-sound",
+        "value": "conference/conf-unmuted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:04:24.516Z",
+        "updated": "2023-01-04T22:04:24.516Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d27f79de-16fe-424b-b13e-02f4f6bafda9",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "locked-sound",
+        "value": "conference/conf-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.159Z",
+        "updated": "2023-01-05T10:23:18.159Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d4c50e9d-9b8d-44ae-a403-c0ee749a8e6c",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "caller-id-name",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.778Z",
+        "updated": "2023-01-05T10:35:04.778Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d4cd4dbf-fa82-48b4-9c25-fb7d820cf547",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "unmuted-sound",
+        "value": "conference/conf-unmuted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.201Z",
+        "updated": "2023-01-05T10:36:09.201Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d6e0b893-cd7e-4e54-b590-58c2bb1c9526",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "locked-sound",
+        "value": "conference/conf-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.520Z",
+        "updated": "2023-01-04T22:05:54.520Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d75d9bd6-0fbc-45ec-a81c-1e6a7180fa81",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "rate",
+        "value": "16000",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.799Z",
+        "updated": "2023-01-05T10:35:24.772Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d7df4a0a-ad5e-4d8c-9f62-e465b45df081",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "is-locked-sound",
+        "value": "conference/conf-is-locked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.190Z",
+        "updated": "2023-01-05T10:36:09.190Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d88bab07-3f63-4b16-b3b9-ab4e1c82a302",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "enter-sound",
+        "value": "tone_stream://%(200,0,500,600,700)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.785Z",
+        "updated": "2023-01-05T10:35:04.785Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "d8dc53ca-9a8b-41a7-9d73-7f3d80949e44",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "is-unlocked-sound",
+        "value": "conference/conf-is-unlocked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.191Z",
+        "updated": "2023-01-05T10:36:09.191Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "da1c2549-67d5-4bbc-85fe-9c8127f47e6b",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "pin-sound",
+        "value": "conference/conf-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:04:24.513Z",
+        "updated": "2023-01-04T22:04:24.513Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "dab31200-856e-4a17-9994-a676b47f8e5b",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "caller-id-name",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.141Z",
+        "updated": "2023-01-05T10:23:18.141Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "dc6aeab3-d7a2-42c0-bb51-44a6df62d46c",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "is-unlocked-sound",
+        "value": "conference/conf-is-unlocked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.857Z",
+        "updated": "2023-01-05T10:33:49.857Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "dd3cfa73-111c-4d48-bacb-d101cb45a696",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "moderator-controls",
+        "value": "moderator",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.195Z",
+        "updated": "2023-01-05T10:36:09.195Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "dd53703c-d4c1-4f8c-b35a-e765ba4d2234",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "bad-pin-sound",
+        "value": "conference/conf-bad-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.840Z",
+        "updated": "2023-01-05T10:33:49.840Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "de7c6ba4-9a60-4de0-a32a-d239668bb7c6",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "alone-sound",
+        "value": "conference/conf-alone.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.171Z",
+        "updated": "2023-01-05T10:36:09.171Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "e07f5999-e935-4d4c-ade4-d43997215093",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "moh-sound",
+        "value": "local_stream://default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.653Z",
+        "updated": "2023-01-04T22:03:09.653Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "e19541a2-3263-4997-8358-862f34d36198",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "bad-pin-sound",
+        "value": "conference/conf-bad-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.775Z",
+        "updated": "2023-01-05T10:35:04.775Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "e26c9865-a277-4c4b-bd29-5a91cae5224f",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "kicked-sound",
+        "value": "conference/conf-kicked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.649Z",
+        "updated": "2023-01-04T22:03:09.649Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "e2cbdd4e-14e2-4ab7-8d27-a6542251de6b",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "rate",
+        "value": "8000",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.167Z",
+        "updated": "2023-01-05T10:23:18.167Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "e532eab2-ea9b-404d-b4f5-13adf3450956",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "comfort-noise",
+        "value": "true",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.683Z",
+        "updated": "2023-01-04T22:00:00.683Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "e9633cef-252f-40b6-bf9e-9ec078d57e57",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "muted-sound",
+        "value": "conference/conf-muted.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.654Z",
+        "updated": "2023-01-04T22:03:09.654Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "e9d3a1ab-86be-4ec2-ad11-51a9e4e6cea9",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "interval",
+        "value": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.645Z",
+        "updated": "2023-01-04T22:03:09.645Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "ece03df8-7a34-45e9-906b-f52a976110df",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "is-unlocked-sound",
+        "value": "conference/conf-is-unlocked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.157Z",
+        "updated": "2023-01-05T10:23:18.157Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "ef960a4f-f968-4a18-a112-4c883806f0e2",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "caller-controls",
+        "value": "page",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.140Z",
+        "updated": "2023-01-05T10:28:55.838Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "efbe685d-f560-4c5d-8a9f-f088c95a46ac",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "kicked-sound",
+        "value": "conference/conf-kicked.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.518Z",
+        "updated": "2023-01-04T22:05:54.519Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "f007c4ab-026e-4066-ae79-4e0fc66fd182",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "exit-sound",
+        "value": "tone_stream://%(500,0,300,200,100,50,25)",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:03:09.643Z",
+        "updated": "2023-01-04T22:03:09.643Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "f094985a-186c-4b6c-bbd2-ee7d507f6da5",
+    "fields": {
+        "conf_profile_id": "fc638a02-fd6a-4471-a3bf-27be640e45e1",
+        "name": "pin-sound",
+        "value": "conference/conf-pin.wav",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:33:49.865Z",
+        "updated": "2023-01-05T10:33:49.865Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "f3ed542d-60c2-4761-af2e-5319afe41afd",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "caller-controls",
+        "value": "default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.502Z",
+        "updated": "2023-01-04T22:05:54.502Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "f90f5fcd-9943-4c9f-8219-ed8e3ac06a2e",
+    "fields": {
+        "conf_profile_id": "cbf6ae81-e964-4be5-82c1-d1b31f0fab95",
+        "name": "auto-gain-level",
+        "value": "0",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:00:00.676Z",
+        "updated": "2023-01-04T22:00:00.676Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "fba3d139-db36-4053-94bb-731e65170bc4",
+    "fields": {
+        "conf_profile_id": "5c4f02be-6f83-4603-9b15-755735b80f47",
+        "name": "comfort-noise",
+        "value": "true",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-04T22:05:54.507Z",
+        "updated": "2023-01-04T22:05:54.507Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "fc0a6301-b6c4-4c85-b0d2-90cc8fa4de10",
+    "fields": {
+        "conf_profile_id": "dc0ecdbb-fdc7-40ae-9074-360590ecd0c4",
+        "name": "domain",
+        "value": null,
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:35:04.782Z",
+        "updated": "2023-01-05T10:35:04.782Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "fc8e6a06-d33a-4ffc-a2ba-36e4467bd915",
+    "fields": {
+        "conf_profile_id": "68df05db-66b2-4ae4-ab23-a45a17aedc56",
+        "name": "caller-controls",
+        "value": "default",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:36:09.176Z",
+        "updated": "2023-01-05T10:36:09.176Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferenceprofileparams",
+    "pk": "fe9b2003-766a-447b-87a7-2fd3c710bbe8",
+    "fields": {
+        "conf_profile_id": "bd72896e-88a1-46e4-ba2c-a73c23d49f70",
+        "name": "interval",
+        "value": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-01-05T10:23:18.154Z",
+        "updated": "2023-01-05T10:23:18.154Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]
