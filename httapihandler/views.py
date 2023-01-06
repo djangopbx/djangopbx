@@ -27,15 +27,11 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.csrf import csrf_exempt
-from .httapihandlerfunctions import TestHandler
-
-logger = logging.getLogger(__name__)
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -45,6 +41,9 @@ from .models import (
 )
 from .serializers import (
     HttApiSessionSerializer,
+)
+from .httapihandlerfunctions import (
+    TestHandler,
 )
 
 
@@ -64,22 +63,12 @@ class HttApiSessionViewSet(viewsets.ModelViewSet):
 
 @csrf_exempt
 def test(request):
-    debug = True
     if not request.method == 'POST':
         return HttpResponseNotFound()
 
     httapihf = TestHandler(request.POST)
-    allowed_addresses = httapihf.get_allowed_addresses()
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+    if not httapihf.address_allowed(request.META['REMOTE_ADDR']):
         return HttpResponseNotFound()
 
-    if debug:
-        logger.info('XML Handler request: {}'.format(request.POST))
-
-    xml = httapihf.get_test()
-    if debug:
-        logger.info('XML Handler response: {}'.format(xml))
-
-    return HttpResponse(xml, content_type='text/xml')
-
+    return HttpResponse(httapihf.get_data(), content_type='text/xml')
 

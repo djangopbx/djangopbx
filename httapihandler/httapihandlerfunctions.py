@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import logging
 from django.core.cache import cache
 from lxml import etree
 from django.db.models import Q
@@ -38,6 +39,8 @@ from tenants.pbxsettings import PbxSettings
 class HttApiHandlerFunctions():
 
     def __init__(self, qdict):
+        self.logger = logging.getLogger(__name__)
+        self.debug = False
         self.qdict = qdict
         self.exiting = False
         self.session = None
@@ -47,6 +50,14 @@ class HttApiHandlerFunctions():
         if qdict.get('exiting', 'false') == 'true':
             self.destroy_httapi_session()
             self.exiting = True
+        if self.debug:
+            self.logger.info('HttApi Handler request:\n{}\n'.format(self.qdict))
+
+
+    def return_data(self, xml):
+        if self.debug:
+            self.logger.info('HttApi Handler response:\n{}\n'.format(xml))
+        return xml
 
 
     def XrootApi(self):
@@ -65,6 +76,14 @@ class HttApiHandlerFunctions():
         return allowed_addresses
 
 
+    def address_allowed(self, ip_address):
+        allowed_addresses = self.get_allowed_addresses()
+        if ip_address in allowed_addresses:
+            return True
+        else:
+            return False
+
+
     def get_httapi_session(self, name = 'None'):
         new = False
         try:
@@ -72,7 +91,6 @@ class HttApiHandlerFunctions():
         except HttApiSession.DoesNotExist:
             self.session = HttApiSession.objects.create(id=self.session_id, name=name)
             new = True
-
         return new
 
 
@@ -84,14 +102,17 @@ class HttApiHandlerFunctions():
         return
 
 
+    def get_data(self):
+        return self.return_data('Ok\n')
+
+
 class TestHandler(HttApiHandlerFunctions):
 
-    def get_test(self):
-        print(self.qdict)
+    def get_data(self):
         if self.exiting:
-            return 'Ok\n'
+            return self.return_data('Ok\n')
 
-        # don't need to do this for this simpel scenario but it tests the session mechanism
+        # don't need to do this for this simple scenario but it tests the session mechanism
         self.get_httapi_session('Test')
 
         x_root = self.XrootApi()
@@ -103,4 +124,4 @@ class TestHandler(HttApiHandlerFunctions):
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
-        return xml
+        return self.return_data(xml)

@@ -85,7 +85,7 @@
 	<!-- default url can be overridden by app data -->
 	<param name="gateway-url" value="http://127.0.0.1/httapi/index" />
 	
-	<param name="method" value="post"/> -->
+	<param name="method" value="POST"/> -->
 
 	<!-- set this to provide authentication credentials to the server -->
 	<!--<param name="gateway-credentials" value="muser:mypass"/>-->
@@ -174,7 +174,7 @@
 	<!-- default url can be overridden by app data -->
 	<param name="gateway-url" value="http://127.0.0.1/httapi/index" />
 	
-	<param name="method" value="post"/> -->
+	<param name="method" value="POST"/> -->
       </params>
     </profile>
   </profiles>
