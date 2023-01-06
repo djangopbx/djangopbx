@@ -27,13 +27,33 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+from  rest_framework  import serializers
+from .models import (
+    ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams
+)
 
-router = routers.DefaultRouter()
-router.register(r'httapisession', views.HttApiSessionViewSet)
 
-urlpatterns = [
-    path('test/', views.test, name='test'),
-]
+class ConferenceControlsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConferenceControls
+        fields =['url', 'id', 'name', 'enabled', 'description',
+                'created', 'updated', 'synchronised', 'updated_by']
+
+class ConferenceControlDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConferenceControlDetails
+        fields =['url', 'id', 'conf_ctrl_id', 'digits', 'action', 'data', 'enabled',
+                'created', 'updated', 'synchronised', 'updated_by']
+
+class ConferenceProfilesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConferenceProfiles
+        fields =['url', 'id', 'name', 'enabled', 'description',
+                'created', 'updated', 'synchronised', 'updated_by']
+
+class ConferenceProfileParamsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConferenceProfileParams
+        fields =['url', 'id', 'conf_profile_id', 'name', 'value', 'enabled', 'description',
+                'created', 'updated', 'synchronised', 'updated_by']
+

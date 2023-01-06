@@ -29,10 +29,37 @@
 
 import logging
 from django.http import HttpResponse, HttpResponseNotFound
+from rest_framework import viewsets
+from rest_framework import permissions
+from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.csrf import csrf_exempt
 from .httapihandlerfunctions import TestHandler
 
 logger = logging.getLogger(__name__)
+
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+from .models import (
+    HttApiSession,
+)
+from .serializers import (
+    HttApiSessionSerializer,
+)
+
+
+class HttApiSessionViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows HttApiSessions to be viewed or edited.
+    """
+    queryset = HttApiSession.objects.all().order_by('id')
+    serializer_class = HttApiSessionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
 
 
 @csrf_exempt

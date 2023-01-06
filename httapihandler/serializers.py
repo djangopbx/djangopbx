@@ -27,13 +27,15 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+from  rest_framework  import serializers
+from .models import (
+    HttApiSession,
+)
 
-router = routers.DefaultRouter()
-router.register(r'httapisession', views.HttApiSessionViewSet)
 
-urlpatterns = [
-    path('test/', views.test, name='test'),
-]
+class HttApiSessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HttApiSession
+        fields =['url', 'id', 'name', 'xml', 'json', 'created']
+
+

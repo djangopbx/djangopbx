@@ -28,5 +28,74 @@
 #
 
 from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework import permissions
+from django_filters.rest_framework import DjangoFilterBackend
 
-# Create your views here.
+
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+from .models import (
+    ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
+)
+from .serializers import (
+    ConferenceControlsSerializer, ConferenceControlDetailsSerializer, ConferenceProfilesSerializer, ConferenceProfileParamsSerializer,
+)
+
+
+class ConferenceControlsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ConferenceControls to be viewed or edited.
+    """
+    queryset = ConferenceControls.objects.all().order_by('name')
+    serializer_class = ConferenceControlsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ConferenceControlDetailsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ConferenceControlDetails to be viewed or edited.
+    """
+    queryset = ConferenceControlDetails.objects.all().order_by('conf_ctrl_id', 'id')
+    serializer_class = ConferenceControlDetailsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['digits', 'action', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ConferenceProfilesViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ConferenceProfiles to be viewed or edited.
+    """
+    queryset = ConferenceProfiles.objects.all().order_by('name')
+    serializer_class = ConferenceProfilesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ConferenceProfileParamsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ConferenceProfileParams to be viewed or edited.
+    """
+    queryset = ConferenceProfileParams.objects.all().order_by('conf_profile_id', 'id')
+    serializer_class = ConferenceProfileParamsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name', 'value', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+

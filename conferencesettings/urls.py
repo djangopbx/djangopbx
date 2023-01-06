@@ -32,8 +32,10 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'httapisession', views.HttApiSessionViewSet)
+router.register(r'conferencecontrols', views.ConferenceControlsViewSet)
+router.register(r'conferencecontroldetails', views.ConferenceControlDetailsViewSet)
+router.register(r'conferenceprofiles', views.ConferenceProfilesViewSet)
+router.register(r'conferenceprofileparams', views.ConferenceProfileParamsViewSet)
 
 urlpatterns = [
-    path('test/', views.test, name='test'),
 ]

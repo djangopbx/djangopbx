@@ -64,6 +64,8 @@ from musiconhold.urls import router as musiconholdrouter
 from accounts.urls import router as accountsrouter
 from voicemail.urls import router as voicemailrouter
 from xmlcdr.urls import router as xmlcdrrouter
+from conferencesettings.urls import router as conferencesettingsrouter
+from httapihandler.urls import router as httapihandlerrouter
 
 router = routers.DefaultRouter()
 router.registry.extend(tenantsrouter.registry)
@@ -75,6 +77,8 @@ router.registry.extend(musiconholdrouter.registry)
 router.registry.extend(accountsrouter.registry)
 router.registry.extend(voicemailrouter.registry)
 router.registry.extend(xmlcdrrouter.registry)
+router.registry.extend(conferencesettingsrouter.registry)
+router.registry.extend(httapihandlerrouter.registry)
 
 urlpatterns = [
     path(''       , include('portal.urls')),
