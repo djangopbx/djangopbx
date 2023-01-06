@@ -29,6 +29,7 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext, gettext_lazy as _
+from django.conf import settings
 from django.contrib import messages
 from .models import (
     Extension, FollowMeDestination, ExtensionUser, Gateway, Bridge,
@@ -62,6 +63,35 @@ class GatewayAdminForm(ModelForm):
         fields = '__all__'
 
 
+class ExtensionUserResource(resources.ModelResource):
+    class Meta:
+        model = ExtensionUser
+        import_id_fields = ('id', )
+
+
+class ExtensionUserAdmin(ImportExportModelAdmin):
+    resource_class = ExtensionUserResource
+    save_as = True
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['user_uuid']
+
+    list_display = ('user_uuid', 'default_user')
+    list_filter = ('default_user',)
+
+    fieldsets = (
+        (None,  {'fields': ['user_uuid', 'default_user']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    )
+
+    ordering = ['user_uuid']
+
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
+
 class ExtensionUserInLine(admin.TabularInline):
     model = ExtensionUser
 
@@ -70,6 +100,35 @@ class ExtensionUserInLine(admin.TabularInline):
         (None,          {'fields': ['user_uuid', 'default_user',]}),
     ]
     ordering = ['user_uuid']
+
+
+class FollowMeDestinationResource(resources.ModelResource):
+    class Meta:
+        model = FollowMeDestination
+        import_id_fields = ('id', )
+
+
+class FollowMeDestinationAdmin(ImportExportModelAdmin):
+    resource_class = FollowMeDestinationResource
+    save_as = True
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['destination']
+
+    list_display = ('destination', 'delay', 'timeout', 'prompt')
+    list_filter = ('delay', 'timeout', 'prompt')
+
+    fieldsets = (
+        (None,  {'fields': ['extension_id', 'destination', 'delay', 'timeout', 'prompt']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    )
+
+    ordering = ['destination']
+
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
 
 
 class FollowMeDestinationInLine(admin.TabularInline):
@@ -304,3 +363,9 @@ class BridgeAdmin(ImportExportModelAdmin):
 admin.site.register(Extension, ExtensionAdmin)
 admin.site.register(Gateway, GatewayAdmin)
 admin.site.register(Bridge, BridgeAdmin)
+
+if settings.PBX_ADMIN_SHOW_ALL:
+    admin.site.register(ExtensionUser, ExtensionUserAdmin)
+    admin.site.register(FollowMeDestination, FollowMeDestinationAdmin)
+
+

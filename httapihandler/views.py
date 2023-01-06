@@ -43,7 +43,7 @@ from .serializers import (
     HttApiSessionSerializer,
 )
 from .httapihandlerfunctions import (
-    TestHandler,
+    TestHandler, FollowMeHandler,
 )
 
 
@@ -67,6 +67,18 @@ def test(request):
         return HttpResponseNotFound()
 
     httapihf = TestHandler(request.POST)
+    if not httapihf.address_allowed(request.META['REMOTE_ADDR']):
+        return HttpResponseNotFound()
+
+    return HttpResponse(httapihf.get_data(), content_type='text/xml')
+
+
+@csrf_exempt
+def followme(request):
+    if not request.method == 'POST':
+        return HttpResponseNotFound()
+
+    httapihf = FollowMeHandler(request.POST)
     if not httapihf.address_allowed(request.META['REMOTE_ADDR']):
         return HttpResponseNotFound()
 

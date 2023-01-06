@@ -40,7 +40,7 @@ class HttApiHandlerFunctions():
 
     def __init__(self, qdict):
         self.logger = logging.getLogger(__name__)
-        self.debug = False
+        self.debug = True
         self.qdict = qdict
         self.exiting = False
         self.session = None
@@ -52,6 +52,13 @@ class HttApiHandlerFunctions():
             self.exiting = True
         if self.debug:
             self.logger.info('HttApi Handler request:\n{}\n'.format(self.qdict))
+        self.dialplan_uuid    = None
+        self.dialplan_name    = None
+        self.extension_uuid   = None
+        self.default_language = None
+        self.default_dialiect = None
+        self.default_voice    = None
+        self.sounds_dir       = None
 
 
     def return_data(self, xml):
@@ -105,6 +112,16 @@ class HttApiHandlerFunctions():
     def get_data(self):
         return self.return_data('Ok\n')
 
+    def get_common_variables(self):
+        self.dialplan_uuid = self.qdict.get('variable_dialplan_uuid')
+        self.dialplan_name = self.qdict.get('variable_dialplan_name')
+        self.extension_uuid = self.qdict.get('variable_extension_uuid')
+        self.default_language = self.qdict.get('variable_default_language', 'en')
+        self.default_dialiect = self.qdict.get('variable_default_dialiect', 'us')
+        self.default_voice = self.qdict.get('variable_default_voice', 'callie')
+        self.sounds_dir = self.qdict.get('sounds_dir', '/usr/share/freeswitch/sounds')
+        return
+
 
 class TestHandler(HttApiHandlerFunctions):
 
@@ -114,6 +131,31 @@ class TestHandler(HttApiHandlerFunctions):
 
         # don't need to do this for this simple scenario but it tests the session mechanism
         self.get_httapi_session('Test')
+
+        x_root = self.XrootApi()
+        x_params = etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+        etree.SubElement(x_work, 'execute', application='answer')
+        x_playback = etree.SubElement(x_work, 'playback', file='/usr/share/freeswitch/sounds/en/us/callie/ivr/8000/ivr-stay_on_line_call_answered_momentarily.wav')
+        etree.SubElement(x_work, 'hangup')
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return self.return_data(xml)
+
+
+class FollowMeHandler(HttApiHandlerFunctions):
+
+    def get_data(self):
+        if self.exiting:
+            return self.return_data('Ok\n')
+
+        #print(self.qdict)
+        # don't need to do this for this simple scenario but it tests the session mechanism
+        self.get_httapi_session('Follow Me')
+        self.get_common_variables()
+        print(self.extension_uuid)
+        print(self.default_voice)
 
         x_root = self.XrootApi()
         x_params = etree.SubElement(x_root, 'params')

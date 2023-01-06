@@ -28,6 +28,7 @@
 #
 
 from django.contrib import admin
+from django.conf import settings
 from django.db import models
 
 from django.utils.translation import gettext, gettext_lazy as _
@@ -177,6 +178,8 @@ class MenuItemGroupAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-admin.site.register(MenuItemGroup, MenuItemGroupAdmin)
 admin.site.register(MenuItem, MenuItemAdmin)
 admin.site.register(Menu, MenuAdmin)
+
+if settings.PBX_ADMIN_SHOW_ALL:
+    admin.site.register(MenuItemGroup, MenuItemGroupAdmin)

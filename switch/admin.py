@@ -28,6 +28,7 @@
 #
 
 from django.contrib import admin
+from django.conf import settings
 
 from django.db import models
 from django.utils.translation import gettext, gettext_lazy as _
@@ -384,10 +385,11 @@ class ModulesAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(SipProfile, SipProfileAdmin)
-admin.site.register(SipProfileSetting, SipProfileSettingAdmin)
-admin.site.register(SipProfileDomain, SipProfileDomainAdmin)
 admin.site.register(SwitchVariable, SwitchVariableAdmin)
 admin.site.register(AccessControl, AccessControlAdmin)
 admin.site.register(EmailTemplate, EmailTemplateAdmin)
 admin.site.register(Modules, ModulesAdmin)
+if settings.PBX_ADMIN_SHOW_ALL:
+    admin.site.register(SipProfileSetting, SipProfileSettingAdmin)
+    admin.site.register(SipProfileDomain, SipProfileDomainAdmin)
 

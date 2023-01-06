@@ -34,6 +34,7 @@ from .models import (
 )
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from import_export import resources
+from django.conf import settings
 
 
 class ConferenceControlDetailsResource(resources.ModelResource):
@@ -191,6 +192,8 @@ class ConferenceProfilesAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(ConferenceControls, ConferenceControlsAdmin)
-admin.site.register(ConferenceControlDetails, ConferenceControlDetailsAdmin)
 admin.site.register(ConferenceProfiles, ConferenceProfilesAdmin)
-admin.site.register(ConferenceProfileParams, ConferenceProfileParamsAdmin)
+
+if settings.PBX_ADMIN_SHOW_ALL:
+    admin.site.register(ConferenceControlDetails, ConferenceControlDetailsAdmin)
+    admin.site.register(ConferenceProfileParams, ConferenceProfileParamsAdmin)

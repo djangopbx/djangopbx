@@ -106,6 +106,8 @@ class DirectoryHandler(XmlHandlerFunctions):
             x_variables = etree.SubElement(x_domain, "variables")
             etree.SubElement(x_variables, "variable", name='default_language', value='$${default_language}')
             etree.SubElement(x_variables, "variable", name='default_dialect', value='$${default_dialect}')
+            etree.SubElement(x_variables, "variable", name='default_voice', value='$${default_voice}')
+            etree.SubElement(x_variables, "variable", name='sounds_dir', value='$${sounds_dir}')
         if groups:
             x_groups = etree.SubElement(x_domain, "groups")
             x_group = etree.SubElement(x_groups, "group", name='default')

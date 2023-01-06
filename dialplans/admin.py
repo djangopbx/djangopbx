@@ -29,6 +29,7 @@
 
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import admin
+from django.conf import settings
 from django.db import models
 from django.db.models import Case, Value, When
 from django.forms.widgets import TextInput, NumberInput, Select
@@ -191,4 +192,6 @@ class DialplanAdmin(ImportExportModelAdmin):
 
 
 admin.site.register(Dialplan, DialplanAdmin)
-admin.site.register(DialplanDetail, DialplanDetailAdmin)
+
+if settings.PBX_ADMIN_SHOW_ALL:
+    admin.site.register(DialplanDetail, DialplanDetailAdmin)

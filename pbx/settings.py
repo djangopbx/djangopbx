@@ -277,3 +277,6 @@ MESSAGE_TAGS = {
 
 # event socket connection info
 EVSKT = ('127.0.0.1', 8021, 'ClueCon')
+
+# show all tables in Admin - useful for imports and exports
+PBX_ADMIN_SHOW_ALL = False
