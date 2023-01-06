@@ -79,6 +79,7 @@ router.registry.extend(xmlcdrrouter.registry)
 urlpatterns = [
     path(''       , include('portal.urls')),
     path('xmlhandler/', include('xmlhandler.urls')),
+    path('httapihandler/', include('httapihandler.urls')),
     path('xmlcdr/', include('xmlcdr.urls')),
     path('portal/', include('portal.urls')),
     path('dashboard/', include('dashboard.urls')),

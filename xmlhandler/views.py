@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def dialplan(request):
-    debug = True
+    debug = False
     xmlhf = DialplanHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
@@ -87,7 +87,7 @@ def staticdialplan(request):
 
 @csrf_exempt
 def directory(request):
-    debug = True
+    debug = False
     xmlhf = DirectoryHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 

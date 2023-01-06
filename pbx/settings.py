@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'recordings.apps.RecordingsConfig',
     'accounts.apps.AccountsConfig',
     'xmlhandler.apps.XmlhandlerConfig',
+    'httapihandler.apps.HttapihandlerConfig',
     'voicemail.apps.VoicemailConfig',
     'xmlcdr.apps.XmlcdrConfig',
     'dashboard.apps.DashboardConfig',
