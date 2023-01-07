@@ -35,6 +35,9 @@ logger = logging.getLogger(__name__)
 
 
 class EventSocket:
+    data_timeout = 0.01
+    nodata_timeout = 0.1
+    sleep_time = 0.005
 
     def __init__(self, sock=None):
         if sock is None:
@@ -43,7 +46,6 @@ class EventSocket:
             self.sock = sock
         self.headers = {}
         self.auth_fail_str = ' '
-
 
     def __del__(self):
         if (self.sock):
@@ -58,6 +60,8 @@ class EventSocket:
         except socket.error as err:
             logger.warn('[Event Socket] Connect Error: {}'.format(err))
             return False
+        self.sock.setblocking(0)
+
         if not self.auth():
             logger.warn('[Event Socket] Auth failed: {}'.format(self.auth_fail_str))
             return False
@@ -97,19 +101,39 @@ class EventSocket:
 
 
     def read(self):
-        time.sleep(.01) #allow fs time to send body
-        try:
-            self.msg = self.sock.recv(4096)
-        except socket.error as err:
-            logger.warn('[Event Socket] Send Error: {}'.format(err))
+        total_data = []
+        data = None
+        begin = time.time()
+        while 1:
+            #if we have some data, then break after timeout
+            if total_data and time.time()-begin > self.data_timeout:
+                break
+            #if we got no data at all, wait a little longer, twice the timeout
+            elif time.time()-begin > self.nodata_timeout:
+                break
+
+            try:
+                data = self.sock.recv(4096)
+                if data:
+                    total_data.append(data.decode())
+                    #reset begin time for next chunk of data
+                    begin = time.time()
+                else:
+                    #sleep for sometime to stop loop consuming CPU
+                    time.sleep(self.sleep_time)
+
+            except socket.error as err:
+                time.sleep(self.sleep_time)
+
+        if not total_data:
             return False
+        self.msg = ''.join(total_data)
         self.parse_msg()
         return
 
 
     def parse_msg(self):
         self.headers.clear()
-        self.msg = self.msg.decode()
         hdr_end = self.msg.find('\n\n')
         if hdr_end == -1:
             logger.warn('[Event Socket] Double linefeed not found.')

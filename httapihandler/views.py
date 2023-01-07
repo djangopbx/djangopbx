@@ -43,7 +43,7 @@ from .serializers import (
     HttApiSessionSerializer,
 )
 from .httapihandlerfunctions import (
-    TestHandler, FollowMeHandler,
+    TestHandler, FollowMeHandler, FollowMeToggleHandler,
 )
 
 
@@ -61,26 +61,29 @@ class HttApiSessionViewSet(viewsets.ModelViewSet):
     ]
 
 
-@csrf_exempt
-def test(request):
+def processhttapi(request, httapihf):
     if not request.method == 'POST':
         return HttpResponseNotFound()
-
-    httapihf = TestHandler(request.POST)
     if not httapihf.address_allowed(request.META['REMOTE_ADDR']):
         return HttpResponseNotFound()
 
     return HttpResponse(httapihf.get_data(), content_type='text/xml')
+
+
+@csrf_exempt
+def test(request):
+    httapihf = TestHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+
+@csrf_exempt
+def followmetoggle(request):
+    httapihf = FollowMeToggleHandler(request.POST)
+    return processhttapi(request, httapihf)
 
 
 @csrf_exempt
 def followme(request):
-    if not request.method == 'POST':
-        return HttpResponseNotFound()
-
     httapihf = FollowMeHandler(request.POST)
-    if not httapihf.address_allowed(request.META['REMOTE_ADDR']):
-        return HttpResponseNotFound()
-
-    return HttpResponse(httapihf.get_data(), content_type='text/xml')
+    return processhttapi(request, httapihf)
 

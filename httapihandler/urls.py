@@ -36,5 +36,5 @@ router.register(r'httapisession', views.HttApiSessionViewSet)
 
 urlpatterns = [
     path('test/', views.test, name='test'),
-    path('followme/', views.followme, name='followme'),
+    path('followmetoggle/', views.followmetoggle, name='followmetoggle'),
 ]

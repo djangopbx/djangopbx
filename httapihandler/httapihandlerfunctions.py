@@ -34,13 +34,15 @@ from django.db.models import Q
 from .models import HttApiSession
 from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
+from accounts.models import Extension, FollowMeDestination
 
 
 class HttApiHandlerFunctions():
+    log_header = 'HttApi Handler: {}: {}'
 
     def __init__(self, qdict):
         self.logger = logging.getLogger(__name__)
-        self.debug = True
+        self.debug = False
         self.qdict = qdict
         self.exiting = False
         self.session = None
@@ -51,7 +53,8 @@ class HttApiHandlerFunctions():
             self.destroy_httapi_session()
             self.exiting = True
         if self.debug:
-            self.logger.info('HttApi Handler request:\n{}\n'.format(self.qdict))
+            self.logger.debug(self.log_header.format('request\n', self.qdict))
+            #self.logger.info('HttApi Handler request:\n{}\n'.format(self.qdict))
         self.dialplan_uuid    = None
         self.dialplan_name    = None
         self.extension_uuid   = None
@@ -59,16 +62,29 @@ class HttApiHandlerFunctions():
         self.default_dialiect = None
         self.default_voice    = None
         self.sounds_dir       = None
+        self.sounds_tuple     = None
 
 
     def return_data(self, xml):
         if self.debug:
-            self.logger.info('HttApi Handler response:\n{}\n'.format(xml))
+            self.logger.debug(self.log_header.format('response\n', xml))
         return xml
 
 
     def XrootApi(self):
         return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"xml/freeswitch-httapi\"></document>')
+
+
+    def error_hangup(self, message = 'Err'):
+        x_root = self.XrootApi()
+        x_params = etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+        etree.SubElement(x_work, 'execute', application = 'set', data = 'api_result=${uuid_display(%s \'%s\')}' % (self.session_id, message))
+        etree.SubElement(x_work, 'execute', application = 'sleep', data = '2000')
+        etree.SubElement(x_work, 'hangup')
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return xml
 
 
     def get_allowed_addresses(self):
@@ -120,6 +136,7 @@ class HttApiHandlerFunctions():
         self.default_dialiect = self.qdict.get('variable_default_dialiect', 'us')
         self.default_voice = self.qdict.get('variable_default_voice', 'callie')
         self.sounds_dir = self.qdict.get('sounds_dir', '/usr/share/freeswitch/sounds')
+        self.sounds_fullpath = '{}/{}/{}/{}'.format(self.sounds_dir, self.default_language, self.default_dialiect, self.default_voice)
         return
 
 
@@ -144,6 +161,37 @@ class TestHandler(HttApiHandlerFunctions):
         return self.return_data(xml)
 
 
+class FollowMeToggleHandler(HttApiHandlerFunctions):
+
+    def get_data(self):
+        if self.exiting:
+            return self.return_data('Ok\n')
+
+        self.get_common_variables()
+        try:
+            e = Extension.objects.get(pk = self.extension_uuid)
+        except Extension.DoesNotExist:
+            self.logger.debug(self.log_header.format('follow me toggle', 'Extn UUID not found'))
+            return self.return_data(self.error_hangup('E1001'))
+
+        x_root = self.XrootApi()
+        x_params = etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+        etree.SubElement(x_work, 'execute', application = 'sleep', data = '2000')
+        if e.follow_me_enabled == 'true':
+            etree.SubElement(x_work, 'playback', file='{}/ivr/ivr-call_forwarding_has_been_cancelled.wav'.format(self.sounds_fullpath))
+            e.follow_me_enabled = 'false'
+        else:
+            etree.SubElement(x_work, 'playback', file='{}/ivr/ivr-call_forwarding_has_been_set.wav'.format(self.sounds_fullpath))
+            e.follow_me_enabled = 'true'
+
+        e.save()
+        etree.SubElement(x_work, 'hangup')
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return self.return_data(xml)
+
+
 class FollowMeHandler(HttApiHandlerFunctions):
 
     def get_data(self):
@@ -154,8 +202,9 @@ class FollowMeHandler(HttApiHandlerFunctions):
         # don't need to do this for this simple scenario but it tests the session mechanism
         self.get_httapi_session('Follow Me')
         self.get_common_variables()
-        print(self.extension_uuid)
-        print(self.default_voice)
+        fmd = FollowMeDestination.objects.select_related('extension_id').filter(extension_id = self.extension_uuid)
+
+        print(fmd)
 
         x_root = self.XrootApi()
         x_params = etree.SubElement(x_root, 'params')
