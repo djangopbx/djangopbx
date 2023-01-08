@@ -271,8 +271,8 @@ class FailureHandler(HttApiHandlerFunctions):
                     no_work = False
                     if forward_no_answer_destination:
                         x_log = etree.SubElement(x_work, 'log', level='NOTICE')
-                        x_log.text = 'forwarding on no answer to: %s' % forward_busy_destination
-                        etree.SubElement(x_work, 'execute', application = 'transfer', data = '%s XML %s' % (forward_busy_destination, context))
+                        x_log.text = 'forwarding on no answer to: %s' % forward_no_answer_destination
+                        etree.SubElement(x_work, 'execute', application = 'transfer', data = '%s XML %s' % (forward_no_answer_destination, context))
                     else:
                         x_log = etree.SubElement(x_work, 'log', level='NOTICE')
                         x_log.text = 'forwarding on no answer with empty destination: hangup(NO_ANSWER)'
