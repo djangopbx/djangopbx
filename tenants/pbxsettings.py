@@ -35,6 +35,19 @@ from .models import DefaultSetting, DomainSetting, ProfileSetting, Domain
 # Class for processing and retrieving settings
 #
 class PbxSettings():
+
+    def default_email_settings(self):
+        email_cfg = {}
+        dsl = DefaultSetting.objects.filter(
+                category = 'email',
+                value_type = 'text',
+                enabled  = 'true').order_by('sequence')
+        for ds in dsl:
+            email_cfg[ds.subcategory] = ds.value
+
+        return email_cfg
+
+
     def default_settings(self, cat, subcat, settingtype = 'text', defaultsetting = '', usedefault = False):
         settingList = DefaultSetting.objects.values_list('value', flat=True).filter(
                 category = cat,

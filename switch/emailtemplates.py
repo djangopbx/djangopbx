@@ -1,3 +1,4 @@
+#
 #    DjangoPBX
 #
 #    MIT License
@@ -26,20 +27,15 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-import psycopg2
-from psycopg2 import Error
-from freeswitch import *
+from .models import EmailTemplate
+from django.db.models import Q
 
-def connect(username):
-    try:
-        _connection = psycopg2.connect(
-            user=username,
-            password='postgres-insecure-abcdef9876543210',
-            host='127.0.0.1',
-            port='5432',
-            database=username)
 
-    except (Exception, Error) as error:
-        consoleLog("WARNING", 'Error while connecting to %s' % dbname)
-        return False
-    return _connection
+class Templates():
+    def get_template(self, domain_id, lang, cat, subcat):
+        try:
+            et = EmailTemplate.objects.get(Q(domain_id=domain_id) | Q(domain_id__isnull=True), enabled='true', language=lang, category=cat, subcategory=subcat)
+            return (et.subject, et.body, et.type)
+        except EmailTemplate.DoesNotExist:
+            return (None, None, None)
+

@@ -355,7 +355,7 @@ class ModulesAdmin(ImportExportModelAdmin):
     resource_class = ModulesResource
     save_as = True
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
-    search_fields = ['category', 'name', 'category', 'descrption']
+    search_fields = ['category', 'name', 'category', 'description']
     fieldsets = [
         (None,  {'fields': ['category', 'label', 'sequence', 'name', 'enabled', 'default_enabled', 'description']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),

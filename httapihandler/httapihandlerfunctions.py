@@ -35,6 +35,7 @@ from .models import HttApiSession
 from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, FollowMeDestination
+from pbx.pbxsendsmtp import PbxTemplateMessage
 
 
 class HttApiHandlerFunctions():
@@ -42,7 +43,7 @@ class HttApiHandlerFunctions():
 
     def __init__(self, qdict):
         self.logger = logging.getLogger(__name__)
-        self.debug = False
+        self.debug = True
         self.qdict = qdict
         self.exiting = False
         self.session = None
@@ -54,9 +55,8 @@ class HttApiHandlerFunctions():
             self.exiting = True
         if self.debug:
             self.logger.debug(self.log_header.format('request\n', self.qdict))
-            #self.logger.info('HttApi Handler request:\n{}\n'.format(self.qdict))
-        self.dialplan_uuid    = None
-        self.dialplan_name    = None
+        self.domain_uuid    = None
+        self.domain_name    = None
         self.extension_uuid   = None
         self.default_language = None
         self.default_dialiect = None
@@ -129,11 +129,11 @@ class HttApiHandlerFunctions():
         return self.return_data('Ok\n')
 
     def get_common_variables(self):
-        self.dialplan_uuid = self.qdict.get('variable_dialplan_uuid')
-        self.dialplan_name = self.qdict.get('variable_dialplan_name')
+        self.domain_uuid = self.qdict.get('variable_domain_uuid')
+        self.domain_name = self.qdict.get('variable_domain_name')
         self.extension_uuid = self.qdict.get('variable_extension_uuid')
         self.default_language = self.qdict.get('variable_default_language', 'en')
-        self.default_dialiect = self.qdict.get('variable_default_dialiect', 'us')
+        self.default_dialect = self.qdict.get('variable_default_dialiect', 'us')
         self.default_voice = self.qdict.get('variable_default_voice', 'callie')
         self.sounds_dir = self.qdict.get('sounds_dir', '/usr/share/freeswitch/sounds')
         self.sounds_fullpath = '{}/{}/{}/{}'.format(self.sounds_dir, self.default_language, self.default_dialiect, self.default_voice)
@@ -153,6 +153,8 @@ class TestHandler(HttApiHandlerFunctions):
         x_params = etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
         etree.SubElement(x_work, 'execute', application='answer')
+        x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+        x_log.text = 'Hello World'
         x_playback = etree.SubElement(x_work, 'playback', file='/usr/share/freeswitch/sounds/en/us/callie/ivr/8000/ivr-stay_on_line_call_answered_momentarily.wav')
         etree.SubElement(x_work, 'hangup')
 
@@ -186,6 +188,8 @@ class FollowMeToggleHandler(HttApiHandlerFunctions):
             e.follow_me_enabled = 'true'
 
         e.save()
+        directory_cache_key = 'directory:%s@%s' % (e.extension, self.domain_name)
+        cache.delete(directory_cache_key)
         etree.SubElement(x_work, 'hangup')
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
@@ -216,3 +220,133 @@ class FollowMeHandler(HttApiHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         return self.return_data(xml)
+
+
+class FailureHandler(HttApiHandlerFunctions):
+
+    def get_data(self):
+        no_work = True
+        if self.exiting:
+            return self.return_data('Ok\n')
+
+        self.get_common_variables()
+        originate_disposition  = self.qdict.get('variable_originate_disposition')
+        dialed_extension  = self.qdict.get('variable_dialed_extension')
+        context  = self.qdict.get('Caller-Context')
+        if not context:
+            context = self.domain_name
+
+        x_root = self.XrootApi()
+        x_params = etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+
+        if originate_disposition == 'USER_BUSY':
+            last_busy_dialed_extension = self.qdict.get('variable_last_busy_dialed_extension', '~None~')
+            if self.debug:
+                self.logger.debug(self.log_header.format('falurehandler', 'last_busy_dialed_extension %s' % last_busy_dialed_extension))
+            if dialed_extension and last_busy_dialed_extension:
+                if not dialed_extension == last_busy_dialed_extension:
+                    forward_busy_enabled = self.qdict.get('variable_forward_busy_enabled', 'false')
+                    if forward_busy_enabled:
+                        if forward_busy_enabled == 'true':
+                            forward_busy_destination = self.qdict.get('variable_forward_busy_destination')
+                            no_work = False
+                            if forward_busy_destination:
+                                etree.SubElement(x_work, 'execute', application = 'set', data = 'last_busy_dialed_extension=%s' % dialed_extension)
+                                x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+                                x_log.text = 'forwarding on busy to: %s' % forward_busy_destination
+                                etree.SubElement(x_work, 'execute', application = 'transfer', data = '%s XML %s' % (forward_busy_destination, context))
+                            else:
+                                x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+                                x_log.text = 'forwarding on busy with empty destination: hangup(USER_BUSY)'
+                                etree.SubElement(x_work, 'hangup', cause = 'USER_BUSY')
+            if no_work:
+                etree.SubElement(x_work, 'hangup', cause = 'USER_BUSY')
+
+        elif originate_disposition == 'NO_ANSWER':
+            forward_no_answer_enabled = self.qdict.get('variable_forward_no_answer_enabled')
+            if forward_no_answer_enabled:
+                if forward_no_answer_enabled == 'true':
+                    forward_no_answer_destination = self.qdict.get('variable_forward_no_answer_destination')
+                    no_work = False
+                    if forward_no_answer_destination:
+                        x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+                        x_log.text = 'forwarding on no answer to: %s' % forward_busy_destination
+                        etree.SubElement(x_work, 'execute', application = 'transfer', data = '%s XML %s' % (forward_busy_destination, context))
+                    else:
+                        x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+                        x_log.text = 'forwarding on no answer with empty destination: hangup(NO_ANSWER)'
+                        etree.SubElement(x_work, 'hangup', cause = 'NO_ANSWER')
+            if no_work:
+                etree.SubElement(x_work, 'hangup', cause = 'NO_ANSWER')
+
+        elif originate_disposition == 'USER_NOT_REGISTERED':
+            forward_user_not_registered_enabled = self.qdict.get('variable_forward_user_not_registered_enabled')
+            if forward_user_not_registered_enabled:
+                if forward_user_not_registered_enabled == 'true':
+                    forward_user_not_registered_destination = self.qdict.get('variable_forward_user_not_registered_destination')
+                    no_work = False
+                    if forward_user_not_registered_destination:
+                        x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+                        x_log.text = 'forwarding on not registerd to: %s' % forward_user_not_registered_destination
+                        etree.SubElement(x_work, 'execute', application = 'transfer', data = '%s XML %s' % (forward_user_not_registered_destination, context))
+                    else:
+                        x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+                        x_log.text = 'forwarding on user not registered with empty destination: hangup(NO_ANSWER)'
+                        etree.SubElement(x_work, 'hangup', cause = 'NO_ANSWER')
+            if no_work:
+                etree.SubElement(x_work, 'hangup', cause = 'NO_ANSWER')
+
+        elif originate_disposition == 'SUBSCRIBER_ABSENT':
+            no_work = False
+            x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+            x_log.text = 'subscriber absent: %s' % dialed_extension
+            etree.SubElement(x_work, 'hangup', cause = 'UNALLOCATED_NUMBER')
+
+        elif originate_disposition == 'CALL_REJECTED':
+            no_work = False
+            x_log = etree.SubElement(x_work, 'log', level='NOTICE')
+            x_log.text = 'call rejected'
+            etree.SubElement(x_work, 'hangup')
+
+        if no_work:
+            etree.SubElement(x_work, 'hangup')
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return self.return_data(xml)
+
+
+class HangupHandler(HttApiHandlerFunctions):
+
+    def get_data(self):
+
+        self.get_common_variables()
+
+        missed_call_app  = self.qdict.get('missed_call_app')
+        missed_call_data = self.qdict.get('missed_call_data')
+        caller_id_name   = self.qdict.get('caller_id_name', ' ')
+        caller_id_number = self.qdict.get('caller_id_number', ' ')
+        sip_to_user      = self.qdict.get('sip_to_user', ' ')
+        dialed_user      = self.qdict.get('dialed_user', ' ')
+
+        if not missed_call_app:
+            return self.return_data('Ok\n')
+        if not missed_call_app == 'email':
+            return self.return_data('Ok\n')
+        if not missed_call_data:
+            return self.return_data('Ok\n')
+
+        m = PbxTemplateMessage()
+        template = m.GetTemplate(self.domain_uuid, '%s-%s' % (self.default_language, self.default_dialect), 'missed', 'default')
+        if not template[0]:
+            self.logger.warn(self.log_header.format('hangup', 'Email Template mising'))
+            return self.return_data('Ok\n')
+
+        subject = template[0].format(caller_id_name = caller_id_name, caller_id_number = caller_id_number, sip_to_user = sip_to_user, dialed_user = dialed_user)
+        body = template[1].format(caller_id_name = caller_id_name, caller_id_number = caller_id_number, sip_to_user = sip_to_user, dialed_user = dialed_user)
+        out = m.Send(missed_call_data, subject, body, template[2])
+        if self.debug or not out[0]:
+            self.logger.warn(self.log_header.format('hangup', out[1]))
+
+        return self.return_data('Ok\n')

@@ -43,7 +43,7 @@ from .serializers import (
     HttApiSessionSerializer,
 )
 from .httapihandlerfunctions import (
-    TestHandler, FollowMeHandler, FollowMeToggleHandler,
+    TestHandler, FollowMeHandler, FollowMeToggleHandler, FailureHandler, HangupHandler,
 )
 
 
@@ -87,3 +87,12 @@ def followme(request):
     httapihf = FollowMeHandler(request.POST)
     return processhttapi(request, httapihf)
 
+@csrf_exempt
+def failurehandler(request):
+    httapihf = FailureHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def hangup(request):
+    httapihf = HangupHandler(request.POST)
+    return processhttapi(request, httapihf)

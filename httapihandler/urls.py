@@ -37,4 +37,6 @@ router.register(r'httapisession', views.HttApiSessionViewSet)
 urlpatterns = [
     path('test/', views.test, name='test'),
     path('followmetoggle/', views.followmetoggle, name='followmetoggle'),
+    path('failurehandler/', views.failurehandler, name='failurehandler'),
+    path('hangup/', views.hangup, name='hangup'),
 ]

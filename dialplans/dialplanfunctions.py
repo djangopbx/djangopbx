@@ -460,7 +460,6 @@ class SwitchDp():
         dp_details = False
         pbxsettings = PbxSettings()
         sval = pbxsettings.default_settings('dialplan', 'dialplan_details', 'boolean', 'false', True)[0]
-        print(sval)
         if sval == 'true':
             dp_details = True
         sval = pbxsettings.default_settings('security', 'pin_length', 'numeric', '8', True)
@@ -472,7 +471,6 @@ class SwitchDp():
                 pin_length = 8
 
         httapi_url = pbxsettings.default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:80', True)[0]
-        print(httapi_url)
         path_of_xml = settings.BASE_DIR / 'dialplans/resources/switch/conf/dialplan'
         ext = ('.xml')
         for files in os.listdir(path_of_xml):

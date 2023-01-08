@@ -2,27 +2,26 @@ import smtplib
 
 from email.message import EmailMessage
 from email.utils import formatdate
-from resources.pbx.settings import Settings
+from tenants.pbxsettings import PbxSettings
+from switch.emailtemplates import Templates as Tp
 
-class Message:
 
-    cfg  = None
-    info = list()
-    ok = True
+class PbxTemplateMessage:
 
     def __init__(self):
+        self.info = []
         self.info.append('[SMTP Sender]')
-        self.s = Settings()
-        cfg = self.s.DefaultSettings('email', None, 'text')
-        if cfg:
-            self.cfg = dict(cfg)
-        else:
+        self.s = PbxSettings()
+        self.cfg = self.s.default_email_settings()
+        self.ok = True
+
+        if not self.cfg:
             self.ok = False
             self.info.append('No Config')
 
 
     def GetTemplate(self, domain_id, lang, cat, subcat):
-        return self.s.EmailTemplates(domain_id, lang, cat, subcat)
+        return Tp().get_template(domain_id, lang, cat, subcat)
 
 
     def Send(self, rps, sub, msg, msg_type):
