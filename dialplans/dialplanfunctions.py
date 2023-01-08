@@ -458,10 +458,12 @@ class SwitchDp():
 
     def import_xml(self, domain_name, dp_remove = False, domain_uuid = ''):
         dp_details = False
-        sval = PbxSettings().default_settings('dialplan', 'dialplan_details', 'boolean', 'false', True)[0]
+        pbxsettings = PbxSettings()
+        sval = pbxsettings.default_settings('dialplan', 'dialplan_details', 'boolean', 'false', True)[0]
+        print(sval)
         if sval == 'true':
             dp_details = True
-        sval = PbxSettings().default_settings('security', 'pin_length', 'numeric', '8', True)
+        sval = pbxsettings.default_settings('security', 'pin_length', 'numeric', '8', True)
         if sval:
             try:
                 pin_length = int(sval[0])
@@ -469,6 +471,8 @@ class SwitchDp():
                 # Handle the exception
                 pin_length = 8
 
+        httapi_url = pbxsettings.default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:80', True)[0]
+        print(httapi_url)
         path_of_xml = settings.BASE_DIR / 'dialplans/resources/switch/conf/dialplan'
         ext = ('.xml')
         for files in os.listdir(path_of_xml):
@@ -479,6 +483,7 @@ class SwitchDp():
 
                 xml = xml.replace('{v_context}', domain_name)
                 xml = xml.replace('{v_pin_number}', pin)
+                xml = xml.replace('{v_httapi_url}', httapi_url)
                 self.create_dp_from_xml(xml, dp_remove, dp_details)
 
             else:

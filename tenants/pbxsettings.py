@@ -41,10 +41,9 @@ class PbxSettings():
                 subcategory = subcat,
                 value_type = settingtype,
                 enabled  = 'true').order_by('sequence')
-
         if settingList.count() == 0:
             if usedefault:
-                return list(defaultsetting)
+                return [defaultsetting]
             else:
                 return False
         return settingList
@@ -60,7 +59,7 @@ class PbxSettings():
 
         if settingList.count() == 0:
             if usedefault:
-                return list(defaultsetting)
+                return [defaultsetting]
             else:
                 return False
         return settingList
@@ -76,7 +75,7 @@ class PbxSettings():
 
         if settingList.count() == 0:
             if usedefault:
-                return list(defaultsetting)
+                return [defaultsetting]
             else:
                 return False
         return settingList
