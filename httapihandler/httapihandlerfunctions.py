@@ -35,6 +35,7 @@ from .models import HttApiSession
 from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, FollowMeDestination
+from switch.switchfunctions import IpFunctions
 from pbx.pbxsendsmtp import PbxTemplateMessage
 
 
@@ -350,3 +351,14 @@ class HangupHandler(HttApiHandlerFunctions):
             self.logger.warn(self.log_header.format('hangup', out[1]))
 
         return self.return_data('Ok\n')
+
+
+class RegisterHandler(HttApiHandlerFunctions):
+
+    def get_data(self):
+        ip_address = self.qdict.get('network-ip', '192.168.42.1')
+        status     = self.qdict.get('status', 'N/A')
+        if status.startswith('Registered'):
+            IpFunctions().update_ip(ip_address)
+        return self.return_data('Ok\n')
+

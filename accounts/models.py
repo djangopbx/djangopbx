@@ -133,6 +133,7 @@ class Extension(models.Model):
 
     class Meta:
         db_table = 'pbx_extensions'
+        unique_together = (('domain_id', 'extension'), ('domain_id', 'number_alias'))
 
     def __str__(self):
         return self.extension

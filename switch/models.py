@@ -84,6 +84,12 @@ class SwitchModuleCategoryChoice(models.TextChoices):
     CE = 'Other', _('Other')
 
 
+class IpStatusChoice(models.IntegerChoices):
+    CPERM = 3, _('Permanent')
+    CCUR  = 1, _('Current')
+    COBS  = 0, _('Obsolete')
+
+
 #
 # model classes
 #
@@ -240,3 +246,19 @@ class Modules(models.Model):
     class Meta:
         db_table = 'pbx_modules'
 
+
+class IpRegister(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    address      = models.GenericIPAddressField(protocol='both', unpack_ipv4=False, unique=True, verbose_name=_('IP Address'))
+    status       = models.DecimalField(max_digits=2, decimal_places=0, choices=IpStatusChoice.choices, default=IpStatusChoice.CCUR, max_length=1, verbose_name=_('Status'))
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
+    updated_by   = models.CharField(max_length=64, default='system', verbose_name=_('Updated by'))
+
+    class Meta:
+        verbose_name_plural='IP Register'
+        db_table = 'pbx_ip_register'
+
+    def __str__(self):
+        return self.address

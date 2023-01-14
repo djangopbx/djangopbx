@@ -44,6 +44,7 @@ from .serializers import (
 )
 from .httapihandlerfunctions import (
     TestHandler, FollowMeHandler, FollowMeToggleHandler, FailureHandler, HangupHandler,
+    RegisterHandler,
 )
 
 
@@ -95,4 +96,9 @@ def failurehandler(request):
 @csrf_exempt
 def hangup(request):
     httapihf = HangupHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def register(request):
+    httapihf = RegisterHandler(request.POST)
     return processhttapi(request, httapihf)

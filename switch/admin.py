@@ -35,12 +35,13 @@ from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import messages
 from .models import (
     SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable,
-    AccessControl, AccessControlNode, EmailTemplate, Modules
+    AccessControl, AccessControlNode, EmailTemplate, Modules, IpRegister,
 )
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from import_export import resources
 from switch.switchfunctions import SwitchFunctions
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
+from pbx.commonfunctions import shcommand
 
 
 class SipProfileDomainResource(resources.ModelResource):
@@ -383,12 +384,64 @@ class ModulesAdmin(ImportExportModelAdmin):
         return super(ModulesAdmin, self).changelist_view(request, extra_context)
 
 
+class IpRegisterResource(resources.ModelResource):
+    class Meta:
+        model = IpRegister
+        import_id_fields = ('id', )
+
+
+class IpRegisterAdmin(ImportExportModelAdmin):
+    resource_class = IpRegisterResource
+    save_as = True
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['address']
+    fieldsets = [
+        (None,  {'fields': ['address', 'status']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('address', 'status', 'created', 'updated')
+    ordering = [
+        'address'
+    ]
+
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        if change:
+            messages.add_message(request, messages.WARN, _('A changed IP will not be added to Firewall automatically'))
+        else:
+            if ':' in obj.address:
+                shcommand(["/usr/local/bin/fw-add-ipv6-sip-customer-list.sh", obj.address])
+            else:
+                shcommand(["/usr/local/bin/fw-add-ipv4-sip-customer-list.sh", obj.address])
+        super().save_model(request, obj, form, change)
+
+
+    def delete_model(self, request, obj):
+        if ':' in obj.address:
+            shcommand(["/usr/local/bin/fw-delete-ipv6-sip-customer-list.sh", obj.address])
+        else:
+            shcommand(["/usr/local/bin/fw-delete-ipv4-sip-customer-list.sh", obj.address])
+        super().delete_model(request, obj)
+
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            if ':' in obj.address:
+                shcommand(["/usr/local/bin/fw-delete-ipv6-sip-customer-list.sh", obj.address])
+            else:
+                shcommand(["/usr/local/bin/fw-delete-ipv4-sip-customer-list.sh", obj.address])
+        super().delete_queryset(request, queryset)
+
+
 
 admin.site.register(SipProfile, SipProfileAdmin)
 admin.site.register(SwitchVariable, SwitchVariableAdmin)
 admin.site.register(AccessControl, AccessControlAdmin)
 admin.site.register(EmailTemplate, EmailTemplateAdmin)
 admin.site.register(Modules, ModulesAdmin)
+admin.site.register(IpRegister, IpRegisterAdmin)
 if settings.PBX_ADMIN_SHOW_ALL:
     admin.site.register(SipProfileSetting, SipProfileSettingAdmin)
     admin.site.register(SipProfileDomain, SipProfileDomainAdmin)
