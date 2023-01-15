@@ -26,6 +26,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.contrib import admin
+# from django.contrib import admin
 
 # Register your models here.

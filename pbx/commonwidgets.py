@@ -34,6 +34,7 @@
 from django.forms.widgets import Select
 from django.db.models import FileField
 
+
 class ListTextWidget(Select):
     template_name = 'portal/widgets/listtxt.html'
 
@@ -42,14 +43,13 @@ class ListTextWidget(Select):
         if value == '' or value is None:
             return ''
         if self.is_localized:
-            return formats.localize_input(value)
+            return format.localize_input(value)
         return str(value)
 
 
 class PbxFileField(FileField):
     def __init__(self, * args, ** kwargs):
-        super().__init__( * args, ** kwargs)
+        super().__init__(* args, ** kwargs)
 
     def db_type(self, connection):
         return 'text'
-

@@ -19,10 +19,8 @@ class PbxTemplateMessage:
             self.ok = False
             self.info.append('No Config')
 
-
     def GetTemplate(self, domain_id, lang, cat, subcat):
         return Tp().get_template(domain_id, lang, cat, subcat)
-
 
     def Send(self, rps, sub, msg, msg_type):
         if not self.ok:
@@ -33,7 +31,7 @@ class PbxTemplateMessage:
             m['From'] = self.cfg['smtp_from']
             m['To'] = rps
             m['Date'] = formatdate(localtime=True)
-        except:
+        except (TypeError, ValueError):
             self.info.append('Error with message parameters')
             return (False, ': '.join(self.info))
 
@@ -43,22 +41,21 @@ class PbxTemplateMessage:
                 m.add_alternative(msg, subtype='html')
             else:
                 m.set_content(msg)
-        except:
+        except (TypeError, ValueError):
             self.info.append('Error with message body')
             return (False, ': '.join(self.info))
 
         with smtplib.SMTP(self.cfg['smtp_host'], int(self.cfg['smtp_port'])) as server:
             try:
-                if not server.starttls()[0] == 220: # Secure the connection
+                if not server.starttls()[0] == 220:  # Secure the connection
                     self.info.append('Warning! connection may not be secure.')
                 server.login(self.cfg['smtp_user_name'], self.cfg['smtp_password'])
                 server.send_message(m)
                 server.quit()
             except smtplib.SMTPResponseException as e:
-                self.info.append('Error! code- %s Text- %s'  % (e.smtp_code, e.smtp_error))
+                self.info.append('Error! code- %s Text- %s' % (e.smtp_code, e.smtp_error))
                 self.ok = False
 
         if self.ok:
             self.info.append('Email sent OK')
         return (self.ok, ': '.join(self.info))
-

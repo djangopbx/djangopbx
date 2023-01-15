@@ -26,9 +26,8 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaulttags import register
@@ -74,7 +73,10 @@ def fwconfigviewer(request):
 def fwlistcounters(request):
     nftjdata = shcommand(['/usr/local/bin/fw-list-counters.sh'])
     data = json.loads(nftjdata)
-    return render(request, 'firewall/fwlistcounters.html', {'refresher': 'fwlistcounters', 'counters': _find_objects(data['nftables'], 'counter')})
+    return render(
+            request, 'firewall/fwlistcounters.html',
+            {'refresher': 'fwlistcounters', 'counters': _find_objects(data['nftables'], 'counter')}
+            )
 
 
 @staff_member_required
@@ -89,7 +91,10 @@ def fwblocklist(request):
     ipv6 = []
     if 'elem' in dataipv6['nftables'][1]['set']:
         ipv6 = dataipv6['nftables'][1]['set']['elem']
-    return render(request, 'firewall/fwiplist.html', {'title': 'Block List', 'refresher': 'fwblocklist', 'ipv4': ipv4, 'ipv6': ipv6})
+    return render(
+            request, 'firewall/fwiplist.html',
+            {'title': 'Block List', 'refresher': 'fwblocklist', 'ipv4': ipv4, 'ipv6': ipv6}
+            )
 
 
 @staff_member_required
@@ -104,7 +109,10 @@ def fwwhitelist(request):
     ipv6 = []
     if 'elem' in dataipv6['nftables'][1]['set']:
         ipv6 = dataipv6['nftables'][1]['set']['elem']
-    return render(request, 'firewall/fwiplist.html', {'title': 'White List', 'refresher': 'fwwhitelist', 'ipv4': ipv4, 'ipv6': ipv6})
+    return render(
+            request, 'firewall/fwiplist.html',
+            {'title': 'White List', 'refresher': 'fwwhitelist', 'ipv4': ipv4, 'ipv6': ipv6}
+            )
 
 
 @staff_member_required
@@ -119,7 +127,10 @@ def fwsipcustomerlist(request):
     ipv6 = []
     if 'elem' in dataipv6['nftables'][1]['set']:
         ipv6 = dataipv6['nftables'][1]['set']['elem']
-    return render(request, 'firewall/fwiplist.html', {'title': 'SIP Customer List', 'refresher': 'fwsipcustomerlist', 'ipv4': ipv4, 'ipv6': ipv6})
+    return render(
+            request, 'firewall/fwiplist.html',
+            {'title': 'SIP Customer List', 'refresher': 'fwsipcustomerlist', 'ipv4': ipv4, 'ipv6': ipv6}
+            )
 
 
 @staff_member_required
@@ -134,7 +145,10 @@ def fwsipgatewaylist(request):
     ipv6 = []
     if 'elem' in dataipv6['nftables'][1]['set']:
         ipv6 = dataipv6['nftables'][1]['set']['elem']
-    return render(request, 'firewall/fwiplist.html', {'title': 'SIP Gateway List', 'refresher': 'fwsipgatewaylist', 'ipv4': ipv4, 'ipv6': ipv6})
+    return render(
+            request, 'firewall/fwiplist.html',
+            {'title': 'SIP Gateway List', 'refresher': 'fwsipgatewaylist', 'ipv4': ipv4, 'ipv6': ipv6}
+            )
 
 
 @staff_member_required
@@ -180,21 +194,23 @@ def fwaddip(request):
         else:
             messages.add_message(request, messages.INFO, _('IP Address is invalid'))
 
-
-    if not 'BLform' in locals():
+    if 'BLform' not in locals():
         BLform = IpAddressForm()
         BLform.fields['setname'].initial = 'BL'
-    if not 'WLform' in locals():
+    if 'WLform' not in locals():
         WLform = IpAddressForm()
         WLform.fields['setname'].initial = 'WL'
-    if not 'SCLform' in locals():
+    if 'SCLform' not in locals():
         SCLform = IpAddressForm()
         SCLform.fields['setname'].initial = 'SCL'
-    if not 'SGLform' in locals():
+    if 'SGLform' not in locals():
         SGLform = IpAddressForm()
         SGLform.fields['setname'].initial = 'SGL'
 
-    return render(request, 'firewall/fwaddip.html', {'BLform': BLform, 'WLform': WLform,'SCLform': SCLform,'SGLform': SGLform,})
+    return render(
+            request, 'firewall/fwaddip.html',
+            {'BLform': BLform, 'WLform': WLform, 'SCLform': SCLform, 'SGLform': SGLform}
+            )
 
 
 @staff_member_required
@@ -239,19 +255,20 @@ def fwdelip(request):
         else:
             messages.add_message(request, messages.INFO, _('IP Address is invalid'))
 
-
-    if not 'BLform' in locals():
+    if 'BLform' not in locals():
         BLform = IpAddressForm()
         BLform.fields['setname'].initial = 'BL'
-    if not 'WLform' in locals():
+    if 'WLform' not in locals():
         WLform = IpAddressForm()
         WLform.fields['setname'].initial = 'WL'
-    if not 'SCLform' in locals():
+    if 'SCLform' not in locals():
         SCLform = IpAddressForm()
         SCLform.fields['setname'].initial = 'SCL'
-    if not 'SGLform' in locals():
+    if 'SGLform' not in locals():
         SGLform = IpAddressForm()
         SGLform.fields['setname'].initial = 'SGL'
 
-    return render(request, 'firewall/fwdelip.html', {'BLform': BLform, 'WLform': WLform,'SCLform': SCLform,'SGLform': SGLform,})
-
+    return render(
+            request, 'firewall/fwdelip.html',
+            {'BLform': BLform, 'WLform': WLform, 'SCLform': SCLform, 'SGLform': SGLform}
+            )

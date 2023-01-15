@@ -52,7 +52,6 @@ class EventSocket:
             self.sock.shutdown(1)
             self.sock.close()
 
-
     def connect(self, host, port, password):
         self.password = 'auth %s' % password
         try:
@@ -66,7 +65,6 @@ class EventSocket:
             logger.warn('[Event Socket] Auth failed: {}'.format(self.auth_fail_str))
             return False
         return True
-
 
     def auth(self):
         self.read()
@@ -88,7 +86,6 @@ class EventSocket:
             self.auth_fail_str = 'No Content-Type header stage 1.'
         return False
 
-
     def send(self, cmd):
         cmd = '%s\n\n' % cmd
         try:
@@ -99,16 +96,15 @@ class EventSocket:
         self.read()
         return self.body
 
-
     def read(self):
         total_data = []
         data = None
         begin = time.time()
         while 1:
-            #if we have some data, then break after timeout
+            # if we have some data, then break after timeout
             if total_data and time.time()-begin > self.data_timeout:
                 break
-            #if we got no data at all, wait a little longer, twice the timeout
+            # if we got no data at all, wait a little longer, twice the timeout
             elif time.time()-begin > self.nodata_timeout:
                 break
 
@@ -116,13 +112,13 @@ class EventSocket:
                 data = self.sock.recv(4096)
                 if data:
                     total_data.append(data.decode())
-                    #reset begin time for next chunk of data
+                    # reset begin time for next chunk of data
                     begin = time.time()
                 else:
-                    #sleep for sometime to stop loop consuming CPU
+                    # sleep for sometime to stop loop consuming CPU
                     time.sleep(self.sleep_time)
 
-            except socket.error as err:
+            except socket.error:
                 time.sleep(self.sleep_time)
 
         if not total_data:
@@ -130,7 +126,6 @@ class EventSocket:
         self.msg = ''.join(total_data)
         self.parse_msg()
         return
-
 
     def parse_msg(self):
         self.headers.clear()
@@ -140,12 +135,11 @@ class EventSocket:
             hdr = self.msg
             self.body = self.msg
         else:
-            hdr = self.msg[ : hdr_end]
-            self.body = self.msg[hdr_end+2 :]
+            hdr = self.msg[: hdr_end]
+            self.body = self.msg[hdr_end+2:]
         hdrs = hdr.split('\n')
         for h in hdrs:
             if ':' in h:
                 kv = h.split(': ')
                 self.headers[kv[0]] = kv[1]
         return
-

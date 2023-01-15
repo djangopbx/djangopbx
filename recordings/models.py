@@ -33,28 +33,31 @@ from django.utils.translation import gettext_lazy as _
 import uuid
 from pbx.commonwidgets import PbxFileField
 
+
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/fs/recordings/<domain name>/<filename>
     return 'fs/recordings/{0}/{1}'.format(instance.domain_id.name, filename)
 
 
 class Recording(models.Model):
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))
-    domain_id    = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))
-    filename     = PbxFileField(upload_to=user_directory_path, verbose_name=_('File Name'))
-    name         = models.CharField(max_length=64, verbose_name=_('Name'))
-    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))
-    base64       = models.TextField(blank=True, null=True, verbose_name=_('Base64'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))                                      # noqa: E501, E221
+    domain_id    = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))  # noqa: E501, E221
+    filename     = PbxFileField(upload_to=user_directory_path, verbose_name=_('File Name'))                                                                 # noqa: E501, E221
+    name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                  # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
+    base64       = models.TextField(blank=True, null=True, verbose_name=_('Base64'))                                                                        # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                              # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                            # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_recordings'
-        permissions = (("can_download_recording", "can_download_recording"), ("can_upload_recording", "can_upload_recording"), ("can_play_recording", "can_play_recording"))
+        permissions = (
+            ("can_download_recording", "can_download_recording"),
+            ("can_upload_recording", "can_upload_recording"),
+            ("can_play_recording", "can_play_recording")
+            )
 
     def __str__(self):
         return self.name
-
-

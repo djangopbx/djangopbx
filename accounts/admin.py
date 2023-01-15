@@ -28,7 +28,7 @@
 #
 
 from django.contrib import admin
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.contrib import messages
 from .models import (
@@ -37,7 +37,7 @@ from .models import (
 from voicemail.models import Voicemail
 from django.forms.widgets import Select
 from django.forms import ModelForm
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from musiconhold.musiconholdfunctions import MohSource
@@ -86,7 +86,6 @@ class ExtensionUserAdmin(ImportExportModelAdmin):
 
     ordering = ['user_uuid']
 
-
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         super().save_model(request, obj, form, change)
@@ -125,7 +124,6 @@ class FollowMeDestinationAdmin(ImportExportModelAdmin):
 
     ordering = ['destination']
 
-
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         super().save_model(request, obj, form, change)
@@ -149,6 +147,7 @@ class ExtensionResource(resources.ModelResource):
 
 class ExtensionAdmin(ImportExportModelAdmin):
     resource_class = ExtensionResource
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -159,9 +158,16 @@ class ExtensionAdmin(ImportExportModelAdmin):
     save_as = True
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
-    search_fields = ['extension', 'effective_caller_id_name', 'outbound_caller_id_name', 'effective_caller_id_number', 'outbound_caller_id_number', 'context']
+    search_fields = [
+                        'extension', 'effective_caller_id_name', 'outbound_caller_id_name',
+                        'effective_caller_id_number', 'outbound_caller_id_number', 'context'
+                    ]
 
-    list_display = ('extension', 'effective_caller_id_name', 'outbound_caller_id_name', 'call_group', 'user_context', 'enabled', 'description')
+    list_display = (
+                    'extension', 'effective_caller_id_name', 'outbound_caller_id_name',
+                    'call_group', 'user_context', 'enabled', 'description'
+                    )
+
     list_filter = (DomainFilter, 'toll_allow', 'call_group', 'user_context', 'enabled')
 
     fieldsets = (
@@ -187,33 +193,34 @@ class ExtensionAdmin(ImportExportModelAdmin):
                             'user_context',
                             'enabled',
                             'description',
-                ]}),
+                            ]}),
 
-        ('Advanced',   {'fields': ['auth_acl',
-                            'cidr',
-                            'sip_force_contact',
-                            #'nibble_account',
-                            'sip_force_expires',
-                            'mwi_account',
-                            'sip_bypass_media',
-                            #'unique_id',
-                            'absolute_codec_string',
-                            'force_ping',
-                            'dial_string',
-                ], 'classes': ['collapse']}),
+        ('Advanced',    {'fields': ['auth_acl',
+                                    'cidr',
+                                    'sip_force_contact',
+                                    # 'nibble_account',
+                                    'sip_force_expires',
+                                    'mwi_account',
+                                    'sip_bypass_media',
+                                    # 'unique_id',
+                                    'absolute_codec_string',
+                                    'force_ping',
+                                    'dial_string',
+                                    ], 'classes': ['collapse']}),
 
-        ('Call Routing',   {'fields': [('forward_all_enabled', 'forward_all_destination'),
-                            ('forward_busy_enabled', 'forward_busy_destination'),
-                            ('forward_no_answer_enabled', 'forward_no_answer_destination'),
-                            ('forward_user_not_registered_enabled', 'forward_user_not_registered_destination'),
-                            #'dial_user',
-                            #'dial_domain',
-                            'forward_caller_id',
-                            #'follow_me_uuid',
-                            'follow_me_enabled',
-                            #'follow_me_destinations',
-                            'do_not_disturb',
-                ], 'classes': ['collapse']}),
+        ('Call Routing',    {'fields': [('forward_all_enabled', 'forward_all_destination'),
+                                        ('forward_busy_enabled', 'forward_busy_destination'),
+                                        ('forward_no_answer_enabled', 'forward_no_answer_destination'),
+                                        ('forward_user_not_registered_enabled',
+                                            'forward_user_not_registered_destination'),
+                                        # 'dial_user',
+                                        # 'dial_domain',
+                                        'forward_caller_id',
+                                        # 'follow_me_uuid',
+                                        'follow_me_enabled',
+                                        # 'follow_me_destinations',
+                                        'do_not_disturb',
+                                        ], 'classes': ['collapse']}),
 
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     )
@@ -239,9 +246,9 @@ class ExtensionAdmin(ImportExportModelAdmin):
             obj.context = request.session['domain_name']
             super().save_model(request, obj, form, change)
             Voicemail.objects.create(
-                extension_id = obj,
-                enabled = 'false',
-                updated_by = request.user.username
+                extension_id=obj,
+                enabled='false',
+                updated_by=request.user.username
             )
 
 
@@ -295,31 +302,29 @@ class GatewayAdmin(ImportExportModelAdmin):
                             'profile',
                             'enabled',
                             'description',
+                            ]}),
 
-                ]}),
-
-        ('Advanced',   {'fields': ['distinct_to',
-                            'auth_username',
-                            'extension',
-                            'register_transport',
-                            'register_proxy',
-                            'outbound_proxy',
-                            'caller_id_in_from',
-                            'supress_cng',
-                            'sip_cid_type',
-                            'codec_prefs',
-                            'extension_in_contact',
-                            'ping',
-                            'channels',
-                            'hostname',
-                ], 'classes': ['collapse']}),
+        ('Advanced',    {'fields': ['distinct_to',
+                                    'auth_username',
+                                    'extension',
+                                    'register_transport',
+                                    'register_proxy',
+                                    'outbound_proxy',
+                                    'caller_id_in_from',
+                                    'supress_cng',
+                                    'sip_cid_type',
+                                    'codec_prefs',
+                                    'extension_in_contact',
+                                    'ping',
+                                    'channels',
+                                    'hostname',
+                                    ], 'classes': ['collapse']}),
 
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     )
 
     ordering = ['gateway']
     actions = [write_gateway_file]
-
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
@@ -351,13 +356,11 @@ class BridgeAdmin(ImportExportModelAdmin):
 
     ordering = ['name']
 
-
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
-
 
 
 admin.site.register(Extension, ExtensionAdmin)
@@ -367,5 +370,3 @@ admin.site.register(Bridge, BridgeAdmin)
 if settings.PBX_ADMIN_SHOW_ALL:
     admin.site.register(ExtensionUser, ExtensionUserAdmin)
     admin.site.register(FollowMeDestination, FollowMeDestinationAdmin)
-
-

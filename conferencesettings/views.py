@@ -27,11 +27,9 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
-
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -40,7 +38,8 @@ from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
 )
 from .serializers import (
-    ConferenceControlsSerializer, ConferenceControlDetailsSerializer, ConferenceProfilesSerializer, ConferenceProfileParamsSerializer,
+    ConferenceControlsSerializer, ConferenceControlDetailsSerializer, ConferenceProfilesSerializer,
+    ConferenceProfileParamsSerializer,
 )
 
 
@@ -98,4 +97,3 @@ class ConferenceProfileParamsViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
-

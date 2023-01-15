@@ -28,7 +28,6 @@
 #
 
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaulttags import register
@@ -42,9 +41,11 @@ import psutil
 from psutil._common import bytes2human
 import time
 
+
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
 
 @register.filter
 def get_item_humanize(dictionary, key):
@@ -106,7 +107,6 @@ class OsDashboard():
             data = str(err)
         return data
 
-
     def get_cpu_usage(self):
         try:
             # Getting load over5 minutes
@@ -118,8 +118,8 @@ class OsDashboard():
             self.load15 = str(round(load15, 2))
 
             self.cpuall = psutil.cpu_percent(interval=0.5, percpu=True)
-            #i = 1
-            #for cpu in cpu_all:
+            # i = 1
+            # for cpu in cpu_all:
             #    self.cpuall += '<>'str(i) + ': ' + str(cpu) + ' '
             #    i += 1
             self.cpuusage = str(round(cpu_usage, 2))
@@ -128,7 +128,6 @@ class OsDashboard():
         except Exception as err:
             data = str(err)
         return data
-
 
     def get_platform(self):
         try:
@@ -146,8 +145,6 @@ class OsDashboard():
             data = str(err)
         return data
 
-
-
     def get_uptime(self):
         try:
             with open('/proc/uptime', 'r') as f:
@@ -158,7 +155,6 @@ class OsDashboard():
         except Exception as err:
             data = str(err)
         return data
-
 
     def get_mem(self):
         try:
@@ -175,33 +171,32 @@ class OsDashboard():
             data = str(err)
         return data
 
-
     def get_traffic(self):
         try:
-            tot_before = psutil.net_io_counters()
             pnic_before = psutil.net_io_counters(pernic=True)
             # sleep some time
             time.sleep(1)
-            tot_after = psutil.net_io_counters()
+            tot_all = psutil.net_io_counters()
             pnic_after = psutil.net_io_counters(pernic=True)
 
-            self.nettotalbytessent = bytes2human(tot_after.bytes_sent)
-            self.nettotalbytesrecv = bytes2human(tot_after.bytes_recv)
-            self.nettotalpacketssent = intcomma(tot_after.packets_sent)
-            self.nettotalpacketsrecv = intcomma(tot_after.packets_recv)
+            self.nettotalbytessent = bytes2human(tot_all.bytes_sent)
+            self.nettotalbytesrecv = bytes2human(tot_all.bytes_recv)
+            self.nettotalpacketssent = intcomma(tot_all.packets_sent)
+            self.nettotalpacketsrecv = intcomma(tot_all.packets_recv)
             nic_names = list(pnic_after.keys())
             nic_names.sort(key=lambda x: sum(pnic_after[x]), reverse=True)
             for name in nic_names:
                 stats_before = pnic_before[name]
                 stats_after = pnic_after[name]
-                self.nic[name] = {'bytessent': bytes2human(stats_after.bytes_sent),
-                                 'bytesrecv': bytes2human(stats_after.bytes_recv),
-                                 'bytesendrate': bytes2human(stats_after.bytes_sent - stats_before.bytes_sent),
-                                 'byterecvrate': bytes2human(stats_after.bytes_recv - stats_before.bytes_recv),
-                                 'packetssent': bytes2human(stats_after.packets_sent),
-                                 'packetsrecv': bytes2human(stats_after.packets_recv),
-                                 'packetsendrate': bytes2human(stats_after.packets_sent - stats_before.packets_sent),
-                                 'packetrecvrate': bytes2human(stats_after.packets_recv - stats_before.packets_recv),
+                self.nic[name] = {
+                                'bytessent': bytes2human(stats_after.bytes_sent),
+                                'bytesrecv': bytes2human(stats_after.bytes_recv),
+                                'bytesendrate': bytes2human(stats_after.bytes_sent - stats_before.bytes_sent),
+                                'byterecvrate': bytes2human(stats_after.bytes_recv - stats_before.bytes_recv),
+                                'packetssent': bytes2human(stats_after.packets_sent),
+                                'packetsrecv': bytes2human(stats_after.packets_recv),
+                                'packetsendrate': bytes2human(stats_after.packets_sent - stats_before.packets_sent),
+                                'packetrecvrate': bytes2human(stats_after.packets_recv - stats_before.packets_recv),
                                 }
 
             data = self.nic
@@ -214,7 +209,8 @@ class OsDashboard():
             for part in psutil.disk_partitions(all=False):
                 usage = psutil.disk_usage(part.mountpoint)
 
-                self.disks[part.device] = {'total': bytes2human(usage.total),
+                self.disks[part.device] = {
+                            'total': bytes2human(usage.total),
                             'used': bytes2human(usage.used),
                             'free': bytes2human(usage.free),
                             'use': usage.percent,
@@ -227,11 +223,11 @@ class OsDashboard():
             data = str(err)
         return data
 
-
     def get_diskio(self):
         try:
             disk_io = psutil.disk_io_counters()
-            self.diskio = {'Read Count': intcomma(disk_io.read_count),
+            self.diskio = {
+                            'Read Count': intcomma(disk_io.read_count),
                             'Write Count': intcomma(disk_io.write_count),
                             'Read Bytes': bytes2human(disk_io.read_bytes),
                             'Write Bytes': bytes2human(disk_io.write_bytes),
@@ -240,7 +236,7 @@ class OsDashboard():
                             'Read Merged Count': intcomma(disk_io.read_merged_count),
                             'Write Merged Count': intcomma(disk_io.write_merged_count),
                             'Busy Time': intcomma(disk_io.busy_time)
-                            }
+                        }
 
             data = self.diskio
         except Exception as err:
@@ -251,7 +247,7 @@ class OsDashboard():
 @staff_member_required
 def osdashboard(request):
 
-    #uptime = get_uptime()
+    # uptime = get_uptime()
     dash = OsDashboard()
-    #print(dash.get_cpus())
+    # print(dash.get_cpus())
     return render(request, 'dashboard/osdashboard.html', {'d': dash})

@@ -39,6 +39,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+# for bootstrap4 alert integration with django messages
+from django.contrib.messages import constants as messages
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -94,7 +97,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # Uncomment below to allow language selection based on data from the request. It customises content for each user.
-    #'django.middleware.locale.LocaleMiddleware',
+    # 'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -221,7 +224,8 @@ STATIC_ROOT = '/var/www/static/'
 # For model.FileField storage
 MEDIA_ROOT = '/home/django-pbx/media'
 
-# This setting defines the additional locations the staticfiles app will traverse if the FileSystemFinder finder is enabled
+# This setting defines the additional locations the staticfiles app will traverse
+# if the FileSystemFinder finder is enabled
 # e.g. if you use the collectstatic or findstatic management command or use the static file serving view.
 
 STATICFILES_DIRS = [
@@ -240,9 +244,9 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        #'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
         'rest_framework.permissions.IsAuthenticated',
-        #'rest_framework.permissions.DjangoModelPermissions',
+        # 'rest_framework.permissions.DjangoModelPermissions',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
@@ -253,8 +257,8 @@ REST_FRAMEWORK = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # Uncomment for production
-#SESSION_COOKIE_AGE = 3600
-#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 3600
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Settings for django-import-export
 IMPORT_EXPORT_USE_TRANSACTIONS = True
@@ -264,8 +268,6 @@ IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'Add'
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap-responsive.html"
 DJANGO_TABLES2_PAGE_RANGE = 8
 
-# for bootstrap4 alert integration with django messages
-from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',

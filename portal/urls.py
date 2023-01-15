@@ -47,5 +47,8 @@ urlpatterns = [
         'favicon.ico',
         RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
     ),
-    re_path(r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>.*)/(?P<fdom>.*)/(?P<fpath>.*))$', views.servefsmedia, name='servefsmedia'),
+    re_path(
+        r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>.*)/(?P<fdom>.*)/(?P<fpath>.*))$',
+        views.servefsmedia, name='servefsmedia'
+        ),
 ]

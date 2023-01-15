@@ -31,10 +31,10 @@ import os
 from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseNotFound
 import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
@@ -42,7 +42,6 @@ from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions
 from django.http import FileResponse
-import base64
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -50,20 +49,18 @@ from pbx.restpermissions import (
 from .models import (
     Menu, MenuItem, MenuItemGroup,
 )
-
 from tenants.models import (
-    Domain, DomainSetting,
+    Domain,
 )
-
 from tenants.pbxsettings import (
     PbxSettings,
 )
-
 from .serializers import (
-    MenuSerializer, MenuNavSerializer, MenuItemSerializer, MenuItemNavSerializer, MenuItemGroupSerializer,
+    MenuSerializer, MenuItemSerializer, MenuItemNavSerializer, MenuItemGroupSerializer,
 )
 
 from accounts.accountfunctions import AccountFunctions
+
 
 @login_required
 def index(request):
@@ -94,7 +91,7 @@ def index(request):
                 pbx_domain_uuid = str(request.user.profile.domain_id.id)
                 request.session['domain_name'] = pbx_domain_name
                 request.session['domain_uuid'] = pbx_domain_uuid
-                request.session['user_uuid']   = pbx_user_uuid
+                request.session['user_uuid'] = pbx_user_uuid
                 extension_list = []
                 for ext in AccountFunctions().list_user_extensions_uuid(pbx_domain_uuid, pbx_user_uuid):
                     extension_list.append(str(ext))
@@ -104,23 +101,31 @@ def index(request):
                     extension_list.append(ext)
                 request.session['extension_list'] = ','.join(extension_list)
 
-            currentmenu = PbxSettings().settings(pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True)[0]
-            m = Menu.objects.get(name = currentmenu)
+            currentmenu = PbxSettings().settings(
+                pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True
+                )[0]
+            m = Menu.objects.get(name=currentmenu)
         else:
             request.session['domain_name'] = 'None'
             request.session['domain_uuid'] = 'f4b3b3d2-6287-489c-aa00-64529e46f2d7'
-            request.session['user_uuid']   = 'ffffffff-aaaa-489c-aa00-1234567890ab'
+            request.session['user_uuid'] = 'ffffffff-aaaa-489c-aa00-1234567890ab'
             request.session['extension_list'] = 'None,None'
-            m = Menu.objects.get(name = 'Default')
+            m = Menu.objects.get(name='Default')
 
         if request.user.is_superuser:
-            menuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=True).order_by('sequence')
-            submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False).order_by('sequence')
+            menuList = MenuItem.objects.filter(menu_id=m.id, parent_id__isnull=True).order_by('sequence')
+            submenuList = MenuItem.objects.filter(menu_id=m.id, parent_id__isnull=False).order_by('sequence')
         else:
             groupList = list(request.user.groups.values_list('name', flat=True))
-            menuitemList = MenuItemGroup.objects.values_list('menu_item_id', flat=True).filter(name__in=groupList, menu_item_id__menu_id=m.id)
-            menuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=True, id__in=menuitemList).order_by('sequence')
-            submenuList = MenuItem.objects.filter(menu_id = m.id, parent_id__isnull=False, id__in=menuitemList).order_by('sequence')
+            menuitemList = MenuItemGroup.objects.values_list(
+                'menu_item_id', flat=True
+                ).filter(name__in=groupList, menu_item_id__menu_id=m.id)
+            menuList = MenuItem.objects.filter(
+                menu_id=m.id, parent_id__isnull=True, id__in=menuitemList
+                ).order_by('sequence')
+            submenuList = MenuItem.objects.filter(
+                menu_id=m.id, parent_id__isnull=False, id__in=menuitemList
+                ).order_by('sequence')
 
         mainmenu = MenuItemNavSerializer(menuList, many=True)
         menudata = mainmenu.data
@@ -158,7 +163,7 @@ def servefsmedia(request, fs, fdir, fdom, fpath, fullpath):
 
     file_location = '%s/%s' % (settings.MEDIA_ROOT, fullpath)
     if not os.path.exists(file_location):
-            return HttpResponseNotFound()
+        return HttpResponseNotFound()
 
     return FileResponse(open(file_location, 'rb'))
 
@@ -226,4 +231,3 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
-

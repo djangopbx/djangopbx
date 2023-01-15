@@ -33,6 +33,7 @@ from django.core.management.base import BaseCommand
 from tenants.pbxsettings import PbxSettings
 from dialplans.dialplanfunctions import SwitchDp
 
+
 class Command(BaseCommand):
     help = 'Load default dialplans'
 
@@ -60,4 +61,3 @@ class Command(BaseCommand):
                     SwitchDp().import_xml(key, dp_remove)
         else:
             SwitchDp().import_xml(d, dp_remove)
-

@@ -27,8 +27,6 @@
 #
 
 from django.urls import path
-#from django.contrib.staticfiles.storage import staticfiles_storage
-#from django.views.generic.base import RedirectView
 
 from . import views
 
@@ -38,4 +36,3 @@ urlpatterns = [
     path('modules/', views.modules, name='modules'),
     path('modules/<uuid:moduuid>/<str:action>/', views.modules, name='modules'),
 ]
-

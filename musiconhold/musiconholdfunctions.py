@@ -37,7 +37,7 @@ class MohSource():
         # This try/except is a workaround to prevent a relation not found error on initial migrate
         try:
             return [('%s%s' % (prefix, c.name), c.name) for c in MusicOnHold.objects.distinct('name')]
-        except:
+        except MusicOnHold.DoesNotExist:
             return [('None', 'None')]
 
 
@@ -54,17 +54,17 @@ class MohFunctions():
 
             for m in mlist:
                 mdir = etree.SubElement(root, 'directory', name=m.name, path=m.path)
-                param = etree.SubElement(mdir, 'param', name='rate', value=str(m.rate))
-                param = etree.SubElement(mdir, 'param', name='shuffle', value=m.shuffle)
-                param = etree.SubElement(mdir, 'param', name='channels', value=str(m.channels))
-                param = etree.SubElement(mdir, 'param', name='interval', value=str(m.interval))
-                param = etree.SubElement(mdir, 'param', name='timer-name', value=m.timer_name)
+                etree.SubElement(mdir, 'param', name='rate', value=str(m.rate))
+                etree.SubElement(mdir, 'param', name='shuffle', value=m.shuffle)
+                etree.SubElement(mdir, 'param', name='channels', value=str(m.channels))
+                etree.SubElement(mdir, 'param', name='interval', value=str(m.interval))
+                etree.SubElement(mdir, 'param', name='timer-name', value=m.timer_name)
 
             etree.indent(root)
-            xml =  str(etree.tostring(root), "utf-8")
+            xml = str(etree.tostring(root), "utf-8")
 
             try:
-                os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok = True)
+                os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok=True)
             except OSError:
                 return 2
 
@@ -77,4 +77,3 @@ class MohFunctions():
             return 0
         else:
             return 1
-

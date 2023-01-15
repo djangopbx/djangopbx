@@ -27,7 +27,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
@@ -51,7 +50,6 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    #permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['username']
     permission_classes = [
@@ -142,5 +140,3 @@ class ProfileSettingViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
-
-

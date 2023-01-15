@@ -42,5 +42,3 @@ class DialplansConfig(AppConfig):
     pbx_license = 'MIT License'
     pbx_dialplan = True
     pbx_dialplan_category = 'General'
-
-

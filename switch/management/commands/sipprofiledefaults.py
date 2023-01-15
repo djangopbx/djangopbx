@@ -29,15 +29,14 @@
 
 from django.utils.translation import gettext_lazy as _
 from django.core.management.base import BaseCommand
-
 from switch.switchfunctions import SwitchFunctions
+
 
 class Command(BaseCommand):
     help = 'Load default SIP Profiles'
 
     def add_arguments(self, parser):
         parser.add_argument('-r', '--remove', help=_('Remove existing SIP Profiles (--remove true)'))
-
 
     def handle(self, *args, **kwargs):
         sp_remove = False
@@ -49,4 +48,3 @@ class Command(BaseCommand):
             sp_remove = True
 
         SwitchFunctions().import_sip_profiles(sp_remove)
-

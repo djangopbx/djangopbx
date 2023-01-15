@@ -34,75 +34,76 @@ from pbx.commonchoices import (
     EnabledTrueFalseChoice,
 )
 
+
 #
 # Choice classes
 #
 class SwitchVariableCategoryChoice(models.TextChoices):
-    CTONES              = 'Tones',                 _('Tones')
-    CRINGTONES          = 'Ringtones',             _('Ringtones')
-    CMUSICONHOLD        = 'Music on Hold',         _('Music on Hold')
-    CSIP                = 'SIP',                   _('SIP')
-    CSIPPROFILEINTERNAL = 'SIP Profile: Internal', _('SIP Profile: Internal')
-    CSIPPROFILEEXTERNAL = 'SIP Profile: External', _('SIP Profile: External')
-    CODECS              = 'Codecs',                _('Codecs')
-    CXMPP               = 'XMPP',                  _('XMPP')
-    CDEFAULTS           = 'Defaults',              _('Defaults')
-    CSOUND              = 'Sound',                 _('Sound')
-    CIPADDRESS          = 'IP Address',            _('IP Address')
-    COTHER              = 'Other',                 _('Other')
+    CTONES              = 'Tones',                 _('Tones')                  # noqa: E221
+    CRINGTONES          = 'Ringtones',             _('Ringtones')              # noqa: E221
+    CMUSICONHOLD        = 'Music on Hold',         _('Music on Hold')          # noqa: E221
+    CSIP                = 'SIP',                   _('SIP')                    # noqa: E221
+    CSIPPROFILEINTERNAL = 'SIP Profile: Internal', _('SIP Profile: Internal')  # noqa: E221
+    CSIPPROFILEEXTERNAL = 'SIP Profile: External', _('SIP Profile: External')  # noqa: E221
+    CODECS              = 'Codecs',                _('Codecs')                 # noqa: E221
+    CXMPP               = 'XMPP',                  _('XMPP')                   # noqa: E221
+    CDEFAULTS           = 'Defaults',              _('Defaults')               # noqa: E221
+    CSOUND              = 'Sound',                 _('Sound')                  # noqa: E221
+    CIPADDRESS          = 'IP Address',            _('IP Address')             # noqa: E221
+    COTHER              = 'Other',                 _('Other')                  # noqa: E221
 
 
 class SwitchVariableCommandChoice(models.TextChoices):
-    CSET     = 'set',      'set'
-    CEXECSET = 'exec-set', 'exec-set'
+    CSET     = 'set',      'set'       # noqa: E221
+    CEXECSET = 'exec-set', 'exec-set'  # noqa: E221
 
 
 class AccessControlDefaultChoice(models.TextChoices):
-    CALLOW = 'allow',      'allow'
-    CDENY  = 'deny', 'deny'
+    CALLOW = 'allow',      'allow'  # noqa: E221
+    CDENY  = 'deny', 'deny'         # noqa: E221
 
 
 class EmailTemplateTypeChoice(models.TextChoices):
-    CHTML     = 'html', 'HTML'
-    CTEXT = 'text', 'Text'
+    CHTML     = 'html', 'HTML'  # noqa: E221
+    CTEXT = 'text', 'Text'      # noqa: E221
 
 
 class SwitchModuleCategoryChoice(models.TextChoices):
-    C1 = 'Streams / Files', _('Streams / Files')
-    C2 = 'File Format Interfaces', _('File Format Interfaces')
-    C3 = 'Auto', _('Auto')
-    C4 = 'Say', _('Say')
-    C5 = 'Loggers', _('Loggers')
-    C6 = 'Languages', _('Languages')
-    C7 = 'XML Interfaces', _('XML Interfaces')
-    C8 = 'Speech Recognition / Text to Speech', _('Speech Recognition / Text to Speech')
-    C9 = 'Codecs', _('Codecs')
-    CA = 'Endpoints', _('Endpoints')
-    CB = 'Applications', _('Applications')
-    CC = 'Dialplan Interfaces', _('Dialplan Interfaces')
-    CD = 'Event Handlers', _('Event Handlers')
-    CE = 'Other', _('Other')
+    C1 = 'Streams / Files', _('Streams / Files')                                          # noqa: E221
+    C2 = 'File Format Interfaces', _('File Format Interfaces')                            # noqa: E221
+    C3 = 'Auto', _('Auto')                                                                # noqa: E221
+    C4 = 'Say', _('Say')                                                                  # noqa: E221
+    C5 = 'Loggers', _('Loggers')                                                          # noqa: E221
+    C6 = 'Languages', _('Languages')                                                      # noqa: E221
+    C7 = 'XML Interfaces', _('XML Interfaces')                                            # noqa: E221
+    C8 = 'Speech Recognition / Text to Speech', _('Speech Recognition / Text to Speech')  # noqa: E221
+    C9 = 'Codecs', _('Codecs')                                                            # noqa: E221
+    CA = 'Endpoints', _('Endpoints')                                                      # noqa: E221
+    CB = 'Applications', _('Applications')                                                # noqa: E221
+    CC = 'Dialplan Interfaces', _('Dialplan Interfaces')                                  # noqa: E221
+    CD = 'Event Handlers', _('Event Handlers')                                            # noqa: E221
+    CE = 'Other', _('Other')                                                              # noqa: E221
 
 
 class IpStatusChoice(models.IntegerChoices):
-    CPERM = 3, _('Permanent')
-    CCUR  = 1, _('Current')
-    COBS  = 0, _('Obsolete')
+    CPERM = 3, _('Permanent')  # noqa: E221
+    CCUR  = 1, _('Current')    # noqa: E221
+    COBS  = 0, _('Obsolete')   # noqa: E221
 
 
 #
 # model classes
 #
 class SipProfileDomain(models.Model):
-    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('SIP Profile Domain'))
-    sip_profile_id = models.ForeignKey('SipProfile', db_column='sip_profile_id', on_delete=models.CASCADE, verbose_name=_('SIP Profile'))
-    name           = models.CharField(max_length=128, default='all', verbose_name=_('Name'))
-    alias          = models.CharField(max_length=8, default='false', verbose_name=_('Alias'))
-    parse          = models.CharField(max_length=8, default='false', verbose_name=_('Parse'))
-    created        = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated        = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised   = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by     = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('SIP Profile Domain'))          # noqa: E501, E221
+    sip_profile_id = models.ForeignKey('SipProfile', db_column='sip_profile_id', on_delete=models.CASCADE, verbose_name=_('SIP Profile'))  # noqa: E501, E221
+    name           = models.CharField(max_length=128, default='all', verbose_name=_('Name'))                                               # noqa: E501, E221
+    alias          = models.CharField(max_length=8, default='false', verbose_name=_('Alias'))                                              # noqa: E501, E221
+    parse          = models.CharField(max_length=8, default='false', verbose_name=_('Parse'))                                              # noqa: E501, E221
+    created        = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                             # noqa: E501, E221
+    updated        = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                 # noqa: E501, E221
+    synchronised   = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                           # noqa: E501, E221
+    updated_by     = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                         # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_sip_profile_domains'
@@ -112,16 +113,16 @@ class SipProfileDomain(models.Model):
 
 
 class SipProfileSetting(models.Model):
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('SIP Profile Setting'))
-    sip_profile_id = models.ForeignKey('SipProfile', db_column='sip_profile_id', on_delete=models.CASCADE, verbose_name=_('SIP Profile'))
-    name           = models.CharField(max_length=64, verbose_name=_('Setting Name'))
-    value          = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))
-    enabled        = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    description    = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
-    created        = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated        = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised   = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by     = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('SIP Profile Setting'))                                 # noqa: E501, E221
+    sip_profile_id = models.ForeignKey('SipProfile', db_column='sip_profile_id', on_delete=models.CASCADE, verbose_name=_('SIP Profile'))                     # noqa: E501, E221
+    name           = models.CharField(max_length=64, verbose_name=_('Setting Name'))                                                                          # noqa: E501, E221
+    value          = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                         # noqa: E501, E221
+    enabled        = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))  # noqa: E501, E221
+    description    = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
+    created        = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
+    updated        = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
+    synchronised   = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                              # noqa: E501, E221
+    updated_by     = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                            # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_sip_profile_settings'
@@ -131,15 +132,15 @@ class SipProfileSetting(models.Model):
 
 
 class SipProfile(models.Model):
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('SIP Profile'))
-    name         = models.CharField(max_length=64, verbose_name=_('Name'))
-    hostname     = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Hostname'))
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('SIP Profile'))                                    # noqa: E501, E221
+    name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                  # noqa: E501, E221
+    hostname     = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Hostname'))                                                      # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))  # noqa: E501, E221
+    description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                              # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                            # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_sip_profiles'
@@ -149,19 +150,19 @@ class SipProfile(models.Model):
 
 
 class SwitchVariable(models.Model):
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Switch Variable'))
-    category     = models.CharField(max_length=64, choices=SwitchVariableCategoryChoice.choices, default=SwitchVariableCategoryChoice.CDEFAULTS, verbose_name=_('Category'))
-    name         = models.CharField(max_length=64, verbose_name=_('Name'))
-    value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))
-    command      = models.CharField(max_length=16, choices=SwitchVariableCommandChoice.choices, default=SwitchVariableCommandChoice.CSET, blank=True, null=True, verbose_name=_('Command'))
-    hostname     = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Hostname'))
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))
-    description  = models.TextField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Switch Variable'))                                                                 # noqa: E501, E221
+    category     = models.CharField(max_length=64, choices=SwitchVariableCategoryChoice.choices, default=SwitchVariableCategoryChoice.CDEFAULTS, verbose_name=_('Category'))                 # noqa: E501, E221
+    name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                                                   # noqa: E501, E221
+    value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                                                          # noqa: E501, E221
+    command      = models.CharField(max_length=16, choices=SwitchVariableCommandChoice.choices, default=SwitchVariableCommandChoice.CSET, blank=True, null=True, verbose_name=_('Command'))  # noqa: E501, E221
+    hostname     = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Hostname'))                                                                                       # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))                                   # noqa: E501, E221
+    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                                                 # noqa: E501, E221
+    description  = models.TextField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                                                    # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                                                 # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                                     # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                                               # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                                             # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_vars'
@@ -171,14 +172,14 @@ class SwitchVariable(models.Model):
 
 
 class AccessControl(models.Model):
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Access Control'))
-    name         = models.CharField(max_length=64, verbose_name=_('Name'))
-    default      = models.CharField(max_length=8, choices=AccessControlDefaultChoice.choices, default=AccessControlDefaultChoice.CDENY, verbose_name=_('Default'))
-    description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Access Control'))                                         # noqa: E501, E221
+    name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                          # noqa: E501, E221
+    default      = models.CharField(max_length=8, choices=AccessControlDefaultChoice.choices, default=AccessControlDefaultChoice.CDENY, verbose_name=_('Default'))  # noqa: E501, E221
+    description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                           # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                        # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                            # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                      # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                    # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_access_controls'
@@ -188,16 +189,16 @@ class AccessControl(models.Model):
 
 
 class AccessControlNode(models.Model):
-    id                = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Access Control None'))
-    access_control_id = models.ForeignKey('AccessControl', on_delete=models.CASCADE, verbose_name=_('Access Control'))
-    type              = models.CharField(max_length=8, choices=AccessControlDefaultChoice.choices, default=AccessControlDefaultChoice.CDENY,verbose_name=_('Type'))
-    cidr              = models.CharField(max_length=64, blank=True, null=True, verbose_name='CIDR')
-    domain            = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Domain'))
-    description       = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
-    created           = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated           = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised      = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by        = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id                = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Access Control None'))                                 # noqa: E501, E221
+    access_control_id = models.ForeignKey('AccessControl', on_delete=models.CASCADE, verbose_name=_('Access Control'))                                                # noqa: E501, E221
+    type              = models.CharField(max_length=8, choices=AccessControlDefaultChoice.choices, default=AccessControlDefaultChoice.CDENY, verbose_name=_('Type'))  # noqa: E501, E221
+    cidr              = models.CharField(max_length=64, blank=True, null=True, verbose_name='CIDR')                                                                   # noqa: E501, E221
+    domain            = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Domain'))                                                              # noqa: E501, E221
+    description       = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                        # noqa: E501, E221
+    created           = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                     # noqa: E501, E221
+    updated           = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                         # noqa: E501, E221
+    synchronised      = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                   # noqa: E501, E221
+    updated_by        = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                 # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_access_control_nodes'
@@ -207,20 +208,20 @@ class AccessControlNode(models.Model):
 
 
 class EmailTemplate(models.Model):
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Email Template'))
-    domain_id    = models.ForeignKey('tenants.Domain', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))
-    language     = models.CharField(max_length=8, default='en-gb', verbose_name=_('Language'))
-    category     = models.CharField(max_length=32, verbose_name=_('Category'))
-    subcategory  = models.CharField(max_length=32, default='default', verbose_name=_('Sub category'))
-    subject      = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Subject'))
-    type         = models.CharField(max_length=8, choices=EmailTemplateTypeChoice.choices, default=EmailTemplateTypeChoice.CHTML, verbose_name=_('Type'))
-    body         = models.TextField(blank=True, null=True, verbose_name=_('Body'))
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Email Template'))                                 # noqa: E501, E221
+    domain_id    = models.ForeignKey('tenants.Domain', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))                           # noqa: E501, E221
+    language     = models.CharField(max_length=8, default='en-gb', verbose_name=_('Language'))                                                              # noqa: E501, E221
+    category     = models.CharField(max_length=32, verbose_name=_('Category'))                                                                              # noqa: E501, E221
+    subcategory  = models.CharField(max_length=32, default='default', verbose_name=_('Sub category'))                                                       # noqa: E501, E221
+    subject      = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Subject'))                                                       # noqa: E501, E221
+    type         = models.CharField(max_length=8, choices=EmailTemplateTypeChoice.choices, default=EmailTemplateTypeChoice.CHTML, verbose_name=_('Type'))   # noqa: E501, E221
+    body         = models.TextField(blank=True, null=True, verbose_name=_('Body'))                                                                          # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))  # noqa: E501, E221
+    description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                              # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                            # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_email_templates'
@@ -230,34 +231,34 @@ class EmailTemplate(models.Model):
 
 
 class Modules(models.Model):
-    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Module'))
-    label           = models.CharField(max_length=64, verbose_name=_('Label'))
-    name            = models.CharField(max_length=64, verbose_name=_('Name'))
-    category        = models.CharField(max_length=64, choices=SwitchModuleCategoryChoice.choices, default=SwitchModuleCategoryChoice.CB, verbose_name=_('Category'))
-    sequence        = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))
-    enabled         = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    default_enabled = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Default Enabled'))
-    description     = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))
-    created         = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated         = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised    = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by      = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Module'))                                                 # noqa: E501, E221
+    label           = models.CharField(max_length=64, verbose_name=_('Label'))                                                                                         # noqa: E501, E221
+    name            = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                          # noqa: E501, E221
+    category        = models.CharField(max_length=64, choices=SwitchModuleCategoryChoice.choices, default=SwitchModuleCategoryChoice.CB, verbose_name=_('Category'))   # noqa: E501, E221
+    sequence        = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                        # noqa: E501, E221
+    enabled         = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))          # noqa: E501, E221
+    default_enabled = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Default Enabled'))  # noqa: E501, E221
+    description     = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                           # noqa: E501, E221
+    created         = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                        # noqa: E501, E221
+    updated         = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                            # noqa: E501, E221
+    synchronised    = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                      # noqa: E501, E221
+    updated_by      = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                    # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_modules'
 
 
 class IpRegister(models.Model):
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    address      = models.GenericIPAddressField(protocol='both', unpack_ipv4=False, unique=True, verbose_name=_('IP Address'))
-    status       = models.DecimalField(max_digits=2, decimal_places=0, choices=IpStatusChoice.choices, default=IpStatusChoice.CCUR, max_length=1, verbose_name=_('Status'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, default='system', verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                                    # noqa: E501, E221
+    address      = models.GenericIPAddressField(protocol='both', unpack_ipv4=False, unique=True, verbose_name=_('IP Address'))                                               # noqa: E501, E221
+    status       = models.DecimalField(max_digits=2, decimal_places=0, choices=IpStatusChoice.choices, default=IpStatusChoice.CCUR, max_length=1, verbose_name=_('Status'))  # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                                 # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                     # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                               # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, default='system', verbose_name=_('Updated by'))                                                                           # noqa: E501, E221
 
     class Meta:
-        verbose_name_plural='IP Register'
+        verbose_name_plural = 'IP Register'
         db_table = 'pbx_ip_register'
 
     def __str__(self):

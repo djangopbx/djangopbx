@@ -29,43 +29,58 @@
 
 import os
 import uuid
-import socket
-from django.conf import settings
-from django.contrib.auth.base_user import BaseUserManager
 from django.db.models import CharField, Value as V
 from django.db.models.functions import Concat
 from lxml import etree
-from io import StringIO
 from .models import Gateway, Bridge, ExtensionUser
 from tenants.pbxsettings import PbxSettings
 
 
 class AccountFunctions():
 
-    def list_gateways(self, domain_id = None):
+    def list_gateways(self, domain_id=None):
         if domain_id:
-            return Gateway.objects.filter(domain_id = uuid.UUID(domain_id), enabled = 'true').values_list('id', 'gateway').order_by('gateway')
+            return Gateway.objects.filter(
+                domain_id=uuid.UUID(domain_id),
+                enabled='true'
+                ).values_list('id', 'gateway').order_by('gateway')
         else:
-            return Gateway.objects.filter(enabled = 'true').values_list('id', 'gateway').order_by('gateway')
+            return Gateway.objects.filter(enabled='true').values_list('id', 'gateway').order_by('gateway')
 
-    def list_bridges(self, domain_id = None):
+    def list_bridges(self, domain_id=None):
         if domain_id:
-            return Bridge.objects.filter(domain_id = uuid.UUID(domain_id), enabled = 'true').annotate(full_dest=Concat(V('bridge:'), 'destination', output_field=CharField())).values_list('full_dest', 'name').order_by('name')
+            return Bridge.objects.filter(
+                domain_id=uuid.UUID(domain_id),
+                enabled='true').annotate(
+                full_dest=Concat(V('bridge:'), 'destination', output_field=CharField())
+                ).values_list('full_dest', 'name').order_by('name')
         else:
-            return Bridge.objects.filter(enabled = 'true').annotate(full_dest=Concat(V('bridge:'), 'destination', output_field=CharField())).values_list('full_dest', 'name').order_by('name')
+            return Bridge.objects.filter(
+                enabled='true').annotate(
+                full_dest=Concat(V('bridge:'), 'destination', output_field=CharField())
+                ).values_list('full_dest', 'name').order_by('name')
 
     def list_user_extensions(self, domain_id, user_uuid):
-            return ExtensionUser.objects.filter(extension_id__domain_id = uuid.UUID(domain_id), user_uuid = uuid.UUID(user_uuid)).values_list('extension_id__extension', flat=True)
+        return ExtensionUser.objects.filter(
+            extension_id__domain_id=uuid.UUID(domain_id),
+            user_uuid=uuid.UUID(user_uuid)
+            ).values_list('extension_id__extension', flat=True)
 
     def list_superuser_extensions(self, domain_id):
-            return ExtensionUser.objects.filter(extension_id__domain_id = uuid.UUID(domain_id)).order_by('extension_id__extension').values_list('extension_id__extension', flat=True)
+        return ExtensionUser.objects.filter(
+            extension_id__domain_id=uuid.UUID(domain_id)
+            ).order_by('extension_id__extension').values_list('extension_id__extension', flat=True)
 
     def list_user_extensions_uuid(self, domain_id, user_uuid):
-            return ExtensionUser.objects.filter(extension_id__domain_id = uuid.UUID(domain_id), user_uuid = uuid.UUID(user_uuid)).values_list('extension_id', flat=True)
+        return ExtensionUser.objects.filter(
+            extension_id__domain_id=uuid.UUID(domain_id),
+            user_uuid=uuid.UUID(user_uuid)
+            ).values_list('extension_id', flat=True)
 
     def list_superuser_extensions_uuid(self, domain_id):
-            return ExtensionUser.objects.filter(extension_id__domain_id = uuid.UUID(domain_id)).order_by('extension_id__extension').values_list('extension_id', flat=True)
-
+        return ExtensionUser.objects.filter(
+            extension_id__domain_id=uuid.UUID(domain_id)
+            ).order_by('extension_id__extension').values_list('extension_id', flat=True)
 
     def gateway_type(self, gateway):
         gateway_type = 'gateway'
@@ -80,7 +95,6 @@ class AccountFunctions():
         if gateway[:4] == 'xmpp':
             gateway_type = 'xmpp'
         return gateway_type
-
 
     def gateway_bridge_data(self, gateway, gateway_type, prefix):
         if gateway_type == 'gateway':
@@ -105,7 +119,6 @@ class AccountFunctions():
 
         return bridge_data
 
-
     def write_gateway_xml(self, gw):
         xml = ''
 
@@ -114,7 +127,7 @@ class AccountFunctions():
             confdir = conflist[0]
 
             root = etree.Element('include')
-            gateway = etree.SubElement(root, 'gateway', name = str(gw.id))
+            gateway = etree.SubElement(root, 'gateway', name=str(gw.id))
             if gw.username:
                 etree.SubElement(gateway, 'param', name='username', value=gw.username)
             if gw.distinct_to:
@@ -164,16 +177,15 @@ class AccountFunctions():
                 etree.SubElement(gateway, 'param', name='supress-cng', value=gw.supress_cng)
             if gw.extension_in_contact:
                 etree.SubElement(gateway, 'param', name='extension-in-contact', value=gw.extension_in_contact)
-            variables = etree.SubElement(gateway, 'variables')
+            etree.SubElement(gateway, 'variables')
 
             if gw.sip_cid_type:
                 etree.SubElement(gateway, 'param', name='sip-cid-type', value=gw.sip_cid_type)
 
-
             etree.indent(root)
-            xml =  str(etree.tostring(root), "utf-8")
+            xml = str(etree.tostring(root), "utf-8")
             try:
-                os.makedirs('%s/%s' % (confdir, gw.profile), mode=0o755, exist_ok = True)
+                os.makedirs('%s/%s' % (confdir, gw.profile), mode=0o755, exist_ok=True)
             except OSError:
                 return -2
 
@@ -186,4 +198,3 @@ class AccountFunctions():
             return 1
         else:
             return -1
-

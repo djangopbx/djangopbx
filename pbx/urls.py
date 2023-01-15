@@ -46,13 +46,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.utils.translation import gettext_lazy as _
 
-# This overrides names in site headers and titles
-# , not required if custom admin templates are being used
-# but no harm in setting them.
-admin.site.site_header = _('DjangoPBX Administration')
-admin.site.site_title = _('DjangoPBX Admin Portal')
-admin.site.index_title = _('Welcome to the DjangoPBX Admin Portal')
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers
 
 # Routers provide an easy way of automatically determining the URL conf.
 from tenants.urls import router as tenantsrouter
@@ -66,6 +60,13 @@ from voicemail.urls import router as voicemailrouter
 from xmlcdr.urls import router as xmlcdrrouter
 from conferencesettings.urls import router as conferencesettingsrouter
 from httapihandler.urls import router as httapihandlerrouter
+
+# This overrides names in site headers and titles
+# , not required if custom admin templates are being used
+# but no harm in setting them.
+admin.site.site_header = _('DjangoPBX Administration')
+admin.site.site_title = _('DjangoPBX Admin Portal')
+admin.site.index_title = _('Welcome to the DjangoPBX Admin Portal')
 
 router = routers.DefaultRouter()
 router.registry.extend(tenantsrouter.registry)
@@ -81,7 +82,7 @@ router.registry.extend(conferencesettingsrouter.registry)
 router.registry.extend(httapihandlerrouter.registry)
 
 urlpatterns = [
-    path(''       , include('portal.urls')),
+    path('', include('portal.urls')),
     path('xmlhandler/', include('xmlhandler.urls')),
     path('httapihandler/', include('httapihandler.urls')),
     path('xmlcdr/', include('xmlcdr.urls')),

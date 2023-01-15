@@ -27,11 +27,9 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
-
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -70,5 +68,3 @@ class MohFileViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
-
-

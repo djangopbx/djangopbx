@@ -27,10 +27,8 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib import admin
 from django.conf import settings
-from django.db import models
 from django.db.models import Case, Value, When
 from django.forms.widgets import TextInput, NumberInput, Select
 from django.forms import ModelForm
@@ -44,7 +42,7 @@ from .models import (
     Dialplan, DialplanDetail
 )
 
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.http import HttpResponseRedirect
 
@@ -54,7 +52,10 @@ class XmlEditAdminForm(ModelForm):
         model = Dialplan
         widgets = {
             "category": Select(choices=DpApps().get_dp_apps_choices()),
-            "xml": AceWidget(usesofttabs=False, showprintmargin=False, width="800px", height="400px", mode='xml', theme='cobalt'),
+            "xml": AceWidget(
+                usesofttabs=False, showprintmargin=False,
+                width="800px", height="400px", mode='xml', theme='cobalt'
+                ),
         }
         fields = '__all__'
 
@@ -63,10 +64,10 @@ class DialplanDetailsInlineAdminForm(ModelForm):
     class Meta:
         model = DialplanDetail
         widgets = {
-            "type": ListTextWidget(choices=SwitchDp().tag_type_choices, attrs={'size':'30'}),
-            "data": TextInput(attrs={'size':'60'}),
-            "group": NumberInput(attrs={'size':'8'}),
-            "sequence": NumberInput(attrs={'size':'8'}),
+            "type": ListTextWidget(choices=SwitchDp().tag_type_choices, attrs={'size': '30'}),
+            "data": TextInput(attrs={'size': '60'}),
+            "group": NumberInput(attrs={'size': '8'}),
+            "sequence": NumberInput(attrs={'size': '8'}),
         }
         fields = '__all__'
 
@@ -109,7 +110,7 @@ class DialplanDetailsInLine(admin.TabularInline):
 
     extra = 4
     fieldsets = [
-        (None,          {'fields': ['tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence' ]}),
+        (None,          {'fields': ['tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence']}),
     ]
     ordering = [
         'group',
@@ -124,6 +125,7 @@ class DialplanDetailsInLine(admin.TabularInline):
 
 
 class DialplanResource(resources.ModelResource):
+
     class Meta:
         model = Dialplan
         import_id_fields = ('id', )
@@ -131,6 +133,7 @@ class DialplanResource(resources.ModelResource):
 
 class DialplanAdmin(ImportExportModelAdmin):
     resource_class = DialplanResource
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -148,7 +151,10 @@ class DialplanAdmin(ImportExportModelAdmin):
     list_filter = (DomainFilter, 'category', 'context', 'enabled', 'destination')
 
     fieldsets = (
-        (None,  {'fields': ['category', ('name', 'sequence'), ('number', 'destination'), ('hostname', 'domain_id'), ('context', 'enabled'), ('description', 'dp_continue')]}),
+        (None,  {'fields': [
+            'category', ('name', 'sequence'), ('number', 'destination'),
+            ('hostname', 'domain_id'), ('context', 'enabled'), ('description', 'dp_continue')
+            ]}),
         ('XML', {'fields': ['xml', 'app_id',], 'classes': ['collapse']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     )
@@ -187,8 +193,6 @@ class DialplanAdmin(ImportExportModelAdmin):
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']
         super().save_model(request, obj, form, change)
-
-
 
 
 admin.site.register(Dialplan, DialplanAdmin)

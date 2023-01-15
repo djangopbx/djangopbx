@@ -45,6 +45,7 @@ from switch.models import SwitchVariable
 
 
 class DpFunctions():
+
     def string_to_regex(string, prefix=''):
         # add prefix
         if len(prefix) > 0:
@@ -52,13 +53,13 @@ class DpFunctions():
                 if string[0] == "+":
                     prefix = prefix + "?"
                 else:
-                    prefix = "\+?" + prefix + "?"
+                    prefix = "\\+?" + prefix + "?"
             else:
                 prefix = "(?:" + prefix + ")?"
 
         # escape the plus
         if string[0] == "+":
-            string = "^\+(" + string[1:] + ")$"
+            string = "^\\+(" + string[1:] + ")$"
 
         # convert N,X,Z syntax to regex
         string.replace("N", "[2-9]")
@@ -296,17 +297,16 @@ class SwitchDp():
 
     time_condition_attrib = ['year', 'mon', 'mday', 'wday', 'week', 'mweek', 'hour', 'minute-of-day', 'date-time']
 
-
-    def generate_xml(self, dp_uuid, domain_uuid, domain_name, ddList = None):
+    def generate_xml(self, dp_uuid, domain_uuid, domain_name, ddList=None):
 
         dp = dialplans.models.Dialplan.objects.get(pk=dp_uuid)
 
-        root = etree.Element("extension", name= dp.name)
+        root = etree.Element("extension", name=dp.name)
         root.set('continue', dp.dp_continue)
         root.set('uuid', str(dp.id))
 
         if not ddList:
-            ddList = dialplans.models.DialplanDetail.objects.filter(dialplan_id = dp.id).order_by(
+            ddList = dialplans.models.DialplanDetail.objects.filter(dialplan_id=dp.id).order_by(
                     'group',
                     Case(
                      When(tag='condition', then=Value(1)),
@@ -321,19 +321,17 @@ class SwitchDp():
         first_action = True
 
         for dd in ddList:
-            # clear flag pass
-            dppass = False
             if dd.data is None:
-                dd_data  = ''
+                dd_data = ''
             else:
-                dd_data  = dd.data
+                dd_data = dd.data
             if dd.type is None:
-                dd_type  = ''
+                dd_type = ''
             else:
-                dd_type  = dd.type
+                dd_type = dd.type
 
             if dd.tag == "condition":
-                #determine the type of condition
+                # determine the type of condition
                 if dd_type in self.time_condition_attrib:
                     condition_type = 'time'
                 else:
@@ -360,7 +358,10 @@ class SwitchDp():
                     if first_action:
                         first_action = False
                         if dp.category == 'Inbound route':
-                            etree.SubElement(condition, dd.tag, application="export", data="call_direction=inbound", inline="true")
+                            etree.SubElement(
+                                condition, dd.tag, application='export',
+                                data="call_direction=inbound", inline='true'
+                                )
                             firstaction = etree.SubElement(condition, dd.tag)
                             firstaction.set('application', 'set')
                             firstaction.set('data', 'domain_uuid=' + str(domain_uuid))
@@ -378,18 +379,16 @@ class SwitchDp():
                     if len(dd.inline) > 0:
                         actionanti.set('inline', dd.inline)
 
-
         etree.indent(root)
         return str(etree.tostring(root), "utf-8").replace('&lt;', '<').replace('&gt;', '>')
 
-
     def create_dpd_from_xml(self, dp_uuid, username):
         dp = dialplans.models.Dialplan.objects.get(pk=dp_uuid)
-        regex = re.compile('expression=\"(.*)\"',re.MULTILINE)
+        regex = re.compile('expression=\"(.*)\"', re.MULTILINE)
         # FreeSWITCH doesn't seem to mind < and > in an XML attribute although technically wrong, but lxml does mind.
-        xml = regex.sub(lambda m: m.group().replace('<',"&lt;").replace('>',"&gt;"), dp.xml)
+        xml = regex.sub(lambda m: m.group().replace('<', "&lt;").replace('>', "&gt;"), dp.xml)
         parser = etree.XMLParser(remove_comments=True)
-        tree   = etree.parse(StringIO(xml), parser)
+        tree = etree.parse(StringIO(xml), parser)
         extension = tree.getroot()
 
         if not etree.iselement(extension):
@@ -397,7 +396,7 @@ class SwitchDp():
 
         if len(extension):  # check root has children
             if extension.tag == 'extension':
-                dialplans.models.DialplanDetail.objects.filter(dialplan_id = dp_uuid).delete()
+                dialplans.models.DialplanDetail.objects.filter(dialplan_id=dp_uuid).delete()
 
                 ddgroup = 0
                 ddorder = 10
@@ -412,7 +411,8 @@ class SwitchDp():
                         for m in extchild.attrib:
                             if m in self.time_condition_attrib:
                                 add_non_time_condition = False
-                                self.dp_detail_add(dp,
+                                self.dp_detail_add(
+                                    dp,
                                     'condition',
                                     m,
                                     extchild.get(m),
@@ -421,10 +421,11 @@ class SwitchDp():
                                     ddgroup,
                                     ddorder,
                                     username
-                                )
+                                    )
 
                         if add_non_time_condition:
-                            self.dp_detail_add(dp,
+                            self.dp_detail_add(
+                                dp,
                                 'condition',
                                 extchild.get('field'),
                                 extchild.get('expression'),
@@ -433,7 +434,7 @@ class SwitchDp():
                                 ddgroup,
                                 ddorder,
                                 username
-                            )
+                                )
                         ddorder += 10
                         if len(extchild):  # check element has children
                             for actchild in extchild:
@@ -442,7 +443,8 @@ class SwitchDp():
                                 else:
                                     ddinline = ''
 
-                                self.dp_detail_add(dp,
+                                self.dp_detail_add(
+                                    dp,
                                     actchild.tag,
                                     actchild.get('application'),
                                     actchild.get('data'),
@@ -451,12 +453,11 @@ class SwitchDp():
                                     ddgroup,
                                     ddorder,
                                     username
-                                )
+                                    )
                                 ddorder += 10
                             ddgroup += 1
 
-
-    def import_xml(self, domain_name, dp_remove = False, domain_uuid = ''):
+    def import_xml(self, domain_name, dp_remove=False, domain_uuid=''):
         dp_details = False
         pbxsettings = PbxSettings()
         sval = pbxsettings.default_settings('dialplan', 'dialplan_details', 'boolean', 'false', True)[0]
@@ -487,14 +488,12 @@ class SwitchDp():
             else:
                 continue
 
-
-    def create_dp_from_xml(self, xml, dp_remove = False, dp_details = True):
+    def create_dp_from_xml(self, xml, dp_remove=False, dp_details=True):
         parser = etree.XMLParser(remove_comments=True)
-        tree   = etree.parse(StringIO(xml), parser)
+        tree = etree.parse(StringIO(xml), parser)
         root = tree.getroot()
-        #root = etree.fromstring(xml) # Using method above so comments are removed.
+        # root = etree.fromstring(xml) # Using method above so comments are removed.
         ddlist = []
-
 
         if len(root):  # check root has children
             extension = root[0]
@@ -504,10 +503,10 @@ class SwitchDp():
             d_uuid = ''
             d = None
             if not ((dp_context == 'public') or (dp_context == '${domain_name}')):
-                if not Domain.objects.filter(name = dp_context).exists():
+                if not Domain.objects.filter(name=dp_context).exists():
                     return False
 
-                d = Domain.objects.get(name = dp_context)
+                d = Domain.objects.get(name=dp_context)
                 d_uuid = str(d.id)
 
             if extension.tag == 'extension':
@@ -559,15 +558,15 @@ class SwitchDp():
                     dp_name = 'No Name'
 
                 dp = dialplans.models.Dialplan.objects.create(
-                    app_id = dp_app_uuid,
-                    name = dp_name,
-                    number = dp_number,
-                    destination = 'false',
-                    context = dp_context,
-                    dp_continue = xml_dp_continue,
-                    sequence = dp_order,
-                    enabled = dp_enabled,
-                    updated_by = 'system'
+                    app_id=dp_app_uuid,
+                    name=dp_name,
+                    number=dp_number,
+                    destination='false',
+                    context=dp_context,
+                    dp_continue=xml_dp_continue,
+                    sequence=dp_order,
+                    enabled=dp_enabled,
+                    updated_by='system'
                 )
                 if dp_global == 'false':
                     dp.domain_id = d
@@ -583,7 +582,8 @@ class SwitchDp():
                             ddbreak = ''
 
                         if dp_details:
-                            self.dp_detail_add(dp,
+                            self.dp_detail_add(
+                                dp,
                                 'condition',
                                 extchild.get('field'),
                                 extchild.get('expression'),
@@ -591,8 +591,9 @@ class SwitchDp():
                                 '',
                                 ddgroup,
                                 ddorder
-                            )
-                        ddlist.append(DialplanDetailStruct(str(dp.id),
+                                )
+                        ddlist.append(DialplanDetailStruct(
+                            str(dp.id),
                             'condition',
                             extchild.get('field'),
                             extchild.get('expression'),
@@ -600,7 +601,7 @@ class SwitchDp():
                             '',
                             ddgroup,
                             ddorder
-                        ))
+                            ))
                         ddorder += 5
                         if len(extchild):  # check element has children
                             for actchild in extchild:
@@ -610,7 +611,8 @@ class SwitchDp():
                                     ddinline = ''
 
                                 if dp_details:
-                                    self.dp_detail_add(dp,
+                                    self.dp_detail_add(
+                                        dp,
                                         actchild.tag,
                                         actchild.get('application'),
                                         actchild.get('data'),
@@ -618,8 +620,9 @@ class SwitchDp():
                                         ddinline,
                                         ddgroup,
                                         ddorder
-                                    )
-                                ddlist.append(DialplanDetailStruct(str(dp.id),
+                                        )
+                                ddlist.append(DialplanDetailStruct(
+                                    str(dp.id),
                                     actchild.tag,
                                     actchild.get('application'),
                                     actchild.get('data'),
@@ -627,7 +630,7 @@ class SwitchDp():
                                     ddinline,
                                     ddgroup,
                                     ddorder
-                                ))
+                                    ))
 
                                 ddorder += 5
                             ddgroup += 1
@@ -635,66 +638,68 @@ class SwitchDp():
                 dp.xml = self.generate_xml(dp.id, '', '', ddlist)
                 dp.save()
 
+    def dp_add(
+            self, domain_id, dp_app_uuid, dp_name, dp_number, dp_destination, dp_context,
+            dp_category, dp_continue, dp_order, dp_enabled, dp_description, dp_updated_by
+            ):
 
-    def dp_add(self, domain_id, dp_app_uuid, dp_name, dp_number, dp_destination, dp_context, dp_category, dp_continue, dp_order, dp_enabled, dp_description, dp_updated_by):
-        d = Domain.objects.get(pk = uuid.UUID(domain_id))
+        d = Domain.objects.get(pk=uuid.UUID(domain_id))
 
         dp = dialplans.models.Dialplan.objects.create(
-            domain_id = d,
-            app_id = dp_app_uuid,
-            name = dp_name,
-            number = dp_number,
-            destination = dp_destination,
-            context = dp_context,
-            category = dp_category,
-            dp_continue = dp_continue,
-            sequence = dp_order,
-            enabled = dp_enabled,
-            description = dp_description,
-            updated_by = dp_updated_by
+            domain_id=d,
+            app_id=dp_app_uuid,
+            name=dp_name,
+            number=dp_number,
+            destination=dp_destination,
+            context=dp_context,
+            category=dp_category,
+            dp_continue=dp_continue,
+            sequence=dp_order,
+            enabled=dp_enabled,
+            description=dp_description,
+            updated_by=dp_updated_by
         )
         return dp
 
-
-    def dp_detail_add(self, dddp, ddtag, ddtype, dddata, ddbreak, ddinline, ddgroup, ddorder, username = 'system'):
+    def dp_detail_add(self, dddp, ddtag, ddtype, dddata, ddbreak, ddinline, ddgroup, ddorder, username='system'):
         dpd = dialplans.models.DialplanDetail.objects.create(
-            dialplan_id = dddp,
-            tag = ddtag,
-            type = ddtype,
-            data = dddata,
-            dp_break = ddbreak,
-            inline = ddinline,
-            group = ddgroup,
-            sequence = ddorder,
-            updated_by = username
+            dialplan_id=dddp,
+            tag=ddtag,
+            type=ddtype,
+            data=dddata,
+            dp_break=ddbreak,
+            inline=ddinline,
+            group=ddgroup,
+            sequence=ddorder,
+            updated_by=username
         )
         return dpd
 
-
     def dp_app_exists(self, dp_domain_uuid, dp_app_uuid):
         if not DpFunctions().valid_uuid4(dp_app_uuid):
-            return True # Better to return True than create a dialplan with an invalid uuid
+            return True  # Better to return True than create a dialplan with an invalid uuid
 
         if DpFunctions().valid_uuid4(dp_domain_uuid):
-            dpextist = dialplans.models.Dialplan.objects.filter((Q(domain_id = dp_domain_uuid) | Q(domain_id__isnull=True)), app_id = dp_app_uuid).exists()
+            dpextist = dialplans.models.Dialplan.objects.filter(
+                (Q(domain_id=dp_domain_uuid) | Q(domain_id__isnull=True)),
+                app_id=dp_app_uuid
+                ).exists()
         else:
-            dpextist = dialplans.models.Dialplan.objects.filter(domain_id__isnull=True, app_id = dp_app_uuid).exists()
+            dpextist = dialplans.models.Dialplan.objects.filter(domain_id__isnull=True, app_id=dp_app_uuid).exists()
         return dpextist
-
 
     def dp_app_remove(self, dp_domain_uuid, dp_app_uuid):
         if not DpFunctions().valid_uuid4(dp_app_uuid):
             return False
 
-        if DpFunctions().valid_uuid4(dp_domain_uuid): # do not remove global dialplans
-            dialplans.models.Dialplan.objects.filter(domain_id = dp_domain_uuid, app_id = dp_app_uuid).delete()
+        if DpFunctions().valid_uuid4(dp_domain_uuid):  # do not remove global dialplans
+            dialplans.models.Dialplan.objects.filter(domain_id=dp_domain_uuid, app_id=dp_app_uuid).delete()
         else:
             return False
         return True
 
-
     def dpd_order_max(self, dp_uuid):
-        dpd_max = dialplans.models.DialplanDetail.objects.filter(dialplan_id = dp_uuid).aggregate(Max('sequence'))
+        dpd_max = dialplans.models.DialplanDetail.objects.filter(dialplan_id=dp_uuid).aggregate(Max('sequence'))
         if not dpd_max:
             return 10
         if dpd_max.get('sequence__max') < 10:
@@ -702,26 +707,26 @@ class SwitchDp():
         return dpd_max.get('sequence__max')
 
 
-
 class DpApps():
 
     def get_dp_apps_choices(self):
-        dp_category_choices = [('Outbound route', _('Outbound route')),
-                                ('Inbound route', _('Inbound route')),
-                                ('Time condition', _('Time condition')),
-        ]
+        dp_category_choices = [
+            ('Outbound route',  _('Outbound route')),
+            ('Inbound route',   _('Inbound route')),
+            ('Time condition',  _('Time condition')),
+            ]
         for acnf in apps.get_app_configs():
             if hasattr(acnf, 'pbx_dialplan'):
                 dp_category_choices.append((acnf.pbx_dialplan_category, _(acnf.pbx_dialplan_category)))
 
         return dp_category_choices
 
-
     def get_dp_apps_uuids(self,):
-        dp_category_uuids = {'Outbound route': '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3',
-                            'Inbound route': 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4',
-                            'Time condition': '4b821450-926b-175a-af93-a03c441818b1',
-        }
+        dp_category_uuids = {
+            'Outbound route': '8c914ec3-9fc0-8ab5-4cda-6c9288bdc9a3',
+            'Inbound route': 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4',
+            'Time condition': '4b821450-926b-175a-af93-a03c441818b1',
+            }
         for acnf in apps.get_app_configs():
             if hasattr(acnf, 'pbx_dialplan'):
                 dp_category_uuids[acnf.pbx_dialplan_category] = acnf.pbx_uuid
@@ -735,12 +740,17 @@ class DpDestAction():
         dp_actions = []
         e_list = []
         v_list = []
-        es = Extension.objects.select_related('domain_id').prefetch_related('voicemail').filter(domain_id = uuid.UUID(domain_uuid),enabled = 'true').order_by('extension')
+        es = Extension.objects.select_related('domain_id').prefetch_related('voicemail').filter(
+                domain_id=uuid.UUID(domain_uuid),
+                enabled='true'
+                ).order_by('extension')
         for e in es:
             e_list.append(('transfer:%s XML %s' % (e.extension, e.domain_id), '%s %s' % (e.extension, e.description)))
-            v = e.voicemail.filter(enabled = 'true').first()
+            v = e.voicemail.filter(enabled='true').first()
             if v:
-                v_list.append(('transfer:99%s XML %s' % (e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description)))
+                v_list.append(
+                    ('transfer:99%s XML %s' % (e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description))
+                    )
 
         if len(e_list) > 0:
             dp_actions.append((_('Extensions'), e_list))
@@ -748,7 +758,7 @@ class DpDestAction():
             dp_actions.append((_('Voicemails'), v_list))
 
         t_list = []
-        sv = SwitchVariable.objects.filter(category = 'Tones', enabled = 'true').order_by('name')
+        sv = SwitchVariable.objects.filter(category='Tones', enabled='true').order_by('name')
         for t in sv:
             t_list.append(('playback:tone_stream://%s' % t.value, t.name))
 
@@ -761,13 +771,11 @@ class DpDestAction():
 class DialplanDetailStruct():
 
     def __init__(self, dddp, ddtag, ddtype, dddata, ddbreak, ddinline, ddgroup, ddorder):
-        self.dialplan_id  = dddp
-        self.tag          = ddtag
-        self.type         = ddtype
-        self.data         = dddata
-        self.dp_break     = ddbreak
-        self.inline       = ddinline
-        self.group        = ddgroup
-        self.sequence     = ddorder
-
-
+        self.dialplan_id  = dddp      # noqa: E221
+        self.tag          = ddtag     # noqa: E221
+        self.type         = ddtype    # noqa: E221
+        self.data         = dddata    # noqa: E221
+        self.dp_break     = ddbreak   # noqa: E221
+        self.inline       = ddinline  # noqa: E221
+        self.group        = ddgroup   # noqa: E221
+        self.sequence     = ddorder   # noqa: E221

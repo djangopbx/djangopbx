@@ -27,10 +27,8 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
-from django.db import models
-from django.forms import ModelForm
 
 from .models import (
     Profile, ProfileSetting, Domain, DomainSetting, DefaultSetting,
@@ -71,12 +69,13 @@ class GroupAdmin(ImportExportMixin, GroupAdmin):
 
 
 #
-#Provides a Log entry viewer to the admin site
+# Provides a Log entry viewer to the admin site
 #
 class LogEntryResource(resources.ModelResource):
 
     class Meta:
         model = LogEntry
+
 
 class LogEntryAdmin(ExportMixin, admin.ModelAdmin):
     resource_class = LogEntryResource
@@ -131,6 +130,7 @@ class LogEntryAdmin(ExportMixin, admin.ModelAdmin):
 class DomainSettingsDomainFilter(admin.SimpleListFilter):
     title = _('Category')
     parameter_name = 'category'
+
     def lookups(self, request, model_admin):
         if 'domain_id__domain_id__exact' in request.GET:
             muuid = request.GET['domain_id__domain_id__exact']
@@ -151,7 +151,7 @@ class DomainSettingInLine(admin.TabularInline):
     model = DomainSetting
     extra = 3
     fieldsets = [
-        (None,          {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
+        (None,          {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
 
@@ -171,7 +171,10 @@ class DomainSettingAdmin(ImportExportModelAdmin):
     list_filter = (DomainFilter, DomainSettingsDomainFilter, 'enabled')
     list_display_links = ('category', 'subcategory', 'value_type', 'value')
     fieldsets = [
-        (None, {'fields': ['domain_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'description' ]}),
+        (None, {'fields': [
+                'domain_id', 'category', 'subcategory', 'value_type', 'value',
+                'sequence', 'enabled', 'description'
+                ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
@@ -193,6 +196,7 @@ class DomainResource(resources.ModelResource):
 
 class DomainAdmin(ImportExportModelAdmin):
     resource_class = DomainResource
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -222,14 +226,15 @@ class DomainAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
         if not change:
             SwitchDp().import_xml(obj.name, False, obj.id)  # Create dialplans
-            DomainSetting.objects.create(domain_id = obj,   # Create default menu setting
-                category = 'domain',
-                subcategory = 'menu',
-                value_type = 'text',
-                value = 'Default',
-                sequence = 10,
-                updated_by = request.user.username
-            )
+            DomainSetting.objects.create(
+                domain_id=obj,   # Create default menu setting
+                category='domain',
+                subcategory='menu',
+                value_type='text',
+                value='Default',
+                sequence=10,
+                updated_by=request.user.username
+                )
 
 
 #
@@ -239,7 +244,7 @@ class ProfileSettingInLine(admin.TabularInline):
     model = ProfileSetting
     extra = 3
     fieldsets = [
-        (None,          {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled' ]}),
+        (None, {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
 
@@ -260,7 +265,10 @@ class ProfileSettingAdmin(ImportExportModelAdmin):
     list_filter = ('user_id', 'category', 'enabled')
     list_display_links = ('category', 'subcategory', 'value_type', 'value')
     fieldsets = [
-        (None, {'fields': ['user_id', 'category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'description' ]}),
+        (None, {'fields': [
+                'user_id', 'category', 'subcategory', 'value_type', 'value', 'sequence',
+                'enabled', 'description'
+                ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
@@ -285,13 +293,13 @@ class ProfileAdmin(ImportExportModelAdmin):
     readonly_fields = ['username', 'email', 'created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['username', 'email']
     fieldsets = [
-        (None,     {'fields': ['domain_id', 'username', 'email', 'user']}),
+        (None, {'fields': ['domain_id', 'username', 'email', 'user']}),
         ('Status', {'fields': ['status', 'enabled', 'api_key'], 'classes': ['collapse']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
 
     list_display = ('username', 'domain_id', 'email', 'enabled')
-    list_filter  = (DomainFilter, 'username', 'domain_id', 'email', 'enabled')
+    list_filter = (DomainFilter, 'username', 'domain_id', 'email', 'enabled')
     inlines = [ProfileSettingInLine]
 
     def save_formset(self, request, form, formset, change):
@@ -329,7 +337,7 @@ class DefaultSettingAdmin(ImportExportModelAdmin):
     list_filter = ('category', 'enabled')
     list_display_links = ('category', 'subcategory', 'value_type', 'value')
     fieldsets = [
-        (None, {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'description' ]}),
+        (None, {'fields': ['category', 'subcategory', 'value_type', 'value', 'sequence', 'enabled', 'description']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
@@ -343,11 +351,9 @@ admin.site.unregister(User)
 admin.site.unregister(Group)
 admin.site.register(User, UserAdmin)
 admin.site.register(Group, GroupAdmin)
-
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(ProfileSetting, ProfileSettingAdmin)
 admin.site.register(Domain, DomainAdmin)
 admin.site.register(DomainSetting, DomainSettingAdmin)
 admin.site.register(DefaultSetting, DefaultSettingAdmin)
 admin.site.register(LogEntry, LogEntryAdmin)
-

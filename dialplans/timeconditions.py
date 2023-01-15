@@ -28,9 +28,10 @@
 
 from django.utils.translation import gettext_lazy as _
 
+
 class TimeConditions():
 
-    vr_choice = [('','')]
+    vr_choice = [('', '')]
     vr_dict = {}
 
     def get_choices(self, idtag, choice):
@@ -53,14 +54,13 @@ class TimeConditions():
         elif choice == 'minute-of-day':
             cl = ''.join(self.tag_wrapped_choice(self.get_timeofday()))
 
-        return '<div id=\"id_%s\" hx-swap-oob=\"innerHTML\"><option value=\"\"></option>%s</div>%s' % (oobidtag, cl, cl)
-
+        return '<div id=\"id_%s\" hx-swap-oob=\"innerHTML\">'\
+            '<option value=\"\"></option>%s</div>%s' % (oobidtag, cl, cl)
 
     def tag_wrapped_choice(self, c):
         return ['<option value=\"%s\">%s</option>' % (x[0], x[1]) for x in c]
 
-
-    def get_condition_list(self, cnd_only = False):
+    def get_condition_list(self, cnd_only=False):
         tuplelist = [
                 ('', ''),
                 ('year',          _('Year')),
@@ -79,7 +79,6 @@ class TimeConditions():
 
         return tuplelist
 
-
     def get_months(self):
         tuplelist = [
                 ('1',  _('January')),
@@ -97,7 +96,6 @@ class TimeConditions():
                 ]
         return tuplelist
 
-
     def get_daysofweek(self):
         tuplelist = [
                 ('1', _('Sunday')),
@@ -109,7 +107,6 @@ class TimeConditions():
                 ('7', _('Saturday'))
                 ]
         return tuplelist
-
 
     def get_years(self):
         return [(str(x), str(x)) for x in range(2022, 2036)]
@@ -144,12 +141,11 @@ class TimeConditions():
         self.vr_choice.append([_('Time of Day'),   self.get_timeofday()])
 
     def build_vr_dict(self):
-        self.vr_dict['wday']          = self.get_daysofweek()
-        self.vr_dict['mday']          = self.get_daysofmonth()
-        self.vr_dict['mon']           = self.get_months()
-        self.vr_dict['mweek']         = self.get_weeksofmonth()
-        self.vr_dict['week']          = self.get_weeksofyear()
-        self.vr_dict['year']          = self.get_years()
-        self.vr_dict['hour']          = self.get_hoursofday()
-        self.vr_dict['minute-of-day'] = self.get_timeofday()
-
+        self.vr_dict['wday']          = self.get_daysofweek()    # noqa: E221
+        self.vr_dict['mday']          = self.get_daysofmonth()   # noqa: E221
+        self.vr_dict['mon']           = self.get_months()        # noqa: E221
+        self.vr_dict['mweek']         = self.get_weeksofmonth()  # noqa: E221
+        self.vr_dict['week']          = self.get_weeksofyear()   # noqa: E221
+        self.vr_dict['year']          = self.get_years()         # noqa: E221
+        self.vr_dict['hour']          = self.get_hoursofday()    # noqa: E221
+        self.vr_dict['minute-of-day'] = self.get_timeofday()     # noqa: E221

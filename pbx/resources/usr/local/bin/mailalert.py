@@ -48,7 +48,11 @@ BODY
 .textsubtitle1 {{font-family:verdana,arial,sans-serif;font-size:20px;color:#4F6313}}
 .textsubtitle2 {{font-family:verdana,arial,sans-serif;font-size:18px;color:#4F6313}}
 .th {{font-family:verdana,arial,sans-serif;font-size:10pt;font-weight: bold; background-color:#D3DCE3;}}
-.th1 {{font-family:verdana,arial,sans-serif;font-size:10pt;color:#838C93; font-weight: bold; background-color:#D3DCE3;}}
+.th1 {{
+  font-family:verdana,arial,sans-serif;
+  font-size:10pt;color:#838C93;
+  font-weight: bold;
+  background-color:#D3DCE3;}}
 .td {{font-family:verdana,arial,sans-serif;font-size:10pt;white-space:nowrap;}}
 .hr {{background-color:#7A8F39}}
 
@@ -62,15 +66,24 @@ BODY
 My Address<br>
 Tel: My Telephone.<br><br>
 
-This electronic message contains information from My Company which may be privileged or confidential.  The information is intended to be for the use of the individual(s) or entity named above.  If you are not the intended recipient be aware that any disclosure, copying, distribution or use of the contents of this information is prohibited.  If you have received this electronic message in error, please notify us by telephone or email to me@mydomain.com immediately.<br></p></body>
+This electronic message contains information from My Company which may be privileged or confidential.
+  The information is intended to be for the use of the individual(s) or entity named above.
+  If you are not the intended recipient be aware that any disclosure, copying, distribution or use of
+ the contents of this information is prohibited.
+  If you have received this electronic message in error, please notify us by telephone or email to
+ me@mydomain.com immediately.<br></p></body>
 </html>
-""".format(alert_timestamp=formatdate(localtime=True), alert_heading=sys.argv[1], alert_text=sys.argv[2]), subtype='html')
+""".format(
+    alert_timestamp=formatdate(localtime=True),
+    alert_heading=sys.argv[1],
+    alert_text=sys.argv[2]
+    ), subtype='html')
 
 
 with smtplib.SMTP("my-mail-server.com", 587) as server:
 
     try:
-        if not server.starttls()[0] == 220: # Secure the connection
+        if not server.starttls()[0] == 220:  # Secure the connection
             print("Warning! connection may not be secure.")
         out = server.login(authmailuser, password)
         out = server.send_message(msg)

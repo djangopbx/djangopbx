@@ -31,7 +31,7 @@
 #  These are functions and classes used by more than one application
 #
 
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from tenants.models import Domain
 import subprocess
@@ -44,10 +44,10 @@ def get_version(package):
     Return package version as listed in `__version__` in `init.py`.
     """
     try:
-        with open(os.path.join(package, '__init__.py'))  as i:
+        with open(os.path.join(package, '__init__.py')) as i:
             init_py = i.read()
         v = re.search("__version__ = ['\"]([^'\"]+)['\"]", init_py).group(1)
-    except:
+    except (IOError, TypeError, AttributeError, KeyError):
         v = '0.0.0'
     return v
 
@@ -61,15 +61,14 @@ def shcommand(cmd):
 
 
 def str2regex(dst, pre=''):
-    out = ''
     # excape the +
     if dst[0] == '+':
-        dst = '^\+(%s)$' % dst[1:]
+        dst = '^\\+(%s)$' % dst[1:]
     # add prefix
     if len(pre) > 0:
         if len(pre) < 4:
             if '+' in dst:
-                pre = '\+?$s?' % pre
+                pre = '\\+?%s?' % pre
             else:
                 pre = '(?:%s)?' % pre
     # conver N,X,Z sytax to regex
@@ -95,8 +94,7 @@ def str2regex(dst, pre=''):
 class DomainUtils():
 
     def domain_from_session(self, request):
-        return Domain.objects.get(name = request.session['domain_name'])
-
+        return Domain.objects.get(name=request.session['domain_name'])
 
 
 class DomainFilter(admin.SimpleListFilter):
@@ -118,10 +116,9 @@ class DomainFilter(admin.SimpleListFilter):
             }
 
     def queryset(self, request, queryset):
-        if self.value() == None:
-            return queryset.filter(domain_id__exact = request.session['domain_uuid'])
+        if self.value() is None:
+            return queryset.filter(domain_id__exact=request.session['domain_uuid'])
         if self.value() == 'global':
-            return queryset.filter(domain_id__exact = None)
-        if not ((self.value() == None) or (self.value() == 'all')):
-            return queryset.filter(domain_id__exact = self.value())
-
+            return queryset.filter(domain_id__exact=None)
+        if not ((self.value() is None) or (self.value() == 'all')):
+            return queryset.filter(domain_id__exact=self.value())

@@ -27,16 +27,18 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from  rest_framework  import serializers
+from rest_framework import serializers
 from .models import (
     XmlCdr,
 )
 
 
 class XmlCdrSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = XmlCdr
-        fields =['url', 'id', 
+        fields = [
+                'url', 'id',
                 'domain_id',
                 'extension_id',
                 'domain_name',
@@ -101,6 +103,5 @@ class XmlCdrSerializer(serializers.ModelSerializer):
                 'created',
                 'updated',
                 'synchronised',
-                'updated_by']
-
-
+                'updated_by'
+                ]

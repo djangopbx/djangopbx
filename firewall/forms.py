@@ -31,12 +31,15 @@ from django_ace import AceWidget
 
 
 class LogViewerForm(forms.Form):
-    logtext = forms.CharField(widget=AceWidget(showgutter=False, usesofttabs=False, showprintmargin=False, width="1200px", height="600px", mode='text', theme='cobalt'))
+    logtext = forms.CharField(widget=AceWidget(
+        showgutter=False, usesofttabs=False, showprintmargin=False,
+        width="1200px", height="600px", mode='text', theme='cobalt'
+        ))
 
 
 class IpAddressForm(forms.Form):
-    ipv4 = forms.GenericIPAddressField(label = 'IPv4 Address', protocol = 'IPv4', required = False)
-    ipv4len = forms.IntegerField(label = '/', min_value = 8, max_value = 32, initial = 32)
-    ipv6 = forms.GenericIPAddressField(label = 'IPv6 Address', protocol = 'IPv6', required = False)
-    ipv6len = forms.IntegerField(label = '/', min_value = 48, max_value = 128, initial = 128)
+    ipv4 = forms.GenericIPAddressField(label='IPv4 Address', protocol='IPv4', required=False)
+    ipv4len = forms.IntegerField(label='/', min_value=8, max_value=32, initial=32)
+    ipv6 = forms.GenericIPAddressField(label='IPv6 Address', protocol='IPv6', required=False)
+    ipv6len = forms.IntegerField(label='/', min_value=48, max_value=128, initial=128)
     setname = forms.CharField(widget=forms.HiddenInput(), required=False)

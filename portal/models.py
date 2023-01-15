@@ -36,13 +36,13 @@ from pbx.commonchoices import (
 
 
 class Menu(models.Model):
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name         = models.CharField(max_length=64, verbose_name=_('Name'))
-    description  = models.CharField(max_length=128, blank=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                     # noqa: E501, E221
+    name         = models.CharField(max_length=64, verbose_name=_('Name'))                                    # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, verbose_name=_('Description'))                # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))  # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))      # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                              # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_menus'
@@ -55,20 +55,20 @@ class Menu(models.Model):
 
 
 class MenuItem(models.Model):
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    menu_id      = models.ForeignKey('Menu', db_column='menu_id', on_delete=models.CASCADE, verbose_name=_('Menu'))
-    parent_id    = models.ForeignKey('self', db_column='parent_id', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Parent Menu Item'))
-    title        = models.CharField(max_length=64, verbose_name=_('Title'))
-    link         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Link'))
-    icon         = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Icon'))
-    category     = models.CharField(max_length=16, choices=TargetCategoryChoice.choices, default=TargetCategoryChoice.CINTERNAL, verbose_name=_('Target'))
-    protected    = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Protected'))
-    sequence     = models.DecimalField(max_digits=11, decimal_places=0,default=10, verbose_name=_('Order'))
-    description  = models.CharField(max_length=128, blank=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                     # noqa: E501, E221
+    menu_id      = models.ForeignKey('Menu', db_column='menu_id', on_delete=models.CASCADE, verbose_name=_('Menu'))                                           # noqa: E501, E221
+    parent_id    = models.ForeignKey('self', db_column='parent_id', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Parent Menu Item'))      # noqa: E501, E221
+    title        = models.CharField(max_length=64, verbose_name=_('Title'))                                                                                   # noqa: E501, E221
+    link         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Link'))                                                            # noqa: E501, E221
+    icon         = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Icon'))                                                             # noqa: E501, E221
+    category     = models.CharField(max_length=16, choices=TargetCategoryChoice.choices, default=TargetCategoryChoice.CINTERNAL, verbose_name=_('Target'))    # noqa: E501, E221
+    protected    = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Protected'))  # noqa: E501, E221
+    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                  # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, verbose_name=_('Description'))                                                                # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                  # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                      # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                              # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_menu_items'
@@ -86,14 +86,14 @@ class MenuItem(models.Model):
 
 
 class MenuItemGroup(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    menu_item_id = models.ForeignKey('MenuItem', db_column='menu_item_id', on_delete=models.CASCADE, verbose_name=_('Menu Item'))
-    name         = models.CharField(max_length=64, blank=True, null=True)
-    group_id     = models.ForeignKey('auth.Group', db_column='group_id', on_delete=models.CASCADE, verbose_name=_('Group'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                    # noqa: E501, E221
+    menu_item_id = models.ForeignKey('MenuItem', db_column='menu_item_id', on_delete=models.CASCADE, verbose_name=_('Menu Item'))  # noqa: E501, E221
+    name         = models.CharField(max_length=64, blank=True, null=True)                                                          # noqa: E501, E221
+    group_id     = models.ForeignKey('auth.Group', db_column='group_id', on_delete=models.CASCADE, verbose_name=_('Group'))        # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                       # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                           # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                     # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                   # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_menu_item_groups'
@@ -104,4 +104,3 @@ class MenuItemGroup(models.Model):
 
     def __str__(self):
         return str(self.group_id)
-

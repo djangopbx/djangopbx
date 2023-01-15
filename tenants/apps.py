@@ -31,6 +31,7 @@ from django.apps import AppConfig
 from django.db.models.signals import post_save
 from django.utils.translation import gettext_lazy as _
 
+
 class TenantsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'tenants'
@@ -44,5 +45,7 @@ class TenantsConfig(AppConfig):
     def ready(self):
         from django.contrib.auth.models import User
         from . import signals
-        post_save.connect(signals.create_or_edit_user_profile, sender=User, weak=False, dispatch_uid="tenants:auth_User")
-
+        post_save.connect(
+            signals.create_or_edit_user_profile,
+            sender=User, weak=False, dispatch_uid="tenants:auth_User"
+            )

@@ -27,22 +27,28 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from  rest_framework  import serializers
+from rest_framework import serializers
 from .models import (
     MusicOnHold, MohFile,
 )
 
 
 class MusicOnHoldSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MusicOnHold
-        fields =['url', 'id', 'domain_id', 'name', 'path', 'rate', 'shuffle', 'channels', 'interval', 'timer_name', 'chime_list', 'chime_freq', 'chime_max',
-                'created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'url', 'id', 'domain_id', 'name', 'path', 'rate', 'shuffle', 'channels',
+                    'interval', 'timer_name', 'chime_list', 'chime_freq', 'chime_max',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
 
 
 class MohFileSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MohFile
-        fields =['url', 'id', 'moh_id', 'filename', 'file_name',
-                'created', 'updated', 'synchronised', 'updated_by']
-
+        fields = [
+                    'url', 'id', 'moh_id', 'filename', 'file_name',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]

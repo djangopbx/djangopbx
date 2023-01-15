@@ -27,9 +27,9 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.forms.models import model_to_dict
 import uuid
 from .models import DefaultSetting, DomainSetting, ProfileSetting, Domain
+
 
 #
 # Class for processing and retrieving settings
@@ -39,21 +39,20 @@ class PbxSettings():
     def default_email_settings(self):
         email_cfg = {}
         dsl = DefaultSetting.objects.filter(
-                category = 'email',
-                value_type = 'text',
-                enabled  = 'true').order_by('sequence')
+                category='email',
+                value_type='text',
+                enabled='true').order_by('sequence')
         for ds in dsl:
             email_cfg[ds.subcategory] = ds.value
 
         return email_cfg
 
-
-    def default_settings(self, cat, subcat, settingtype = 'text', defaultsetting = '', usedefault = False):
+    def default_settings(self, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
         settingList = DefaultSetting.objects.values_list('value', flat=True).filter(
-                category = cat,
-                subcategory = subcat,
-                value_type = settingtype,
-                enabled  = 'true').order_by('sequence')
+                category=cat,
+                subcategory=subcat,
+                value_type=settingtype,
+                enabled='true').order_by('sequence')
         if settingList.count() == 0:
             if usedefault:
                 return [defaultsetting]
@@ -61,14 +60,13 @@ class PbxSettings():
                 return False
         return settingList
 
-
-    def domain_settings(self, uuidstr, cat, subcat, settingtype = 'text', defaultsetting = '', usedefault = False):
+    def domain_settings(self, uuidstr, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
         settingList = DomainSetting.objects.values_list('value', flat=True).filter(
-                domain_id = uuid.UUID(uuidstr),
-                category = cat,
-                subcategory = subcat,
-                value_type = settingtype,
-                enabled  = 'true').order_by('sequence')
+                domain_id=uuid.UUID(uuidstr),
+                category=cat,
+                subcategory=subcat,
+                value_type=settingtype,
+                enabled='true').order_by('sequence')
 
         if settingList.count() == 0:
             if usedefault:
@@ -77,14 +75,13 @@ class PbxSettings():
                 return False
         return settingList
 
-
-    def user_settings(self, uuidstr, cat, subcat, settingtype = 'text', defaultsetting = '', usedefault = False):
+    def user_settings(self, uuidstr, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
         settingList = ProfileSetting.objects.values_list('value', flat=True).filter(
-                user_id = uuid.UUID(uuidstr),
-                category = cat,
-                subcategory = subcat,
-                value_type = settingtype,
-                enabled  = 'true').order_by('sequence')
+                user_id=uuid.UUID(uuidstr),
+                category=cat,
+                subcategory=subcat,
+                value_type=settingtype,
+                enabled='true').order_by('sequence')
 
         if settingList.count() == 0:
             if usedefault:
@@ -93,8 +90,10 @@ class PbxSettings():
                 return False
         return settingList
 
-
-    def settings(self, useruuidstr, domainuuidstr, cat, subcat, settingtype = 'text', defaultsetting = '', usedefault = False):
+    def settings(
+            self, useruuidstr, domainuuidstr, cat, subcat,
+            settingtype='text', defaultsetting='', usedefault=False
+            ):
         settingList = self.user_settings(useruuidstr, cat, subcat, settingtype, defaultsetting, False)
         if settingList:
             return settingList
@@ -104,10 +103,8 @@ class PbxSettings():
         settingList = self.default_settings(cat, subcat, settingtype, defaultsetting, usedefault)
         return settingList
 
-
     def get_domains(self):
         qs_dict = [{i.name: str(i.id)} for i in Domain.objects.filter(enabled='true')]
         if qs_dict is not None:
             return qs_dict
         return False
-

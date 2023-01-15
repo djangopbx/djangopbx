@@ -36,59 +36,58 @@ from django.utils.translation import gettext_lazy as _
 
 
 class EnabledTrueFalseNoneChoice(models.TextChoices):
-    CNONE  = '',  ''
-    CTRUE  = 'true',  _('True')
-    CFALSE = 'false', _('False')
+    CNONE  = '',  ''              # noqa: E221
+    CTRUE  = 'true',  _('True')   # noqa: E221
+    CFALSE = 'false', _('False')  # noqa: E221
 
 
 class EnabledTrueFalseChoice(models.TextChoices):
-    CFALSE = 'false', _('False')
-    CTRUE  = 'true',  _('True')
+    CFALSE = 'false', _('False')  # noqa: E221
+    CTRUE  = 'true',  _('True')   # noqa: E221
 
 
 class PrimaryTrueFalseChoice(models.IntegerChoices):
-    CTRUE  = 1, _('True')
-    CFALSE = 0, _('False')
+    CTRUE  = 1, _('True')   # noqa: E221
+    CFALSE = 0, _('False')  # noqa: E221
 
 
 class EnabledDisabledChoice(models.TextChoices):
-    CENABLED  = 'true',  _('Enabled')
-    CDISABLED = 'false', _('Disabled')
+    CENABLED  = 'true',  _('Enabled')   # noqa: E221
+    CDISABLED = 'false', _('Disabled')  # noqa: E221
 
 
 class ConfirmChoice(models.TextChoices):
-    CNONE    = '',  _('')
-    CCONFIRM = '1', _('Confirm')
+    CNONE    = '',  _('')         # noqa: E221
+    CCONFIRM = '1', _('Confirm')  # noqa: E221
 
 
 class SettingTypeChoice(models.TextChoices):
-    CTEXT    = 'text'   , _('text')
-    CNUMERIC = 'numeric', _('numeric')
-    CARRAY   = 'array'  , _('array')
-    CBOOLEAN = 'boolean', _('boolean')
-    CCODE    = 'code'   , _('code')
-    CUUID    = 'uuid'   , _('uuid')
-    CNAME    = 'name'   , _('name')
-    CVAR     = 'var'    , _('var')
-    CDIR     = 'dir'    , _('dir')
+    CTEXT    = 'text',    _('text')     # noqa: E221
+    CNUMERIC = 'numeric', _('numeric')  # noqa: E221
+    CARRAY   = 'array',   _('array')    # noqa: E221
+    CBOOLEAN = 'boolean', _('boolean')  # noqa: E221
+    CCODE    = 'code',    _('code')     # noqa: E221
+    CUUID    = 'uuid',    _('uuid')     # noqa: E221
+    CNAME    = 'name',    _('name')     # noqa: E221
+    CVAR     = 'var',     _('var')      # noqa: E221
+    CDIR     = 'dir',     _('dir')      # noqa: E221
 
 
 class StatusDefaultChoice(models.TextChoices):
-    CNONE         = ''                      , _('Not Set')
-    CAVAILABLE    = 'Available'             , _('Available')
-    CAVAILABLEOD  = 'Available (On Demand)' , _('Available (On Demand)')
-    CLOGGEDOUT    = 'Logged Out'            , _('Logged Out')
-    CONBREAK      = 'On Break'              , _('On Break')
-    CDONOTDISTURB = 'Do Not Disturb'        , _('Do Not Disturb')
+    CNONE         = '',                       _('Not Set')                # noqa: E221
+    CAVAILABLE    = 'Available',              _('Available')              # noqa: E221
+    CAVAILABLEOD  = 'Available (On Demand)',  _('Available (On Demand)')  # noqa: E221
+    CLOGGEDOUT    = 'Logged Out',             _('Logged Out')             # noqa: E221
+    CONBREAK      = 'On Break',               _('On Break')               # noqa: E221
+    CDONOTDISTURB = 'Do Not Disturb',         _('Do Not Disturb')         # noqa: E221
 
 
 class TargetCategoryChoice(models.TextChoices):
-    CINTERNAL = 'internal' , _('Internal')
-    CEXTERNAL = 'external' , _('External')
-    CEMAIL    = 'e-mail'   , _('E-Mail')
+    CINTERNAL = 'internal',  _('Internal')  # noqa: E221
+    CEXTERNAL = 'external',  _('External')  # noqa: E221
+    CEMAIL    = 'e-mail',    _('E-Mail')    # noqa: E221
 
 
 class CallDirectionChoice(models.TextChoices):
-    CINBOUND  = 'inbound' , _('Inbound')
-    COUTBOUND = 'outbound', _('Outbound')
-
+    CINBOUND  = 'inbound',  _('Inbound')   # noqa: E221
+    COUTBOUND = 'outbound', _('Outbound')  # noqa: E221

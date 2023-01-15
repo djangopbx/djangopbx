@@ -29,6 +29,7 @@
 
 from rest_framework import permissions
 
+
 class UserApiAccessPermission(permissions.BasePermission):
     """
     Global User API permission check.
@@ -51,5 +52,3 @@ class MinorAdminApiAccessPermission(permissions.BasePermission):
     """
     def has_permission(self, request, view):
         return request.user.groups.filter(name="minor_admin_api").exists()
-
-

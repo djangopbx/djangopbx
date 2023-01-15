@@ -27,22 +27,28 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from  rest_framework  import serializers
+from rest_framework import serializers
 from .models import (
     Voicemail, VoicemailGreeting,
 )
 
 
 class VoicemailSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Voicemail
-        fields =['url', 'id', 'extension_id', 'password', 'greeting_id', 'alternate_greeting_id', 'mail_to', 'sms_to', 'cc', 'attach_file', 'local_after_email', 'enabled', 'description',
-                'created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'url', 'id', 'extension_id', 'password', 'greeting_id', 'alternate_greeting_id',
+                    'mail_to', 'sms_to', 'cc', 'attach_file', 'local_after_email', 'enabled', 'description',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
 
 
 class VoicemailGreetingSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = VoicemailGreeting
-        fields =['url', 'id', 'voicemail_id', 'filename', 'name', 'description',
-                'created', 'updated', 'synchronised', 'updated_by']
-
+        fields = [
+                    'url', 'id', 'voicemail_id', 'filename', 'name', 'description',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]

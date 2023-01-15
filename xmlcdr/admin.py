@@ -29,12 +29,11 @@
 
 from django.contrib import admin
 from pbx.commonfunctions import DomainFilter, DomainUtils
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 import json
 from django.forms import ModelForm
 from django_ace import AceWidget
-
 from .models import XmlCdr
 
 
@@ -43,15 +42,21 @@ class PrettyJSONWidget(AceWidget):
         value = json.dumps(json.loads(value), indent=4, sort_keys=True)
         return value
 
+
 class JsonEditAdminForm(ModelForm):
     class Meta:
         model = XmlCdr
         widgets = {
-            "xml": AceWidget(usesofttabs=False, showprintmargin=False, width="800px", height="400px", mode='xml', theme='cobalt', readonly=True),
-            "json": PrettyJSONWidget(usesofttabs=False, showprintmargin=False, width="800px", height="400px", mode=None, theme='cobalt', readonly=True),
+            "xml": AceWidget(
+                    usesofttabs=False, showprintmargin=False, width="800px",
+                    height="400px", mode='xml', theme='cobalt', readonly=True
+                    ),
+            "json": PrettyJSONWidget(
+                    usesofttabs=False, showprintmargin=False, width="800px",
+                    height="400px", mode=None, theme='cobalt', readonly=True
+                    ),
         }
         fields = '__all__'
-
 
 
 class XmlCdrResource(resources.ModelResource):
@@ -66,7 +71,8 @@ class XmlCdrAdmin(ImportExportModelAdmin):
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
-        (None,  {'fields': ['domain_id',
+        (None,  {'fields': [
+                        'domain_id',
                         'extension_id',
                         'domain_name',
                         'accountcode',
@@ -102,13 +108,16 @@ class XmlCdrAdmin(ImportExportModelAdmin):
                         'last_app',
                         'last_arg',
                         'missed_call',
-                        #'digits_dialed',
+                        # 'digits_dialed',
                         'pin_number',
                         'hangup_cause',
                         'hangup_cause_q850',
-                        'sip_hangup_disposition']}),
+                        'sip_hangup_disposition'
+                        ]}),
 
-        ('Conference',   {'fields': ['conference_name', 'conference_uuid', 'conference_member_id'], 'classes': ['collapse']}),
+        ('Conference',   {'fields': [
+                            'conference_name', 'conference_uuid', 'conference_member_id'
+                            ], 'classes': ['collapse']}),
         ('Call Centre',   {'fields': [
                         'cc_side',
                         'cc_member_uuid',
@@ -124,25 +133,27 @@ class XmlCdrAdmin(ImportExportModelAdmin):
                         'cc_queue_canceled_epoch',
                         'cc_cancel_reason',
                         'cc_cause',
-                        'waitsec',], 'classes': ['collapse']}),
+                        'waitsec'
+                        ], 'classes': ['collapse']}),
         ('JSON',   {'fields': ['json'], 'classes': ['collapse']}),
         ('XML',   {'fields': ['xml'], 'classes': ['collapse']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
-    list_display = ('extension_id', 'caller_id_name', 'caller_id_number', 'caller_destination', 'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause')
+    list_display = (
+        'extension_id', 'caller_id_name', 'caller_id_number', 'caller_destination',
+        'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause'
+        )
     list_filter = (DomainFilter, 'direction', 'hangup_cause',)
 
     ordering = [
-        '-start_stamp', 'extension_id' 
+        '-start_stamp', 'extension_id'
     ]
-
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
-
 
 
 admin.site.register(XmlCdr, XmlCdrAdmin)

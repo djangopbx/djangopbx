@@ -79,7 +79,7 @@ class VoicemailGreetingViewSet(viewsets.ModelViewSet):
 
 
 @login_required
-def listvoicemails(request, vmuuid = None, vmext = None, action = None):
+def listvoicemails(request, vmuuid=None, vmext=None, action=None):
     extension_list = request.session['extension_list'].split(',')
     if request.user.is_superuser:
         extension_list = AccountFunctions().list_superuser_extensions(request.session['domain_uuid'])
@@ -95,10 +95,10 @@ def listvoicemails(request, vmuuid = None, vmext = None, action = None):
             if '-ERR no reply' in vmstr:
                 info[e] = ['-', '-', '0', _('No Voicemail Messages'), '-']
             else:
-                #'1670780459:0:201:test1.djangopbx.com:inbox:/var/lib/freeswitch/storage/voicemail/default/test1.djangopbx.com/201/msg_2740d2b1-de55-4425-b71e-4215647642ea.wav:68d2c984-78da-4d13-a48e-2e800fc7506f:Test1:202:7'
+                # '1670780459:0:201:test1.djangopbx.com:inbox:/var/lib/freeswitch/storage/voicemail/default/test1.djangopbx.com/201/msg_2740d2b1-de55-4425-b71e-4215647642ea.wav:68d2c984-78da-4d13-a48e-2e800fc7506f:Test1:202:7'  # noqa: E501
                 vmlist = vmstr.split('\n')
                 for vm in vmlist:
-                    if not ':' in vm:
+                    if ':' not in vm:
                         continue
                     v = vm.split(':')
                     filename = os.path.basename(v[5])
@@ -117,8 +117,15 @@ def listvoicemails(request, vmuuid = None, vmext = None, action = None):
                             date_time.strftime("%d-%m-%Y, %H:%M:%S"),
                             v[8],
                             v[9],
-                            '<audio controls><source src="/fs/voicemail/default/%s/%s/%s" type="%s"> %s</audio>' % (request.session['domain_name'], e, filename, atype, _('Your browser does not support the audio tag.')),
+                            '<audio controls><source src="/fs/voicemail/default/%s/%s/%s" type="%s"> %s</audio>' % (
+                                request.session['domain_name'],
+                                e, filename, atype,
+                                _('Your browser does not support the audio tag.')
+                                ),
                             '<a href=\"/voicemail/listvoicemails/%s/%s/delete/\">%s</a>' % (v[6], v[2], _('Delete'))
                             ]
 
-    return render(request, 'infotablemulti.html', {'refresher' : 'listvoicemails', 'th' : th, 'info': info, 'title': 'Voicemails'})
+    return render(
+            request, 'infotablemulti.html',
+            {'refresher': 'listvoicemails', 'th': th, 'info': info, 'title': 'Voicemails'}
+            )

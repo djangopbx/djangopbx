@@ -29,10 +29,8 @@
 
 from django.contrib import admin
 from django.conf import settings
-from django.db import models
-
-from django.utils.translation import gettext, gettext_lazy as _
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from django.utils.translation import gettext_lazy as _
+from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
 
@@ -46,7 +44,7 @@ class MenuItemFilter(admin.SimpleListFilter):
     parameter_name = 'workarea'
 
     def lookups(self, request, model_admin):
-        mitms = [(c.id, c.title) for c in MenuItem.objects.filter(parent_id__isnull = True).order_by('title')]
+        mitms = [(c.id, c.title) for c in MenuItem.objects.filter(parent_id__isnull=True).order_by('title')]
         return [('all', _('All')), ('top', _('Top Level ( - )'))] + mitms
 
     def choices(self, cl):
@@ -60,19 +58,19 @@ class MenuItemFilter(admin.SimpleListFilter):
             }
 
     def queryset(self, request, queryset):
-        if self.value() == None:
+        if self.value() is None:
             return queryset.filter()
         if self.value() == 'top':
-            return queryset.filter(parent_id__isnull = True)
+            return queryset.filter(parent_id__isnull=True)
         if not self.value() == 'all':
-            return queryset.filter(parent_id = self.value())
+            return queryset.filter(parent_id=self.value())
 
 
 class MenuItemGroupInLine(admin.TabularInline):
     model = MenuItemGroup
     extra = 3
     fieldsets = [
-        (None,          {'fields': ['group_id' ]}),
+        (None,          {'fields': ['group_id']}),
     ]
 
 
@@ -88,7 +86,9 @@ class MenuItemAdmin(ImportExportModelAdmin):
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
 
     fieldsets = [
-        (None,          {'fields': ['menu_id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected', 'sequence', 'description' ]}),
+        (None,          {'fields': [
+            'menu_id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected', 'sequence', 'description'
+            ]}),
         ('Update Info.', {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     inlines = [MenuItemGroupInLine]
@@ -117,7 +117,9 @@ class MenuItemInLine(admin.TabularInline):
     model = MenuItem
     extra = 3
     fieldsets = [
-        (None,          {'fields': ['menu_id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected', 'sequence' ]}),
+        (None,          {'fields': [
+            'menu_id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected', 'sequence'
+            ]}),
     ]
     ordering = ['sequence']
 
@@ -131,6 +133,7 @@ class MenuResource(resources.ModelResource):
 class MenuAdmin(ImportExportModelAdmin):
     resource_class = MenuResource
     save_as = True
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline

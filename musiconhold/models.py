@@ -40,22 +40,22 @@ def user_directory_path(instance, filename):
 
 
 class MusicOnHold(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Music On Hold'))
-    domain_id  = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))
-    name       = models.CharField(max_length=32, default='default', verbose_name=_('Name'))
-    path       = models.CharField(max_length=256, default='$${sounds_dir}/music/default/', verbose_name=_('Path'))
-    rate       = models.DecimalField(max_digits=11, decimal_places=0, default=8000, verbose_name=_('Rate'))
-    shuffle    = models.CharField(max_length=8, default='true', verbose_name=_('Shuffle'))
-    channels   = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, verbose_name=_('Channels'))
-    interval   = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, verbose_name=_('Interval'))
-    timer_name = models.CharField(max_length=32, default='soft', verbose_name=_('Timer Name'))
-    chime_list = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Chime List'))
-    chime_freq = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, verbose_name=_('Chime Frequency'))
-    chime_max  = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, verbose_name=_('Chime Max.'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Music On Hold'))                                  # noqa: E501, E221
+    domain_id  = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))  # noqa: E501, E221
+    name       = models.CharField(max_length=32, default='default', verbose_name=_('Name'))                                                               # noqa: E501, E221
+    path       = models.CharField(max_length=256, default='$${sounds_dir}/music/default/', verbose_name=_('Path'))                                        # noqa: E501, E221
+    rate       = models.DecimalField(max_digits=11, decimal_places=0, default=8000, verbose_name=_('Rate'))                                               # noqa: E501, E221
+    shuffle    = models.CharField(max_length=8, default='true', verbose_name=_('Shuffle'))                                                                # noqa: E501, E221
+    channels   = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, verbose_name=_('Channels'))                                  # noqa: E501, E221
+    interval   = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, verbose_name=_('Interval'))                                  # noqa: E501, E221
+    timer_name = models.CharField(max_length=32, default='soft', verbose_name=_('Timer Name'))                                                            # noqa: E501, E221
+    chime_list = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Chime List'))                                                     # noqa: E501, E221
+    chime_freq = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, verbose_name=_('Chime Frequency'))                           # noqa: E501, E221
+    chime_max  = models.DecimalField(max_digits=11, decimal_places=0, blank=True, null=True, verbose_name=_('Chime Max.'))                                # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                              # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                  # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                            # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                          # noqa: E501, E221
 
     class Meta:
         verbose_name_plural = 'Music On Hold'
@@ -66,19 +66,23 @@ class MusicOnHold(models.Model):
 
 
 class MohFile(models.Model):
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))
-    moh_id    = models.ForeignKey('MusicOnHold', on_delete=models.CASCADE, verbose_name=_('Hold Music'))
-    filename  = PbxFileField(upload_to=user_directory_path, verbose_name=_('File Name'))
-    file_name = models.CharField(max_length=256, verbose_name=_('Name'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))  # noqa: E501, E221
+    moh_id    = models.ForeignKey('MusicOnHold', on_delete=models.CASCADE, verbose_name=_('Hold Music'))             # noqa: E501, E221
+    filename  = PbxFileField(upload_to=user_directory_path, verbose_name=_('File Name'))                             # noqa: E501, E221
+    file_name = models.CharField(max_length=256, verbose_name=_('Name'))                                             # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))         # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))             # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                       # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                     # noqa: E501, E221
 
     class Meta:
         verbose_name_plural = 'MOH Files'
         db_table = 'pbx_music_on_hold_files'
-        permissions = (("can_download_file", "can_download_file"), ("can_upload_file", "can_upload_file"), ("can_play_file", "can_play_file"))
+        permissions = (
+            ("can_download_file", "can_download_file"),
+            ("can_upload_file", "can_upload_file"),
+            ("can_play_file", "can_play_file")
+            )
 
     def __str__(self):
         return str(self.id)

@@ -43,10 +43,8 @@ from django.utils.html import format_html
 import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
-from django_tables2.export.views import ExportMixin
 
 from tenants.pbxsettings import PbxSettings
-
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -81,7 +79,9 @@ def xml_cdr_import(request):
     if request.method == 'POST':
         if debug:
             logger.info('XML CDR request: {}'.format(request.POST))
-        XmlCdrFunctions().xml_cdr_import(request.GET.get('uuid', 'a_none'), request.POST.get('cdr', '<?xml version=\"1.0\"?><none switchname=\"django-pbx-dev1\">'))
+        XmlCdrFunctions().xml_cdr_import(request.GET.get('uuid', 'a_none'), request.POST.get(
+            'cdr', '<?xml version=\"1.0\"?><none switchname=\"django-pbx-dev1\">'
+            ))
 
     return HttpResponse('')
 
@@ -104,13 +104,18 @@ class CdrViewerList(tables.Table):
     class Meta:
         model = XmlCdr
         attrs = {"class": "paleblue"}
-        fields = ('id', 'extension_id', 'direction', 'caller_id_name', 'caller_id_number', 'destination_number', 'caller_destination', 'recording', 'start_stamp', 'duration', 'status')
+        fields = (
+            'id', 'extension_id', 'direction', 'caller_id_name', 'caller_id_number', 'destination_number',
+            'caller_destination', 'recording', 'start_stamp', 'duration', 'status'
+            )
 
-    start_stamp = tables.DateTimeColumn(verbose_name=_('Date Time'), attrs = {"td": {"style" : "white-space: nowrap;"}}, format = 'Y-m-d H:i:s')
+    start_stamp = tables.DateTimeColumn(
+        verbose_name=_('Date Time'), attrs={"td": {"style": "white-space: nowrap;"}}, format='Y-m-d H:i:s'
+        )
     status = tables.Column(verbose_name=_('Status'), empty_values=())
     recording = tables.Column(verbose_name=_('Recording'), empty_values=())
 
-    #id = tables.Column(linkify=("selectcdr", [tables.A("id")]))
+    # id = tables.Column(linkify=("selectcdr", [tables.A("id")]))
     def render_id(self, value, record):
         return format_html('<a href=\"/xmlcdr/selectcdr/{}/\">{}</a>', value, str(value)[0:8])
 
@@ -134,8 +139,11 @@ class CdrViewerFilter(filters.FilterSet):
 
     class Meta:
         model = XmlCdr
-        fields = ['extension_id', 'direction', 'caller_id_name', 'caller_id_number', 'destination_number', 'caller_destination', 'start_stamp', 'end_stamp', 'duration']
-
+        fields = [
+            'extension_id', 'direction', 'caller_id_name', 'caller_id_number',
+            'destination_number', 'caller_destination', 'start_stamp',
+            'end_stamp', 'duration'
+            ]
 
 
 @method_decorator(login_required, name='dispatch')
@@ -168,7 +176,9 @@ def selectcdr(request, cdruuid=None):
     cache_key = 'switch:record_path'
     switch_record_path = cache.get(cache_key)
     if not switch_record_path:
-        switch_record_path = PbxSettings().default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True)[0]
+        switch_record_path = PbxSettings().default_settings(
+            'switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True
+            )[0]
         cache.set(cache_key, switch_record_path)
 
     extension_list = request.session['extension_list_uuid'].split(',')
@@ -197,7 +207,8 @@ def selectcdr(request, cdruuid=None):
             atype = 'audio/mpeg'
 
         record_path_tmp = cdr.record_path.replace(switch_record_path, cdr_record_path)
-        info[_('Recording')] = '<audio controls><source src="%s/%s" type="%s"> %s</audio>' % (record_path_tmp, cdr.record_name, atype, _('Your browser does not support the audio tag.'))
+        info[_('Recording')] = '<audio controls><source src="%s/%s" type="%s"> %s</audio>' % (
+                record_path_tmp, cdr.record_name, atype, _('Your browser does not support the audio tag.')
+                )
 
     return render(request, 'infotable.html', {'back': 'cdrviewer', 'info': info, 'title': 'Call Detail Record'})
-

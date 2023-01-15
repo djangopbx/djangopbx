@@ -34,9 +34,6 @@ from django.core.management import call_command
 from django.apps import apps
 
 
-from tenants.pbxsettings import PbxSettings
-
-
 class Command(BaseCommand):
     help = 'Load default menu'
 
@@ -51,6 +48,9 @@ class Command(BaseCommand):
 
         if r == 'true':
             menu_remove = True
+
+        if menu_remove:
+            pass
             # remove not yet implemented
 
         portal_path = apps.get_app_config('portal').path
@@ -85,4 +85,3 @@ class Command(BaseCommand):
                 print('Loading Menu for: %s' % defaults_file)
                 call_command('loaddata', defaults_file, verbosity=0)
                 Path(loaded_file).touch()
-

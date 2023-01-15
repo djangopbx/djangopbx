@@ -30,14 +30,13 @@
 from django.contrib import admin
 from django.conf import settings
 
-from django.db import models
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from .models import (
     SipProfile, SipProfileSetting, SipProfileDomain, SwitchVariable,
     AccessControl, AccessControlNode, EmailTemplate, Modules, IpRegister,
 )
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from switch.switchfunctions import SwitchFunctions
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
@@ -45,6 +44,7 @@ from pbx.commonfunctions import shcommand
 
 
 class SipProfileDomainResource(resources.ModelResource):
+
     class Meta:
         model = SipProfileDomain
         import_id_fields = ('id', )
@@ -74,7 +74,7 @@ class SipProfileDomainInLine(admin.TabularInline):
     classes = ['collapse']
     extra = 1
     fieldsets = [
-        (None,          {'fields': ['name', 'alias', 'parse' ]}),
+        (None,          {'fields': ['name', 'alias', 'parse']}),
     ]
     ordering = [
         'name'
@@ -82,6 +82,7 @@ class SipProfileDomainInLine(admin.TabularInline):
 
 
 class SipProfileSettingResource(resources.ModelResource):
+
     class Meta:
         model = SipProfileSetting
         import_id_fields = ('id', )
@@ -111,7 +112,7 @@ class SipProfileSettingInLine(admin.TabularInline):
     classes = ['collapse']
     extra = 2
     fieldsets = [
-        (None,          {'fields': ['name', 'value', 'enabled', 'description' ]}),
+        (None,          {'fields': ['name', 'value', 'enabled', 'description']}),
     ]
     ordering = [
         'name'
@@ -119,6 +120,7 @@ class SipProfileSettingInLine(admin.TabularInline):
 
 
 class SipProfileResource(resources.ModelResource):
+
     class Meta:
         model = SipProfile
         import_id_fields = ('id', )
@@ -140,6 +142,7 @@ def write_sip_profile_files(modeladmin, request, queryset):
 class SipProfileAdmin(ImportExportModelAdmin):
     resource_class = SipProfileResource
     save_as = True
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -182,6 +185,7 @@ class SipProfileAdmin(ImportExportModelAdmin):
 
 
 class SwitchVariableResource(resources.ModelResource):
+
     class Meta:
         model = SwitchVariable
         import_id_fields = ('id', )
@@ -206,7 +210,9 @@ class SwitchVariableAdmin(ImportExportModelAdmin):
     readonly_fields = ['name', 'created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['category', 'name', 'value', 'descrption']
     fieldsets = [
-        (None,  {'fields': ['category', 'name', 'value', 'command', 'hostname', 'enabled', 'sequence', 'description']}),
+        (None,  {'fields': [
+            'category', 'name', 'value', 'command', 'hostname', 'enabled', 'sequence', 'description'
+            ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('category', 'name', 'value', 'hostname', 'enabled', 'description')
@@ -236,7 +242,7 @@ class AccessControlNodeInLine(admin.TabularInline):
     model = AccessControlNode
     extra = 1
     fieldsets = [
-        (None,          {'fields': ['type', 'cidr', 'domain', 'description' ]}),
+        (None,          {'fields': ['type', 'cidr', 'domain', 'description']}),
     ]
     ordering = [
         'description'
@@ -244,6 +250,7 @@ class AccessControlNodeInLine(admin.TabularInline):
 
 
 class AccessControlResource(resources.ModelResource):
+
     class Meta:
         model = AccessControl
         import_id_fields = ('id', )
@@ -264,6 +271,7 @@ def write_acl_file(modeladmin, request, queryset):
 
 class AccessControlAdmin(ImportExportModelAdmin):
     resource_class = AccessControlResource
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -306,6 +314,7 @@ class AccessControlAdmin(ImportExportModelAdmin):
 
 
 class EmailTemplateResource(resources.ModelResource):
+
     class Meta:
         model = EmailTemplate
         import_id_fields = ('id', )
@@ -318,7 +327,10 @@ class EmailTemplateAdmin(ImportExportModelAdmin):
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['language', 'category', 'subcategory', 'descrption']
     fieldsets = [
-        (None,  {'fields': ['domain_id', 'language', 'category', 'subcategory', 'subject', 'type', 'body', 'enabled', 'description']}),
+        (None,  {'fields': [
+                'domain_id', 'language', 'category', 'subcategory', 'subject', 'type', 'body', 'enabled',
+                'description'
+                ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('language', 'category', 'subcategory', 'subject', 'type', 'enabled', 'description')
@@ -334,6 +346,7 @@ class EmailTemplateAdmin(ImportExportModelAdmin):
 
 
 class ModulesResource(resources.ModelResource):
+
     class Meta:
         model = Modules
         import_id_fields = ('id', )
@@ -405,7 +418,6 @@ class IpRegisterAdmin(ImportExportModelAdmin):
         'address'
     ]
 
-
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         if change:
@@ -417,14 +429,12 @@ class IpRegisterAdmin(ImportExportModelAdmin):
                 shcommand(["/usr/local/bin/fw-add-ipv4-sip-customer-list.sh", obj.address])
         super().save_model(request, obj, form, change)
 
-
     def delete_model(self, request, obj):
         if ':' in obj.address:
             shcommand(["/usr/local/bin/fw-delete-ipv6-sip-customer-list.sh", obj.address])
         else:
             shcommand(["/usr/local/bin/fw-delete-ipv4-sip-customer-list.sh", obj.address])
         super().delete_model(request, obj)
-
 
     def delete_queryset(self, request, queryset):
         for obj in queryset:
@@ -433,7 +443,6 @@ class IpRegisterAdmin(ImportExportModelAdmin):
             else:
                 shcommand(["/usr/local/bin/fw-delete-ipv4-sip-customer-list.sh", obj.address])
         super().delete_queryset(request, queryset)
-
 
 
 admin.site.register(SipProfile, SipProfileAdmin)
@@ -445,4 +454,3 @@ admin.site.register(IpRegister, IpRegisterAdmin)
 if settings.PBX_ADMIN_SHOW_ALL:
     admin.site.register(SipProfileSetting, SipProfileSettingAdmin)
     admin.site.register(SipProfileDomain, SipProfileDomainAdmin)
-

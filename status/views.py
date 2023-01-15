@@ -52,9 +52,15 @@ def fslogviewer(request):
 def djangopbx(request):
     info = {}
     info['Version<br>&nbsp;'] = get_version('pbx')
-    info['Git Branch'] = shcommand(['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'name-rev', '--name-only', 'HEAD'])
-    info['Git Commit'] = shcommand(['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'rev-parse', 'HEAD'])
-    git_origin = shcommand(['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'config', '--get', 'remote.origin.url']).replace('.git', '')
+    info['Git Branch'] = shcommand(
+        ['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'name-rev', '--name-only', 'HEAD']
+        )
+    info['Git Commit'] = shcommand(
+        ['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'rev-parse', 'HEAD']
+        )
+    git_origin = shcommand(
+        ['/usr/bin/git', '--git-dir=%s/.git' % settings.BASE_DIR, 'config', '--get', 'remote.origin.url']
+        ).replace('.git', '')
     if '@' in git_origin:
         git_origin = 'https://' + git_origin.split('@')[1]
     info['Git Origin<br>&nbsp;'] = git_origin
@@ -63,7 +69,7 @@ def djangopbx(request):
     es = EventSocket()
     if es.connect(*settings.EVSKT):
         fs_ver = es.send('api version')
-        z = re.match('FreeSWITCH Version (\d+\.\d+\.\d+(?:\.\d+)?).*\(.*?(\d+\w+)\s*\)', fs_ver)
+        z = re.match('FreeSWITCH Version (\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?).*\\(.*?(\\d+\\w+)\\s*\\)', fs_ver)
         info['Switch Version'] = '%s (%s)' % (z.groups()[0], z.groups()[1])
     info['Python Version'] = sys.version
 
@@ -93,13 +99,19 @@ def modules(request, moduuid=None, action=None):
             else:
                 messages.add_message(request, messages.WARN, _('Module %s Failed' % cmd))
 
-        mods = Modules.objects.filter(enabled = 'true').order_by('category', 'label')
+        mods = Modules.objects.filter(enabled='true').order_by('category', 'label')
         for m in mods:
             m_status = es.send('api module_exists %s' % m.name)
             if m_status == 'true':
-                info['<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)] = [running, '<a href=\"/status/modules/%s/stop/\">%s</a>' % (str(m.id), stop), m.description]
+                info[
+                    '<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)
+                    ] = [running, '<a href=\"/status/modules/%s/stop/\">%s</a>' % (str(m.id), stop), m.description]
             else:
-                info['<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)] = [stopped, '<a href=\"/status/modules/%s/start/\">%s</a>' % (str(m.id), start), m.description]
+                info[
+                    '<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)
+                    ] = [stopped, '<a href=\"/status/modules/%s/start/\">%s</a>' % (str(m.id), start), m.description]
 
-    return render(request, 'infotablemulti.html', {'refresher': 'modules', 'info': info, 'th': th, 'title': 'Modules Status'})
-
+    return render(
+        request, 'infotablemulti.html',
+        {'refresher': 'modules', 'info': info, 'th': th, 'title': 'Modules Status'}
+        )

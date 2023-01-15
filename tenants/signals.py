@@ -29,15 +29,16 @@
 
 from .models import Profile
 
+
 def create_or_edit_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
     try:
-        instance.profile.username   = instance.username
+        instance.profile.username = instance.username
     except Profile.DoesNotExist:
         Profile.objects.create(user=instance)
-        instance.profile.username   = instance.username
+        instance.profile.username = instance.username
 
     instance.profile.email = instance.email
     if instance.is_active:
@@ -46,4 +47,3 @@ def create_or_edit_user_profile(sender, instance, created, **kwargs):
         instance.profile.user_enabled = 'false'
 
     instance.profile.save()
-

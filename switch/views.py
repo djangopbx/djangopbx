@@ -27,7 +27,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
@@ -37,7 +36,8 @@ from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from .models import (
-    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable, AccessControl, AccessControlNode, EmailTemplate, Modules
+    SipProfileDomain, SipProfileSetting, SipProfile, SwitchVariable, AccessControl,
+    AccessControlNode, EmailTemplate, Modules
 )
 from .serializers import (
     SipProfileDomainSerializer, SipProfileSettingSerializer, SipProfileSerializer, SwitchVariableSerializer,
@@ -155,4 +155,3 @@ class ModulesViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
-

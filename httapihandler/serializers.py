@@ -27,15 +27,14 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from  rest_framework  import serializers
+from rest_framework import serializers
 from .models import (
     HttApiSession,
 )
 
 
 class HttApiSessionSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = HttApiSession
-        fields =['url', 'id', 'name', 'xml', 'json', 'created']
-
-
+        fields = ['url', 'id', 'name', 'xml', 'json', 'created']

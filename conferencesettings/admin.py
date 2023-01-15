@@ -28,11 +28,10 @@
 #
 
 from django.contrib import admin
-from django.utils.translation import gettext, gettext_lazy as _
 from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams
 )
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
 
@@ -64,7 +63,6 @@ class ConferenceControlDetailsAdmin(ImportExportModelAdmin):
 
 class ConferenceControlDetailsInLine(admin.TabularInline):
     model = ConferenceControlDetails
-    #classes = ['collapse']
     extra = 1
     fieldsets = [
         (None,          {'fields': ['digits', 'action', 'data', 'enabled']}),
@@ -83,6 +81,7 @@ class ConferenceControlsResource(resources.ModelResource):
 class ConferenceControlsAdmin(ImportExportModelAdmin):
     resource_class = ConferenceControlsResource
     save_as = True
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -141,7 +140,6 @@ class ConferenceProfileParamsAdmin(ImportExportModelAdmin):
 
 class ConferenceProfileParamsInLine(admin.TabularInline):
     model = ConferenceProfileParams
-    #classes = ['collapse']
     extra = 1
     fieldsets = [
         (None,          {'fields': ['name', 'value', 'enabled', 'description']}),
@@ -160,6 +158,7 @@ class ConferenceProfilesResource(resources.ModelResource):
 class ConferenceProfilesAdmin(ImportExportModelAdmin):
     resource_class = ConferenceProfilesResource
     save_as = True
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline

@@ -25,10 +25,12 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-
 from django import forms
 from django_ace import AceWidget
 
-class LogViewerForm(forms.Form):
-    logtext = forms.CharField(widget=AceWidget(showgutter=False, usesofttabs=False, showprintmargin=False, width="1200px", height="600px", mode='text', theme='cobalt'))
 
+class LogViewerForm(forms.Form):
+    logtext = forms.CharField(widget=AceWidget(
+        showgutter=False, usesofttabs=False, showprintmargin=False,
+        width="1200px", height="600px", mode='text', theme='cobalt'
+        ))

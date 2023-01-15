@@ -26,6 +26,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.db import models
+# from django.db import models
 
 # Create your models here.

@@ -50,10 +50,10 @@ def dialplan(request):
     if debug:
         logger.info('XML Handler request: {}'.format(request.POST))
 
-    call_context            = request.POST.get('Caller-Context', '')
-    hostname                = request.POST.get('FreeSWITCH-Switchname', '')
-    destination_number      = request.POST.get('Caller-Destination-Number', '')
-    hunt_context            = request.POST.get('Hunt-Context')
+    call_context = request.POST.get('Caller-Context', '')
+    hostname = request.POST.get('FreeSWITCH-Switchname', '')
+    destination_number = request.POST.get('Caller-Destination-Number', '')
+    hunt_context = request.POST.get('Hunt-Context')
     hunt_destination_number = request.POST.get('Hunt-Destination-Number')
 
     if hunt_context:
@@ -62,7 +62,7 @@ def dialplan(request):
     if hunt_destination_number:
         destination_number = hunt_destination_number
 
-    xml = xmlhf.GetDialplan(call_context, hostname, destination_number )
+    xml = xmlhf.GetDialplan(call_context, hostname, destination_number)
     if debug:
         logger.info('XML Handler response: {}'.format(xml))
 
@@ -70,7 +70,7 @@ def dialplan(request):
 
 
 def staticdialplan(request):
-    xmlhf = XmlHandlerFunctions()
+    xmlhf = DialplanHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
     if request.META['REMOTE_ADDR'] not in allowed_addresses:
@@ -100,12 +100,12 @@ def directory(request):
     if debug:
         logger.info('XML Handler request: {}'.format(request.POST))
 
-    purpose                = request.POST.get('purpose', '')
-    action                 = request.POST.get('action', '')
-    domain                 = request.POST.get('domain')
-    user                   = request.POST.get('user')
+    purpose = request.POST.get('purpose', '')
+    action = request.POST.get('action', '')
+    domain = request.POST.get('domain')
+    user = request.POST.get('user')
     event_calling_function = request.POST.get('Event-Calling-Function', '')
-    event_calling_file     = request.POST.get('Event-Calling-File', '')
+    event_calling_file = request.POST.get('Event-Calling-File', '')
 
     if purpose == 'gateways':
         xml = xmlhf.GetDomain()
@@ -131,7 +131,7 @@ def directory(request):
 
 
 def staticdirectory(request):
-    xmlhf = XmlHandlerFunctions()
+    xmlhf = DirectoryHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
     if request.META['REMOTE_ADDR'] not in allowed_addresses:
@@ -143,4 +143,3 @@ def staticdirectory(request):
         return HttpResponseNotFound()
 
     return HttpResponse(xml, content_type='application/xml')
-

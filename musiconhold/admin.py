@@ -29,11 +29,10 @@
 
 from django.contrib import admin
 from django.forms import ModelForm
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from django.forms.widgets import TextInput
-from pbx.commonfunctions import DomainFilter
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from .musiconholdfunctions import MohFunctions
@@ -42,11 +41,13 @@ from .models import (
     MusicOnHold, MohFile,
 )
 
+
 class MusicOnHoldFileInlineAdminForm(ModelForm):
+
     class Meta:
         model = MohFile
         widgets = {
-            "file_name": TextInput(attrs={'size':'60'}),
+            "file_name": TextInput(attrs={'size': '60'}),
         }
         fields = '__all__'
 
@@ -57,7 +58,7 @@ class MusicOnHoldFileInLine(admin.TabularInline):
 
     extra = 1
     fieldsets = [
-        (None,          {'fields': ['file_name', 'filename' ]}),
+        (None,          {'fields': ['file_name', 'filename']}),
     ]
     ordering = [
         'file_name'
@@ -85,6 +86,7 @@ def write_local_stream_file(modeladmin, request, queryset):
 
 class MusicOnHoldAdmin(ImportExportModelAdmin):
     resource_class = MusicOnHoldResource
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -92,9 +94,11 @@ class MusicOnHoldAdmin(ImportExportModelAdmin):
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
-        (None,  {'fields': ['domain_id', 'name', 'rate', 'path',
-                        'shuffle', 'channels', 'interval', 'timer_name',
-                        'chime_list', 'chime_freq', 'chime_max']}),
+        (None,  {'fields': [
+                    'domain_id', 'name', 'rate', 'path',
+                    'shuffle', 'channels', 'interval', 'timer_name',
+                    'chime_list', 'chime_freq', 'chime_max'
+                    ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('name', 'rate', 'path')
@@ -128,7 +132,6 @@ class MusicOnHoldAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         super().save_model(request, obj, form, change)
-
 
 
 admin.site.register(MusicOnHold, MusicOnHoldAdmin)

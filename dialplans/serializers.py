@@ -27,23 +27,30 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from  rest_framework  import serializers
+from rest_framework import serializers
 from .models import (
     Dialplan, DialplanDetail,
 )
 
 
 class DialplanSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Dialplan
-        fields =['url', 'id', 'domain_id', 'app_id', 'hostname', 'context',
-                'category', 'name', 'number', 'destination', 'dp_continue', 'xml', 'sequence', 'enabled', 'description',
-                'created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'url', 'id', 'domain_id', 'app_id', 'hostname', 'context',
+                    'category', 'name', 'number', 'destination', 'dp_continue',
+                    'xml', 'sequence', 'enabled', 'description',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
 
 
 class DialplanDetailSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = DialplanDetail
-        fields =['url', 'id', 'dialplan_id', 'tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence',
-                'created', 'updated', 'synchronised', 'updated_by']
-
+        fields = [
+                    'url', 'id', 'dialplan_id', 'tag', 'type', 'data',
+                    'dp_break', 'inline', 'group', 'sequence',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]

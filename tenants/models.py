@@ -44,44 +44,49 @@ from django.utils.html import mark_safe
 # Becomes effectivly the pbx users table
 #
 class Profile(models.Model):
+
     class Meta:
         db_table = "pbx_users"
 
-    user_uuid    = models.UUIDField(db_index=True, unique=True, default=uuid.uuid4, editable=False)
-    domain_id    = models.ForeignKey('Domain', models.SET_NULL, blank=True, null=True, verbose_name=_('Domain'))
-    username     = models.CharField(max_length=150, db_index=True, unique=True, verbose_name=_('User ID'))
-    email        = models.CharField(max_length=254, null=True, verbose_name=_('Email'))
-    status       = models.CharField(max_length=32, blank=True, choices=StatusDefaultChoice.choices, default=StatusDefaultChoice.CNONE, verbose_name=_('Status'))
-    api_key      = models.CharField(max_length=254, blank=True, null=True, editable=True, verbose_name=_('API Key'))
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
-    user         = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('User'))
+    user_uuid    = models.UUIDField(db_index=True, unique=True, default=uuid.uuid4, editable=False)                                                               # noqa: E501, E221
+    domain_id    = models.ForeignKey('Domain', models.SET_NULL, blank=True, null=True, verbose_name=_('Domain'))                                                  # noqa: E501, E221
+    username     = models.CharField(max_length=150, db_index=True, unique=True, verbose_name=_('User ID'))                                                        # noqa: E501, E221
+    email        = models.CharField(max_length=254, null=True, verbose_name=_('Email'))                                                                           # noqa: E501, E221
+    status       = models.CharField(max_length=32, blank=True, choices=StatusDefaultChoice.choices, default=StatusDefaultChoice.CNONE, verbose_name=_('Status'))  # noqa: E501, E221
+    api_key      = models.CharField(max_length=254, blank=True, null=True, editable=True, verbose_name=_('API Key'))                                              # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))        # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                      # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                          # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                    # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                  # noqa: E501, E221
+    user         = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('User'))                                                                   # noqa: E501, E221
 
     def __str__(self):
         return self.username
+
 
 #
 # Domains - each domain represents a tenant
 #
 class Domain(models.Model):
+
     class Meta:
         db_table = "pbx_domains"
         permissions = (("can_select_domain", "can_select_domain"),)
 
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name         = models.CharField(max_length=128, db_index=True, unique=True, verbose_name=_('Name'), help_text="Eg. tenant.djangopbx.com")
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                   # noqa: E501, E221
+    name         = models.CharField(max_length=128, db_index=True, unique=True, verbose_name=_('Name'), help_text="Eg. tenant.djangopbx.com")               # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))  # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                              # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                            # noqa: E501, E221
 
     def select_domain(self):
-        return mark_safe('<a class="grp-button" href="%s">%s</a>' % (reverse('selectdomain', args=[self.id]), _('Select Domain')))
+        return mark_safe('<a class="grp-button" href="%s">%s</a>' % (
+                    reverse('selectdomain', args=[self.id]), _('Select Domain')
+                    ))
 
     select_domain.short_description = _('Select Domain')
 
@@ -93,22 +98,23 @@ class Domain(models.Model):
 # ProfileSetting overrides both domain and default settings
 #
 class ProfileSetting(models.Model):
+
     class Meta:
         db_table = "pbx_user_settings"
 
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id      = models.ForeignKey('Profile', on_delete=models.CASCADE, verbose_name=_('User'))
-    category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))
-    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))
-    value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))
-    value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))
-    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                      # noqa: E501, E221
+    user_id      = models.ForeignKey('Profile', on_delete=models.CASCADE, verbose_name=_('User'))                                                              # noqa: E501, E221
+    category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))                                                                  # noqa: E501, E221
+    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
+    value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))  # noqa: E501, E221
+    value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                            # noqa: E501, E221
+    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                   # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))     # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                      # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                   # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                       # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                 # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                               # noqa: E501, E221
 
     def __str__(self):
         return f"{self.category}->{self.subcategory}: {self.value}"
@@ -118,23 +124,24 @@ class ProfileSetting(models.Model):
 # DomainSetting overrides default settings
 #
 class DomainSetting(models.Model):
+
     class Meta:
         db_table = "pbx_domain_settings"
 
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    domain_id    = models.ForeignKey('Domain', on_delete=models.CASCADE, verbose_name=_('Domain'))
-    app_uuid     = models.UUIDField(blank=True, null=True, editable=False)
-    category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))
-    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))
-    value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))
-    value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))
-    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                         # noqa: E501, E221
+    domain_id    = models.ForeignKey('Domain', on_delete=models.CASCADE, verbose_name=_('Domain'))                                                             # noqa: E501, E221
+    app_uuid     = models.UUIDField(blank=True, null=True, editable=False)                                                                                     # noqa: E501, E221
+    category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))                                                                  # noqa: E501, E221
+    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
+    value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))  # noqa: E501, E221
+    value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                            # noqa: E501, E221
+    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                   # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))     # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                      # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                   # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                       # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                 # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                               # noqa: E501, E221
 
     def __str__(self):
         return f"{self.category}->{self.subcategory}: {self.value}"
@@ -144,23 +151,22 @@ class DomainSetting(models.Model):
 # DefaultSetting - default settings
 #
 class DefaultSetting(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    app_uuid = models.UUIDField(blank=True, null=True, editable=False)
-    category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))
-    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))
-    value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))
-    value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))
-    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))
-    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                                # noqa: E501, E221
+    app_uuid = models.UUIDField(blank=True, null=True, editable=False)                                                                                         # noqa: E501, E221
+    category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))                                                                  # noqa: E501, E221
+    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
+    value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))  # noqa: E501, E221
+    value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                            # noqa: E501, E221
+    sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                   # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))     # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                      # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                   # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                       # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                 # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                               # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_default_settings'
 
     def __str__(self):
         return f"{self.category}->{self.subcategory}: {self.value}"
-

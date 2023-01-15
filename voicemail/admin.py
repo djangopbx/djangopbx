@@ -29,21 +29,21 @@
 
 from django.contrib import admin
 from django.forms import ModelForm
-from django.utils.translation import gettext, gettext_lazy as _
 from django.forms.widgets import TextInput
-from pbx.commonfunctions import DomainFilter, DomainUtils
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
 from .models import (
     Voicemail, VoicemailGreeting,
 )
 
+
 class VoicemailGreetingInlineAdminForm(ModelForm):
+
     class Meta:
         model = VoicemailGreeting
         widgets = {
-            "name": TextInput(attrs={'size':'60'}),
+            "name": TextInput(attrs={'size': '60'}),
         }
         fields = '__all__'
 
@@ -54,7 +54,7 @@ class VoicemailGreetingInLine(admin.TabularInline):
 
     extra = 1
     fieldsets = [
-        (None,          {'fields': ['name', 'filename' ]}),
+        (None,          {'fields': ['name', 'filename']}),
     ]
     ordering = [
         'filename'
@@ -69,6 +69,7 @@ class VoicemailResource(resources.ModelResource):
 
 class VoicemailAdmin(ImportExportModelAdmin):
     resource_class = VoicemailResource
+
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -80,12 +81,14 @@ class VoicemailAdmin(ImportExportModelAdmin):
         # To allow adding a voicemail record maually:
         # 1. Add extension_id to the field set below, just before password.
         # 2. Comment out the def has_add_permission.
-        (None,  {'fields': ['password', 'greeting_id', 'alternate_greeting_id',
-                        'mail_to', 'sms_to', 'cc', 'attach_file', 'local_after_email', 'enabled', 'description']}),
+        (None,  {'fields': [
+                    'password', 'greeting_id', 'alternate_greeting_id',
+                    'mail_to', 'sms_to', 'cc', 'attach_file', 'local_after_email', 'enabled', 'description'
+                    ]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('extension_id', 'mail_to', 'attach_file', 'local_after_email', 'enabled', 'description')
-    list_filter = ('enabled',)
+    list_filter = ('extension_id__domain_id', 'enabled',)
 
     ordering = [
         'extension_id'

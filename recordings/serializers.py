@@ -27,16 +27,17 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from  rest_framework  import serializers
+from rest_framework import serializers
 from .models import (
     Recording,
 )
 
 
 class RecordingSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Recording
-        fields =['url', 'id', 'domain_id', 'filename', 'name', 'description', 'base64',
-                'created', 'updated', 'synchronised', 'updated_by']
-
-
+        fields = [
+                    'url', 'id', 'domain_id', 'filename', 'name', 'description', 'base64',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]

@@ -34,8 +34,10 @@ from django.db.models import Q
 class Templates():
     def get_template(self, domain_id, lang, cat, subcat):
         try:
-            et = EmailTemplate.objects.get(Q(domain_id=domain_id) | Q(domain_id__isnull=True), enabled='true', language=lang, category=cat, subcategory=subcat)
+            et = EmailTemplate.objects.get(
+                    Q(domain_id=domain_id) | Q(domain_id__isnull=True),
+                    enabled='true', language=lang, category=cat, subcategory=subcat
+                    )
             return (et.subject, et.body, et.type)
         except EmailTemplate.DoesNotExist:
             return (None, None, None)
-

@@ -32,15 +32,14 @@ from django.utils.translation import gettext_lazy as _
 
 
 class HttApiSession(models.Model):
-    id      = models.UUIDField(primary_key=True, verbose_name=_('Session_ID'))
-    name    = models.CharField(max_length=32, verbose_name=_('Name'))
-    xml     = models.TextField(blank=True, null=True, verbose_name=_('XML'))
-    json    = models.JSONField(blank=True, null=True, verbose_name=_('json'))
-    created = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))
+    id      = models.UUIDField(primary_key=True, verbose_name=_('Session_ID'))                           # noqa: E501, E221
+    name    = models.CharField(max_length=32, verbose_name=_('Name'))                                    # noqa: E501, E221
+    xml     = models.TextField(blank=True, null=True, verbose_name=_('XML'))                             # noqa: E501, E221
+    json    = models.JSONField(blank=True, null=True, verbose_name=_('json'))                            # noqa: E501, E221
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))  # noqa: E501, E221
 
     class Meta:
         db_table = 'pbx_httapi_session'
 
     def __str__(self):
         return self.id
-

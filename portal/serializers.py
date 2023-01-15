@@ -27,34 +27,48 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from  rest_framework  import serializers
+from rest_framework import serializers
 from .models import (
     Menu, MenuItem, MenuItemGroup
 )
 
 
 class MenuSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Menu
-        fields =['url', 'id', 'name', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+        fields = ['url', 'id', 'name', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+
 
 class MenuNavSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Menu
-        fields =['name']
+        fields = ['name']
+
 
 class MenuItemSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MenuItem
-        fields =['url', 'id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected', 'sequence', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'url', 'id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected',
+                    'sequence', 'description', 'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
 
 class MenuItemNavSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MenuItem
-        fields =['id_str', 'parent_id_str', 'title', 'link', 'icon']
+        fields = ['id_str', 'parent_id_str', 'title', 'link', 'icon']
+
 
 class MenuItemGroupSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MenuItemGroup
-        fields =['url', 'id', 'menu_item_id', 'name', 'group_id', 'created', 'updated', 'synchronised', 'updated_by']
-
+        fields = [
+                    'url', 'id', 'menu_item_id', 'name', 'group_id',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]

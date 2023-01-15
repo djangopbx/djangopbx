@@ -33,7 +33,7 @@ from django.db.models import Q
 from dialplans.models import Dialplan
 from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
-from accounts.models import Extension, ExtensionUser, FollowMeDestination
+from accounts.models import Extension, ExtensionUser
 from voicemail.models import Voicemail
 
 
@@ -58,7 +58,6 @@ class XmlHandlerFunctions():
 ''')
         return xml_list
 
-
     def XmlHeader(self, name, context):
         xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="freeswitch/xml">
@@ -67,7 +66,6 @@ class XmlHandlerFunctions():
 '''
         return xml.format(name, context)
 
-
     def XmlFooter(self):
         return '''    </context>
   </section>
@@ -75,12 +73,13 @@ class XmlHandlerFunctions():
 '''
 
     def XrootDynamic(self):
-        return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<document type=\"freeswitch/xml\"></document>')
-
+        return etree.XML(
+                b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n'
+                b'<document type=\"freeswitch/xml\"></document>'
+                )
 
     def XrootStatic(self):
         return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
-
 
     def get_allowed_addresses(self):
         cache_key = 'xmlhandler:allowed_addresses'
@@ -96,12 +95,15 @@ class XmlHandlerFunctions():
 
 class DirectoryHandler(XmlHandlerFunctions):
 
-    def DirectoryAddDomain(self, domain, x_section, params = True, variables = True, groups = True):
+    def DirectoryAddDomain(self, domain, x_section, params=True, variables=True, groups=True):
         x_domain = etree.SubElement(x_section, "domain", name=domain, alias='true')
         if params:
             x_params = etree.SubElement(x_domain, "params")
             etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
-            etree.SubElement(x_params, "param", name='jsonrpc-allowed-event-channels', value='demo,conference,presence')
+            etree.SubElement(
+                x_params, "param", name='jsonrpc-allowed-event-channels',
+                value='demo,conference,presence'
+                )
         if variables:
             x_variables = etree.SubElement(x_domain, "variables")
             etree.SubElement(x_variables, "variable", name='default_language', value='$${default_language}')
@@ -116,7 +118,7 @@ class DirectoryHandler(XmlHandlerFunctions):
         return x_domain
 
     def DirectoryAddUserAcl(self, domain, x_users, e):
-        x_user =  etree.SubElement(x_users, "user", id=e.extension)
+        x_user = etree.SubElement(x_users, "user", id=e.extension)
         if e.cidr:
             x_user.set("cidr", e.cidr)
         return
@@ -124,7 +126,7 @@ class DirectoryHandler(XmlHandlerFunctions):
     def DirectoryAddUser(self, domain, user, number_as_presence_id, x_users, e, eu, v, cacheable):
         flag_vm_enabled = True
         vm_enabled = 'true'
-        if v == None:
+        if v is None:
             flag_vm_enabled = False
             vm_enabled = 'false'
 
@@ -137,9 +139,11 @@ class DirectoryHandler(XmlHandlerFunctions):
         if e.dial_string:
             dial_string = e.dial_string
         else:
-            dial_string = '{sip_invite_domain=%s,presence_id=%s}${sofia_contact(%s)}' % (domain, presence_id, destination)
+            dial_string = '{sip_invite_domain=%s,presence_id=%s}${sofia_contact(%s)}' % (
+                domain, presence_id, destination
+                )
 
-        x_user =  etree.SubElement(x_users, "user", id=user)
+        x_user = etree.SubElement(x_users, "user", id=user)
         if cacheable:
             x_user.set("cacheable", '60000')
 
@@ -169,10 +173,9 @@ class DirectoryHandler(XmlHandlerFunctions):
         etree.SubElement(x_params, "param", name='dial-string', value=dial_string)
         etree.SubElement(x_params, "param", name='verto-context', value=domain)
         etree.SubElement(x_params, "param", name='verto-dialplan', value='XML')
-        #etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
-        #etree.SubElement(x_params, "param", name='jsonrpc-allowed-event-channels', value='demo,conference,presence')
+        # etree.SubElement(x_params, "param", name='jsonrpc-allowed-methods', value='verto')
+        # etree.SubElement(x_params, "param", name='jsonrpc-allowed-event-channels', value='demo,conference,presence')
         x_variables = etree.SubElement(x_user, "variables")
-
 
         etree.SubElement(x_variables, "variable", name='domain_uuid', value=str(e.domain_id.id))
         etree.SubElement(x_variables, "variable", name='domain_name', value=domain)
@@ -190,7 +193,10 @@ class DirectoryHandler(XmlHandlerFunctions):
             if v.greeting_id:
                 etree.SubElement(x_variables, "variable", name='voicemail_greeting_number', value=str(v.greeting_id))
             if v.alternate_greeting_id:
-                etree.SubElement(x_variables, "variable", name='voicemail_alternate_greet_id', value=str(v.alternate_greeting_id))
+                etree.SubElement(
+                    x_variables, "variable", name='voicemail_alternate_greet_id',
+                    value=str(v.alternate_greeting_id)
+                    )
 
         if e.call_group:
             etree.SubElement(x_variables, "variable", name='call_group', value=e.call_group)
@@ -206,17 +212,35 @@ class DirectoryHandler(XmlHandlerFunctions):
         if e.user_context:
             etree.SubElement(x_variables, "variable", name='user_context', value=e.user_context)
         if e.effective_caller_id_name:
-            etree.SubElement(x_variables, "variable", name='effective_caller_id_name', value=e.effective_caller_id_name)
+            etree.SubElement(
+                x_variables, "variable", name='effective_caller_id_name',
+                value=e.effective_caller_id_name
+                )
         if e.effective_caller_id_number:
-            etree.SubElement(x_variables, "variable", name='effective_caller_id_number', value=e.effective_caller_id_number)
+            etree.SubElement(
+                x_variables, "variable", name='effective_caller_id_number',
+                value=e.effective_caller_id_number
+                )
         if e.outbound_caller_id_name:
-            etree.SubElement(x_variables, "variable", name='outbound_caller_id_name', value=e.outbound_caller_id_name)
+            etree.SubElement(
+                x_variables, "variable", name='outbound_caller_id_name',
+                value=e.outbound_caller_id_name
+                )
         if e.outbound_caller_id_number:
-            etree.SubElement(x_variables, "variable", name='outbound_caller_id_number', value=e.outbound_caller_id_number)
+            etree.SubElement(
+                x_variables, "variable", name='outbound_caller_id_number',
+                value=e.outbound_caller_id_number
+                )
         if e.emergency_caller_id_name:
-            etree.SubElement(x_variables, "variable", name='emergency_caller_id_name', value=e.emergency_caller_id_name)
+            etree.SubElement(
+                x_variables, "variable", name='emergency_caller_id_name',
+                value=e.emergency_caller_id_name
+                )
         if e.emergency_caller_id_number:
-            etree.SubElement(x_variables, "variable", name='emergency_caller_id_number', value=e.emergency_caller_id_number)
+            etree.SubElement(
+                x_variables, "variable", name='emergency_caller_id_number',
+                value=e.emergency_caller_id_number
+                )
         if e.missed_call_app:
             etree.SubElement(x_variables, "variable", name='missed_call_app', value=e.missed_call_app)
         if e.missed_call_data:
@@ -243,7 +267,7 @@ class DirectoryHandler(XmlHandlerFunctions):
         if e.sip_force_expires:
             etree.SubElement(x_variables, "variable", name='sip-force-expires', value=e.sip_force_expires)
         if e.nibble_account:
-            etree.SubElement(x_variables, "variable", name='nibble_accouint', value=nibble_account)
+            etree.SubElement(x_variables, "variable", name='nibble_accouint', value=e.nibble_account)
         if e.absolute_codec_string:
             etree.SubElement(x_variables, "variable", name='absolute_codec_string', value=e.absolute_codec_string)
         etree.SubElement(x_variables, "variable", name='force_ping', value=e.force_ping)
@@ -259,13 +283,25 @@ class DirectoryHandler(XmlHandlerFunctions):
             etree.SubElement(x_variables, "variable", name='forward_all_destination', value=e.forward_all_destination)
         etree.SubElement(x_variables, "variable", name='forward_busy_enabled', value=e.forward_busy_enabled)
         if e.forward_busy_destination:
-            etree.SubElement(x_variables, "variable", name='forward_busy_destination', value=e.forward_busy_destination)
+            etree.SubElement(
+                x_variables, "variable", name='forward_busy_destination',
+                value=e.forward_busy_destination
+                )
         etree.SubElement(x_variables, "variable", name='forward_no_answer_enabled', value=e.forward_no_answer_enabled)
         if e.forward_no_answer_destination:
-            etree.SubElement(x_variables, "variable", name='forward_no_answer_destination', value=e.forward_no_answer_destination)
-        etree.SubElement(x_variables, "variable", name='forward_user_not_registered_enabled', value=e.forward_user_not_registered_enabled)
+            etree.SubElement(
+                x_variables, "variable", name='forward_no_answer_destination',
+                value=e.forward_no_answer_destination
+                )
+        etree.SubElement(
+                x_variables, "variable", name='forward_user_not_registered_enabled',
+                value=e.forward_user_not_registered_enabled
+                )
         if e.forward_user_not_registered_destination:
-            etree.SubElement(x_variables, "variable", name='forward_user_not_registered_destination', value=e.forward_user_not_registered_destination)
+            etree.SubElement(
+                x_variables, "variable", name='forward_user_not_registered_destination',
+                value=e.forward_user_not_registered_destination
+                )
         etree.SubElement(x_variables, "variable", name='follow_me_enabled', value=e.follow_me_enabled)
         if e.follow_me_destinations:
             etree.SubElement(x_variables, "variable", name='follow_me_destinations', value=e.follow_me_destinations)
@@ -275,13 +311,12 @@ class DirectoryHandler(XmlHandlerFunctions):
         etree.SubElement(x_variables, "variable", name='export_vars', value='domain_name')
         return
 
-
     def DirectoryPopulate(self, domain, x_users, e):
-        x_user =  etree.SubElement(x_users, "user", id=e.extension)
-        sip_from_number = e.extension
+        x_user = etree.SubElement(x_users, "user", id=e.extension)
+        # sip_from_number = e.extension
         if e.number_alias:
             x_user.set("number-alias", e.number_alias)
-            sip_from_number = e.number_alias
+            # sip_from_number = e.number_alias
 
         x_params = etree.SubElement(x_user, "params")
         etree.SubElement(x_params, "param", name='directory-visible', value=e.directory_visible)
@@ -291,16 +326,14 @@ class DirectoryHandler(XmlHandlerFunctions):
         etree.SubElement(x_variables, "variable", name='directory-exten-visible', value=e.directory_exten_visible)
         return
 
-
     def DirectoryReverseAuth(self, domain, user, x_users, password):
-        x_user =  etree.SubElement(x_users, "user", id=e.extension)
-        x_params =  etree.SubElement(x_user, "params")
+        x_user = etree.SubElement(x_users, "user", id=user)
+        x_params = etree.SubElement(x_user, "params")
         etree.SubElement(x_params, "param", name='reverse-auth-user', value=user)
         etree.SubElement(x_params, "param", name='reverse-auth-pass', value=password)
         return
 
-
-    def GetDirectory(self, domain, user, cacheable = True):
+    def GetDirectory(self, domain, user, cacheable=True):
         if not domain:
             xml = self.NotFoundXml()
             return xml
@@ -312,8 +345,10 @@ class DirectoryHandler(XmlHandlerFunctions):
         number_as_presence_id = cache.get(cache_key)
         if not number_as_presence_id:
             try:
-                number_as_presence_id = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')[0]
-            except:
+                number_as_presence_id = PbxSettings().default_settings(
+                    'xmlhandler', 'number_as_presence_id', 'boolean'
+                    )[0]
+            except KeyError:
                 number_as_presence_id = 'false'
             cache.set(cache_key, number_as_presence_id)
 
@@ -327,14 +362,16 @@ class DirectoryHandler(XmlHandlerFunctions):
         if xml:
             return xml
 
-        e = Extension.objects.filter((Q(extension = user) | Q(number_alias = user)), domain_id__name = domain, enabled = 'true').first()
-        if e == None:
+        e = Extension.objects.filter(
+                (Q(extension=user) | Q(number_alias=user)), domain_id__name=domain, enabled='true'
+                ).first()
+        if e is None:
             xml = self.NotFoundXml()
             cache.set(directory_cache_key, xml)
             return xml
 
-        v = Voicemail.objects.filter(extension_id__extension = user, enabled = 'true').first()
-        eu = ExtensionUser.objects.filter(extension_id = e.id, default_user = 'true').first()
+        v = Voicemail.objects.filter(extension_id__extension=user, enabled='true').first()
+        eu = ExtensionUser.objects.filter(extension_id=e.id, default_user='true').first()
 
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
@@ -347,16 +384,18 @@ class DirectoryHandler(XmlHandlerFunctions):
         cache.set(directory_cache_key, xml)
         return xml
 
-
-    def GetAcl(self, domain = None):
+    def GetAcl(self, domain=None):
         if domain:
-            es = Extension.objects.select_related('domain_id').filter(domain_id__name = domain, enabled = 'true').exclude(cidr__isnull = True).exclude(cidr__exact = '').order_by('domain_id')
+            es = Extension.objects.select_related('domain_id').filter(
+                domain_id__name=domain, enabled='true'
+                ).exclude(cidr__isnull=True).exclude(cidr__exact='').order_by('domain_id')
         else:
-            es = Extension.objects.select_related('domain_id').filter(enabled = 'true').exclude(cidr__isnull = True).exclude(cidr__exact = '').order_by('domain_id')
+            es = Extension.objects.select_related('domain_id').filter(
+                enabled='true'
+                ).exclude(cidr__isnull=True).exclude(cidr__exact='').order_by('domain_id')
 
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
-
 
         last_domain = 'None'
         for e in es:
@@ -369,9 +408,8 @@ class DirectoryHandler(XmlHandlerFunctions):
         xml = str(etree.tostring(x_root), "utf-8")
         return xml
 
-
     def GetDomain(self):
-        ds = Domain.objects.filter(enabled = 'true').order_by('name')
+        ds = Domain.objects.filter(enabled='true').order_by('name')
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
 
@@ -381,7 +419,6 @@ class DirectoryHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         return xml
-
 
     def GetGroupCall(self, domain):
         if not domain:
@@ -393,7 +430,9 @@ class DirectoryHandler(XmlHandlerFunctions):
         if xml:
             return xml
 
-        es = Extension.objects.select_related('domain_id').filter(domain_id__name = domain, enabled = 'true').exclude(call_group__isnull = True).exclude(call_group = '').order_by('call_group')
+        es = Extension.objects.select_related('domain_id').filter(
+                domain_id__name=domain, enabled='true'
+                ).exclude(call_group__isnull=True).exclude(call_group='').order_by('call_group')
         cg_dict = {}
         for e in es:
             if ',' in e.call_group:
@@ -420,7 +459,6 @@ class DirectoryHandler(XmlHandlerFunctions):
         cache.set(directory_cache_key, xml)
         return xml
 
-
     def GetReverseAuthLookup(self, domain, user):
         if not domain:
             xml = self.NotFoundXml()
@@ -433,8 +471,10 @@ class DirectoryHandler(XmlHandlerFunctions):
         if xml:
             return xml
 
-        e = Extension.objects.filter((Q(extension = user) | Q(number_alias = user)), domain_id__name = domain, enabled = 'true').first()
-        if e == None:
+        e = Extension.objects.filter(
+                (Q(extension=user) | Q(number_alias=user)), domain_id__name=domain, enabled='true'
+                ).first()
+        if e is None:
             xml = self.NotFoundXml()
             cache.set(directory_cache_key, xml)
             return xml
@@ -450,12 +490,17 @@ class DirectoryHandler(XmlHandlerFunctions):
         cache.set(directory_cache_key, xml)
         return xml
 
-
-    def GetPopulateDirectory(self, domain = None):
+    def GetPopulateDirectory(self, domain=None):
         if domain:
-            es = Extension.objects.select_related('domain_id').filter((Q(directory_visible = 'true') | Q(directory_exten_visible = 'true')), domain_id__name = domain, enabled = 'true').order_by('domain_id')
+            es = Extension.objects.select_related('domain_id').filter(
+                (Q(directory_visible='true') | Q(directory_exten_visible='true')),
+                domain_id__name=domain, enabled='true'
+                ).order_by('domain_id')
         else:
-            es = Extension.objects.select_related('domain_id').filter((Q(directory_visible = 'true') | Q(directory_exten_visible = 'true')), enabled = 'true').order_by('domain_id')
+            es = Extension.objects.select_related('domain_id').filter(
+                (Q(directory_visible='true') | Q(directory_exten_visible='true')),
+                enabled='true'
+                ).order_by('domain_id')
 
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='directory')
@@ -471,11 +516,10 @@ class DirectoryHandler(XmlHandlerFunctions):
         xml = str(etree.tostring(x_root), "utf-8")
         return xml
 
-
-    def GetDirectoryStatic(self, number_as_presence_id, cacheable = False):
+    def GetDirectoryStatic(self, number_as_presence_id, cacheable=False):
         try:
             number_as_presence_id = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')[0]
-        except:
+        except KeyError:
             number_as_presence_id = 'false'
 
         if number_as_presence_id == 'true':
@@ -484,14 +528,16 @@ class DirectoryHandler(XmlHandlerFunctions):
             number_as_presence_id = False
 
         x_root = self.XrootStatic()
-        es = Extension.objects.select_related('domain_id').prefetch_related('extensionuser', 'voicemail').filter(enabled = 'true').order_by('domain_id')
+        es = Extension.objects.select_related('domain_id').prefetch_related('extensionuser', 'voicemail').filter(
+                enabled='true'
+                ).order_by('domain_id')
         last_domain = 'None'
         for e in es:
             if not last_domain == e.domain_id.name:
                 last_domain = e.domain_id.name
                 x_users = self.DirectoryAddDomain(e.domain_id.name, x_root)
-            v = e.voicemail.filter(enabled = 'true').first()
-            eu = e.extensionuser.filter(default_user = 'true').first()
+            v = e.voicemail.filter(enabled='true').first()
+            eu = e.extensionuser.filter(default_user='true').first()
             self.DirectoryAddUser(e.domain_id.name, e.extension, number_as_presence_id, x_users, e, eu, v, cacheable)
 
         etree.indent(x_root)
@@ -527,14 +573,26 @@ class DialplanHandler(XmlHandlerFunctions):
         xml_list.append(self.XmlHeader('dialplan', call_context))
 
         if context_name == 'public' and context_type == 'single':
-            xml_list.extend(Dialplan.objects.filter((Q(category = 'Inbound route',  xml__isnull = False, number = destination_number) | Q(context__contains='public', domain_id__isnull=True)), (Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
+            xml_list.extend(Dialplan.objects.filter(
+                (Q(
+                    category='Inbound route',  xml__isnull=False,
+                    number=destination_number
+                    ) | Q(context__contains='public', domain_id__isnull=True)),
+                (Q(hostname=hostname) | Q(hostname__isnull=True)), enabled='true'
+                ).values_list('xml', flat=True).order_by('sequence'))
             if len(xml_list) == 1:
                 xml_list = self.NotFoundPublic(xml_list)
         else:
             if context_name == "public" or ('@' in context_name):
-                xml_list.extend(Dialplan.objects.filter((Q(hostname = hostname) | Q(hostname__isnull=True)),  xml__isnull = False, context = call_context, enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
+                xml_list.extend(Dialplan.objects.filter(
+                    (Q(hostname=hostname) | Q(hostname__isnull=True)),  xml__isnull=False,
+                    context=call_context, enabled='true'
+                    ).values_list('xml', flat=True).order_by('sequence'))
             else:
-                xml_list.extend(Dialplan.objects.filter((Q(context = call_context) | Q(context = '${domain_name}')), (Q(hostname = hostname) | Q(hostname__isnull=True)),  xml__isnull = False, enabled = 'true').values_list('xml', flat=True).order_by('sequence'))
+                xml_list.extend(Dialplan.objects.filter(
+                    (Q(context=call_context) | Q(context='${domain_name}')),
+                    (Q(hostname=hostname) | Q(hostname__isnull=True)),  xml__isnull=False, enabled='true'
+                    ).values_list('xml', flat=True).order_by('sequence'))
 
         if len(xml_list) == 0:
             return self.NotFoundXml()
@@ -546,16 +604,17 @@ class DialplanHandler(XmlHandlerFunctions):
         cache.set(dialplan_cache_key, xml)
         return xml
 
-
     def GetDialplanStatic(self, hostname):
         xml_list = list()
         xml_list.append('<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<include>\n')
-        dps = Dialplan.objects.filter((Q(hostname = hostname) | Q(hostname__isnull=True)), enabled = 'true').order_by('context', 'sequence')
+        dps = Dialplan.objects.filter(
+                (Q(hostname=hostname) | Q(hostname__isnull=True)), enabled='true'
+                ).order_by('context', 'sequence')
         start = True
         dp_count = 0
         for d in dps:
             dp_count += 1
-            if start == True:
+            if start:
                 start = False
                 last_context = d.context
                 xml_list.append('<context name=\"{}\">\n'.format(d.context))
@@ -572,4 +631,3 @@ class DialplanHandler(XmlHandlerFunctions):
             return xml
 
         return self.NotFoundXml()
-
