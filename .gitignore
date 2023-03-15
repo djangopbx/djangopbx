@@ -3,3 +3,4 @@ __pycache__/
 *.log
 *.loaded
 django-pbx.sock
+ahftest.py

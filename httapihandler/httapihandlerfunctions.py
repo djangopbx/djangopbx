@@ -218,6 +218,7 @@ class FollowMeHandler(HttApiHandlerFunctions):
         self.get_common_variables()
         fmd = FollowMeDestination.objects.select_related('extension_id').filter(extension_id=self.extension_uuid)
 
+
         print(fmd)
 
         x_root = self.XrootApi()
