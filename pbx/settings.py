@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'firewall.apps.FirewallConfig',
     'status.apps.StatusConfig',
     'conferencesettings.apps.ConferencesettingsConfig',
+    'provision.apps.ProvisionConfig',
 ]
 
 MIDDLEWARE = [
