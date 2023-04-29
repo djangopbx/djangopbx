@@ -35,6 +35,10 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class PlaceholderChoice(models.TextChoices):
+    CNONE  = '',  ''              # noqa: E221
+
+
 class EnabledTrueFalseNoneChoice(models.TextChoices):
     CNONE  = '',  ''              # noqa: E221
     CTRUE  = 'true',  _('True')   # noqa: E221

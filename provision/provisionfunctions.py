@@ -27,22 +27,41 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-#import os
+import os
 #import socket
-#from django.conf import settings
+from django.conf import settings
 #from lxml import etree
 #from io import StringIO
 import provision.models
 #from tenants.pbxsettings import PbxSettings
 #from pbx.commonfunctions import shcommand
+from .models import DeviceVendors, DeviceVendorFunctions
 
 
 class DeviceVendorFunctionChoice():
-    def choices(self):
+    def choices(self, vendor=None):
         # This try/except is a workaround to prevent a relation not found error on initial migrate
         try:
-            return [(c.name, c.name) for c in switch.models.DeviceVendorFunctions.objects.filter(enabled='true')]
-        except switch.models.DeviceVendorFunctions.DoesNotExist:
+            if vendor:
+                return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]
+            return [(c.value, '%s -> %s' % (c.vendor_id.name, c.name)) for c in DeviceVendorFunctions.objects.filter(enabled='true')]
+        except DeviceVendorFunctions.DoesNotExist:
             return [('None', 'None')]
 
+
+class ProvisionFunctions():
+    template_list = []
+
+    def __init__(self):
+        self.path_of_templates = settings.BASE_DIR / 'provision/templates/provision'
+
+    def get_template_list(self):
+        vendor_list = DeviceVendors.objects.filter(enabled='true')
+        for v in vendor_list:
+            for it in os.scandir(os.path.join(self.path_of_templates, v.name)):
+                if it.is_dir():
+                    relpath = os.path.relpath(it.path, start=self.path_of_templates)
+                    self.template_list.append((relpath, relpath))
+        self.template_list.sort()
+        return self.template_list
 

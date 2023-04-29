@@ -31,7 +31,7 @@ from django.db import models
 import uuid
 from django.utils.translation import gettext_lazy as _
 from pbx.commonchoices import (
-    EnabledTrueFalseChoice, EnabledTrueFalseNoneChoice,
+    EnabledTrueFalseChoice, EnabledTrueFalseNoneChoice
 )
 
 
@@ -51,6 +51,13 @@ class DeviceKeyCategoryChoice(models.TextChoices):
     CEXPANSION6  = 'expansion-6', _('Expansion 6')    # noqa: E221
 
 
+class LineTransportChoice(models.TextChoices):
+    CUDP    = 'udp',     _('UDP')     # noqa: E221
+    CTCP    = 'tcp',     _('TCP')     # noqa: E221
+    CTLS    = 'tls',     _('TLS')     # noqa: E221
+    CDNSSRV = 'dns srv', _('DNS SRV') # noqa: E221
+
+
 class DeviceVendors(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Vendor'))                                                            # noqa: E501, E221
     name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                                     # noqa: E501, E221
@@ -62,6 +69,7 @@ class DeviceVendors(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                               # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Vendors'
         db_table = 'pbx_device_vendors'
 
     def __str__(self):
@@ -81,10 +89,22 @@ class DeviceVendorFunctions(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                               # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Vendor Functions'
         db_table = 'pbx_device_vendor_functions'
 
     def __str__(self):
         return self.name
+
+
+class DeviceVendorFunctionChoice():
+    def choices(self, vendor=None):
+        # This try/except is a workaround to prevent a relation not found error on initial migrate
+        try:
+            if vendor:
+                return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]
+            return [(c.value, '%s -> %s' % (c.vendor_id.name, c.name)) for c in DeviceVendorFunctions.objects.filter(enabled='true')]
+        except DeviceVendorFunctions.DoesNotExist:
+            return [('None', 'None')]
 
 
 class DeviceVendorFunctionGroups(models.Model):
@@ -97,6 +117,7 @@ class DeviceVendorFunctionGroups(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                               # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Vendor Function Groups'
         db_table = 'pbx_device_vendor_function_groups'
 
     def __str__(self):
@@ -106,6 +127,7 @@ class DeviceVendorFunctionGroups(models.Model):
 class DeviceProfiles(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Profile'))                                                           # noqa: E501, E221
     domain_id    = models.ForeignKey('tenants.Domain', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))                                              # noqa: E501, E221
+    vendor       = models.ForeignKey('DeviceVendors', on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Vendor'))                                              # noqa: E501, E221
     name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                                     # noqa: E501, E221
     enabled      = models.CharField(max_length=8, blank=True, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))         # noqa: E501, E221
     description  = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                                      # noqa: E501, E221
@@ -115,6 +137,7 @@ class DeviceProfiles(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                               # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Profiles'
         db_table = 'pbx_device_profiles'
 
     def __str__(self):
@@ -123,7 +146,7 @@ class DeviceProfiles(models.Model):
 
 class DeviceProfileSettings(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Setting'))                                                           # noqa: E501, E221
-    device_id    = models.ForeignKey('Devices', db_column='device_id', on_delete=models.CASCADE, verbose_name=_('Device'))                                                     # noqa: E501, E221
+    profile_id   = models.ForeignKey('DeviceProfiles', db_column='profile_id', on_delete=models.CASCADE, verbose_name=_('Profile'))                                            # noqa: E501, E221
     name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                                     # noqa: E501, E221
     value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                                            # noqa: E501, E221
     enabled      = models.CharField(max_length=8, blank=True, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))         # noqa: E501, E221
@@ -134,6 +157,7 @@ class DeviceProfileSettings(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                               # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Profile Settings'
         db_table = 'pbx_device_profile_settings'
 
     def __str__(self):
@@ -142,11 +166,11 @@ class DeviceProfileSettings(models.Model):
 
 class DeviceProfileKeys(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Key'))                                                                  # noqa: E501, E221
-    profile_id   = models.ForeignKey('Devices', db_column='profile_id', on_delete=models.CASCADE, verbose_name=_('Profile'))                                                      # noqa: E501, E221
+    profile_id   = models.ForeignKey('DeviceProfiles', db_column='profile_id', on_delete=models.CASCADE, verbose_name=_('Profile'))                                               # noqa: E501, E221
     category     = models.CharField(max_length=16, blank=True, choices=DeviceKeyCategoryChoice.choices, default=DeviceKeyCategoryChoice.CLINE, verbose_name=_('Category'))        # noqa: E501, E221
     key_id       = models.DecimalField(max_digits=11, decimal_places=0, default=1, verbose_name=_('Key'))                                                                         # noqa: E501, E221
     #vendor_id    = models.ForeignKey('DeviceVendors', db_column='vendor_id', on_delete=models.CASCADE, verbose_name=_('Vendor'))                                                 # noqa: E501, E221
-    key_type     = models.CharField(max_length=64, verbose_name=_('Key type'))                                                                                                    # noqa: E501, E221
+    key_type     = models.CharField(max_length=64, choices=DeviceVendorFunctionChoice().choices(), verbose_name=_('Key type'))                                                    # noqa: E501, E221
     line         = models.DecimalField(max_digits=3, decimal_places=0, default=1, verbose_name=_('Line'))                                                                         # noqa: E501, E221
     value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                                               # noqa: E501, E221
     extension    = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Extension'))                                                                            # noqa: E501, E221
@@ -159,6 +183,7 @@ class DeviceProfileKeys(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                                  # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Profile Keys'
         db_table = 'pbx_device_profile_keys'
 
     def __str__(self):
@@ -182,13 +207,14 @@ class Devices(models.Model):
     provisioned_method = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Prov. Method'))                                                                # noqa: E501, E221
     enabled            = models.CharField(max_length=8, blank=True, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))   # noqa: E501, E221
     description        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                                # noqa: E501, E221
-    provisioned_ip     = models.GenericIPAddressField(protocol='both', unpack_ipv4=False, unique=True, verbose_name=_('Provisioned Address'))                                  # noqa: E501, E221
+    provisioned_ip     = models.GenericIPAddressField(blank=True, null=True, protocol='both', unpack_ipv4=False, unique=True, verbose_name=_('Provisioned Address'))           # noqa: E501, E221
     created            = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                             # noqa: E501, E221
     updated            = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                 # noqa: E501, E221
     synchronised       = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                           # noqa: E501, E221
     updated_by         = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                         # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Devices'
         db_table = 'pbx_devices'
 
     def __str__(self):
@@ -209,7 +235,7 @@ class DeviceLines(models.Model):
     auth_id = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Auth ID'))                                                                               # noqa: E501, E221
     password = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Password'))                                                                             # noqa: E501, E221
     sip_port = models.DecimalField(max_digits=5, decimal_places=0, default=5060, blank=True, null=True, verbose_name=_('SIP Port'))                                            # noqa: E501, E221
-    sip_transport = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                                           # noqa: E501, E221
+    sip_transport = models.CharField(max_length=254, blank=True, null=True, choices=LineTransportChoice.choices, default=LineTransportChoice.CUDP, verbose_name=_('Transport'))# noqa: E501, E221
     register_expires = models.DecimalField(max_digits=5, decimal_places=0, default=1800, blank=True, null=True, verbose_name=_('Expires'))                                     # noqa: E501, E221
     shared_line = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Shared Line'))                                                                       # noqa: E501, E221
     enabled      = models.CharField(max_length=8, blank=True, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))         # noqa: E501, E221
@@ -219,6 +245,7 @@ class DeviceLines(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                               # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Lines'
         db_table = 'pbx_device_lines'
 
     def __str__(self):
@@ -231,7 +258,7 @@ class DeviceKeys(models.Model):
     category     = models.CharField(max_length=16, blank=True, choices=DeviceKeyCategoryChoice.choices, default=DeviceKeyCategoryChoice.CLINE, verbose_name=_('Category'))        # noqa: E501, E221
     key_id       = models.DecimalField(max_digits=11, decimal_places=0, default=1, verbose_name=_('Key'))                                                                         # noqa: E501, E221
     #vendor_id    = models.ForeignKey('DeviceVendors', db_column='vendor_id', on_delete=models.CASCADE, verbose_name=_('Vendor'))                                                 # noqa: E501, E221
-    key_type     = models.CharField(max_length=64, verbose_name=_('Key type'))                                                                                                    # noqa: E501, E221
+    key_type     = models.CharField(max_length=64, choices=DeviceVendorFunctionChoice().choices(), verbose_name=_('Key type'))                                                    # noqa: E501, E221
     line         = models.DecimalField(max_digits=3, decimal_places=0, default=1, verbose_name=_('Line'))                                                                         # noqa: E501, E221
     value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                                               # noqa: E501, E221
     extension    = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Extension'))                                                                            # noqa: E501, E221
@@ -244,6 +271,7 @@ class DeviceKeys(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                                  # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Keys'
         db_table = 'pbx_device_keys'
 
     def __str__(self):
@@ -263,6 +291,7 @@ class DeviceSettings(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                               # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Device Settings'
         db_table = 'pbx_device_settings'
 
     def __str__(self):
