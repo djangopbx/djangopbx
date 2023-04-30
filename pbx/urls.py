@@ -59,7 +59,9 @@ from accounts.urls import router as accountsrouter
 from voicemail.urls import router as voicemailrouter
 from xmlcdr.urls import router as xmlcdrrouter
 from conferencesettings.urls import router as conferencesettingsrouter
+from provision.urls import router as provisionrouter
 from httapihandler.urls import router as httapihandlerrouter
+
 
 # This overrides names in site headers and titles
 # , not required if custom admin templates are being used
@@ -79,6 +81,7 @@ router.registry.extend(accountsrouter.registry)
 router.registry.extend(voicemailrouter.registry)
 router.registry.extend(xmlcdrrouter.registry)
 router.registry.extend(conferencesettingsrouter.registry)
+router.registry.extend(provisionrouter.registry)
 router.registry.extend(httapihandlerrouter.registry)
 
 urlpatterns = [
@@ -92,6 +95,7 @@ urlpatterns = [
     path('status/', include('status.urls')),
     path('dialplans/', include('dialplans.urls')),
     path('voicemail/', include('voicemail.urls')),
+    path('provision/', include('provision.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
 
