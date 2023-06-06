@@ -1,0 +1,7 @@
+#!version:1.0.0.1
+## The header above must appear as-is in the first line
+
+{% include "./y000000000052.cfg" %} 
+{% include "./mac.cfg" %} 
+
+overwrite_mode = {{ prov_defs.yealink_overwrite_mode }}

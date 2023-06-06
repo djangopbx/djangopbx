@@ -27,25 +27,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path, re_path
-from rest_framework import routers
-from . import views
-
-router = routers.DefaultRouter()
-router.register(r'devicevendors', views.DeviceVendorsViewSet)
-router.register(r'devicevendorfunctions', views.DeviceVendorFunctionsViewSet)
-router.register(r'devicevendorfunctiongroups', views.DeviceVendorFunctionGroupsViewSet)
-router.register(r'deviceprofiles', views.DeviceProfilesViewSet)
-router.register(r'deviceprofilesettings', views.DeviceProfileSettingsViewSet)
-router.register(r'deviceprofilekeys', views.DeviceProfileKeysViewSet)
-router.register(r'devices', views.DevicesViewSet)
-router.register(r'devicelines', views.DeviceLinesViewSet)
-router.register(r'devicekeys', views.DeviceKeysViewSet)
-router.register(r'devicesettings', views.DeviceSettingsViewSet)
+from django.shortcuts import render
 
 
-urlpatterns = [
-    re_path(r'^device_config/(?P<mac>[A-Fa-f0-9]{12})\.(xml|cfg)$', views.device_config, name='deviceconfig'),
-    re_path(r'^device_config/(?P<file>y[0-9]{12}\.cfg)$', views.device_config, name='deviceconfig'),
-    re_path(r'^device_config/(?P<file>y0{12}\.boot)$', views.device_config, name='deviceconfig'),
-]

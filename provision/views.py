@@ -27,13 +27,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-import logging
+import base64
+import re
+#import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
 
+from .provisionfunctions import ProvisionFunctions
 from tenants.pbxsettings import PbxSettings
 
 from pbx.restpermissions import (
@@ -50,7 +53,7 @@ from .serializers import (
 )
 
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 class DeviceVendorsViewSet(viewsets.ModelViewSet):
     """
@@ -193,6 +196,158 @@ class DeviceSettingsViewSet(viewsets.ModelViewSet):
     ]
 
 
+def chk_prov_auth(request, host, pbxs):
+    realm = host
+    if ':' in host:
+        realm = host.split(':')[0]
 
-def device_config(request):
-    pass
+    domain = pbxs.get_domain(realm)
+    if not domain:
+        return (False, HttpResponseNotFound())
+
+    http_auth_enabled = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_enabled', 'boolean')[0]
+    if not http_auth_enabled:
+        return (False, HttpResponseNotFound())
+
+    if not http_auth_enabled == 'true':
+        return (False, HttpResponseNotFound())
+
+    http_usr = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_username')[0]
+    if not http_usr:
+        return (False, HttpResponseNotFound())
+
+    http_pwd = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_password')[0]
+    if not http_pwd:
+        return (False, HttpResponseNotFound())
+
+    if 'HTTP_AUTHORIZATION' in request.META:
+        auth = request.META['HTTP_AUTHORIZATION'].split()
+        if len(auth) == 2:
+            # NOTE: We are only support basic authentication for now.
+            #
+            if auth[0].lower() == "basic":
+                uname, passwd = base64.b64decode(auth[1]).decode('utf-8').split(':', 1)
+                if uname == http_usr and passwd == http_pwd:
+                    return (True, domain)
+
+    response = HttpResponse()
+    response.status_code = 401
+    response['WWW-Authenticate'] = 'Basic realm="%s"' % realm
+    return (False, response)
+
+def device_config(request, *args, **kwargs):
+    mac = None
+    host = request.META['HTTP_HOST']
+    if ':' in host:
+        host = host.split(':')[0]
+
+    pbxs = PbxSettings()
+    pf = ProvisionFunctions()
+
+    pauth = chk_prov_auth(request, host, pbxs)
+    if not pauth[0]:
+        return pauth[1]
+
+    if 'file' in kwargs:
+        cfgfile = kwargs['file']
+    else:
+        cfgfile = 'mac.cfg'
+
+    if 'mac' in kwargs:
+        mac = kwargs['mac']
+# revove!!!!!!!!!!!!
+    mac = '001565a6699b'
+    if not mac:
+        p = re.compile(r'(?:[0-9a-fA-F]:?){12}')
+        results = re.findall(p, request.META['HTTP_USER_AGENT'])
+        if len(results) > 0:
+            mac = results[0]
+
+    if not mac:
+        return HttpResponseNotFound()
+
+    if not ':' in mac:
+        mac = ':'.join(mac[i:i+2] for i in range(0,12,2))
+
+    try:
+        device = Devices.objects.get(domain_id_id=pauth[1].id, mac_address=mac.upper())
+    except Devices.DoesNotExist:
+        device = None
+
+    if not device:
+        return HttpResponseNotFound()
+
+    # Get default settings, domain settings, then user settings, then device settings, lines and keys
+    prov_lines = DeviceLines.objects.filter(enabled='true', device_id=device).order_by('line_number')
+
+    line_keys = pf.device_keys(device, 'line')
+    memory_keys = pf.device_keys(device, 'memory')
+    programmable_keys = pf.device_keys(device, 'programmable')
+    expansion_1_keys = pf.device_keys(device, 'expansion-1')
+    expansion_2_keys = pf.device_keys(device, 'expansion-2')
+    expansion_3_keys = pf.device_keys(device, 'expansion-3')
+    expansion_4_keys = pf.device_keys(device, 'expansion-4')
+    expansion_5_keys = pf.device_keys(device, 'expansion-5')
+    expansion_6_keys = pf.device_keys(device, 'expansion-6')
+
+    prov_defs = {'domain_name': device.domain_id}
+    prov_defs = pbxs.default_provision_settings(prov_defs)
+    prov_defs = pbxs.domain_provision_settings(prov_defs, device.domain_id)
+    if device.user_id:
+        prov_defs = pbxs.user_provision_settings(prov_defs, device.user_id)
+
+    if device.profile_id:
+        prov_defs = pf.device_profile_settings(prov_defs, device.profile_id)
+
+    prov_defs = pf.device_settings(prov_defs)
+
+
+    # Set Content type
+    contype = 'text/plain'
+    if request.META['CONTENT_TYPE'] == 'application/octet-stream':
+        h_dict = {
+                    'Content-Description': 'File Transfer',
+                    'Content-Disposition': 'attachment; filename="%s"' % cfgfile,
+                    'Content-Transfer-Encoding': 'binary',
+                    'Expires': 0,
+                    'Cache-Control': 'must-revalidate, post-check=0, pre-check=0',
+                    'Pragma': 'public'
+                }
+        return render(
+            request, 'provision/%s/%s' % (device.template, cfgfile),
+            {'prov_defs': prov_defs,
+            'prov_lines': prov_lines,
+            'line_keys': line_keys,
+            'memory_keys': memory_keys,
+            'programmable_keys': programmable_keys,
+            'expansion_1_keys': expansion_1_keys,
+            'expansion_2_keys': expansion_2_keys,
+            'expansion_3_keys': expansion_3_keys,
+            'expansion_4_keys': expansion_4_keys,
+            'expansion_5_keys': expansion_5_keys,
+            'expansion_6_keys': expansion_6_keys
+            }, 'application/octet-stream',
+            200, 'uft-8', 'django', h_dict
+            )
+    else:
+        # Add if statements here if you need a specific CONTENT-TYPE header for a device vendor.
+        if device.vendor == 'something special':
+            contype = 'text/plain'
+
+
+    return render(
+            request, 'provision/%s/%s' % (device.template, cfgfile),
+            {'prov_defs': prov_defs,
+            'prov_lines': prov_lines,
+            'line_keys': line_keys,
+            'memory_keys': memory_keys,
+            'programmable_keys': programmable_keys,
+            'expansion_1_keys': expansion_1_keys,
+            'expansion_2_keys': expansion_2_keys,
+            'expansion_3_keys': expansion_3_keys,
+            'expansion_4_keys': expansion_4_keys,
+            'expansion_5_keys': expansion_5_keys,
+            'expansion_6_keys': expansion_6_keys
+            }, contype
+            )
+

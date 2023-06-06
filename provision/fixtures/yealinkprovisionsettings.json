@@ -1,0 +1,2630 @@
+[
+{
+    "model": "tenants.defaultsetting",
+    "pk": "be02b916-3419-4bc7-881e-46711134577c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_blf_led_mode",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "The value is 0 (default) or 1.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f0704072-c3d9-48df-b89b-2aea6035b3c4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_call_waiting",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Call Waiting 1=enabled 0=disable",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3401d056-56b1-4038-a03b-4be041b80b0e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_call_waiting_tone",
+        "value_type": "boolean",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Call Waiting Tone 0-Disabled, 1-Enabled (default)",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2d380c07-aba5-46a9-8ef5-7e6b713868fd",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_cdp_enable",
+        "value_type": "boolean",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "CDP 0-Disabled, 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "85c7d304-2c91-447d-b139-c05d2499ea7d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_cid_source",
+        "value_type": "numeric",
+        "value": "2",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "SIP header(s) to carry the caller ID; 0-FROM, 1-PAI 2-PAI-FROM (default), 3-PRID-PAI-FROM, 4-PAI-RPID-FROM, 5-RPID-FROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0ad4500c-cfdf-46cf-952f-711b41252327",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_1_priority",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "The priority of the specified codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "6b520b18-050c-49f6-b29c-71cd299c294d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_2_priority",
+        "value_type": "numeric",
+        "value": "2",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "The priority of the specified codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "92b48426-6658-40a4-a3b6-14d73560bcfa",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_3_priority",
+        "value_type": "numeric",
+        "value": "3",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "The priority of the specified codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2bbfd8da-0cc1-4d20-8186-a37b13f96435",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_4_priority",
+        "value_type": "numeric",
+        "value": "4",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "The priority of the specified codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a26ce50f-d877-45fc-8112-3fc3888a07e4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_5_priority",
+        "value_type": "numeric",
+        "value": "5",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "The priority of the specified codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3c235e65-9b25-4ecc-a29d-ce5ffa19170b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_6_priority",
+        "value_type": "numeric",
+        "value": "6",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "The priority of the specified codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d8569da8-01d7-4615-8484-0c1a5b0fe53a",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_7_priority",
+        "value_type": "numeric",
+        "value": "7",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "The priority of the specified codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "21f7bdbe-97cd-456f-911a-8dd4101a4dd9",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g722_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "314425f8-2fe8-4a1c-8ae5-c540cfc3072d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g722_priority",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ea57f5d1-a52f-4973-9073-d5f8ef3f5b26",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g723_53_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3b6685b3-0ca7-49f5-8863-f1b358b1c0e4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g723_53_priority",
+        "value_type": "numeric",
+        "value": "5",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "22683fe3-d2c0-4f84-a99d-3a4b8a821570",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g723_63_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "57d98ac9-9df0-41bd-b494-2d46ce9a10e9",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g723_63_priority",
+        "value_type": "numeric",
+        "value": "6",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "bb18c828-7e10-4f75-948f-8cd7804a0bb4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g726_16_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c8dd14e4-b8be-4b91-ad71-2d83b97d1bb3",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g726_16_priority",
+        "value_type": "numeric",
+        "value": "8",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "314b14aa-7d5e-4bbf-92c8-7801b19ad078",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g726_24_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ed2914e6-4af5-49aa-9310-590b6492798d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g726_24_priority",
+        "value_type": "numeric",
+        "value": "9",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b49dc66e-0ff9-4a41-ac0d-1cc0743cc3be",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g726_32_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2e13034b-14b6-4dc9-b390-921eacdbc536",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g726_32_priority",
+        "value_type": "numeric",
+        "value": "10",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "eb9261fc-d2b2-4bb5-aebf-3357b5d41f49",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g726_40_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3bee322f-7de7-48ed-91be-ee5dfa14c55c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g726_40_priority",
+        "value_type": "numeric",
+        "value": "11",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2f7e7465-31f4-4fb1-87ba-54d283f9b96b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g729_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "4cab3f85-da3d-47b0-b3e6-15129583bc86",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_g729_priority",
+        "value_type": "numeric",
+        "value": "2",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d4e238e6-877b-4b39-a99f-6cee3d2f1919",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_gsm_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "8dd3b8c5-885d-494a-bca5-266e2b317f31",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_gsm_priority",
+        "value_type": "numeric",
+        "value": "12",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c8d10105-152b-419b-8836-c5af755b36cf",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_ilbc_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "792cee0e-f2af-42a9-9b59-a8cbaabf17be",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_ilbc_priority",
+        "value_type": "numeric",
+        "value": "7",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "e1d03aea-1563-4c57-86de-4d4d274b8352",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_opus_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a018c028-0f99-4ef8-869d-f5322636ae36",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_opus_priority",
+        "value_type": "numeric",
+        "value": "true",
+        "sequence": "0",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "6483045a-931d-4d8d-ba21-75bc2c9aa9ce",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_pcma_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f1396ecd-3a56-4573-995e-446ddd2cb2c2",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_pcma_priority",
+        "value_type": "numeric",
+        "value": "3",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "226b612f-ed90-4c1c-965d-030bd0c0f5c0",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_pcmu_enable",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "0",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0d96067e-5cfd-4618-b779-00a37ae80bc2",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_codec_pcmu_priority",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Set to enable or disable the selected Yealink codec.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "166b27d1-1860-4154-88d3-5e15781e7bbb",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_date_format",
+        "value_type": "numeric",
+        "value": "3",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "0-WWW MMM DD (default), 1-DD-MMM-YY, 2-YYYY-MM-DD, 3-DD/MM/YYYY, 4-MM/DD/YY, 5-DD MMM YYYY, 6-WWW DD MMM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b2d1e9c4-7097-4fc8-bb14-5aba6df4ef32",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dialplan_dialnow_rule_1",
+        "value_type": "text",
+        "value": "[2-9]xx[2-9]xxxxxx",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Dial Now - Automatically dial out the entered numbers.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "5ea731fc-51d6-4b0a-9c2f-0dcc6560becd",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dialplan_dialnow_rule_2",
+        "value_type": "text",
+        "value": "911",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Dial Now - Automatically dial out the entered numbers.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "91a03c96-1597-41dd-9605-0ca1df7e010c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dialplan_dialnow_rule_3",
+        "value_type": "text",
+        "value": "411",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Dial Now - Automatically dial out the entered numbers.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ed6080df-0d8b-40e6-887d-ace104855114",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dialplan_dialnow_rule_4",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Dial Now - Automatically dial out the entered numbers.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "81035ca7-cbc6-4b26-90ef-89997e43a5fb",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dialplan_dialnow_rule_5",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Dial Now - Automatically dial out the entered numbers.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "561035ed-e388-4d5e-888d-367455faa05c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_direct_ip_call_enable",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "0-Disabled, 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "1f298476-c8e0-4315-9d7f-b70d36166fcc",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_direct_pickup_enable",
+        "value_type": "boolean",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Direct Pickup 0-Disabled, 1-Enabled (default)",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "709945c3-7fc4-4903-b6b2-7c0d695fea43",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dsskey_length",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "DSS Key Label Length 0-Default, 1-Extended, 2-Mid Range",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "35f217f6-8551-4cdd-80f9-9c98ae702e30",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dsskey_transfer_mode",
+        "value_type": "numeric",
+        "value": "2",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "DSS key transfer mode: 0-Display Number, 1 Attended Transfer, 2 Blind Transfer (default).",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "6fd955ef-2f65-41f0-84cf-5b3ad917cc20",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dtmf_hide",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "0-Disabled, 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ba0ebf59-6364-47b2-9a98-73430669a4c4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dtmf_type",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "0-INBAND, 1-RFC 2833 (default), 2-SIP INFO, 3-RFC2833 + SIP INFO",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3dee932a-6987-4693-b289-825d192e8f85",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_feature_key_sync",
+        "value_type": "boolean",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Enable or disable the feature key synchronization; 0-Disabled (default), 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "e8f3e617-a6b3-4859-af59-04e2349f3d49",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_cp860",
+        "value_type": "text",
+        "value": "CP860-37.81.0.10.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the CP860 firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a55c087c-3e9c-4b53-b866-a5874871c60a",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_cp920",
+        "value_type": "text",
+        "value": "CP920-78.86.0.15.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "CP920 Firmware",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7a769f2f-2833-4b90-9789-ff96a4723773",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_cp960",
+        "value_type": "text",
+        "value": "CP960-73.86.0.20.rom",
+        "sequence": "0",
+        "enabled": "false",
+        "description": "Filename of the CP960 firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "dd146ee4-7b73-4724-a3fa-5f6ba9829f96",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t19p",
+        "value_type": "text",
+        "value": "T19P_E2-53.84.0.125.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Firmware for T19p",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "1a8ed959-6599-48d2-b816-5525a6313bb0",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t21p",
+        "value_type": "text",
+        "value": "T21P_E2-52.84.0.125.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Firmware for T21p",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "fd7a5a08-66e0-4554-8a99-4b1cb8714d2f",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t23g",
+        "value_type": "text",
+        "value": "T23-44.84.0.140.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Firmware for t23g",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2f27755a-5082-469d-8ea6-52e350cb9988",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t27g",
+        "value_type": "text",
+        "value": "T27G-69.86.0.15.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T27G firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "311d2739-a340-42f5-8e3e-6e6ecce1faa2",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t29g",
+        "value_type": "text",
+        "value": "T29-46.83.0.120.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T29G firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "80be5582-1b23-4f22-9ed1-61be272982e5",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t30p",
+        "value_type": "text",
+        "value": "T31-T30-T30P-T31G-T31P-T33P-T33G-124.86.0.40.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Firmware for T30P",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "5e02dbf9-92fd-42ed-8e49-80db8728376a",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t31g",
+        "value_type": "text",
+        "value": "T31-T30-T30P-T31G-T31P-T33P-T33G-124.86.0.40.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T31g firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "15d042a4-2f44-4a60-8a97-68d795c13763",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t33g",
+        "value_type": "text",
+        "value": "T31-T30-T30P-T31G-T31P-T33P-T33G-124.86.0.40.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Firmware for T33G",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "75850968-9226-450f-a3e1-414ec1d610ee",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t38g",
+        "value_type": "text",
+        "value": "t38g-38.70.0.185.rom",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Filename of the T38G firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7223c3a7-5ef9-46a8-84be-39338a6788a6",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t40g",
+        "value_type": "text",
+        "value": "T40G-76.84.0.125.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T40G firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c5d9b7ea-8e3b-4428-9845-438be7be0baa",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t40p",
+        "value_type": "text",
+        "value": "T40-54.84.0.125.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T40P firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f714e8a0-9753-48e0-9674-0f4efc7e4ff1",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t41p",
+        "value_type": "text",
+        "value": "T41-36.83.0.120.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T41P firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "9480f346-c038-462b-b440-329383290b84",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t41s",
+        "value_type": "text",
+        "value": "T46S-T48S-T42S-T41S-66.86.0.15.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T41S firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "84eb10e2-bd9f-4bd0-8073-ac8cf002e7f0",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t42g",
+        "value_type": "text",
+        "value": "T42-29.83.0.120.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T42G firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "94e3e470-dddd-456b-aa5f-0048588f476c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t42p",
+        "value_type": "text",
+        "value": "T42-29.83.0.120.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Firmware for T42p",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "768f216e-fc19-4c97-b843-03d48ce70c4e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t42s",
+        "value_type": "text",
+        "value": "T46S-T48S-T42S-T41S-66.86.0.15.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T42S firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "5fb6ef46-0a7f-4bb6-b415-49b437454321",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t46g",
+        "value_type": "text",
+        "value": "T46-28.83.0.120.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T46G firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "4e2b8fcb-7d06-4553-becf-9904e1331c4c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t46s",
+        "value_type": "text",
+        "value": "T46S-T48S-T42S-T41S-66.86.0.15.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T46S firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c97603b4-b929-4e27-8292-70ac34e6df0e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t46u",
+        "value_type": "text",
+        "value": "T46U-T43U-T46U-T41U-T48U-T42U-108.86.0.70.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "T46U Firmware",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0276b965-0ef6-493a-bdd0-b9786bf8aad7",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t48g",
+        "value_type": "text",
+        "value": "T48-35.83.0.120.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T48G firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "77314a84-6304-47d8-a6b4-fb6d12b8804f",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t48s",
+        "value_type": "text",
+        "value": "T46S-T48S-T42S-T41S-66.86.0.15.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T48S firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c53fdce7-b0eb-49ef-9d58-5a3a212bf5bf",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t49g",
+        "value_type": "text",
+        "value": "t49g-51.80.0.100.rom",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Filename of the T49Gfirmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "804003fc-f0e9-4b3b-a35b-6c2742f965eb",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t52s",
+        "value_type": "text",
+        "value": "T54S-T52S-70.84.0.70.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T52Sfirmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3bea98c5-a45e-4bca-bf65-3933595356aa",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t53",
+        "value_type": "text",
+        "value": "T54W_T57W_T53W_T53_T53C_T54_T57-96.86.0.45.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T54w firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0ff12b8a-a3ff-48d9-a662-e510ef62d85c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t53w",
+        "value_type": "text",
+        "value": "T54W_T57W_T53W_T53_T53C_T54_T57-96.86.0.45.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T54w firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7378c0b6-3242-4989-8af6-903dfb437285",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t54s",
+        "value_type": "text",
+        "value": "T54S-T52S-70.84.0.70.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T54s firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c72506d7-e3f9-4830-84ff-37acab5d1cd1",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t54w",
+        "value_type": "text",
+        "value": "T54W_T57W_T53W_T53_T53C_T54_T57-96.86.0.45.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T54w firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "4ffd1ad7-1b00-41f7-8e93-19412127245a",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t56a",
+        "value_type": "text",
+        "value": "t56a-58.80.0.25.rom",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Filename of the T56A firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7c061ebd-79e3-4780-abb4-495ccbc38ea2",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t57w",
+        "value_type": "text",
+        "value": "T54W_T57W_T53W_T53_T53C_T54_T57-96.86.0.45.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Filename of the T54w firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "616d6358-d07e-4e42-8560-7de0f42cd5b1",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t58a",
+        "value_type": "text",
+        "value": "t58a-58.80.0.25.rom",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Filename of the T58A firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2cdd8b87-db72-4ad1-b18b-745fc1f7e906",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_t58v",
+        "value_type": "text",
+        "value": "t58v-58.80.0.25.rom",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Filename of the T58V firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3f903069-c0fc-4bf1-9c33-907bf238475e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_url",
+        "value_type": "text",
+        "value": "http://myfirmware.com",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Base URL for Yealink Firmware. Download from http://support.yealink.com",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a39fc1af-9c30-46c7-a564-212e4af0331f",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_vp530",
+        "value_type": "text",
+        "value": "vp530-23.70.0.40.rom",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Filename of the VP530 firmware ROM",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "017d9828-45cf-4881-8e9f-3fc3a6a0c7d6",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_w52p",
+        "value_type": "text",
+        "value": "base-for-W52P-W56P-25.81.0.60.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "W52P-W56P Firmware",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b5a7f21f-dd0c-4886-9233-2278c758bff9",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_w60b",
+        "value_type": "text",
+        "value": "W60B-77.85.0.25.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "W60B firmware",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "77193a89-f4f0-4ed8-89fd-894a125027c9",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_firmware_w70b",
+        "value_type": "text",
+        "value": "W70B-146.85.0.25.rom",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Firmware for w70b",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c45264b7-6e85-42e4-b245-f22caff091d4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_hide_feature_access_codes_enable",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "0-Disabled, 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b75ef82b-a225-43a5-a208-78d545cca8aa",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ip_address_mode",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "IP Address mode 0-ipv4, 1-ipv6, 2-ipv4&ipv6",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "df933bbc-9d69-405f-80b1-99871c4d39e4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_language_gui",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "The language used in phone interface.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "e731d65f-132b-49a1-9f20-39ecd1e70b54",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_lldp_enable",
+        "value_type": "boolean",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "LLDP 0-Disabled, 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "dc4a391f-25b7-44bb-accb-efb23f20662c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_missed_call_popup_enable",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Display Missed Call Popup",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ada36bd5-51ab-4bf8-a2ad-bc39671b2a3a",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_missed_call_power_led_flash_enable",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "0-Disabled:power indicator LED is off, 1-Enabled:power indicator LED is solid red",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "68eba481-aeb1-4c7e-a4e4-630946abc0e7",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_network_vpn_enable",
+        "value_type": "boolean",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "(0-Disabled;1-Enabled)",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "85675560-82cf-48a5-8056-227c01a44f37",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_openvpn_url",
+        "value_type": "text",
+        "value": "hxxps://replace-this.url/openvpn.tar",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "(URL within 511 characters)",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2c3445ff-0339-43d4-8762-3c87ec37be57",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_outbound_proxy_fallback_interval",
+        "value_type": "numeric",
+        "value": "120",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Integer from 0 to 65535",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f54bd090-723c-47c8-a9cd-c1e875134501",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_overwrite_mode",
+        "value_type": "boolean",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Overwrite Mode 0-Disabled, 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c7227e2b-870f-4c11-aab8-dfff8d626ded",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_predial_autodial",
+        "value_type": "boolean",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Auto dial after digit timeout 0-Disabled (default), 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a9f1e1a3-8165-45ed-b598-a09ea8965966",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_provision_url",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Provisioning URL for Yealink",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "95862d61-18ac-41b5-ac69-467e0ef3afd7",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_remote_phonebook_1_name",
+        "value_type": "text",
+        "value": "Personal",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Remote Phonebook Users on Yealink",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "32cdd450-2ba4-43d7-95d8-dcd825084455",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_remote_phonebook_2_name",
+        "value_type": "text",
+        "value": "Global",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Remote Phonebook Groups on Yealink",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0abb1daf-e88f-4151-9bbb-fed244b9d3e4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_remote_phonebook_3_name",
+        "value_type": "text",
+        "value": "Local",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Remote Phonebook Extensions on Yealink",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c786b947-2d08-4a48-a2b3-cb508c179c3b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_remote_phonebook_enable",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Query contact names from remote phonebook when receiving incoming calls. 0-Disabled (default), 1-Enabled;",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "aa200d6f-c048-4203-9838-8dd05fa31bd5",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_retransmission",
+        "value_type": "boolean",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Retransmission",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "78f05ec5-d59c-4033-aeb5-62c9f46999cb",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_rfc2543_hold",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Default 0",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ddc70c4e-69be-43e7-8ad0-1e934ac47d0e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_1",
+        "value_type": "text",
+        "value": "Ring1.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The default value 1 stands for Ring1.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a55346e4-0562-4455-b003-1950e33151d7",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_10",
+        "value_type": "text",
+        "value": "Ring8.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "5958dab7-d8de-49f5-a412-49567701a4b0",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_2",
+        "value_type": "text",
+        "value": "Ring2.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 2 stands for Ring2.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "392b549d-35ec-48cd-943d-fe3799bfa508",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_3",
+        "value_type": "text",
+        "value": "Ring3.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 3 stands for Ring3.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "24e46bf0-edfd-4d82-a617-c1aa3656b046",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_4",
+        "value_type": "text",
+        "value": "Ring4.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 4 stands for Ring4.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "4d38a1ff-b391-48b4-8552-a200f299d838",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_5",
+        "value_type": "text",
+        "value": "Ring5.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 5 stands for Ring5.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "b46a4a0e-6e58-484d-a1a6-20af1c97295d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_6",
+        "value_type": "text",
+        "value": "Ring6.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 6 stands for Ring6.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "205fe7ac-a259-4902-ac41-75479b03614e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_7",
+        "value_type": "text",
+        "value": "Ring7.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 7 stands for Ring7.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7db19fce-f2f7-4be1-bab4-7678fd90e2a2",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_8",
+        "value_type": "text",
+        "value": "Ring8.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3a9c4b27-8fac-4a64-acae-ff8e5b94f70e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_file_9",
+        "value_type": "text",
+        "value": "Ring8.wav",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Ring tone for each text ranges from 1 to 8. The value 8 stands for Ring8.wav.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "765e18d9-9440-42be-a858-2c0ef90ee50f",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_1",
+        "value_type": "text",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "eff410eb-1256-4ea7-9a60-ff9fe380ff08",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_10",
+        "value_type": "text",
+        "value": "10",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "78dee88b-6b6e-42e2-98ad-99ab9c521bd5",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_2",
+        "value_type": "text",
+        "value": "2",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "16150946-b283-4227-90ce-865ad2c3bb1d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_3",
+        "value_type": "text",
+        "value": "3",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "af56de21-f82e-496b-aa2f-c36c89aad136",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_4",
+        "value_type": "text",
+        "value": "4",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f2985575-04ed-47d0-b301-059caff3bba1",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_5",
+        "value_type": "text",
+        "value": "5",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0b02df63-256c-46ed-a6e4-8099addf2af0",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_6",
+        "value_type": "text",
+        "value": "6",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "32c7a515-afdf-4198-b185-83176c4a6e65",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_7",
+        "value_type": "text",
+        "value": "7",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a6a3b3f6-486e-4e69-a864-42964db271b7",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_8",
+        "value_type": "text",
+        "value": "8",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "0c4aec7f-0f39-4984-be6a-0401a8d5e02b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_text_9",
+        "value_type": "text",
+        "value": "9",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Text to map the keywords contained in the Alert-info header.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "368d8f25-9faf-417b-a1ac-942ecf8b9793",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ringtone_delete",
+        "value_type": "text",
+        "value": "http://localhost/all,delete",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "http://localhost/all,delete all the customized ring tones",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7af991ec-ddb9-4942-a05d-d1acc529fef5",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ringtone_url",
+        "value_type": "text",
+        "value": "custom.wav",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Before using this parameter, you should store the desired ring tone (custom.wav) to the provisioning server",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "627ef79d-1a49-4bae-b215-56182e308351",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_ring_type",
+        "value_type": "text",
+        "value": "custom.wav",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Custom ring tone (Busy.wav);",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "05bcbb47-06f6-4c81-a1c9-cdf2982d60a7",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_rport",
+        "value_type": "boolean",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Enable or disable the NAT Rport. 0-Disabled (default), 1-Enabled.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "70894b7b-2edd-41ad-8526-060589df4e11",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_session_timer",
+        "value_type": "boolean",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "SIP Session Timers",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "968c9f53-305c-4fbd-a7dd-4dd6099e829e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_sip_listen_port",
+        "value_type": "numeric",
+        "value": "5060",
+        "sequence": "0",
+        "enabled": "false",
+        "description": "5060 default",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "1374da96-dc40-4f12-8269-0b94278b7c55",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_srtp_encryption",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "0-Disabled (default), 1-Forced, 2-Negotiate",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d0fb35a5-b5cb-4d9c-9554-56c5087d74ec",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_subscribe_mwi_to_vm",
+        "value_type": "boolean",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Subscribe to the voicemail MWI 0-Disabled (default), 1-Enabled",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7f4a1607-4cbe-49f5-8cd2-6d599b89bd9b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_time_format",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "0-12 Hour, 1-24 Hour",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "fc2fa8cd-b14e-48e3-99bd-7c01c9d6208d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_time_zone",
+        "value_type": "text",
+        "value": "0",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Time zone ranges from -11 to +12",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "9009cb3d-5eb8-41fa-bcbb-ee6b63cdccfa",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_time_zone_name",
+        "value_type": "text",
+        "value": "United Kingdom(London)",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Time zone name example United States-Mountain Time",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f20eea5d-402c-4d40-bfee-a5b8abe7217a",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_transfer_semi_attended",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "0-Disabled, 1-Enabled (default). Transferee to display missed call prompt when receiving a semi_attended transfer call.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "fabea2c0-3585-4cfc-8819-f45ef61002ab",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_trust_certificates",
+        "value_type": "text",
+        "value": "false",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Required trusted certificate for provisioning.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2f5e8429-6890-4da7-84ae-65c9c29b5091",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_trust_ctrl",
+        "value_type": "numeric",
+        "value": "1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "(0-Disabled;1-Enabled)",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3528a13b-5f99-4b32-aefc-f48d764a33d6",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_trusted_certificates",
+        "value_type": "text",
+        "value": "isrgrootx1.pem",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "Added by AHF 20220730",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "fb13e647-ca3f-4da6-901c-584b8cde4055",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_voice_mail_popup_enable",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "Display Voice Mail Popup",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c032b49e-dec9-40f0-959b-2371a914c409",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_voice_tone_callwaiting",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Change the call tone volume",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ecff53ed-89aa-4ee6-9f75-60fcdf3f7629",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_voice_tone_country",
+        "value_type": "text",
+        "value": "United States",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "For example, United States, France, Germany etc.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

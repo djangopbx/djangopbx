@@ -47,6 +47,32 @@ class PbxSettings():
 
         return email_cfg
 
+    def default_provision_settings(self, ps_dict):
+        dsl = DefaultSetting.objects.filter(
+                category='provision',
+                enabled='true').order_by('sequence')
+        for ds in dsl:
+            ps_dict[ds.subcategory] = ds.value
+        return ps_dict
+
+    def domain_provision_settings(self, ps_dict, domain):
+        dsl = DomainSetting.objects.filter(
+                domain_id=domain,
+                category='provision',
+                enabled='true').order_by('sequence')
+        for ds in dsl:
+            ps_dict[ds.subcategory] = ds.value
+        return ps_dict
+
+    def user_provision_settings(self, ps_dict, user):
+        psl = ProfileSetting.objects.filter(
+                user_id=user,
+                category='provision',
+                enabled='true').order_by('sequence')
+        for ps in psl:
+            ps_dict[ps.subcategory] = ps.value
+        return ps_dict
+
     def default_settings(self, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
         settingList = DefaultSetting.objects.values_list('value', flat=True).filter(
                 category=cat,
@@ -103,8 +129,25 @@ class PbxSettings():
         settingList = self.default_settings(cat, subcat, settingtype, defaultsetting, usedefault)
         return settingList
 
+    def dd_settings(
+            self, domainuuidstr, cat, subcat,
+            settingtype='text', defaultsetting='', usedefault=False
+            ):
+        settingList = self.domain_settings(domainuuidstr, cat, subcat, settingtype, defaultsetting, False)
+        if settingList:
+            return settingList
+        settingList = self.default_settings(cat, subcat, settingtype, defaultsetting, usedefault)
+        return settingList
+
     def get_domains(self):
         qs_dict = [{i.name: str(i.id)} for i in Domain.objects.filter(enabled='true')]
         if qs_dict is not None:
             return qs_dict
         return False
+
+    def get_domain(self, dname):
+        try:
+            d = Domain.objects.get(name=dname)
+        except Domain.DoesNotExist:
+            d = None
+        return d

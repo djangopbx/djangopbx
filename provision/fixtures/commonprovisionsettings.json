@@ -1,0 +1,704 @@
+[
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a5323190-b733-49c1-99c4-396ab8950bb8",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "admin_name",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ae3f809e-81af-4ed4-82f7-275251210d3a",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "admin_password",
+        "value_type": "text",
+        "value": "!INSECURE!",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Required for Grandstream",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3790e46b-ef9e-4cdc-bfd2-6b3708751843",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "auto_insert_enabled",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d376fe0f-fb89-4418-8fb4-590e4cac483f",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "cidr",
+        "value_type": "array",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "8854358d-c6a4-4eeb-b21b-37ced80a4fbb",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "contact_extensions",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "allow extensions to be provisioned as contacts as  in provision templates",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c5196771-f408-40b3-81c7-b4ce525620c3",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "contact_groups",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "6c4430f6-3713-4c8b-9da3-eaf1705d7dc3",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "contact_users",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "17fe1190-2a81-47e1-8b56-32f6ae8093f7",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_enabled",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7d742914-9c55-4cee-a295-c19501389f41",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_start_day",
+        "value_type": "text",
+        "value": "10",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "5aa7f396-d742-48f1-b53f-c609b9a6759a",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_start_month",
+        "value_type": "text",
+        "value": "3",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7b444c2f-bed7-4da5-8cf3-4cc79df8625f",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_start_time",
+        "value_type": "text",
+        "value": "2",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ef0ad392-8956-4355-bf44-48d8712c74c1",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_start_weekday",
+        "value_type": "text",
+        "value": "7",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "6f4a9657-e130-4003-bc96-22a1312d76f4",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_stop_day",
+        "value_type": "text",
+        "value": "3",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f8e7b78b-1b84-42da-9e14-ec03dbb67c52",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_stop_month",
+        "value_type": "text",
+        "value": "11",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d3e72ae2-b887-443d-8523-96726343bb55",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_stop_time",
+        "value_type": "text",
+        "value": "2",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "e7942398-3d32-4a32-924f-e61bf31299fa",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "daylight_savings_stop_weekday",
+        "value_type": "text",
+        "value": "7",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "931f9369-9aac-4620-8d4b-7d2bf642b1d2",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "enabled",
+        "value_type": "text",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c998c762-6a43-4911-a465-a9653eeb793d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "http_auth_enabled",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ed380d7d-b3b8-40b4-8528-f10d521ddef0",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "http_auth_password",
+        "value_type": "array",
+        "value": "!INSECURE!",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "27b7ccfd-58d7-409c-80ff-cca014349d70",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "http_auth_type",
+        "value_type": "text",
+        "value": "digest",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c6a5b05b-210d-484f-bbb6-c1dd2223992e",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "http_auth_username",
+        "value_type": "text",
+        "value": "MyProvisionUsername",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "931d6cc7-ca82-4813-ae92-7015e0c2ea1b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "http_domain_filter",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "5bc38b86-089f-44cb-9fff-38be38c497e8",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "line_register_expires",
+        "value_type": "numeric",
+        "value": "1800",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "a9dc7f4a-0a19-40cb-829a-093bf81d00db",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "line_sip_port",
+        "value_type": "numeric",
+        "value": "5060",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "472300e4-267a-4f0d-83ab-04d2017c7d0f",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "line_sip_transport",
+        "value_type": "text",
+        "value": "udp",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "48dd60fe-d7de-417c-85c4-2d2d897a709c",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "ntp_server_primary",
+        "value_type": "text",
+        "value": "uk.pool.ntp.org",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7bcc3c26-ac55-4934-be9f-e0edfbc7193b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "ntp_server_secondary",
+        "value_type": "text",
+        "value": "pool.ntp.org",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d157078e-b363-4f34-a6d4-8a86990a40b7",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "number_as_presence_id",
+        "value_type": "text",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "203711b9-1d2a-4b52-9d8c-d6f23b451d8f",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "nway_conference",
+        "value_type": "text",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "N-Way conferencing for devices supporting network conference uri",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "384ef2c0-d954-4ef9-9947-dc1d82d98e57",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "outbound_proxy_fallback_interval",
+        "value_type": "numeric",
+        "value": "120",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Integer from 0 to 65535",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c104cf6e-722b-4994-8f3e-2a368aa11715",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "outbound_proxy_primary",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ebfc19c9-cec1-4596-a0ee-582d3f4a0392",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "outbound_proxy_secondary",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "cd2173be-aa43-4fd2-9c75-02f49c199485",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "path",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "58527906-a809-4699-a65c-fa8cc6771e35",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "server_address_primary",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "94b98bb3-bb63-4059-9a3a-6855ee4b0441",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "server_address_secondary",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d39b97ea-fc69-4a42-af30-628cf6139e0b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "stun_port",
+        "value_type": "numeric",
+        "value": "3478",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "STUN server port",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "ce5bf781-bb48-480a-b144-4fa466842fa1",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "stun_server",
+        "value_type": "text",
+        "value": "stun.freeswitch.org",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "STUN server address",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "2672dbbc-2834-4e95-9ea9-e9ff6dc07838",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "user_password",
+        "value_type": "text",
+        "value": "",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "User level password for phone embeded web server.",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "559cd2d6-8ca0-4e6e-ae9d-565c8eed898d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "voicemail_number",
+        "value_type": "text",
+        "value": "*97",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "",
+        "created": "2022-11-26T12:49:25.941Z",
+        "updated": "2022-11-26T12:49:25.941Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

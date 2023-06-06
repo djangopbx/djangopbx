@@ -35,7 +35,10 @@ from django.conf import settings
 import provision.models
 #from tenants.pbxsettings import PbxSettings
 #from pbx.commonfunctions import shcommand
-from .models import DeviceVendors, DeviceVendorFunctions
+from .models import (
+    DeviceVendors, DeviceVendorFunctions, DeviceProfiles,
+    DeviceProfileSettings, DeviceProfileKeys, DeviceLines, DeviceKeys, DeviceSettings
+)
 
 
 class DeviceVendorFunctionChoice():
@@ -65,3 +68,31 @@ class ProvisionFunctions():
         self.template_list.sort()
         return self.template_list
 
+    def device_settings(self, ps_dict):
+        dsl = DeviceSettings.objects.filter(
+                enabled='true').order_by('name')
+        for ds in dsl:
+            ps_dict[ds.name] = ds.value
+        return ps_dict
+
+    def device_profile_settings(self, ps_dict, profile_id):
+        dsl = DeviceProfileSettings.objects.filter(
+                profile_id=profile_id,
+                enabled='true').order_by('name')
+        for ds in dsl:
+            ps_dict[ds.name] = ds.value
+        return ps_dict
+
+    def device_keys(self, device, category):
+        if device.profile_id:
+            dk = DeviceKeys.objects.values(
+                'key_id', 'key_type', 'line', 'value', 'extension', 'label', 'icon'
+                ).filter(device_id=device, category=category).order_by('key_id').union(
+                    DeviceProfileKeys.objects.values(
+                    'key_id', 'key_type', 'line', 'value', 'extension', 'label', 'icon'
+                    ).filter(profile_id=device.profile_id, category=category))
+        else:
+            dk = DeviceKeys.objects.values(
+                'key_id', 'key_type', 'line', 'value', 'extension', 'label', 'icon'
+                ).filter(device_id=device, category=category).order_by('key_id')
+        return dk

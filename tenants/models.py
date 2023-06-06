@@ -105,7 +105,7 @@ class ProfileSetting(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                      # noqa: E501, E221
     user_id      = models.ForeignKey('Profile', on_delete=models.CASCADE, verbose_name=_('User'))                                                              # noqa: E501, E221
     category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))                                                                  # noqa: E501, E221
-    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
+    subcategory  = models.CharField(max_length=64, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
     value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))  # noqa: E501, E221
     value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                            # noqa: E501, E221
     sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                   # noqa: E501, E221
@@ -132,7 +132,7 @@ class DomainSetting(models.Model):
     domain_id    = models.ForeignKey('Domain', on_delete=models.CASCADE, verbose_name=_('Domain'))                                                             # noqa: E501, E221
     app_uuid     = models.UUIDField(blank=True, null=True, editable=False)                                                                                     # noqa: E501, E221
     category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))                                                                  # noqa: E501, E221
-    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
+    subcategory  = models.CharField(max_length=64, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
     value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))  # noqa: E501, E221
     value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                            # noqa: E501, E221
     sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                   # noqa: E501, E221
@@ -154,7 +154,7 @@ class DefaultSetting(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                                # noqa: E501, E221
     app_uuid = models.UUIDField(blank=True, null=True, editable=False)                                                                                         # noqa: E501, E221
     category     = models.CharField(max_length=32, db_index=True, verbose_name=_('Category'))                                                                  # noqa: E501, E221
-    subcategory  = models.CharField(max_length=32, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
+    subcategory  = models.CharField(max_length=64, db_index=True, verbose_name=_('Subcategory'))                                                               # noqa: E501, E221
     value_type   = models.CharField(max_length=32, db_index=True, choices=SettingTypeChoice.choices, default=SettingTypeChoice.CTEXT, verbose_name=_('Type'))  # noqa: E501, E221
     value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                            # noqa: E501, E221
     sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                   # noqa: E501, E221

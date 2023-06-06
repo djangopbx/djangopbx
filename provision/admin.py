@@ -191,6 +191,12 @@ class DeviceProfilesResource(resources.ModelResource):
 
 class DeviceProfilesAdmin(ImportExportModelAdmin):
     resource_class = DeviceProfilesResource
+
+    class Media:
+        css = {
+            'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
+        }
+
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['name', 'description']
     fieldsets = [

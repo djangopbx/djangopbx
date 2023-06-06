@@ -141,7 +141,7 @@ class DeviceProfiles(models.Model):
         db_table = 'pbx_device_profiles'
 
     def __str__(self):
-        return self.name
+        return f"{self.domain_id}->{self.name}"
 
 
 class DeviceProfileSettings(models.Model):

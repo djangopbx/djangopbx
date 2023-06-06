@@ -27,25 +27,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path, re_path
-from rest_framework import routers
-from . import views
-
-router = routers.DefaultRouter()
-router.register(r'devicevendors', views.DeviceVendorsViewSet)
-router.register(r'devicevendorfunctions', views.DeviceVendorFunctionsViewSet)
-router.register(r'devicevendorfunctiongroups', views.DeviceVendorFunctionGroupsViewSet)
-router.register(r'deviceprofiles', views.DeviceProfilesViewSet)
-router.register(r'deviceprofilesettings', views.DeviceProfileSettingsViewSet)
-router.register(r'deviceprofilekeys', views.DeviceProfileKeysViewSet)
-router.register(r'devices', views.DevicesViewSet)
-router.register(r'devicelines', views.DeviceLinesViewSet)
-router.register(r'devicekeys', views.DeviceKeysViewSet)
-router.register(r'devicesettings', views.DeviceSettingsViewSet)
+from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
 
-urlpatterns = [
-    re_path(r'^device_config/(?P<mac>[A-Fa-f0-9]{12})\.(xml|cfg)$', views.device_config, name='deviceconfig'),
-    re_path(r'^device_config/(?P<file>y[0-9]{12}\.cfg)$', views.device_config, name='deviceconfig'),
-    re_path(r'^device_config/(?P<file>y0{12}\.boot)$', views.device_config, name='deviceconfig'),
-]
+class ContactsConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'contacts'
+    verbose_name = _('Contacts')
+    pbx_uuid = '83cb5c84-0c69-4702-bf62-725b66493db2'
+    pbx_category = 'CRM'
+    pbx_subcategory = ''
+    pbx_version = '1.0'
+    pbx_license = 'MIT License'
