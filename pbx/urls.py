@@ -61,6 +61,7 @@ from xmlcdr.urls import router as xmlcdrrouter
 from conferencesettings.urls import router as conferencesettingsrouter
 from provision.urls import router as provisionrouter
 from httapihandler.urls import router as httapihandlerrouter
+from contacts.urls import router as contactsrouter
 
 
 # This overrides names in site headers and titles
@@ -83,6 +84,8 @@ router.registry.extend(xmlcdrrouter.registry)
 router.registry.extend(conferencesettingsrouter.registry)
 router.registry.extend(provisionrouter.registry)
 router.registry.extend(httapihandlerrouter.registry)
+router.registry.extend(contactsrouter.registry)
+
 
 urlpatterns = [
     path('', include('portal.urls')),

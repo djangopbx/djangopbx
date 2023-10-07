@@ -111,7 +111,7 @@ class ContactTel(models.Model):
         db_table = 'pbx_contacts_tel'
 
     def __str__(self):
-        return self.value
+        return self.number
 
 
 class ContactEmail(models.Model):
@@ -154,7 +154,7 @@ class ContactGeo(models.Model):
 class ContactUrl(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Geo Tag ID'))  # noqa: E501, E221
     contact_id   = models.ForeignKey('Contact', on_delete=models.CASCADE, verbose_name=_('Contact'))                     # noqa: E501, E221
-    url          = models.CharField(max_length=1024, verbose_name=_('URL (Website)'))                                    # noqa: E501, E221
+    url_uri      = models.CharField(max_length=1024, verbose_name=_('URL (Website)'))                                    # noqa: E501, E221
     created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))             # noqa: E501, E221
     updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                 # noqa: E501, E221
     synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                           # noqa: E501, E221
@@ -166,7 +166,7 @@ class ContactUrl(models.Model):
         db_table = 'pbx_contacts_url'
 
     def __str__(self):
-        return self.geo_uri
+        return self.url_uri
 
 
 class ContactOrg(models.Model):
@@ -185,7 +185,7 @@ class ContactOrg(models.Model):
         db_table = 'pbx_contacts_org'
 
     def __str__(self):
-        return self.orgainisation_name
+        return self.organisation_name
 
 
 class ContactAddress(models.Model):
@@ -249,3 +249,23 @@ class ContactCategory(models.Model):
     def __str__(self):
         return self.category
 
+
+class ContactGroup(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Group'))                 # noqa: E501, E221
+    contact_id   = models.ForeignKey('contact', on_delete=models.CASCADE, verbose_name=_('Contact'))                               # noqa: E501, E221
+    name         = models.CharField(max_length=64, blank=True, null=True)                                                          # noqa: E501, E221
+    group_id     = models.ForeignKey('auth.Group', db_column='group_id', on_delete=models.CASCADE, verbose_name=_('Group'))        # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                       # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                           # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                     # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                   # noqa: E501, E221
+
+    class Meta:
+        db_table = 'pbx_contacts_groups'
+
+    def save(self, *args, **kwargs):
+        self.name = self.group_id.name
+        super(ContactGroup, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.group_id)
