@@ -191,6 +191,7 @@ class DeviceProfilesResource(resources.ModelResource):
 
 class DeviceProfilesAdmin(ImportExportModelAdmin):
     resource_class = DeviceProfilesResource
+    save_as = True
 
     class Media:
         css = {
@@ -344,6 +345,7 @@ class DevicesResource(resources.ModelResource):
 
 class DevicesAdmin(ImportExportModelAdmin):
     resource_class = DevicesResource
+    save_as = True
 
     class Media:
         css = {
