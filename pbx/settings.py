@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     'conferencesettings.apps.ConferencesettingsConfig',
     'provision.apps.ProvisionConfig',
     'contacts.apps.ContactsConfig',
+    'ringgroups.apps.RinggroupsConfig',
 ]
 
 MIDDLEWARE = [

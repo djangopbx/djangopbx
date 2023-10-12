@@ -60,14 +60,14 @@ class XmlCdrFunctions():
     def str2int(self, tmpstr):
         try:
             number = int(tmpstr)
-        except ValueError:
+        except (TypeError, ValueError):
             number = 0
         return number
 
     def str2float(self, tmpstr):
         try:
             number = round(float(tmpstr), 2)
-        except ValueError:
+        except (TypeError, ValueError):
             number = 0.0
         return number
 
