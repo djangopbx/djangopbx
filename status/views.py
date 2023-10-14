@@ -33,10 +33,25 @@ from django.conf import settings
 from django.contrib import messages
 from pbx.commonfunctions import shcommand, get_version
 from pbx.fseventsocket import EventSocket
+from pbx.devicecfgevent import DeviceCfgEvent
 from .forms import LogViewerForm
 from switch.models import Modules
 import re
 import sys
+import json
+import datetime
+
+
+def parseregdetail(regdetail):
+    lines = regdetail.splitlines()
+    i = 1
+    info = {}
+    for line in lines:
+        if i > 3 and i < 17:
+            data = line.split(':', 1)
+            info[data[0]] = data[1].strip()
+        i += 1
+    return info
 
 
 @staff_member_required
@@ -115,3 +130,71 @@ def modules(request, moduuid=None, action=None):
         request, 'infotablemulti.html',
         {'refresher': 'modules', 'info': info, 'th': th, 'title': 'Modules Status'}
         )
+
+
+@staff_member_required
+def fsregistrations(request, realm=None):
+    if not realm:
+        realm = request.session['domain_name']
+    es = EventSocket()
+    if not es.connect(*settings.EVSKT):
+        return render(request, 'error.html', {'back': '/portal/', 'info': {'Message': _('Unable to connect to the FreeSWITCH Event Socket')}, 'title': 'Event Socket Error'})
+
+    if request.method == 'POST':
+        actlist = request.POST.getlist('_selected_action')
+        if request.POST['action'] == 'unregister':
+            for target in actlist:
+                data = target.split('|')
+                result = es.send('api sofia profile %s flush_inbound_reg %s@%s reboot' % (data[2], data[0], data[1]))
+
+            messages.add_message(request, messages.INFO, _(result))
+        else:
+            dce = DeviceCfgEvent()
+            for target in actlist:
+                data = target.split('|')
+                regdetail =  es.send('api sofia status profile %s user %s@%s' % (data[2], data[0], data[1]))
+                if regdetail:
+                    info = parseregdetail(regdetail)
+                    if 'Agent' in info:
+                        cmd = dce.buildevent(data[0], data[1], data[2], request.POST['action'], info['Agent'].split()[0].lower())
+                        es.send(cmd)
+            messages.add_message(request, messages.INFO, _('Request: %s Sent' % request.POST['action']))
+
+    rows = []
+    info = []
+    th = ['User', 'LAN IP', 'Network IP', 'Network Port', 'Network Protocol', 'Hostname', 'Expires (Seconds)', 'profile']
+    act = {'unregister': 'Un-Register', 'check_sync': 'Provision', 'reboot': 'Reboot'}
+
+    unixts = int(datetime.datetime.now().timestamp())
+    registrations = es.send('api show registrations as json')
+    if registrations:
+        registrations = json.loads(registrations)
+        for i in registrations['rows']:
+            if realm == 'all' or realm == i['realm']:
+                sip_profile = i['url'].split('/')[1]
+                sip_user = '%s@%s' % (i['reg_user'], i['realm'])
+                rows.append('%s|%s|%s' % (i['reg_user'], i['realm'], sip_profile))
+                rows.append('<a href="/status/fsregdetail/%s/%s">%s</a>' % (sip_profile, sip_user, sip_user))
+                rows.append(i['token'].split('@')[1])
+                rows.append(i['network_ip'])
+                rows.append(i['network_port'])
+                rows.append(i['network_proto'])
+                rows.append(i['hostname'])
+                rows.append(str(int(i['expires']) - unixts))
+                rows.append(sip_profile)
+                info.append(rows)
+                rows = []
+    return render(request, 'actiontable.html', {'refresher': 'fsregistrations', 'showall': 'fsregistrations', 'info': info, 'th': th, 'act': act, 'title': 'Registrations'})
+
+
+@staff_member_required
+def fsregdetail(request, sip_profile=None, sip_user=None):
+    info = {}
+    es = EventSocket()
+    if es.connect(*settings.EVSKT):
+        regdetail = es.send('api sofia status profile %s user %s' % (sip_profile, sip_user))
+    if regdetail:
+        info = parseregdetail(regdetail)
+
+    return render(request, 'infotable.html', {'back': 'fsregistrations', 'info': info, 'title': 'Registration Detail'})
+

@@ -35,4 +35,7 @@ urlpatterns = [
     path('djangopbx/', views.djangopbx, name='djangopbx'),
     path('modules/', views.modules, name='modules'),
     path('modules/<uuid:moduuid>/<str:action>/', views.modules, name='modules'),
+    path('fsregistrations/', views.fsregistrations, name='fsregistrations'),
+    path('fsregistrations/<str:realm>/', views.fsregistrations, name='fsregistrations'),
+    path('fsregdetail/<str:sip_profile>/<str:sip_user>/', views.fsregdetail, name='fsregdetail'),
 ]

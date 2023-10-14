@@ -7,23 +7,26 @@
         <div class="card-header">
             <div class="row">
             <div class="col-lg-6"><i class="fa fa-info"></i> {% translate title %}</div>
-            {% if refresher %}
-            <div class="col-lg-6 text-right"><form action="{% url refresher %}" method="get"><input type="submit" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></form></div>
-            {% endif %}
+            <div class="col-lg-6 text-right">
             {% if back %}
-            <div class="col-lg-6 text-right"><form action="{% url back %}" method="get"><input type="submit" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></form></div>
+            <a href="{% url back %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>
             {% endif %}
+            {% if refresher %}
+            <a href="{% url refresher %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></a>
+            {% endif %}
+            </div>
             </div>
         </div>
         <div class="card-body cardbody1">
-        <table class="pbxformtable">
+        <div class="table-container table-responsive">
+        <table width="100%" class="pbxformtable">
             <tr>
             {% for h in th %}
             <th>{{ h }}</th>
             {% endfor %}
             </tr>
         {% for key, value in info.items %}
-            <tr>
+            <tr class="{% cycle 'odd' 'even' %}">
                 <th><b>{{ key|safe }}</b></th>
                 {% for v in value %}
                 <td>{{ v|safe }}</td>
@@ -31,6 +34,7 @@
             </tr>
         {% endfor %}
         </table>
+        </div>
         </div>
     </div>
 

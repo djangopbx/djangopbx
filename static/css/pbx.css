@@ -23,6 +23,51 @@ tcselecthxtag {
 
 }
 
+.pbx-actions {
+  padding: 10px;
+  border-top: none;
+  border-bottom: none;
+  line-height: 24px;
+  color: #666;
+  width: 100%;
+}
+
+.pbx-actions select {
+  vertical-align: top;
+  height: 24px;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  padding: 0 0 0 4px;
+  margin-left: 10px;
+}
+
+.pbx-actions button {
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  box-shadow: 0 -15px 20px -10px rgba(0, 0, 0, 0.15) inset;
+  cursor: pointer;
+  height: 24px;
+  line-height: 1;
+  padding: 4px 8px;
+  margin: 0;
+  color: #333;
+}
+
+.pbx-action-select {
+    padding-right: 1px;
+
+}
+
+.pbx-action-toggle {
+    padding-right: 1px;
+
+}
+
 /*
 CSS for colours
 */
@@ -191,9 +236,14 @@ table.pbxtable th {
     vertical-align:top;
 }
 
+table.pbxformtable {
+    border-collapse: collapse;
+    border-color: #CCC;
+    border: 1px solid #DDD;
+}
 
 table.pbxformtable tr {
-    border-bottom: 1pt solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 table.pbxformtable td {
@@ -201,7 +251,7 @@ table.pbxformtable td {
     padding-left: 20px;
     line-height: 13px;
     text-align: left;
-    background-color: #fefefe !important;
+/*    background-color: #fefefe !important;*/
     vertical-align:top;
 }
 
@@ -211,8 +261,18 @@ table.pbxformtable th {
     line-height: 13px;
     text-align: left;
     vertical-align:top;
+    border-right: 1px solid #f0f0f0;
     background-color: #f6f6ff !important;
 }
+
+table.pbxformtable tr.odd {
+    background-color: #fcfcfc;
+}
+
+table.pbxformtable tr.even {
+    background-color: white;
+}
+
 
 .table-borderless th {
     border: 0;
@@ -222,6 +282,7 @@ table.pbxformtable th {
 CSS for django-tables2
 */
 table.paleblue {
+    width: 100%;
     border-collapse: collapse;
     border-color: #CCC;
     border: 1px solid #DDD;

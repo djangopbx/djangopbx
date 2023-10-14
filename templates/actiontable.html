@@ -1,0 +1,63 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <script type="text/javascript" language="Javascript" src="{% static 'script/checkboxall.js' %}"></script>
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <div class="row">
+            <div class="col-lg-6"><i class="fa fa-info"></i> {% translate title %}</div>
+            <div class="col-lg-6 text-right">
+            {% if back %}
+            <a href="{% url back %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>
+            {% endif %}
+            {% if showall %}
+            <a href="{% url showall %}all" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Show All' %}"></a>
+            {% endif %}
+            {% if refresher %}
+            <a href="{% url refresher %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></a>
+            {% endif %}
+            </div>
+            </div>
+        </div>
+        <div class="card-body cardbody1">
+        <form action="{% url refresher %}" method="post">
+        {% csrf_token %}
+        <div class="pbx-actions">
+        <label>{% translate 'Action' %}: <select name="action" required>
+            <option value="" selected>---------</option>
+            {% for key, value in act.items %}
+            <option value="{{ key }}">{% translate value %}</option>
+            {% endfor %}
+        </select></label>
+        <button type="submit" class="button" title="Run the selected action" name="index" value="0">Go</button>
+        </div>
+        <div class="table-container table-responsive">
+        <table width="100%" id="result_list" class="paleblue">
+        <thead>
+            <tr>
+            <th><input type="checkbox" id="pbx-action-toggle" onclick="SelectAll()">&nbsp;</th>
+            {% for h in th %}
+            <th>{% translate h %}</th>
+            {% endfor %}
+            </tr>
+        </thead>
+        {% for r in info %}
+            <tr class="{% cycle 'odd' 'even' %}">
+            {% for d in r %}
+            {% if forloop.first %}
+                <td><input type="checkbox" name="_selected_action" value="{{ d|safe }}" class="pbx-action-select"></td>
+            {% else %}
+                <td>{{ d|safe }}</td>
+            {% endif %}
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
