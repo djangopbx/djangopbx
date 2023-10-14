@@ -108,6 +108,7 @@ class CdrViewerList(tables.Table):
             'id', 'extension_id', 'direction', 'caller_id_name', 'caller_id_number', 'destination_number',
             'caller_destination', 'recording', 'start_stamp', 'duration', 'status'
             )
+        order_by = '-start_stamp'
 
     start_stamp = tables.DateTimeColumn(
         verbose_name=_('Date Time'), attrs={"td": {"style": "white-space: nowrap;"}}, format='Y-m-d H:i:s'
