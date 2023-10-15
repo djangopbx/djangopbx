@@ -173,6 +173,8 @@ class DomainSelectorList(tables.Table):
         model = Domain
         attrs = {"class": "paleblue"}
         fields = ('name', 'description')
+        order_by = 'name'
+
     name = tables.Column(linkify=("selectdomain", [tables.A("id")]))
 
 
