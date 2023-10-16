@@ -428,6 +428,9 @@ class XmlCdrFunctions():
             elif (not record.answer_stamp and not record.bridge_uuid and
                     not record.sip_hangup_disposition == 'send_refuse'):
                 call_result = _('cancelled')
+            elif (not record.answer_stamp and not record.bridge_uuid and
+                    record.sip_hangup_disposition == 'send_refuse'):
+                call_result = _('no answer')
             else:
                 call_result = _('failed')
         elif record.direction == 'outbound':
