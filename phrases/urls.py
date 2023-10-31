@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +27,12 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
+from rest_framework import routers
 from . import views
 
+router = routers.DefaultRouter()
+router.register(r'phrases', views.PhrasesViewSet)
+router.register(r'phrasedetailss', views.PhraseDetailsViewSet)
+
 urlpatterns = [
-    path('dialplan/', views.dialplan, name='dialplan'),
-    path('directory/', views.directory, name='directory'),
-    path('languages/', views.languages, name='languages'),
-    path('static/dialplan.xml', views.staticdialplan, name='staticdialplan'),
-    path('static/directory.xml', views.staticdirectory, name='staticdirectory'),
 ]

@@ -94,6 +94,7 @@ INSTALLED_APPS = [
     'provision.apps.ProvisionConfig',
     'contacts.apps.ContactsConfig',
     'ringgroups.apps.RinggroupsConfig',
+    'phrases.apps.PhrasesConfig',
 ]
 
 MIDDLEWARE = [

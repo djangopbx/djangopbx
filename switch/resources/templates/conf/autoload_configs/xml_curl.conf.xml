@@ -8,6 +8,10 @@
       <param name="gateway-url" value="http://127.0.0.1:8080/xmlhandler/dialplan/" bindings="dialplan"/>
       <param name="timeout" value="10"/>
     </binding>
+    <binding name="languages">
+      <param name="gateway-url" value="http://127.0.0.1:8080/xmlhandler/languages/" bindings="languages"/>
+      <param name="timeout" value="10"/>
+    </binding>
     <!--<binding name="example"> -->
       <!-- Allow to bind on a particular IP for requests sent -->
       <!--<param name="bind-local" value="127.0.0.1" />-->

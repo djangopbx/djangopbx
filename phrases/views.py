@@ -27,16 +27,45 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.apps import AppConfig
-from django.utils.translation import gettext_lazy as _
+from rest_framework import viewsets
+from rest_framework import permissions
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-class RinggroupsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'ringgroups'
-    verbose_name = _('Ring Groups')
-    pbx_uuid = '77578687-8eb7-4bb7-a00a-ddf3e8b7169f'
-    pbx_category = 'Switch'
-    pbx_subcategory = ''
-    pbx_version = '1.0'
-    pbx_license = 'MIT License'
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+from .models import (
+    Phrases, PhraseDetails
+)
+from .serializers import (
+    PhrasesSerializer, PhraseDetailsSerializer
+)
+
+
+class PhrasesViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Phrases to be viewed or edited.
+    """
+    queryset = Phrases.objects.all().order_by('domain_id', 'name')
+    serializer_class = PhrasesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['domain_id', 'name']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class PhraseDetailsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows PhraseDetails to be viewed or edited.
+    """
+    queryset = PhraseDetails.objects.all().order_by('phrase_id', 'sequence')
+    serializer_class = PhraseDetailsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['phrase_id']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]

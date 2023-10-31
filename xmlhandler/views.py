@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@
 import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-from .xmlhandlerfunctions import DirectoryHandler, DialplanHandler
+from .xmlhandlerfunctions import DirectoryHandler, DialplanHandler, LanguagesHandler
 
 logger = logging.getLogger(__name__)
 
@@ -141,5 +141,27 @@ def staticdirectory(request):
         xml = xmlhf.GetDirectoryStatic()
     else:
         return HttpResponseNotFound()
+
+    return HttpResponse(xml, content_type='application/xml')
+
+@csrf_exempt
+def languages(request):
+    debug = True
+    xmlhf = LanguagesHandler()
+    allowed_addresses = xmlhf.get_allowed_addresses()
+
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+        return HttpResponseNotFound()
+
+    if not request.method == 'POST':
+        return HttpResponseNotFound()
+
+    if debug:
+        logger.info('XML Handler request: {}'.format(request.POST))
+
+    lang = request.POST.get('lang', '')
+    macro_name = request.POST.get('macro_name', '')
+
+    xml = xmlhf.GetLanguage(lang, macro_name)
 
     return HttpResponse(xml, content_type='application/xml')

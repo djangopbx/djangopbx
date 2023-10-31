@@ -58,15 +58,15 @@
 
   <!-- languages section (under development still) -->
   <section name="languages" description="Language Management">
-    <X-PRE-PROCESS cmd="include" data="lang/de/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="lang/en/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="lang/fr/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="lang/ru/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="lang/he/*.xml"/>
-    <X-PRE-PROCESS cmd="include" data="lang/es/es_ES.xml"/>
-    <X-NO-PRE-PROCESS cmd="include" data="lang/es/es_MX.xml"/>
-    <X-PRE-PROCESS cmd="include" data="lang/pt/pt_BR.xml"/>
-    <X-NO-PRE-PROCESS cmd="include" data="lang/pt/pt_PT.xml"/>
-    <X-NO-PRE-PROCESS cmd="include" data="lang/sv/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/de/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/en/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/fr/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/ru/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/he/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/es/es_ES.xml"/>
+    <X-NO-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/es/es_MX.xml"/>
+    <X-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/pt/pt_BR.xml"/>
+    <X-NO-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/pt/pt_PT.xml"/>
+    <X-NO-PRE-PROCESS cmd="include" data="/home/django-pbx/freeswitch/lang/sv/*.xml"/>
   </section>
 </document>

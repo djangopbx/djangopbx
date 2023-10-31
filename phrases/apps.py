@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +27,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from . import views
+from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
-urlpatterns = [
-    path('dialplan/', views.dialplan, name='dialplan'),
-    path('directory/', views.directory, name='directory'),
-    path('languages/', views.languages, name='languages'),
-    path('static/dialplan.xml', views.staticdialplan, name='staticdialplan'),
-    path('static/directory.xml', views.staticdirectory, name='staticdirectory'),
-]
+
+class PhrasesConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'phrases'
+    verbose_name = _('Phrases')
+    pbx_uuid = '8f6aaa30-bf6d-4617-9309-47852f9fbab8'
+    pbx_category = 'Switch'
+    pbx_subcategory = ''
+    pbx_version = '1.0'
+    pbx_license = 'MIT License'

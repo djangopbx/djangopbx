@@ -44,7 +44,7 @@ class HttApiHandlerFunctions():
 
     def __init__(self, qdict):
         self.logger = logging.getLogger(__name__)
-        self.debug = True
+        self.debug = False
         self.qdict = qdict
         self.exiting = False
         self.session = None

@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -29,4 +29,164 @@
 
 from django.contrib import admin
 
-# Register your models here.
+from .models import (
+    RingGroup, RingGroupDestination, RingGroupUser
+)
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
+from django.conf import settings
+from django.forms import ModelForm
+from switch.switchsounds import SwitchSounds
+from pbx.commonwidgets import ListTextWidget
+
+from pbx.commonfunctions import DomainFilter, DomainUtils
+
+
+class RingGroupUserResource(resources.ModelResource):
+    class Meta:
+        model = RingGroupUser
+        import_id_fields = ('id', )
+
+
+class RingGroupUserAdmin(ImportExportModelAdmin):
+    resource_class = RingGroupUserResource
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['user_uuid']
+    fieldsets = [
+        (None,  {'fields': ['user_uuid', ]}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('ring_group_id', 'user_uuid',)
+    list_filter = ()
+    ordering = [
+        'ring_group_id','user_uuid'
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
+
+class RingGroupUserInLine(admin.TabularInline):
+    model = RingGroupUser
+    extra = 1
+    fieldsets = [
+        (None,          {'fields': ['user_uuid']}),
+    ]
+    ordering = [
+        'user_uuid'
+    ]
+
+
+class RingGroupDestinationResource(resources.ModelResource):
+    class Meta:
+        model = RingGroupDestination
+        import_id_fields = ('id', )
+
+
+class RingGroupDestinationAdmin(ImportExportModelAdmin):
+    resource_class = RingGroupDestinationResource
+    save_as = True
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['number']
+    fieldsets = [
+        (None,  {'fields': ['number', 'delay', 'timeout', 'destination_prompt']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('ring_group_id', 'number')
+    list_filter = ('ring_group_id', 'number')
+    ordering = [
+        'ring_group_id, number'
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
+
+class RingGroupDestinationInLine(admin.TabularInline):
+    model = RingGroupDestination
+    extra = 3
+    fieldsets = [
+        (None,          {'fields': ['number', 'delay', 'timeout', 'destination_prompt']}),
+    ]
+    ordering = [
+        'number'
+    ]
+
+
+class RingGroupAdminForm(ModelForm):
+
+    class Meta:
+        model = RingGroup
+        widgets = {
+            "greeting": ListTextWidget(choices=[('', 'List unavailable')], attrs={'size': '50'}),
+        }
+        fields = '__all__'
+
+
+class RingGroupResource(resources.ModelResource):
+    class Meta:
+        model = RingGroup
+        import_id_fields = ('id', )
+
+
+class RingGroupAdmin(ImportExportModelAdmin):
+    resource_class = RingGroupResource
+    form = RingGroupAdminForm
+    save_as = True
+
+    class Media:
+        css = {
+            'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
+        }
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['name', 'extension', 'description']
+    fieldsets = [
+        (None,  {'fields': ['domain_id', 'name', 'extension', 'greeting', 'strategy', 
+                            ('timeout_app', 'timeout_data'),
+                            ('missed_call_app', 'missed_call_data'),
+                            'call_timeout', 'forward_toll_allow',
+                            ('forward_enabled', 'forward_destination'),
+                            ('caller_id_name', 'caller_id_number'),
+                            ('cid_name_prefix', 'cid_number_prefix'),
+                            'distinctive_ring', 'ring_group_ringback', 'follow_me_enabled',
+                            'context', 'enabled', 'description']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('name', 'extension', 'context', 'description', 'enabled')
+    list_filter = (DomainFilter, 'enabled', 'forward_enabled')
+    ordering = [
+        'domain_id', 'name', 'extension'
+    ]
+    inlines = [RingGroupDestinationInLine, RingGroupUserInLine]
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        # this is required for access to the request object so the domain_name session
+        # variable can be passed to the chioces function
+        self.form.Meta.widgets['greeting'].choices=SwitchSounds().get_sounds_choices_list(request.session['domain_name'])
+        return super().get_form(request, obj, change, **kwargs)
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for instance in instances:
+            instance.updated_by = request.user.username
+            instance.save()
+        formset.save_m2m()
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        if not change:
+            obj.domain_id = DomainUtils().domain_from_session(request)
+            obj.context = request.session['domain_name']
+        super().save_model(request, obj, form, change)
+
+
+admin.site.register(RingGroup, RingGroupAdmin)
+
+if settings.PBX_ADMIN_SHOW_ALL:
+    admin.site.register(RingGroupDestination, RingGroupDestinationAdmin)
+    admin.site.register(RingGroupUser, RingGroupUserAdmin)

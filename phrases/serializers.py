@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +27,42 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from . import views
+from rest_framework import serializers
+from .models import (
+    Phrases, PhraseDetails,
+)
 
-urlpatterns = [
-    path('dialplan/', views.dialplan, name='dialplan'),
-    path('directory/', views.directory, name='directory'),
-    path('languages/', views.languages, name='languages'),
-    path('static/dialplan.xml', views.staticdialplan, name='staticdialplan'),
-    path('static/directory.xml', views.staticdirectory, name='staticdirectory'),
-]
+
+class PhrasesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Phrases
+        fields = [
+                'url', 'id',
+                'domain_id',
+                'name',
+                'language',
+                'enabled',
+                'description',
+                'created',
+                'updated',
+                'synchronised',
+                'updated_by'
+                ]
+
+
+class PhraseDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PhraseDetails
+        fields = [
+                'url', 'id',
+                'phrase_id',
+                'pfunction',
+                'data',
+                'sequence',
+                'created',
+                'updated',
+                'synchronised',
+                'updated_by'
+                ]

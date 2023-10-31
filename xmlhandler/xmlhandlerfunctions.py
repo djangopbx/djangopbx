@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import re
 from django.core.cache import cache
 from lxml import etree
 from django.db.models import Q
@@ -35,6 +36,8 @@ from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, ExtensionUser
 from voicemail.models import Voicemail
+from switch.models import SwitchVariable
+from phrases.models import PhraseDetails
 
 
 class XmlHandlerFunctions():
@@ -91,6 +94,50 @@ class XmlHandlerFunctions():
             aa = ','.join(allowed_addresses)
             cache.set(cache_key, aa)
         return allowed_addresses
+
+    def get_default_language(self):
+        cache_key = 'xmlhandler:lang:default_language'
+        cv = cache.get(cache_key)
+        if cv:
+            return cv
+        sv = SwitchVariable.objects.filter(category='defaults', name='default_language', enabled='true').first()
+        if sv is None:
+            cv = 'en'
+        else:
+            cv = sv.value
+        cache.set(cache_key, cv)
+        return cv
+
+    def get_default_dialect(self):
+        cache_key = 'xmlhandler:lang:default_dialect'
+        cv = cache.get(cache_key)
+        if cv:
+            return cv
+        sv = SwitchVariable.objects.filter(category='defaults', name='default_dialect', enabled='true').first()
+        if sv is None:
+            cv = 'us'
+        else:
+            cv = sv.value
+        cache.set(cache_key, cv)
+        return cv
+
+    def get_default_voice(self):
+        cache_key = 'xmlhandler:lang:default_voice'
+        cv = cache.get(cache_key)
+        if cv:
+            return cv
+        sv = SwitchVariable.objects.filter(category='defaults', name='default_voice', enabled='true').first()
+        if sv is None:
+            cv = 'callie'
+        else:
+            cv = sv.value
+        cache.set(cache_key, cv)
+        return cv
+
+    def valid_uuid4(self, uuid):
+        regex = re.compile('[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}', re.I)
+        match = regex.match(uuid)
+        return bool(match)
 
 
 class DirectoryHandler(XmlHandlerFunctions):
@@ -631,3 +678,49 @@ class DialplanHandler(XmlHandlerFunctions):
             return xml
 
         return self.NotFoundXml()
+
+
+class LanguagesHandler(XmlHandlerFunctions):
+
+    def GetLanguage(self, lang, macro_name):
+        if not self.valid_uuid4(macro_name):
+            return self.NotFoundXml()
+
+        languages_cache_key = 'languages:%s:%s' % (lang, macro_name)
+        xml = cache.get(languages_cache_key)
+        if xml:
+            return xml
+
+        cache_key = 'xmlhandler:lang:sounds_dir'
+        sounds_dir = cache.get(cache_key)
+        if not sounds_dir:
+            sounds_dir = PbxSettings().default_settings('switch', 'sounds', 'dir', '/usr/share/freeswitch/sounds', True)[0]
+            cache.set(cache_key, sounds_dir)
+
+        default_language = self.get_default_language()
+        default_dialect = self.get_default_dialect()
+        default_voice = self.get_default_voice()
+
+        xml_list = list()
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='languages')
+        x_language = etree.SubElement(x_section, "language", name=lang)
+        x_language.attrib['say-module'] = lang
+        x_language.attrib['sound-prefix'] = '{}/{}/{}/{}'.format(sounds_dir, default_language, default_dialect, default_voice)
+        x_language.attrib['tts-engine'] = 'cepstral'
+        x_language.attrib['tts-voice'] = default_voice
+        x_phrases = etree.SubElement(x_language, "phrases")
+        x_macros = etree.SubElement(x_phrases, "macros")
+        pds = PhraseDetails.objects.filter(phrase_id=macro_name).order_by('sequence')
+        # using len() here because we are going to itterate the queryset anyway (otherwise count is better but two hits on the RDBMS).
+        if len(pds) > 0:
+            x_macro = etree.SubElement(x_macros, "macro", name=macro_name)
+            x_input = etree.SubElement(x_macro, "input", pattern="(.*)")
+            x_match = etree.SubElement(x_input, "match")
+        for pd in pds:
+            etree.SubElement(x_match, "action", function=pd.pfunction, data=pd.data)
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(languages_cache_key, xml)
+        return xml
