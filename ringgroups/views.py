@@ -27,6 +27,59 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework import permissions
+from django_filters.rest_framework import DjangoFilterBackend
 
-# Create your views here.
+
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+from .models import (
+    RingGroup, RingGroupDestination, RingGroupUser
+)
+from .serializers import (
+    RingGroupSerializer, RingGroupDestinationSerializer, RingGroupUserSerializer
+)
+
+
+class RingGroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows RingGroups to be viewed or edited.
+    """
+    queryset = RingGroup.objects.all().order_by('domain_id', 'name', 'extension')
+    serializer_class = RingGroupSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['domain_id', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class RingGroupDestinationViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows RingGroupDestinations to be viewed or edited.
+    """
+    queryset = RingGroupDestination.objects.all().order_by('ring_group_id', 'number')
+    serializer_class = RingGroupDestinationSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['ring_group_id']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class RingGroupUserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows RingGroupUsers to be viewed or edited.
+    """
+    queryset = RingGroupUser.objects.all().order_by('ring_group_id', 'user_uuid')
+    serializer_class = RingGroupUserSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['ring_group_id']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
