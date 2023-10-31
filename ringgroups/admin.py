@@ -35,7 +35,7 @@ from .models import (
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
-from django.forms import ModelForm
+from django.forms import ModelForm, Select
 from switch.switchsounds import SwitchSounds
 from pbx.commonwidgets import ListTextWidget
 
@@ -121,6 +121,7 @@ class RingGroupAdminForm(ModelForm):
         model = RingGroup
         widgets = {
             "greeting": ListTextWidget(choices=[('', 'List unavailable')], attrs={'size': '50'}),
+            "ring_group_ringback": Select(choices=[('', 'List unavailable')]),
         }
         fields = '__all__'
 
@@ -163,9 +164,11 @@ class RingGroupAdmin(ImportExportModelAdmin):
     inlines = [RingGroupDestinationInLine, RingGroupUserInLine]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
+        ss = SwitchSounds()
         # this is required for access to the request object so the domain_name session
         # variable can be passed to the chioces function
-        self.form.Meta.widgets['greeting'].choices=SwitchSounds().get_sounds_choices_list(request.session['domain_name'])
+        self.form.Meta.widgets['greeting'].choices=ss.get_sounds_choices_list(request.session['domain_name'])
+        self.form.Meta.widgets['ring_group_ringback'].choices=ss.get_ringback_choices_list(request.session['domain_name'])
         return super().get_form(request, obj, change, **kwargs)
 
     def save_formset(self, request, form, formset, change):
