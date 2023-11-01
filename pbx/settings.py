@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'contacts.apps.ContactsConfig',
     'ringgroups.apps.RinggroupsConfig',
     'phrases.apps.PhrasesConfig',
+    'utilities.apps.UtilitiesConfig',
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,12 @@ CACHES = {
         'LOCATION': '127.0.0.1:11211',
         'TIMEOUT': 300,
         'KEY_PREFIX': 'pbx_',
+        "OPTIONS": {
+            "no_delay": True,
+            "ignore_exc": True,
+            "max_pool_size": 8,
+            "use_pooling": True,
+        },
     }
 }
 
