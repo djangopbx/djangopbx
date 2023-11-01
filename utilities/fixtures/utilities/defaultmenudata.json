@@ -1,0 +1,59 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "b9ac0610-d2a8-4baf-b5be-d0fba24fbc6e",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": null,
+        "title": "Utilities",
+        "link": "dropdown",
+        "icon": "fa fa-wrench",
+        "category": "internal",
+        "protected": "true",
+        "sequence": "88000",
+        "description": "",
+        "created": "2022-11-29T22:26:08.604Z",
+        "updated": "2022-11-29T22:33:59.265Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "0fa09544-65cf-4073-b251-f0dc52b375d0",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "b9ac0610-d2a8-4baf-b5be-d0fba24fbc6e",
+        "title": "Clear Cache",
+        "link": "/utilities/clearcache/",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "88010",
+        "description": "",
+        "created": "2023-10-31T18:56:06.698Z",
+        "updated": "2023-10-31T18:56:06.698Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "3bfffd8d-75f7-4400-92d7-71317dc0e72b",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "b9ac0610-d2a8-4baf-b5be-d0fba24fbc6e",
+        "title": "Reload XML/ACL",
+        "link": "/utilities/reloadxml/",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "88020",
+        "description": "",
+        "created": "2023-11-01T11:06:28.052Z",
+        "updated": "2023-11-01T11:06:28.052Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

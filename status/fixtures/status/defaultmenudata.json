@@ -39,6 +39,25 @@
 },
 {
     "model": "portal.menuitem",
+    "pk": "09806d1d-e324-4f6f-a35e-d0a964927295",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "6c53a5e4-2b23-4ba0-af63-8f1393b8e45b",
+        "title": "Registrations",
+        "link": "/status/fsregistrations",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "89020",
+        "description": "",
+        "created": "2023-10-12T15:14:12.895Z",
+        "updated": "2023-10-12T15:14:12.895Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
     "pk": "653fbbcf-6f5f-4710-8974-fc6be6eb6911",
     "fields": {
         "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
