@@ -252,6 +252,9 @@ def newobroute(request):
             if gateway2:
                 gateway2_type = AccountFunctions().gateway_type(gateway2)
                 gateway2_bridge_data = AccountFunctions().gateway_bridge_data(gateway2, gateway2_type, prefix)
+            else:
+                gateway2_type = 'N/A'
+
             if gateway3:
                 gateway3_type = AccountFunctions().gateway_type(gateway3)
                 gateway3_bridge_data = AccountFunctions().gateway_bridge_data(gateway3, gateway3_type, prefix)
