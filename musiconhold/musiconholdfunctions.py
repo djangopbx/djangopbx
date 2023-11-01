@@ -37,7 +37,7 @@ class MohSource():
         # This try/except is a workaround to prevent a relation not found error on initial migrate
         try:
             return [('%s%s' % (prefix, c.name), c.name) for c in MusicOnHold.objects.distinct('name')]
-        except MusicOnHold.DoesNotExist:
+        except:
             return [('None', 'None')]
 
 

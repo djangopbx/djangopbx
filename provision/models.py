@@ -103,7 +103,7 @@ class DeviceVendorFunctionChoice():
             if vendor:
                 return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]
             return [(c.value, '%s -> %s' % (c.vendor_id.name, c.name)) for c in DeviceVendorFunctions.objects.filter(enabled='true')]
-        except DeviceVendorFunctions.DoesNotExist:
+        except:
             return [('None', 'None')]
 
 

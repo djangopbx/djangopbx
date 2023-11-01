@@ -48,7 +48,7 @@ class DeviceVendorFunctionChoice():
             if vendor:
                 return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]
             return [(c.value, '%s -> %s' % (c.vendor_id.name, c.name)) for c in DeviceVendorFunctions.objects.filter(enabled='true')]
-        except DeviceVendorFunctions.DoesNotExist:
+        except:
             return [('None', 'None')]
 
 
@@ -59,12 +59,16 @@ class ProvisionFunctions():
         self.path_of_templates = settings.BASE_DIR / 'provision/templates/provision'
 
     def get_template_list(self):
-        vendor_list = DeviceVendors.objects.filter(enabled='true')
-        for v in vendor_list:
-            for it in os.scandir(os.path.join(self.path_of_templates, v.name)):
-                if it.is_dir():
-                    relpath = os.path.relpath(it.path, start=self.path_of_templates)
-                    self.template_list.append((relpath, relpath))
+        # This try/except is a workaround to prevent a relation not found error on initial migrate
+        try:
+            vendor_list = DeviceVendors.objects.filter(enabled='true')
+            for v in vendor_list:
+                for it in os.scandir(os.path.join(self.path_of_templates, v.name)):
+                    if it.is_dir():
+                        relpath = os.path.relpath(it.path, start=self.path_of_templates)
+                        self.template_list.append((relpath, relpath))
+        except:
+            pass
         self.template_list.sort()
         return self.template_list
 

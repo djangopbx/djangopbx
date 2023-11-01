@@ -42,7 +42,7 @@ class SipProfileChoice():
         # This try/except is a workaround to prevent a relation not found error on initial migrate
         try:
             return [(c.name, c.name) for c in switch.models.SipProfile.objects.filter(enabled='true')]
-        except switch.models.SipProfile.DoesNotExist:
+        except:
             return [('None', 'None')]
 
 
