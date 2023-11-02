@@ -36,7 +36,7 @@ from pbx.commonchoices import EnabledTrueFalseChoice
 
 class RingGroupStrategyChoice(models.TextChoices):
     CSIM  = 'simultaneous', _('Simultaneous') # noqa: E221
-    CSEQ  = 'sequence',     _('Sequnce')      # noqa: E221
+    CSEQ  = 'sequence',     _('Sequence')     # noqa: E221
     CENT  = 'enterprise',   _('Enterprise')   # noqa: E221
     CROL  = 'rollover',     _('Rollover')     # noqa: E221
     CRAN  = 'random',       _('Random')       # noqa: E221

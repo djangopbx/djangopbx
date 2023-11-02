@@ -36,6 +36,7 @@ import urllib.parse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .models import XmlCdr
 from tenants.models import Domain
 from accounts.models import Extension
@@ -109,10 +110,10 @@ class XmlCdrFunctions():
 
         try:
             d = Domain.objects.get(name=domain_name)
-        except Domain.ObjectDoesNotExist:
+        except ObjectDoesNotExist:
             logger.warn('XML CDR request {}: Unable to find domain {}.'.format(t_uuid, domain_name))
             return False
-        except Domain.MultipleObjectsReturned:
+        except MultipleObjectsReturned:
             logger.warn('XML CDR request {}: Multiple domain record found for {}.'.format(t_uuid, domain_name))
             return False
 
@@ -121,7 +122,7 @@ class XmlCdrFunctions():
         if extension_uuid:
             try:
                 e = Extension.objects.get(pk=extension_uuid)
-            except Extension.ObjectDoesNotExist:
+            except ObjectDoesNotExist:
                 logger.debug('XML CDR request {}: Unable to find extension by uuid {}.'.format(t_uuid, extension_uuid))
             else:
                 extension_found = True
@@ -130,12 +131,12 @@ class XmlCdrFunctions():
             if tmpstr and not extension_found:
                 try:
                     e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
+                except ObjectDoesNotExist:
                     logger.debug(
                         'XML CDR request {}: Unable to find extension by number dialled_user {}.'.
                         format(t_uuid, tmpstr)
                         )
-                except Extension.MultipleObjectsReturned:
+                except MultipleObjectsReturned:
                     logger.warn(
                         'XML CDR request {}: Multiple extension records found for dialed_user {}.'.
                         format(t_uuid, tmpstr)
@@ -147,12 +148,12 @@ class XmlCdrFunctions():
             if tmpstr and not extension_found:
                 try:
                     e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
+                except ObjectDoesNotExist:
                     logger.debug(
                         'XML CDR request {}: Unable to find extension by number referred_by_user {}.'.
                         format(t_uuid, tmpstr)
                         )
-                except Extension.MultipleObjectsReturned:
+                except MultipleObjectsReturned:
                     logger.warn(
                         'XML CDR request {}: Multiple extension records found for referred_by_user {}.'.
                         format(t_uuid, tmpstr)
@@ -164,12 +165,12 @@ class XmlCdrFunctions():
             if tmpstr and not extension_found:
                 try:
                     e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
+                except ObjectDoesNotExist:
                     logger.debug(
                         'XML CDR request {}: Unable to find extension by number last_sent_callee_id_number {}.'.
                         format(t_uuid, tmpstr)
                         )
-                except Extension.MultipleObjectsReturned:
+                except MultipleObjectsReturned:
                     logger.warn(
                         'XML CDR request {}: Multiple extension records found for last_sent_callee_id_number {}.'.
                         format(t_uuid, tmpstr)

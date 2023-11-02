@@ -68,7 +68,7 @@ class XmlCdr(models.Model):
     pdd_ms                    = models.DecimalField(max_digits=32, decimal_places=0, blank=True, null=True, verbose_name=_('PDD'))                        # noqa: E501, E221
     rtp_audio_in_mos          = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True, verbose_name=_('MOS'))                         # noqa: E501, E221
     last_app                  = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Last App.'))                                       # noqa: E501, E221
-    last_arg                  = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Last Arg.'))                                      # noqa: E501, E221
+    last_arg                  = models.TextField(blank=True, null=True, verbose_name=_('Last Arg.'))                                                      # noqa: E501, E221
     missed_call               = models.BooleanField(blank=True, null=True, verbose_name=_('Missed Call'))                                                 # noqa: E501, E221
     cc_side                   = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('CC Side'))                                         # noqa: E501, E221
     cc_member_uuid            = models.UUIDField(blank=True, null=True, verbose_name=_('CC Member UUID'))                                                 # noqa: E501, E221

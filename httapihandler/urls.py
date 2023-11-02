@@ -40,4 +40,5 @@ urlpatterns = [
     path('failurehandler/', views.failurehandler, name='failurehandler'),
     path('hangup/', views.hangup, name='hangup'),
     path('register/', views.register, name='register'),
+    path('ringgroup/', views.ringgroup, name='ringgroup'),
 ]

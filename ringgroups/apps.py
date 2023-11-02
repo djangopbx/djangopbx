@@ -40,3 +40,5 @@ class RinggroupsConfig(AppConfig):
     pbx_subcategory = ''
     pbx_version = '1.0'
     pbx_license = 'MIT License'
+    pbx_dialplan = True
+    pbx_dialplan_category = 'Ring group'

@@ -28,6 +28,7 @@
 #
 
 from django.contrib import admin
+from django.http import HttpResponseRedirect
 
 from .models import (
     RingGroup, RingGroupDestination, RingGroupUser
@@ -40,6 +41,7 @@ from switch.switchsounds import SwitchSounds
 from pbx.commonwidgets import ListTextWidget
 
 from pbx.commonfunctions import DomainFilter, DomainUtils
+from .ringgroupfunctions import RgFunctions
 
 
 class RingGroupUserResource(resources.ModelResource):
@@ -135,6 +137,7 @@ class RingGroupResource(resources.ModelResource):
 class RingGroupAdmin(ImportExportModelAdmin):
     resource_class = RingGroupResource
     form = RingGroupAdminForm
+    change_form_template = "ringgroups/ringgroup_changeform.html"
     save_as = True
 
     class Media:
@@ -186,6 +189,15 @@ class RingGroupAdmin(ImportExportModelAdmin):
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']
         super().save_model(request, obj, form, change)
+
+    def response_change(self, request, obj):
+        if "_generate-xml" in request.POST:
+            rgf = RgFunctions(request.session['domain_uuid'], request.session['domain_name'], str(obj.id), request.user.username)
+            obj.dialplan_id = rgf.generate_xml()
+            obj.save()
+            self.message_user(request, "XML Generated")
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)
 
 
 admin.site.register(RingGroup, RingGroupAdmin)

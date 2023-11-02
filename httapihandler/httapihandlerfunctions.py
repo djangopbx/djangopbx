@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, FollowMeDestination
 from switch.switchfunctions import IpFunctions
 from pbx.pbxsendsmtp import PbxTemplateMessage
+from ringgroups.ringgroupfunctions import RgFunctions
 
 
 class HttApiHandlerFunctions():
@@ -399,3 +400,26 @@ class RegisterHandler(HttApiHandlerFunctions):
         if status.startswith('Registered'):
             IpFunctions().update_ip(ip_address)
         return self.return_data('Ok\n')
+
+
+class RingGroupHandler(HttApiHandlerFunctions):
+
+    def get_data(self):
+        if self.exiting:
+            return self.return_data('Ok\n')
+
+        self.get_common_variables()
+        ringgroup_uuid = self.qdict.get('variable_ring_group_uuid')
+        cid_name = self.qdict.get('Caller-Orig-Caller-ID-Name')
+        cid_number = self.qdict.get('Caller-Orig-Caller-ID-Number')
+        direction = self.qdict.get('Caller-Direction')
+        rgf = RgFunctions(self.domain_uuid, self.domain_name, ringgroup_uuid)
+
+        x_root = self.XrootApi()
+        etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+        etree.SubElement(x_work, 'execute', application='bridge', data=rgf.generate_bridge(direction, cid_number, cid_name))
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return self.return_data(xml)
