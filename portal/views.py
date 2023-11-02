@@ -70,10 +70,15 @@ def index(request):
     if 'domain_name' in request.session:
         pbx_domain_name = request.session['domain_name']
         dreload = False
+    else:
+        request.session['domain_name'] = 'None'
 
     if 'domain_uuid' in request.session:
         pbx_domain_uuid = request.session['domain_uuid']
         dreload = False
+    else:
+        request.session['domain_uuid'] = 'f4b3b3d2-6287-489c-aa00-64529e46f2d7'
+
 
     if 'domain_change' in request.session:
         if request.session['domain_change'] == 'yes':
@@ -102,14 +107,12 @@ def index(request):
                 request.session['extension_list'] = ','.join(extension_list)
 
             currentmenu = PbxSettings().settings(
-                pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True
-                )[0]
+                pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True )[0]
             m = Menu.objects.get(name=currentmenu)
         else:
-            request.session['domain_name'] = 'None'
-            request.session['domain_uuid'] = 'f4b3b3d2-6287-489c-aa00-64529e46f2d7'
             request.session['user_uuid'] = 'ffffffff-aaaa-489c-aa00-1234567890ab'
             request.session['extension_list'] = 'None,None'
+            request.session['extension_list_uuid'] = 'ffffffff-aaaa-489c-aa00-1234567890ab,'
             m = Menu.objects.get(name='Default')
 
         if request.user.is_superuser:
