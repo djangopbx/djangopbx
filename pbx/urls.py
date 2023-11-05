@@ -104,7 +104,8 @@ urlpatterns = [
     path('voicemail/', include('voicemail.urls')),
     path('provision/', include('provision.urls')),
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('accounts/auth/', include('django.contrib.auth.urls')),
     path('utilities/', include('utilities.urls')),
 
     # Wire up our API using automatic URL routing.
