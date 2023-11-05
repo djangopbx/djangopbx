@@ -114,7 +114,7 @@ class HttApiHandlerFunctions():
         try:
             self.session = HttApiSession.objects.get(pk=self.session_id)
         except HttApiSession.DoesNotExist:
-            self.session = HttApiSession.objects.create(id=self.session_id, name=name)
+            self.session = HttApiSession.objects.create(id=self.session_id, name=name, json={'Default': 'true'})
             new = True
         return new
 
@@ -406,19 +406,33 @@ class RingGroupHandler(HttApiHandlerFunctions):
 
     def get_data(self):
         if self.exiting:
+            destroy_httapi_session()
             return self.return_data('Ok\n')
 
         self.get_common_variables()
+        self.get_httapi_session(name='RingGroupHandler')
+
         ringgroup_uuid = self.qdict.get('variable_ring_group_uuid')
-        cid_name = self.qdict.get('Caller-Orig-Caller-ID-Name')
-        cid_number = self.qdict.get('Caller-Orig-Caller-ID-Number')
-        direction = self.qdict.get('Caller-Direction')
-        rgf = RgFunctions(self.domain_uuid, self.domain_name, ringgroup_uuid)
+        if ringgroup_uuid:
+            self.session.json['ring_group_uuid'] = ringgroup_uuid
+            self.session.save()
+            rgf = RgFunctions(self.domain_uuid, self.domain_name, ringgroup_uuid)
+        else:
+            rgf = RgFunctions(self.domain_uuid, self.domain_name, self.session.json['ring_group_uuid'])
 
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
-        etree.SubElement(x_work, 'execute', application='bridge', data=rgf.generate_bridge(direction, cid_number, cid_name))
+        if not 'bridge_done' in self.session.json:
+            self.session.json['bridge_done'] = 'true'
+            self.session.save()
+            etree.SubElement(x_work, 'execute', application='bridge', data=rgf.generate_bridge())
+        else:
+            toa = rgf.generate_timeout_action()
+            if toa[0] == 'hangup':
+                etree.SubElement(x_work, 'hangup')
+            else:
+                etree.SubElement(x_work, 'execute', application=toa[0], data=toa[1])
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")

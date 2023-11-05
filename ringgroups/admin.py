@@ -41,7 +41,7 @@ from switch.switchsounds import SwitchSounds
 from pbx.commonwidgets import ListTextWidget
 
 from pbx.commonfunctions import DomainFilter, DomainUtils
-from .ringgroupfunctions import RgFunctions
+from .ringgroupfunctions import RgFunctions, RgDestAction
 
 
 class RingGroupUserResource(resources.ModelResource):
@@ -123,6 +123,7 @@ class RingGroupAdminForm(ModelForm):
         model = RingGroup
         widgets = {
             "greeting": ListTextWidget(choices=[('', 'List unavailable')], attrs={'size': '50'}),
+            "timeout_data": Select(choices=[('', 'List unavailable')]),
             "ring_group_ringback": Select(choices=[('', 'List unavailable')]),
         }
         fields = '__all__'
@@ -149,7 +150,7 @@ class RingGroupAdmin(ImportExportModelAdmin):
     search_fields = ['name', 'extension', 'description']
     fieldsets = [
         (None,  {'fields': ['domain_id', 'name', 'extension', 'greeting', 'strategy', 
-                            ('timeout_app', 'timeout_data'),
+                            'timeout_data',
                             ('missed_call_app', 'missed_call_data'),
                             'call_timeout', 'forward_toll_allow',
                             ('forward_enabled', 'forward_destination'),
@@ -168,9 +169,11 @@ class RingGroupAdmin(ImportExportModelAdmin):
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         ss = SwitchSounds()
+        rga = RgDestAction(request.session['domain_name'], request.session['domain_uuid'])
         # this is required for access to the request object so the domain_name session
         # variable can be passed to the chioces function
         self.form.Meta.widgets['greeting'].choices=ss.get_sounds_choices_list(request.session['domain_name'])
+        self.form.Meta.widgets['timeout_data'].choices=rga.get_rg_action_choices()
         self.form.Meta.widgets['ring_group_ringback'].choices=ss.get_ringback_choices_list(request.session['domain_name'])
         return super().get_form(request, obj, change, **kwargs)
 

@@ -767,6 +767,18 @@ class DpDestAction():
         if len(v_list) > 0:
             dp_actions.append((_('Voicemails'), v_list))
 
+        rg_list = []
+        rgs = dialplans.models.Dialplan.objects.select_related('domain_id').filter(
+                domain_id=uuid.UUID(domain_uuid),
+                category='Ring group',
+                 enabled='true'
+                ).order_by('name')
+        for rg in rgs:
+            rg_list.append(('transfer:%s XML %s' % (rg.number, rg.domain_id), '%s-%s' % (rg.name, rg.number)))
+
+        if len(rg_list) > 0:
+            dp_actions.append((_('Ring groups'), rg_list))
+
         t_list = []
         sv = SwitchVariable.objects.filter(category='Tones', enabled='true').order_by('name')
         for t in sv:
