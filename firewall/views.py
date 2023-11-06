@@ -152,6 +152,24 @@ def fwsipgatewaylist(request):
 
 
 @staff_member_required
+def fwwebblocklist(request):
+    nftjdata = shcommand(['/usr/local/bin/fw-show-ipv4-web-block-list.sh'])
+    dataipv4 = json.loads(nftjdata)
+    nftjdata = shcommand(['/usr/local/bin/fw-show-ipv6-web-block-list.sh'])
+    dataipv6 = json.loads(nftjdata)
+    ipv4 = []
+    if 'elem' in dataipv4['nftables'][1]['set']:
+        ipv4 = dataipv4['nftables'][1]['set']['elem']
+    ipv6 = []
+    if 'elem' in dataipv6['nftables'][1]['set']:
+        ipv6 = dataipv6['nftables'][1]['set']['elem']
+    return render(
+            request, 'firewall/fwiplist.html',
+            {'title': 'Web Block List', 'refresher': 'fwwebblocklist', 'ipv4': ipv4, 'ipv6': ipv6}
+            )
+
+
+@staff_member_required
 def fwaddip(request):
     if request.method == 'POST':
 

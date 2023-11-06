@@ -36,6 +36,7 @@ urlpatterns = [
     path('fwwhitelist/', views.fwwhitelist, name='fwwhitelist'),
     path('fwsipcustomerlist/', views.fwsipcustomerlist, name='fwsipcustomerlist'),
     path('fwsipgatewaylist/', views.fwsipgatewaylist, name='fwsipgatewaylist'),
+    path('fwwebblocklist/', views.fwwebblocklist, name='fwwebblocklist'),
     path('fwconfigviewer/', views.fwconfigviewer, name='fwconfigviewer'),
     path('fwaddip/', views.fwaddip, name='fwaddip'),
     path('fwdelip/', views.fwdelip, name='fwdelip'),

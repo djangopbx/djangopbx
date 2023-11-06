@@ -1,8 +1,9 @@
+#
 #    DjangoPBX
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -26,21 +27,10 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.apps import AppConfig
-from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.signals import user_login_failed
+from pbx.commonipfunctions import IpFunctions
 
-
-class PortalConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'portal'
-    verbose_name = _('Portal')
-    pbx_uuid = 'f4b3b3d2-6287-489c-2a00-64529e46f2d7'
-    pbx_category = 'Core'
-    pbx_subcategory = ''
-    pbx_version = '1.0'
-    pbx_license = 'MIT License'
-
-    def ready(self):
-        from .signals import failed_user_login
-        user_login_failed.connect(failed_user_login)
+def failed_user_login(sender, credentials, request, **kwargs):
+    meta = request.META
+    ip = IpFunctions().get_client_ip(meta)
+    if ip:
+        IpFunctions().update_web_fail_ip(ip, credentials['username'])

@@ -4336,5 +4336,41 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "e02b5ba1-1f57-4ea8-a608-3d17d3a174c4",
+    "fields": {
+        "app_uuid": null,
+        "category": "portal",
+        "subcategory": "max_fail_attempts",
+        "value_type": "numeric",
+        "value": "5",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-11-06T09:51:04.287Z",
+        "updated": "2023-11-06T09:51:04.287Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "fbe54c82-3ed3-4096-a79c-a19a98569e8b",
+    "fields": {
+        "app_uuid": null,
+        "category": "portal",
+        "subcategory": "ignore_fail_address",
+        "value_type": "array",
+        "value": "127.0.0.1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-11-06T09:52:39.427Z",
+        "updated": "2023-11-06T09:52:39.427Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

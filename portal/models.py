@@ -104,3 +104,21 @@ class MenuItemGroup(models.Model):
 
     def __str__(self):
         return str(self.group_id)
+
+
+class Failed_logins(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                       # noqa: E501, E221
+    address      = models.GenericIPAddressField(protocol='both', unpack_ipv4=False, unique=True, verbose_name=_('IP Address'))  # noqa: E501, E221
+    username     = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('User ID'))                           # noqa: E501, E221
+    attempts     = models.DecimalField(max_digits=4, decimal_places=0, default=1, verbose_name=_('Attempts'))                   # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                    # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                        # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                  # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, default='system', verbose_name=_('Updated by'))                              # noqa: E501, E221
+
+    class Meta:
+        verbose_name_plural = 'Failed Logins'
+        db_table = 'pbx_failed_logins'
+
+    def __str__(self):
+        return self.address

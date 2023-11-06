@@ -35,7 +35,7 @@ from import_export import resources
 
 
 from .models import (
-    Menu, MenuItem, MenuItemGroup,
+    Menu, MenuItem, MenuItemGroup, Failed_logins,
 )
 
 
@@ -181,8 +181,57 @@ class MenuItemGroupAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class Failed_loginsResource(resources.ModelResource):
+    class Meta:
+        model = Failed_logins
+        import_id_fields = ('id', )
+
+
+class Failed_loginsAdmin(ImportExportModelAdmin):
+    resource_class = Failed_loginsResource
+    save_as = True
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['address']
+    fieldsets = [
+        (None,  {'fields': ['address', 'username', 'sttempts']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('address', 'username', 'attempts', 'created', 'updated')
+    ordering = [
+        'address'
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        if change:
+            messages.add_message(request, messages.WARN, _('A changed IP will not be added to Firewall automatically'))
+        else:
+            if ':' in obj.address:
+                shcommand(["/usr/local/bin/fw-add-ipv6-web-block-list.sh", obj.address])
+            else:
+                shcommand(["/usr/local/bin/fw-add-ipv4-web-block-list.sh", obj.address])
+        super().save_model(request, obj, form, change)
+
+    def delete_model(self, request, obj):
+        if ':' in obj.address:
+            shcommand(["/usr/local/bin/fw-delete-ipv6-web-block-list.sh", obj.address])
+        else:
+            shcommand(["/usr/local/bin/fw-delete-ipv4-web-block-list.sh", obj.address])
+        super().delete_model(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            if ':' in obj.address:
+                shcommand(["/usr/local/bin/fw-delete-ipv6-web-block-list.sh", obj.address])
+            else:
+                shcommand(["/usr/local/bin/fw-delete-ipv4-web-block-list.sh", obj.address])
+        super().delete_queryset(request, queryset)
+
+
 admin.site.register(MenuItem, MenuItemAdmin)
 admin.site.register(Menu, MenuAdmin)
+admin.site.register(Failed_logins, Failed_loginsAdmin)
 
 if settings.PBX_ADMIN_SHOW_ALL:
     admin.site.register(MenuItemGroup, MenuItemGroupAdmin)

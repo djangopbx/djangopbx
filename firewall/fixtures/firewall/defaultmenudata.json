@@ -169,5 +169,24 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "e2684abd-239a-4c43-8bac-08c76734f3a9",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "9e02d2b7-3853-4b58-806b-1507775083d4",
+        "title": "Firewall web block List",
+        "link": "/firewall/fwwebblocklist",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "87055",
+        "description": "",
+        "created": "2023-11-06T17:04:47.456Z",
+        "updated": "2023-11-06T17:04:47.456Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

@@ -97,6 +97,7 @@ urlpatterns = [
     path('httapihandler/', include('httapihandler.urls')),
     path('xmlcdr/', include('xmlcdr.urls')),
     path('portal/', include('portal.urls')),
+    path('portal/auth/', include('django.contrib.auth.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('firewall/', include('firewall.urls')),
     path('status/', include('status.urls')),
@@ -105,7 +106,6 @@ urlpatterns = [
     path('provision/', include('provision.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('accounts/auth/', include('django.contrib.auth.urls')),
     path('utilities/', include('utilities.urls')),
 
     # Wire up our API using automatic URL routing.
