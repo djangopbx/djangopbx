@@ -184,8 +184,12 @@ DATABASES = {
         'USER': 'djangopbx',
         'PASSWORD': 'postgres-insecure-abcdef9876543210',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
-        'CONN_MAX_AGE': 300
+        'PORT': '5432'
+# removed CONN_MAX_AGE as it was causing a Server 500 error after a uwsgi restart/reload
+# exceptions were:
+#      psycopg2.OperationalError: SSL SYSCALL error: EOF detected
+#      AttributeError: 'SessionStore' object has no attribute '_session_cache'
+#        'CONN_MAX_AGE': 300
     }
 }
 
