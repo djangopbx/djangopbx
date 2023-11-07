@@ -326,9 +326,10 @@ class XmlCdrFunctions():
         xcdr.accountcode = cdr_dict['cdr']['variables'].get('accountcode')
         xcdr.direction = cdr_dict['cdr']['variables'].get('call_direction', nonestr)
         xcdr.context = context
-
-        xcdr.caller_id_name = unquote(caller_id_name)
-        xcdr.caller_id_number = unquote(caller_id_number)
+        if caller_id_name:
+            xcdr.caller_id_name = unquote(caller_id_name)
+        if caller_id_number:
+            xcdr.caller_id_number = unquote(caller_id_number)
 
         xcdr.caller_destination = self.uq(cdr_dict['cdr']['variables'].get('caller_destination'))
         # xcdr.source_number = cdr_dict['cdr']['variables'].get('')
