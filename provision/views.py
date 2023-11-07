@@ -38,6 +38,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .provisionfunctions import ProvisionFunctions
 from tenants.pbxsettings import PbxSettings
+from pbx.commonipfunctions import IpFunctions
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -229,6 +230,11 @@ def chk_prov_auth(request, host, pbxs):
                 uname, passwd = base64.b64decode(auth[1]).decode('utf-8').split(':', 1)
                 if uname == http_usr and passwd == http_pwd:
                     return (True, domain)
+                else:
+                    meta = request.META
+                    ip = IpFunctions().get_client_ip(meta)
+                    if ip:
+                        IpFunctions().update_web_fail_ip(ip, uname)
 
     response = HttpResponse()
     response.status_code = 401
@@ -255,8 +261,8 @@ def device_config(request, *args, **kwargs):
 
     if 'mac' in kwargs:
         mac = kwargs['mac']
-# revove!!!!!!!!!!!!
-    mac = '001565a6699b'
+# Hard coded MAC for testing revove!!!!!!!!!!!!
+#    mac = '001565a6699b'
     if not mac:
         p = re.compile(r'(?:[0-9a-fA-F]:?){12}')
         results = re.findall(p, request.META['HTTP_USER_AGENT'])
