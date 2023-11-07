@@ -76,7 +76,7 @@ class ClearCacheView(View):
                 cache.delete('dialplan:%s' % domain_name)
                 dps = Dialplan.objects.filter(enabled='true', domain_id=domain_uuid, category='Inbound route')
                 for dp in dps:
-                    cache.delete('dialplan:%s:%s' % (domain_name, dp.number))
+                    cache.delete('dialplan:%s:%s' % (dp.context, dp.number))
 
             if languages:
                 del_list = [
