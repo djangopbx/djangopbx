@@ -205,7 +205,7 @@ class RgFunctions():
             etree.SubElement(x_condition, "action", application='set', data='call_timeout=%s' % self.rg.call_timeout)
             etree.SubElement(x_condition, "action", application='set', data='continue_on_fail=true')
             etree.SubElement(x_condition, "action", application='ring_ready', data='')
-            if len(self.rg.greeting) > 4:
+            if self.rg.greeting:
                 etree.SubElement(x_condition, "action", application='playback', data=self.rg.greeting)
 
             if self.rg.follow_me_enabled == 'true':
