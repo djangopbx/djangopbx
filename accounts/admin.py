@@ -30,6 +30,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django.core.cache import cache
 from django.contrib import messages
 from .models import (
     Extension, FollowMeDestination, ExtensionUser, Gateway, Bridge,
@@ -239,6 +240,8 @@ class ExtensionAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
+        directory_cache_key = 'directory:%s@%s' % (obj.extension, request.session['domain_name'])
+        cache.delete(directory_cache_key)
         if change:
             super().save_model(request, obj, form, change)
         else:
