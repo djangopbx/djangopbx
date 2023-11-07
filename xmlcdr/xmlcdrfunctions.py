@@ -32,7 +32,7 @@ import datetime
 import logging
 import xmltodict
 from xml.parsers.expat import ExpatError
-import urllib.parse
+from urllib.parse import unquote
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
@@ -55,7 +55,7 @@ class XmlCdrFunctions():
 
     def uq(self, url):
         if url:
-            return urllib.parse.unquote(url)
+            return unquote(url)
         return None
 
     def str2int(self, tmpstr):
@@ -327,8 +327,8 @@ class XmlCdrFunctions():
         xcdr.direction = cdr_dict['cdr']['variables'].get('call_direction', nonestr)
         xcdr.context = context
 
-        xcdr.caller_id_name = caller_id_name
-        xcdr.caller_id_number = caller_id_number
+        xcdr.caller_id_name = unquote(caller_id_name)
+        xcdr.caller_id_number = unquote(caller_id_number)
 
         xcdr.caller_destination = self.uq(cdr_dict['cdr']['variables'].get('caller_destination'))
         # xcdr.source_number = cdr_dict['cdr']['variables'].get('')
