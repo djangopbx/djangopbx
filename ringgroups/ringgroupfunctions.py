@@ -213,7 +213,10 @@ class RgFunctions():
             else:
                 etree.SubElement(x_condition, "action", application='bridge', data=self.generate_bridge())
                 app_data_list = self.rg.timeout_data.split(':')
-                etree.SubElement(x_condition, "action", application=app_data_list[0], data=app_data_list[1])
+                if app_data_list[0] == 'hangup':
+                    etree.SubElement(x_condition, "action", application=app_data_list[0])
+                else:
+                    etree.SubElement(x_condition, "action", application=app_data_list[0], data=app_data_list[1])
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8").replace('&lt;', '<').replace('&gt;', '>')

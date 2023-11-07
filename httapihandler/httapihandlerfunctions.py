@@ -432,7 +432,7 @@ class RingGroupHandler(HttApiHandlerFunctions):
         else:
             toa = rgf.generate_timeout_action()
             if toa[0] == 'hangup':
-                etree.SubElement(x_work, 'hangup')
+                etree.SubElement(x_work, toa[0])
             else:
                 etree.SubElement(x_work, 'execute', application=toa[0], data=toa[1])
 
