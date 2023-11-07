@@ -105,8 +105,6 @@ class RgFunctions():
         for ext in exts:
             self.ext_dict[ext.extension] = (str(ext.id), ext.follow_me_enabled)
 
-        self.rg = RingGroup.objects.get(pk=ringgroup_uuid)
-
         if ringgroup_uuid:
             try:
                 self.rg = RingGroup.objects.get(pk=ringgroup_uuid)

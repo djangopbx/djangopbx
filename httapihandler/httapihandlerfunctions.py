@@ -39,6 +39,7 @@ from switch.models import IpRegister
 from pbx.pbxsendsmtp import PbxTemplateMessage
 from pbx.commonfunctions import shcommand
 from ringgroups.ringgroupfunctions import RgFunctions
+from accounts.extensionfunctions import ExtFunctions
 
 
 class HttApiHandlerFunctions():
@@ -215,26 +216,20 @@ class FollowMeHandler(HttApiHandlerFunctions):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        # don't need to do this for this simple scenario but it tests the session mechanism
-        self.get_httapi_session('Follow Me')
         self.get_common_variables()
-        fmd = FollowMeDestination.objects.select_related('extension_id').filter(extension_id=self.extension_uuid)
-
-
-        print(fmd)
+        call_direction = self.qdict.get('variable_call_direction', 'local')
+        extension_uuid = self.qdict.get('variable_extension_uuid')
+        if extension_uuid:
+            extf = ExtFunctions(self.domain_uuid, self.domain_name, call_direction, extension_uuid)
 
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
-        etree.SubElement(x_work, 'execute', application='answer')
-        etree.SubElement(
-            x_work, 'playback',
-            file='/usr/share/freeswitch/sounds/en/us/callie/ivr/8000/ivr-stay_on_line_call_answered_momentarily.wav'
-            )
-        etree.SubElement(x_work, 'hangup')
-
+        etree.SubElement(x_work, 'execute', application='set', data='hangup_after_bridge=true')
+        etree.SubElement(x_work, 'execute', application='bridge', data=extf.generate_bridge())
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
+        print(xml)
         return self.return_data(xml)
 
 
@@ -417,7 +412,7 @@ class RingGroupHandler(HttApiHandlerFunctions):
             return self.return_data('Ok\n')
 
         self.get_common_variables()
-        self.get_httapi_session(name='RingGroupHandler')
+        self.get_httapi_session('RingGroupHandler')
 
         ringgroup_uuid = self.qdict.get('variable_ring_group_uuid')
         if ringgroup_uuid:
