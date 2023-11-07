@@ -34,7 +34,6 @@ from lxml import etree
 from io import StringIO
 import switch.models
 from tenants.pbxsettings import PbxSettings
-from pbx.commonfunctions import shcommand
 
 
 class SipProfileChoice():
@@ -359,15 +358,3 @@ class SwitchFunctions():
 
         else:
             return 1
-
-
-class IpFunctions():
-    def update_ip(self, ip_address):
-        ip, created = switch.models.IpRegister.objects.update_or_create(address=ip_address)
-        if created:
-            if ':' in ip.address:
-                shcommand(["/usr/local/bin/fw-add-ipv6-sip-customer-list.sh", ip.address])
-            else:
-                shcommand(["/usr/local/bin/fw-add-ipv4-sip-customer-list.sh", ip.address])
-
-        return

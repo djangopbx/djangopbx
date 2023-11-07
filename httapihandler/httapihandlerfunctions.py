@@ -35,8 +35,9 @@ from .models import HttApiSession
 # from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, FollowMeDestination
-from switch.switchfunctions import IpFunctions
+from switch.models import IpRegister
 from pbx.pbxsendsmtp import PbxTemplateMessage
+from pbx.commonfunctions import shcommand
 from ringgroups.ringgroupfunctions import RgFunctions
 
 
@@ -398,7 +399,13 @@ class RegisterHandler(HttApiHandlerFunctions):
         ip_address = self.qdict.get('network-ip', '192.168.42.1')
         status = self.qdict.get('status', 'N/A')
         if status.startswith('Registered'):
-            IpFunctions().update_ip(ip_address)
+            ip, created = IpRegister.objects.update_or_create(address=ip_address)
+            if created:
+                if ':' in ip.address:
+                    shcommand(["/usr/local/bin/fw-add-ipv6-sip-customer-list.sh", ip.address])
+                else:
+                    shcommand(["/usr/local/bin/fw-add-ipv4-sip-customer-list.sh", ip.address])
+
         return self.return_data('Ok\n')
 
 
