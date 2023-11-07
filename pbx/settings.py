@@ -293,3 +293,7 @@ EVSKT = ('127.0.0.1', 8021, 'ClueCon')
 
 # show all tables in Admin - useful for imports and exports
 PBX_ADMIN_SHOW_ALL = False
+
+# New in Django 4.1.   If set to True, existing persistent database connections will be
+# health checked before they are reused in each request performing database access.
+CONN_HEALTH_CHECKS = True
