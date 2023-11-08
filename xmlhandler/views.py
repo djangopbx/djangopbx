@@ -187,6 +187,8 @@ def configuration(request):
         xml = xmlhf.GetSofia(hostanme)
     elif key_value == 'local_stream.conf':
         xml = xmlhf.GetLocalStream()
+    elif key_value == 'translate.conf':
+        xml = xmlhf.GetTranslate()
     else:
         xml = xmlhf.NotFoundXml()
 
