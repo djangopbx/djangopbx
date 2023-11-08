@@ -31,8 +31,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'phrases', views.PhrasesViewSet)
-router.register(r'phrasedetails', views.PhraseDetailsViewSet)
+router.register(r'numbertranslations', views.NumberTranslationsViewSet)
+router.register(r'numbertranslationdetails', views.NumberTranslationDetailsViewSet)
 
 urlpatterns = [
 ]

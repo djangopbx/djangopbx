@@ -27,12 +27,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from rest_framework import routers
-from . import views
+from django.test import TestCase
 
-router = routers.DefaultRouter()
-router.register(r'phrases', views.PhrasesViewSet)
-router.register(r'phrasedetails', views.PhraseDetailsViewSet)
-
-urlpatterns = [
-]
+# Create your tests here.

@@ -27,12 +27,40 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from rest_framework import routers
-from . import views
+from rest_framework import serializers
+from .models import (
+    NumberTranslations, NumberTranslationDetails,
+)
 
-router = routers.DefaultRouter()
-router.register(r'phrases', views.PhrasesViewSet)
-router.register(r'phrasedetails', views.PhraseDetailsViewSet)
 
-urlpatterns = [
-]
+class NumberTranslationsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = NumberTranslations
+        fields = [
+                'url', 'id',
+                'name',
+                'enabled',
+                'description',
+                'created',
+                'updated',
+                'synchronised',
+                'updated_by'
+                ]
+
+
+class NumberTranslationDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = NumberTranslationDetails
+        fields = [
+                'url', 'id',
+                'number_translation_id',
+                'td_regex',
+                'td_replace',
+                'td_order',
+                'created',
+                'updated',
+                'synchronised',
+                'updated_by'
+                ]

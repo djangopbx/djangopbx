@@ -27,12 +27,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from rest_framework import routers
-from . import views
+from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
-router = routers.DefaultRouter()
-router.register(r'phrases', views.PhrasesViewSet)
-router.register(r'phrasedetails', views.PhraseDetailsViewSet)
 
-urlpatterns = [
-]
+class NumbertranslationsConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'numbertranslations'
+    verbose_name = _('Number Translations')
+    pbx_uuid = '35ddab1c-cb11-4fde-b239-b8612cb831ad'
+    pbx_category = 'Switch'
+    pbx_subcategory = ''
+    pbx_version = '1.0'
+    pbx_license = 'MIT License'

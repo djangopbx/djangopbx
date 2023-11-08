@@ -64,6 +64,7 @@ from httapihandler.urls import router as httapihandlerrouter
 from contacts.urls import router as contactsrouter
 from phrases.urls import router as phrasesrouter
 from ringgroups.urls import router as ringgroupsrouter
+from numbertranslations.urls import router as numbertranslationsrouter
 
 
 # This overrides names in site headers and titles
@@ -89,6 +90,7 @@ router.registry.extend(httapihandlerrouter.registry)
 router.registry.extend(contactsrouter.registry)
 router.registry.extend(phrasesrouter.registry)
 router.registry.extend(ringgroupsrouter.registry)
+router.registry.extend(numbertranslationsrouter.registry)
 
 
 urlpatterns = [

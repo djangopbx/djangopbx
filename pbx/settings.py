@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     'ringgroups.apps.RinggroupsConfig',
     'phrases.apps.PhrasesConfig',
     'utilities.apps.UtilitiesConfig',
+    'numbertranslations.apps.NumbertranslationsConfig',
 ]
 
 MIDDLEWARE = [

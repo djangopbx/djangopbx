@@ -1,0 +1,67 @@
+[
+{
+    "model": "numbertranslations.numbertranslations",
+    "pk": "6027f181-6c4f-421c-84c5-07e3aeb49bc4",
+    "fields": {
+        "name": "e164_to_GB_national",
+        "enabled": "true",
+        "description": "Convert from E.164 format to GB national dialling",
+        "created": "2023-11-08T12:36:51.234Z",
+        "updated": "2023-11-08T12:38:06.528Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslations",
+    "pk": "67cef9b0-7c03-4056-b35c-e0678edb7194",
+    "fields": {
+        "name": "remove_leading_plus",
+        "enabled": "true",
+        "description": "Remove a leading +",
+        "created": "2023-11-08T12:42:06.265Z",
+        "updated": "2023-11-08T12:42:06.265Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslations",
+    "pk": "7113a8ed-35b8-47c5-b803-046e580e7a25",
+    "fields": {
+        "name": "strip_non_digits",
+        "enabled": "true",
+        "description": "Remove anything that is not [0-9a-fA-F#*]",
+        "created": "2023-11-08T12:43:10.217Z",
+        "updated": "2023-11-08T12:43:10.217Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslations",
+    "pk": "8ab39139-fedc-4133-adcb-28676c7371c2",
+    "fields": {
+        "name": "strip_symbols",
+        "enabled": "true",
+        "description": "Remove anything that is [^ (){}_-]",
+        "created": "2023-11-08T12:44:08.061Z",
+        "updated": "2023-11-08T12:44:08.061Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslations",
+    "pk": "a1c13f86-36e9-44b9-a42f-2d82489593d6",
+    "fields": {
+        "name": "GB_national_to_e164",
+        "enabled": "true",
+        "description": "Convert from GB national dialling to E.164 format",
+        "created": "2023-11-08T12:40:30.783Z",
+        "updated": "2023-11-08T12:40:30.783Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

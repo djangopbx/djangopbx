@@ -1,0 +1,184 @@
+[
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "08b99cbf-d109-4581-92c9-333c453364c8",
+    "fields": {
+        "number_translation_id": "8ab39139-fedc-4133-adcb-28676c7371c2",
+        "td_regex": "^[ (){}_-]*([^ (){}_-]+)[ (){}_-]*([^ (){}_-]*)[ (){}_-]*([^ (){}_-]*)[ (){}_-]*([^ (){}_-]*)[ (){}_-]*([^ (){}_-]*)[ (){}_-]*([",
+        "td_replace": "$1$2$3$4$5$6$7$8$9",
+        "td_order": "5",
+        "created": "2023-11-08T12:44:08.066Z",
+        "updated": "2023-11-08T12:44:08.066Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "191cfa5d-a08d-47c3-b12a-4ff41d597334",
+    "fields": {
+        "number_translation_id": "6027f181-6c4f-421c-84c5-07e3aeb49bc4",
+        "td_regex": "^(\\d+)$",
+        "td_replace": "00$1",
+        "td_order": "15",
+        "created": "2023-11-08T12:38:06.531Z",
+        "updated": "2023-11-08T12:38:06.531Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "20265121-8ed9-4215-ab95-7adb242f7b88",
+    "fields": {
+        "number_translation_id": "a1c13f86-36e9-44b9-a42f-2d82489593d6",
+        "td_regex": "^(\\d+)$",
+        "td_replace": "$1",
+        "td_order": "20",
+        "created": "2023-11-08T12:40:30.788Z",
+        "updated": "2023-11-08T12:40:30.788Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "3a7b354f-af79-4d82-b668-7a4de42f1d27",
+    "fields": {
+        "number_translation_id": "6027f181-6c4f-421c-84c5-07e3aeb49bc4",
+        "td_regex": "^44(\\d+)$",
+        "td_replace": "0$1",
+        "td_order": "10",
+        "created": "2023-11-08T12:36:51.237Z",
+        "updated": "2023-11-08T12:36:51.237Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "508a1549-a2c3-4336-8218-8ed20985a536",
+    "fields": {
+        "number_translation_id": "6027f181-6c4f-421c-84c5-07e3aeb49bc4",
+        "td_regex": "^\\+(\\d+)$",
+        "td_replace": "00$1",
+        "td_order": "20",
+        "created": "2023-11-08T12:38:06.532Z",
+        "updated": "2023-11-08T12:38:06.532Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "5a76e1a2-d882-4ded-b385-42701c82c689",
+    "fields": {
+        "number_translation_id": "6027f181-6c4f-421c-84c5-07e3aeb49bc4",
+        "td_regex": "^44(\\d{3,6})$",
+        "td_replace": "$1",
+        "td_order": "5",
+        "created": "2023-11-08T12:38:06.534Z",
+        "updated": "2023-11-08T12:38:06.534Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "6e4970ea-f983-4d49-81de-c3189ebc3458",
+    "fields": {
+        "number_translation_id": "a1c13f86-36e9-44b9-a42f-2d82489593d6",
+        "td_regex": "^\\+(\\d+)$",
+        "td_replace": "$1",
+        "td_order": "5",
+        "created": "2023-11-08T12:40:30.790Z",
+        "updated": "2023-11-08T12:40:30.790Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "8a5966bb-1b62-4c60-bd3c-b76672c5c8a2",
+    "fields": {
+        "number_translation_id": "7113a8ed-35b8-47c5-b803-046e580e7a25",
+        "td_regex": "^[^0-9a-fA-F#*]*([0-9a-fA-F#*]+)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0-9a-fA-F#*]*([0-9a-fA-F#*]*)[^0",
+        "td_replace": "$1$2$3$4$5$6$7$8$9",
+        "td_order": "5",
+        "created": "2023-11-08T12:43:10.222Z",
+        "updated": "2023-11-08T12:43:10.222Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "ab0c4704-62ab-460e-801d-6940684e7de0",
+    "fields": {
+        "number_translation_id": "7113a8ed-35b8-47c5-b803-046e580e7a25",
+        "td_regex": "^(.*)$",
+        "td_replace": "$1",
+        "td_order": "10",
+        "created": "2023-11-08T12:43:10.220Z",
+        "updated": "2023-11-08T12:43:10.220Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "b1cbe21a-a373-4205-9850-3b39be713c68",
+    "fields": {
+        "number_translation_id": "8ab39139-fedc-4133-adcb-28676c7371c2",
+        "td_regex": "^(.*)$",
+        "td_replace": "$1",
+        "td_order": "10",
+        "created": "2023-11-08T12:44:08.064Z",
+        "updated": "2023-11-08T12:44:08.064Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "bdcfd853-a7f6-4211-9ab0-cf4a32b4e61a",
+    "fields": {
+        "number_translation_id": "a1c13f86-36e9-44b9-a42f-2d82489593d6",
+        "td_regex": "^0([1-9]\\d+)$",
+        "td_replace": "44$1",
+        "td_order": "15",
+        "created": "2023-11-08T12:40:30.787Z",
+        "updated": "2023-11-08T12:40:30.787Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "de003866-f596-493a-930d-7687daab9a9f",
+    "fields": {
+        "number_translation_id": "a1c13f86-36e9-44b9-a42f-2d82489593d6",
+        "td_regex": "^00(\\d+)$",
+        "td_replace": "$1",
+        "td_order": "10",
+        "created": "2023-11-08T12:40:30.785Z",
+        "updated": "2023-11-08T12:40:30.785Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "numbertranslations.numbertranslationdetails",
+    "pk": "fa19ae89-cb6e-452a-be40-08ab3dfce843",
+    "fields": {
+        "number_translation_id": "67cef9b0-7c03-4056-b35c-e0678edb7194",
+        "td_regex": "^\\+(\\d+)$",
+        "td_replace": "$1",
+        "td_order": "10",
+        "created": "2023-11-08T12:42:06.268Z",
+        "updated": "2023-11-08T12:42:06.268Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]
