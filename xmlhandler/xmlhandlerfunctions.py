@@ -34,11 +34,13 @@ from django.db.models import Q
 from dialplans.models import Dialplan
 from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
-from accounts.models import Extension, ExtensionUser
+from accounts.models import Extension, ExtensionUser, Gateway
 from voicemail.models import Voicemail
-from switch.models import SwitchVariable
+from switch.models import (
+    SwitchVariable, AccessControl, AccessControlNode, SipProfile
+    )
 from phrases.models import PhraseDetails
-
+from musiconhold.models import MusicOnHold
 
 class XmlHandlerFunctions():
 
@@ -723,4 +725,156 @@ class LanguagesHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(languages_cache_key, xml)
+        return xml
+
+
+class ConfigHandler(XmlHandlerFunctions):
+
+    def GetACL(self):
+        configuration_cache_key = 'configuration:acl.conf'
+        xml = cache.get(languages_cache_key)
+        if xml:
+            return xml
+
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='configuration')
+        x_conf_name = etree.SubElement(x_section, 'configuration', name='acl.conf', description='Network Lists')
+        x_networklists = etree.SubElement(x_conf_name, 'network-lists')
+        alist = AccessControl.objects.all().order_by('name')
+        for a in alist:
+            x_netlist = etree.SubElement(x_networklists, 'list', name=a.name, default=a.default)
+            nlist = AccessControlNode.objects.filter(access_control_id=a.id).order_by('-type')
+            for n in nlist:
+                if n.domain is not None:
+                    etree.SubElement(x_netlist, 'node', type=n.type, domain=n.domain)
+                if n.cidr is not None:
+                    etree.SubElement(x_netlist, 'node', type=n.type, cidr=n.cidr)
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(configuration_cache_key, xml)
+        return xml
+
+    def GetSofia(self, hostname=''):
+        configuration_cache_key = 'configuration:sofia.conf'
+        xml = cache.get(languages_cache_key)
+        if xml:
+            return xml
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='configuration')
+        x_conf_name = etree.SubElement(x_section, 'configuration', name='sofia.conf', description='sofia Endpoint')
+        x_global_settings = etree.SubElement(x_conf_name, 'global_settings')
+        etree.SubElement(x_global_settings, 'param', name='log-level', value='0')
+        #etree.SubElement(x_global_settings, 'param', name='auto-restart', value='false')
+        etree.SubElement(x_global_settings, 'param', name='debug-presense', value='0')
+        #etree.SubElement(x_global_settings, 'param', name='capture-serverlog-level', value='udp:homer.mydomain.com:5060')
+        x_profiles = etree.SubElement(x_conf_name, 'profiles')
+        ps = SipProfile.objects.filter(enabled='true').order_by('name')
+        ds = p.SipProfileDomain.all().order_by('name')
+        ss = p.SipProfileSetting.filter(enabled='true').order_by('name')
+        for p in ps:
+            gws = Gateway.objects.filter((Q(hostname=hostname) | Q(hostname__isnull=True)), enabled='true', profile=p.name)
+            x_profile = etree.SubElement(x_profiles, 'profile', name=p.name)
+            etree.SubElement(x_profile, 'aliases')
+            x_gateways = etree.SubElement(x_profile, 'gateways')
+            etree.SubElement(x_gateways, 'X-PRE-PROCESS', cmd='include', data='%s/*.xml' % p.name)
+            for gw in gws:
+                x_gateway = etree.SubElement(x_gateways, 'gateway', name=str(gw.id))
+                if gw.username:
+                    etree.SubElement(x_gateway, 'param', name='username', value=gw.username)
+                if gw.distinct_to:
+                    etree.SubElement(x_gateway, 'param', name='distinct-to', value=gw.distinct_to)
+                if gw.auth_username:
+                    etree.SubElement(x_gateway, 'param', name='auth-username', value=gw.auth_username)
+                if gw.password:
+                    etree.SubElement(x_gateway, 'param', name='password', value=gw.password)
+                if gw.realm:
+                    etree.SubElement(x_gateway, 'param', name='realm', value=gw.realm)
+                if gw.from_user:
+                    etree.SubElement(x_gateway, 'param', name='from-user', value=gw.from_user)
+                if gw.from_domain:
+                    etree.SubElement(x_gateway, 'param', name='from-domain', value=gw.from_domain)
+                if gw.proxy:
+                    etree.SubElement(x_gateway, 'param', name='proxy', value=gw.proxy)
+                if gw.register_proxy:
+                    etree.SubElement(x_gateway, 'param', name='register-proxy', value=gw.register_proxy)
+                if gw.outbound_proxy:
+                    etree.SubElement(x_gateway, 'param', name='outbound-proxy', value=gw.outbound_proxy)
+                if gw.expire_seconds:
+                    etree.SubElement(x_gateway, 'param', name='expire-seconds', value=str(gw.expire_seconds))
+                if gw.register:
+                    etree.SubElement(x_gateway, 'param', name='register', value=gw.register)
+                if gw.register_transport:
+                    if gw.register_transport == 'udp':
+                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.rgister_transport)
+                    elif gw.register_transport == 'tcp':
+                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.rgister_transport)
+                    elif gw.register_transport == 'tls':
+                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.rgister_transport)
+                        etree.SubElement(x_gateway, 'param', name='contact-params', value='transport=tls')
+                    else:
+                        etree.SubElement(x_gateway, 'param', name='register-transport', value='udp')
+
+                if gw.retry_seconds:
+                    etree.SubElement(x_gateway, 'param', name='retry-seconds', value=str(gw.retry_seconds))
+                if gw.extension:
+                    etree.SubElement(x_gateway, 'param', name='extension', value=gw.extension)
+                if gw.ping:
+                    etree.SubElement(x_gateway, 'param', name='ping', value=gw.ping)
+                if gw.context:
+                    etree.SubElement(x_gateway, 'param', name='context', value=gw.context)
+                if gw.caller_id_in_from:
+                    etree.SubElement(x_gateway, 'param', name='caller-id-in-from', value=gw.caller_id_in_from)
+                if gw.supress_cng:
+                    etree.SubElement(x_gateway, 'param', name='supress-cng', value=gw.supress_cng)
+                if gw.extension_in_contact:
+                    etree.SubElement(x_gateway, 'param', name='extension-in-contact', value=gw.extension_in_contact)
+                x_variables = etree.SubElement(x_gateway, 'variables')
+                if gw.sip_cid_type:
+                    etree.SubElement(x_variables, 'variable', name='sip-cid-type', value=gw.sip_cid_type)
+
+            x_domains = etree.SubElement(x_profile, 'domains')
+            for d in ds:
+                etree.SubElement(x_domains, 'domain', name=d.name, alias=d.alias, parse=d.parse)
+
+            x_settings = etree.SubElement(x_profile, 'settings')
+            for s in ss:
+                if s.value is None:
+                    s_value = ''
+                else:
+                    s_value = s.value
+                etree.SubElement(x_settings, 'param', name=s.name, value=s_value)
+
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(configuration_cache_key, xml)
+        return xml
+
+    def GetLocalStream(self):
+        configuration_cache_key = 'configuration:local_stream.conf'
+        xml = cache.get(languages_cache_key)
+        if xml:
+            return xml
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='configuration')
+        x_conf_name = etree.SubElement(x_section, 'configuration', name='local_stream.conf', description='Stream files from local directories')
+        mlist = MusicOnHold.objects.all().order_by('name', 'rate')
+        for m in mlist:
+            x_mdir = etree.SubElement(x_conf_name, 'directory', name=m.name, path=m.path)
+            etree.SubElement(x_mdir, 'param', name='rate', value=str(m.rate))
+            etree.SubElement(x_mdir, 'param', name='shuffle', value=m.shuffle)
+            etree.SubElement(x_mdir, 'param', name='channels', value=str(m.channels))
+            etree.SubElement(x_mdir, 'param', name='interval', value=str(m.interval))
+            etree.SubElement(x_mdir, 'param', name='timer-name', value=m.timer_name)
+            if m.chime_list:
+                etree.SubElement(x_mdir, 'param', name='chime-list', value=m.chime_list)
+                if m.chime_freq:
+                    etree.SubElement(x_mdir, 'param', name='chime-freq', value=m.chime_freq)
+                if m.chime_max:
+                    etree.SubElement(x_mdir, 'param', name='chime-max', value=m.chime_max)
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(configuration_cache_key, xml)
         return xml

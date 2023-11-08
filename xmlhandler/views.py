@@ -30,7 +30,7 @@
 import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-from .xmlhandlerfunctions import DirectoryHandler, DialplanHandler, LanguagesHandler
+from .xmlhandlerfunctions import DirectoryHandler, DialplanHandler, LanguagesHandler, ConfigHandler
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +146,7 @@ def staticdirectory(request):
 
 @csrf_exempt
 def languages(request):
-    debug = True
+    debug = False
     xmlhf = LanguagesHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
@@ -163,5 +163,31 @@ def languages(request):
     macro_name = request.POST.get('macro_name', '')
 
     xml = xmlhf.GetLanguage(lang, macro_name)
+
+    return HttpResponse(xml, content_type='application/xml')
+
+@csrf_exempt
+def configuration(request):
+    debug = True
+
+    xmlhf = ConfigHandler()
+    allowed_addresses = xmlhf.get_allowed_addresses()
+    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+        return HttpResponseNotFound()
+    if not request.method == 'POST':
+        return HttpResponseNotFound()
+    if debug:
+        logger.info('XML Handler request: {}'.format(request.POST))
+
+    hostname = request.POST.get('hostname', request.META['REMOTE_HOST'])
+    key_value = request.POST.get('key_value', '')
+    if key_value == 'acl.conf':
+        xml = xmlhf.GetACL()
+    elif key_value == 'sofia.conf':
+        xml = xmlhf.GetSofia(hostanme)
+    elif key_value == 'local_stream.conf':
+        xml = xmlhf.GetLocalStream()
+    else:
+        xml = xmlhf.NotFoundXml()
 
     return HttpResponse(xml, content_type='application/xml')

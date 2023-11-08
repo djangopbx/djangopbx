@@ -34,6 +34,7 @@ urlpatterns = [
     path('dialplan/', views.dialplan, name='dialplan'),
     path('directory/', views.directory, name='directory'),
     path('languages/', views.languages, name='languages'),
+    path('configuration/', views.configuration, name='configuration'),
     path('static/dialplan.xml', views.staticdialplan, name='staticdialplan'),
     path('static/directory.xml', views.staticdirectory, name='staticdirectory'),
 ]
