@@ -42,6 +42,7 @@ from switch.models import (
 from phrases.models import PhraseDetails
 from musiconhold.models import MusicOnHold
 from numbertranslations.models import NumberTranslations
+from ivrmenus.models import IvrMenus
 
 
 class XmlHandlerFunctions():
@@ -896,6 +897,50 @@ class ConfigHandler(XmlHandlerFunctions):
             x_profile = etree.SubElement(x_profiles, 'profile', name=n.name, description=n.description)
             for nd in nds:
                 etree.SubElement(x_profile, 'rule', regex=nd.regex, replace=nd.replace)
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(configuration_cache_key, xml)
+        return xml
+
+    def GetIvr(self, ivr_id):
+        configuration_cache_key = 'configuration:ivr.conf:%s' % ivr_id
+        xml = cache.get(languages_cache_key)
+        if xml:
+            return xml
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='configuration')
+        x_conf_name = etree.SubElement(x_section, 'configuration', name='ivr.conf', description='IVR Menus')
+        x_menus = etree.SubElement(x_conf_name, "menus")
+        try:
+            ivr = IvrMenus.objects.Get(pk=ivr_id)
+        except:
+            return self.NotFoundXml()
+
+        x_menu = etree.SubElement(x_menus, "menu", name=str(ivr.id), description=ivr.name)
+        x_menu.attrib['greet-long'] = ivr.greet_long
+        x_menu.attrib['greet-short'] = ivr.greet_short
+        x_menu.attrib['invalid-sound'] = ivr.invalid_sound
+        x_menu.attrib['exit-sound'] = ivr.exit_sound
+        x_menu.attrib['confirm-macro'] = ivr.confirm_macro
+        x_menu.attrib['confirm-key'] = ivr.confirm_key
+        x_menu.attrib['tts-engine'] = ivr.tts_engine
+        x_menu.attrib['tts-voice'] = ivr.tts_voice
+        x_menu.attrib['confirm-attempts'] = ivr.confirm_attempts
+        x_menu.attrib['timeout'] = ivr.timeout
+        x_menu.attrib['inter-digit-timeout'] = ivr.inter_digit_timeout
+        x_menu.attrib['max-failures'] = ivr.max_failiures
+        x_menu.attrib['max-timeouts'] = ivr.max_timeouts
+        x_menu.attrib['digit-len'] = ivr.digit_len
+        ivropts = ivr.IvrMenuOptions.all().order_by('sequence')
+        for op in ivropts:
+            etree.SubElement(x_menu, "entry", action=op.option_action, digits=op.option_digits, param=op.option_param, description=op.description)
+
+        if ivr.direct_dial == 'true':
+            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/', param='set ${cond(${user_exists id $1 %s} == true ? user_exists=true : user_exists=false)}' % ivr.context, description='direct dial')
+            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/', param='playback ${cond(${user_exists} == true ? ivr/ivr-call_being_transferred.wav : ivr/ivr-that_was_an_invalid_entry.wav)}', description='direct dial')
+            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/', param='transfer ${cond(${user_exists} == true ? $1 XML %s)}' % ivr.context, description='direct dial')
+
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")

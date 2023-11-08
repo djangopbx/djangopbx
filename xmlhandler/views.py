@@ -189,6 +189,9 @@ def configuration(request):
         xml = xmlhf.GetLocalStream()
     elif key_value == 'translate.conf':
         xml = xmlhf.GetTranslate()
+    elif key_value == 'ivr.conf':
+        menu_name = request.POST.get('Menu-Name', '')
+        xml = xmlhf.GetIvr(menu_name)
     else:
         xml = xmlhf.NotFoundXml()
 
