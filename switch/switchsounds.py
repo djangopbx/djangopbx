@@ -48,10 +48,28 @@ except ImportError:
 class SwitchSounds():
 
     def __init__(self):
-        self.path_of_sound_files = '/'
+        self.sounds_dir = '/'
         self.recordings_dir = False
         self.sounds_dir = False
         self.voice_dir = False
+
+    def get_languages(self):
+        lang_list = []
+        self.get_sounds_dir()
+        for f1 in os.scandir(self.sounds_dir):
+            if f1.is_dir():
+                d1 = os.path.relpath(f1.path, start=self.sounds_dir)
+                if len(d1) == 2:
+                    for f2 in os.scandir(f1.path):
+                        if f2.is_dir():
+                            d2 = os.path.relpath(f2.path, start=f1.path)
+                            if len(d2) == 2:
+                                for f3 in os.scandir(f2.path):
+                                    if f3.is_dir():
+                                        d3 = os.path.relpath(f3.path, start=f2.path)
+                                        lang_list.append(('%s/%s/%s' % (d1, d2, d3), '%s-%s %s' % (d1, d2, d3)))
+
+        return lang_list
 
     def sounds_dir_scan(self, sdir, rdir=None ):
         if not rdir:

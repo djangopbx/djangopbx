@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'phrases.apps.PhrasesConfig',
     'utilities.apps.UtilitiesConfig',
     'numbertranslations.apps.NumbertranslationsConfig',
+    'ivrmenus.apps.IvrmenusConfig',
 ]
 
 MIDDLEWARE = [
