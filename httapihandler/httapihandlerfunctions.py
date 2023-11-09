@@ -42,7 +42,26 @@ from ringgroups.ringgroupfunctions import RgFunctions
 from accounts.extensionfunctions import ExtFunctions
 
 
+
 class HttApiHandlerFunctions():
+
+# The session in the HttApiHandlerFunctions class uses a Django JSONField.
+# If you need a session, start one e.g.:
+#    self.get_httapi_session('RingGroupHandler')
+#
+# Don't forget to delete it when finished:
+#    if self.exiting:
+#        destroy_httapi_session()
+#        return self.return_data('Ok\n')
+#
+# You can set a session value with:
+#    self.session.json['my_variable'] = 'something'
+#    self.session.save()
+#
+# Read it with:
+#    if my_variable' in self.session.json:
+#        my_var = self.session.json['my_variable']
+
     log_header = 'HttApi Handler: {}: {}'
 
     def __init__(self, qdict):
@@ -80,14 +99,16 @@ class HttApiHandlerFunctions():
             )
 
     def error_hangup(self, message='Err'):
+        extension_uuid = self.qdict.get('variable_extension_uuid')
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
+        etree.SubElement(x_work, 'playback', file='ivr/ivr-call_cannot_be_completed_as_dialed.wav')
+        etree.SubElement(x_work, 'execute', application='sleep', data='1000')
         etree.SubElement(
             x_work, 'execute', application='set',
-            data='api_result=${uuid_display(%s \'%s\')}' % (self.session_id, message)
+            data='httapi=httapi:%s message:%s}' % (self.session_id, message)
             )
-        etree.SubElement(x_work, 'execute', application='sleep', data='2000')
         etree.SubElement(x_work, 'hangup')
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
@@ -408,33 +429,25 @@ class RingGroupHandler(HttApiHandlerFunctions):
 
     def get_data(self):
         if self.exiting:
-            destroy_httapi_session()
             return self.return_data('Ok\n')
 
         self.get_common_variables()
-        self.get_httapi_session('RingGroupHandler')
 
         ringgroup_uuid = self.qdict.get('variable_ring_group_uuid')
-        if ringgroup_uuid:
-            self.session.json['ring_group_uuid'] = ringgroup_uuid
-            self.session.save()
+        try:
             rgf = RgFunctions(self.domain_uuid, self.domain_name, ringgroup_uuid)
-        else:
-            rgf = RgFunctions(self.domain_uuid, self.domain_name, self.session.json['ring_group_uuid'])
+        except:
+            return self.return_data(self.error_hangup('R1001'))
 
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
-        if not 'bridge_done' in self.session.json:
-            self.session.json['bridge_done'] = 'true'
-            self.session.save()
-            etree.SubElement(x_work, 'execute', application='bridge', data=rgf.generate_bridge())
+        etree.SubElement(x_work, 'execute', application='bridge', data=rgf.generate_bridge())
+        toa = rgf.generate_timeout_action()
+        if toa[0] == 'hangup':
+            etree.SubElement(x_work, toa[0])
         else:
-            toa = rgf.generate_timeout_action()
-            if toa[0] == 'hangup':
-                etree.SubElement(x_work, toa[0])
-            else:
-                etree.SubElement(x_work, 'execute', application=toa[0], data=toa[1])
+            etree.SubElement(x_work, 'execute', application=toa[0], data=toa[1])
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")

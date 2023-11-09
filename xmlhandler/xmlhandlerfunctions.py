@@ -774,8 +774,8 @@ class ConfigHandler(XmlHandlerFunctions):
         x_profiles = etree.SubElement(x_conf_name, 'profiles')
         ps = SipProfile.objects.filter(enabled='true').order_by('name')
         for p in ps:
-            ds = p.SipProfileDomain.all().order_by('name')
-            ss = p.SipProfileSetting.filter(enabled='true').order_by('name')
+            ds = p.sipprofiledomain_set.all().order_by('name')
+            ss = p.sipprofilesetting_set.filter(enabled='true').order_by('name')
             gws = Gateway.objects.filter((Q(hostname=hostname) | Q(hostname__isnull=True)), enabled='true', profile=p.name)
             x_profile = etree.SubElement(x_profiles, 'profile', name=p.name)
             etree.SubElement(x_profile, 'aliases')
@@ -893,7 +893,7 @@ class ConfigHandler(XmlHandlerFunctions):
         x_profiles = etree.SubElement(x_conf_name, "profiles")
         ns = NumberTranslations.objects.filter(enabled='true').order_by('name')
         for n in ns:
-            nds = n.NumberTranslationDetails.all().order_by('td_order')
+            nds = n.numbertranslationdetails_set.all().order_by('td_order')
             x_profile = etree.SubElement(x_profiles, 'profile', name=n.name, description=n.description)
             for nd in nds:
                 etree.SubElement(x_profile, 'rule', regex=nd.regex, replace=nd.replace)
@@ -905,7 +905,7 @@ class ConfigHandler(XmlHandlerFunctions):
 
     def GetIvr(self, ivr_id):
         configuration_cache_key = 'configuration:ivr.conf:%s' % ivr_id
-        xml = cache.get(languages_cache_key)
+        xml = cache.get(configuration_cache_key)
         if xml:
             return xml
         x_root = self.XrootDynamic()
@@ -913,36 +913,46 @@ class ConfigHandler(XmlHandlerFunctions):
         x_conf_name = etree.SubElement(x_section, 'configuration', name='ivr.conf', description='IVR Menus')
         x_menus = etree.SubElement(x_conf_name, "menus")
         try:
-            ivr = IvrMenus.objects.Get(pk=ivr_id)
+            ivr = IvrMenus.objects.get(pk=ivr_id)
         except:
             return self.NotFoundXml()
 
         x_menu = etree.SubElement(x_menus, "menu", name=str(ivr.id), description=ivr.name)
-        x_menu.attrib['greet-long'] = ivr.greet_long
-        x_menu.attrib['greet-short'] = ivr.greet_short
-        x_menu.attrib['invalid-sound'] = ivr.invalid_sound
-        x_menu.attrib['exit-sound'] = ivr.exit_sound
-        x_menu.attrib['confirm-macro'] = ivr.confirm_macro
-        x_menu.attrib['confirm-key'] = ivr.confirm_key
-        x_menu.attrib['tts-engine'] = ivr.tts_engine
-        x_menu.attrib['tts-voice'] = ivr.tts_voice
-        x_menu.attrib['confirm-attempts'] = ivr.confirm_attempts
-        x_menu.attrib['timeout'] = ivr.timeout
-        x_menu.attrib['inter-digit-timeout'] = ivr.inter_digit_timeout
-        x_menu.attrib['max-failures'] = ivr.max_failiures
-        x_menu.attrib['max-timeouts'] = ivr.max_timeouts
-        x_menu.attrib['digit-len'] = ivr.digit_len
-        ivropts = ivr.IvrMenuOptions.all().order_by('sequence')
+        x_menu.attrib['greet-long'] = (ivr.greet_long if ivr.greet_long else '')
+        x_menu.attrib['greet-short'] = (ivr.greet_short if ivr.greet_short else '')
+        x_menu.attrib['invalid-sound'] = (ivr.invalid_sound if ivr.invalid_sound else '')
+        x_menu.attrib['exit-sound'] = (ivr.exit_sound if ivr.exit_sound else '')
+        x_menu.attrib['confirm-macro'] = (ivr.confirm_macro if ivr.confirm_macro else '')
+        x_menu.attrib['confirm-key'] = (ivr.confirm_key if ivr.confirm_key else '')
+        x_menu.attrib['tts-engine'] = (ivr.tts_engine if ivr.tts_engine else '')
+        x_menu.attrib['tts-voice'] = (ivr.tts_voice if ivr.tts_voice else '')
+        x_menu.attrib['confirm-attempts'] = str(ivr.confirm_attempts)
+        x_menu.attrib['timeout'] = str(ivr.timeout)
+        x_menu.attrib['inter-digit-timeout'] = str(ivr.inter_digit_timeout)
+        x_menu.attrib['max-failures'] = str(ivr.max_failiures)
+        x_menu.attrib['max-timeouts'] = str(ivr.max_timeouts)
+        x_menu.attrib['digit-len'] = str(ivr.digit_len)
+
+        ivropts = ivr.ivrmenuoptions_set.all().order_by('sequence')
         for op in ivropts:
-            etree.SubElement(x_menu, "entry", action=op.option_action, digits=op.option_digits, param=op.option_param, description=op.description)
+            etree.SubElement(x_menu, "entry", action=(
+                op.option_action if op.option_action else ''),
+                digits=(op.option_digits if op.option_digits else '1'),
+                param=(op.option_param if op.option_param else ''),
+                description=(op.description if op.description else ''))
 
         if ivr.direct_dial == 'true':
-            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/', param='set ${cond(${user_exists id $1 %s} == true ? user_exists=true : user_exists=false)}' % ivr.context, description='direct dial')
-            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/', param='playback ${cond(${user_exists} == true ? ivr/ivr-call_being_transferred.wav : ivr/ivr-that_was_an_invalid_entry.wav)}', description='direct dial')
-            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/', param='transfer ${cond(${user_exists} == true ? $1 XML %s)}' % ivr.context, description='direct dial')
+            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/',
+                param='set ${cond(${user_exists id $1 %s} == true ? user_exists=true : user_exists=false)}' % ivr.context, description='direct dial')
+            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/',
+                param='playback ${cond(${user_exists} == true ? ivr/ivr-call_being_transferred.wav : ivr/ivr-that_was_an_invalid_entry.wav)}',
+                description='direct dial')
+            etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/',
+                param='transfer ${cond(${user_exists} == true ? $1 XML %s)}' % ivr.context, description='direct dial')
 
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
+        print(xml)
         return xml

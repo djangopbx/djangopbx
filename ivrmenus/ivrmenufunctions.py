@@ -48,7 +48,7 @@ class IvrDestAction():
         else:
             return _(text)
 
-    def get_ivr_action_choices(self, decorate=False):
+    def get_ivr_action_choices(self, sep=':', decorate=False):
         ivr_actions = []
         e_list = []
         v_list = []
@@ -57,11 +57,11 @@ class IvrDestAction():
                 enabled='true'
                 ).order_by('extension')
         for e in es:
-            e_list.append(('transfer:%s XML %s' % (e.extension, e.domain_id), '%s %s' % (e.extension, e.description)))
+            e_list.append(('transfer%s%s XML %s' % (sep, e.extension, e.domain_id), '%s %s' % (e.extension, e.description)))
             v = e.voicemail.filter(enabled='true').first()
             if v:
                 v_list.append(
-                    ('transfer:99%s XML %s' % (e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description))
+                    ('transfer%s99%s XML %s' % (sep, e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description))
                     )
 
         if len(e_list) > 0:
@@ -75,7 +75,7 @@ class IvrDestAction():
                 enabled='true'
                 ).order_by('name')
         for rg in rgs:
-            rg_list.append(('transfer:%s XML %s' % (rg.number, self.domain_name), '%s-%s' % (rg.name, rg.number)))
+            rg_list.append(('transfer%s%s XML %s' % (sep, rg.number, self.domain_name), '%s-%s' % (rg.name, rg.number)))
 
         if len(rg_list) > 0:
             ivr_actions.append((self.decorate('Ring groups', decorate), rg_list))
@@ -86,7 +86,7 @@ class IvrDestAction():
                 enabled='true'
                 ).order_by('name')
         for ivr in ivrs:
-            ivr_list.append(('transfer:%s XML %s' % (ivr.number, self.domain_name), '%s-%s' % (ivr.name, ivr.number)))
+            ivr_list.append(('transfer%s%s XML %s' % (sep, ivr.number, self.domain_name), '%s-%s' % (ivr.name, ivr.number)))
 
         if len(ivr_list) > 0:
             ivr_actions.append((self.decorate('IVR menus', decorate), ivr_list))
@@ -94,15 +94,15 @@ class IvrDestAction():
         t_list = []
         sv = SwitchVariable.objects.filter(category='Tones', enabled='true').order_by('name')
         for t in sv:
-            t_list.append(('playback:tone_stream://%s' % t.value, t.name))
+            t_list.append(('playback%stone_stream://%s' % (sep, t.value), t.name))
 
         if len(t_list) > 0:
             ivr_actions.append((self.decorate('Tones', decorate), t_list))
 
         o_list = []
-        o_list.append(('transfer:98 XML %s' % self.domain_name, _('Check Voicemail')))
-        o_list.append(('transfer:411 XML %s' % self.domain_name, _('Company Directory')))
-        o_list.append(('transfer:732 XML %s' % self.domain_name, _('Record')))
+        o_list.append(('transfer%s98 XML %s' % (sep, self.domain_name), _('Check Voicemail')))
+        o_list.append(('transfer%s411 XML %s' % (sep,  self.domain_name), _('Company Directory')))
+        o_list.append(('transfer%s732 XML %s' % (sep, self.domain_name), _('Record')))
         o_list.append(('hangup', _('Hangup')))
         ivr_actions.append((self.decorate('Other', decorate), o_list))
 

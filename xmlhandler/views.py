@@ -190,8 +190,7 @@ def configuration(request):
     elif key_value == 'translate.conf':
         xml = xmlhf.GetTranslate()
     elif key_value == 'ivr.conf':
-        menu_name = request.POST.get('Menu-Name', '')
-        xml = xmlhf.GetIvr(menu_name)
+        xml = xmlhf.GetIvr(request.POST.get('Menu-Name', ''))
     else:
         xml = xmlhf.NotFoundXml()
 
