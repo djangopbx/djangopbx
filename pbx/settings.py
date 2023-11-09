@@ -255,6 +255,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = '/portal/auth/login/'
 LOGIN_REDIRECT_URL = '/'
 
 REST_FRAMEWORK = {
