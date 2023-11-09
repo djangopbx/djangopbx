@@ -168,7 +168,7 @@ def languages(request):
 
 @csrf_exempt
 def configuration(request):
-    debug = True
+    debug = False
 
     xmlhf = ConfigHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
@@ -179,7 +179,10 @@ def configuration(request):
     if debug:
         logger.info('XML Handler request: {}'.format(request.POST))
 
-    hostname = request.POST.get('hostname', request.META['REMOTE_HOST'])
+    hostname = request.POST.get('hostname', '')
+    if not hostname:
+        xml = xmlhf.NotFoundXml()
+
     key_value = request.POST.get('key_value', '')
     if key_value == 'acl.conf':
         xml = xmlhf.GetACL()
