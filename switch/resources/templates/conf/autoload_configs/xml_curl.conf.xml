@@ -1,15 +1,19 @@
 <configuration name="xml_curl.conf" description="cURL XML Gateway">
   <bindings>
     <binding name="directory">
-      <param name="gateway-url" value="http://127.0.0.1:8080/xmlhandler/directory/" bindings="directory"/>
+      <param name="gateway-url" value="http://127.0.0.1:80/xmlhandler/directory/" bindings="directory"/>
       <param name="timeout" value="10"/>
     </binding>
     <binding name="dialplan">
-      <param name="gateway-url" value="http://127.0.0.1:8080/xmlhandler/dialplan/" bindings="dialplan"/>
+      <param name="gateway-url" value="http://127.0.0.1:80/xmlhandler/dialplan/" bindings="dialplan"/>
       <param name="timeout" value="10"/>
     </binding>
     <binding name="languages">
-      <param name="gateway-url" value="http://127.0.0.1:8080/xmlhandler/languages/" bindings="languages"/>
+      <param name="gateway-url" value="http://127.0.0.1:80/xmlhandler/languages/" bindings="languages"/>
+      <param name="timeout" value="10"/>
+    </binding>
+    <binding name="languages">
+      <param name="gateway-url" value="http://127.0.0.1:80/xmlhandler/configuration/" bindings="configuration"/>
       <param name="timeout" value="10"/>
     </binding>
     <!--<binding name="example"> -->

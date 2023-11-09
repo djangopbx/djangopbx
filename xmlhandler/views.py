@@ -184,7 +184,7 @@ def configuration(request):
     if key_value == 'acl.conf':
         xml = xmlhf.GetACL()
     elif key_value == 'sofia.conf':
-        xml = xmlhf.GetSofia(hostanme)
+        xml = xmlhf.GetSofia(hostname)
     elif key_value == 'local_stream.conf':
         xml = xmlhf.GetLocalStream()
     elif key_value == 'translate.conf':

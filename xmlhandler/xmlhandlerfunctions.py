@@ -47,6 +47,9 @@ from ivrmenus.models import IvrMenus
 
 class XmlHandlerFunctions():
 
+    def __init__(self):
+        self.debug = False
+
     def NotFoundXml(self):
         return '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="freeswitch/xml">
@@ -434,6 +437,8 @@ class DirectoryHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(directory_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetAcl(self, domain=None):
@@ -509,6 +514,8 @@ class DirectoryHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(directory_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetReverseAuthLookup(self, domain, user):
@@ -540,6 +547,8 @@ class DirectoryHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(directory_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetPopulateDirectory(self, domain=None):
@@ -654,6 +663,8 @@ class DialplanHandler(XmlHandlerFunctions):
         xml = '\n'
         xml = xml.join(xml_list)
         cache.set(dialplan_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetDialplanStatic(self, hostname):
@@ -728,6 +739,8 @@ class LanguagesHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(languages_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
 
@@ -735,7 +748,7 @@ class ConfigHandler(XmlHandlerFunctions):
 
     def GetACL(self):
         configuration_cache_key = 'configuration:acl.conf'
-        xml = cache.get(languages_cache_key)
+        xml = cache.get(configuration_cache_key)
         if xml:
             return xml
 
@@ -756,11 +769,13 @@ class ConfigHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetSofia(self, hostname=''):
         configuration_cache_key = 'configuration:sofia.conf'
-        xml = cache.get(languages_cache_key)
+        xml = cache.get(configuration_cache_key)
         if xml:
             return xml
         x_root = self.XrootDynamic()
@@ -852,11 +867,13 @@ class ConfigHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetLocalStream(self):
         configuration_cache_key = 'configuration:local_stream.conf'
-        xml = cache.get(languages_cache_key)
+        xml = cache.get(configuration_cache_key)
         if xml:
             return xml
         x_root = self.XrootDynamic()
@@ -880,6 +897,8 @@ class ConfigHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetTranslate(self):
@@ -901,6 +920,8 @@ class ConfigHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetIvr(self, ivr_id):
@@ -954,5 +975,6 @@ class ConfigHandler(XmlHandlerFunctions):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
-        print(xml)
+        if self.debug:
+            print(xml)
         return xml
