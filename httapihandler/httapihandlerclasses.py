@@ -27,12 +27,10 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-import logging
 from django.core.cache import cache
 from lxml import etree
-# from django.db.models import Q
-from .models import HttApiSession
-# from tenants.models import Domain
+from .httapihandler import HttApiHandler
+from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, FollowMeDestination
 from switch.models import IpRegister
@@ -40,139 +38,14 @@ from pbx.pbxsendsmtp import PbxTemplateMessage
 from pbx.commonfunctions import shcommand
 from ringgroups.ringgroupfunctions import RgFunctions
 from accounts.extensionfunctions import ExtFunctions
+from recordings.models import Recording
 
 
-
-class HttApiHandlerFunctions():
-
-# The session in the HttApiHandlerFunctions class uses a Django JSONField.
-# If you need a session, start one e.g.:
-#    self.get_httapi_session('RingGroupHandler')
-#
-# Don't forget to delete it when finished:
-#    if self.exiting:
-#        destroy_httapi_session()
-#        return self.return_data('Ok\n')
-#
-# You can set a session value with:
-#    self.session.json['my_variable'] = 'something'
-#    self.session.save()
-#
-# Read it with:
-#    if my_variable' in self.session.json:
-#        my_var = self.session.json['my_variable']
-
-    log_header = 'HttApi Handler: {}: {}'
-
-    def __init__(self, qdict):
-        self.logger = logging.getLogger(__name__)
-        self.debug = False
-        self.qdict = qdict
-        self.exiting = False
-        self.session = None
-        self.session_id = qdict.get('session_id')
-        if not self.session_id:
-            self.exiting = True
-        if qdict.get('exiting', 'false') == 'true':
-            self.destroy_httapi_session()
-            self.exiting = True
-        if self.debug:
-            self.logger.debug(self.log_header.format('request\n', self.qdict))
-        self.domain_uuid = None
-        self.domain_name = None
-        self.extension_uuid = None
-        self.default_language = None
-        self.default_dialiect = None
-        self.default_voice = None
-        self.sounds_dir = None
-        self.sounds_tuple = None
-
-    def return_data(self, xml):
-        if self.debug:
-            self.logger.debug(self.log_header.format('response\n', xml))
-        return xml
-
-    def XrootApi(self):
-        return etree.XML(
-            b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n'
-            b'<document type=\"xml/freeswitch-httapi\"></document>'
-            )
-
-    def error_hangup(self, message='Err'):
-        extension_uuid = self.qdict.get('variable_extension_uuid')
-        x_root = self.XrootApi()
-        etree.SubElement(x_root, 'params')
-        x_work = etree.SubElement(x_root, 'work')
-        etree.SubElement(x_work, 'playback', file='ivr/ivr-call_cannot_be_completed_as_dialed.wav')
-        etree.SubElement(x_work, 'execute', application='sleep', data='1000')
-        etree.SubElement(
-            x_work, 'execute', application='set',
-            data='httapi=httapi:%s message:%s}' % (self.session_id, message)
-            )
-        etree.SubElement(x_work, 'hangup')
-        etree.indent(x_root)
-        xml = str(etree.tostring(x_root), "utf-8")
-        return xml
-
-    def get_allowed_addresses(self):
-        cache_key = 'httapihandler:allowed_addresses'
-        aa = cache.get(cache_key)
-        if aa:
-            allowed_addresses = aa.split(',')
-        else:
-            allowed_addresses = PbxSettings().default_settings('httapihandler', 'allowed_address', 'array')
-            aa = ','.join(allowed_addresses)
-            cache.set(cache_key, aa)
-        return allowed_addresses
-
-    def address_allowed(self, ip_address):
-        allowed_addresses = self.get_allowed_addresses()
-        if ip_address in allowed_addresses:
-            return True
-        else:
-            return False
-
-    def get_httapi_session(self, name='None'):
-        new = False
-        try:
-            self.session = HttApiSession.objects.get(pk=self.session_id)
-        except HttApiSession.DoesNotExist:
-            self.session = HttApiSession.objects.create(id=self.session_id, name=name, json={'Default': 'true'})
-            new = True
-        return new
-
-    def destroy_httapi_session(self):
-        try:
-            HttApiSession.objects.get(pk=self.session_id).delete()
-        except HttApiSession.DoesNotExist:
-            pass
-        return
-
-    def get_data(self):
-        return self.return_data('Ok\n')
-
-    def get_common_variables(self):
-        self.domain_uuid = self.qdict.get('variable_domain_uuid')
-        self.domain_name = self.qdict.get('variable_domain_name')
-        self.extension_uuid = self.qdict.get('variable_extension_uuid')
-        self.default_language = self.qdict.get('variable_default_language', 'en')
-        self.default_dialect = self.qdict.get('variable_default_dialiect', 'us')
-        self.default_voice = self.qdict.get('variable_default_voice', 'callie')
-        self.sounds_dir = self.qdict.get('sounds_dir', '/usr/share/freeswitch/sounds')
-        self.sounds_fullpath = '{}/{}/{}/{}'.format(
-            self.sounds_dir, self.default_language, self.default_dialiect, self.default_voice
-            )
-        return
-
-
-class TestHandler(HttApiHandlerFunctions):
+class TestHandler(HttApiHandler):
 
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
-
-        # don't need to do this for this simple scenario but it tests the session mechanism
-        self.get_httapi_session('Test')
 
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')
@@ -189,18 +62,25 @@ class TestHandler(HttApiHandlerFunctions):
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
-        return self.return_data(xml)
+        return xml
 
 
-class FollowMeToggleHandler(HttApiHandlerFunctions):
+class FollowMeToggleHandler(HttApiHandler):
+
+    def get_variables(self):
+        self.var_list = [
+        'extension_uuid'
+        ]
+        self.var_list.extend(self.domain_var_list)
 
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_common_variables()
+        self.get_domain_variables()
+        extension_uuid = self.qdict.get('extension_uuid')
         try:
-            e = Extension.objects.get(pk=self.extension_uuid)
+            e = Extension.objects.get(pk=extension_uuid)
         except Extension.DoesNotExist:
             self.logger.debug(self.log_header.format('follow me toggle', 'Extn UUID not found'))
             return self.return_data(self.error_hangup('E1001'))
@@ -212,13 +92,13 @@ class FollowMeToggleHandler(HttApiHandlerFunctions):
         if e.follow_me_enabled == 'true':
             etree.SubElement(
                 x_work, 'playback',
-                file='{}/ivr/ivr-call_forwarding_has_been_cancelled.wav'.format(self.sounds_fullpath)
+                file='ivr/ivr-call_forwarding_has_been_cancelled.wav'
                 )
             e.follow_me_enabled = 'false'
         else:
             etree.SubElement(
                 x_work, 'playback',
-                file='{}/ivr/ivr-call_forwarding_has_been_set.wav'.format(self.sounds_fullpath)
+                file='ivr/ivr-call_forwarding_has_been_set.wav'
                 )
             e.follow_me_enabled = 'true'
 
@@ -228,18 +108,25 @@ class FollowMeToggleHandler(HttApiHandlerFunctions):
         etree.SubElement(x_work, 'hangup')
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
-        return self.return_data(xml)
+        return xml
 
 
-class FollowMeHandler(HttApiHandlerFunctions):
+class FollowMeHandler(HttApiHandler):
+
+    def get_variables(self):
+        self.var_list = [
+        'call_direction',
+        'extension_uuid'
+        ]
+        self.var_list.extend(self.domain_var_list)
 
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_common_variables()
-        call_direction = self.qdict.get('variable_call_direction', 'local')
-        extension_uuid = self.qdict.get('variable_extension_uuid')
+        self.get_domain_variables()
+        call_direction = self.qdict.get('call_direction', 'local')
+        extension_uuid = self.qdict.get('extension_uuid')
         if extension_uuid:
             extf = ExtFunctions(self.domain_uuid, self.domain_name, call_direction, extension_uuid)
 
@@ -250,20 +137,34 @@ class FollowMeHandler(HttApiHandlerFunctions):
         etree.SubElement(x_work, 'execute', application='bridge', data=extf.generate_bridge())
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
-        print(xml)
-        return self.return_data(xml)
+        return xml
 
 
-class FailureHandler(HttApiHandlerFunctions):
+class FailureHandler(HttApiHandler):
+
+    def get_variables(self):
+        self.var_list = [
+        'originate_disposition',
+        'dialed_extension',
+        'last_busy_dialed_extension',
+        'forward_busy_enabled',
+        'forward_busy_destination',
+        'forward_busy_destination',
+        'forward_no_answer_enabled',
+        'forward_no_answer_destination',
+        'forward_user_not_registered_enabled',
+        'forward_user_not_registered_destination'
+        ]
+        self.var_list.extend(self.domain_var_list)
 
     def get_data(self):
         no_work = True
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_common_variables()
-        originate_disposition = self.qdict.get('variable_originate_disposition')
-        dialed_extension = self.qdict.get('variable_dialed_extension')
+        self.get_domain_variables()
+        originate_disposition = self.qdict.get('originate_disposition')
+        dialed_extension = self.qdict.get('dialed_extension')
         context = self.qdict.get('Caller-Context')
         if not context:
             context = self.domain_name
@@ -273,17 +174,17 @@ class FailureHandler(HttApiHandlerFunctions):
         x_work = etree.SubElement(x_root, 'work')
 
         if originate_disposition == 'USER_BUSY':
-            last_busy_dialed_extension = self.qdict.get('variable_last_busy_dialed_extension', '~None~')
+            last_busy_dialed_extension = self.qdict.get('last_busy_dialed_extension', '~None~')
             if self.debug:
                 self.logger.debug(self.log_header.format(
                     'falurehandler', 'last_busy_dialed_extension %s' % last_busy_dialed_extension
                     ))
             if dialed_extension and last_busy_dialed_extension:
                 if not dialed_extension == last_busy_dialed_extension:
-                    forward_busy_enabled = self.qdict.get('variable_forward_busy_enabled', 'false')
+                    forward_busy_enabled = self.qdict.get('forward_busy_enabled', 'false')
                     if forward_busy_enabled:
                         if forward_busy_enabled == 'true':
-                            forward_busy_destination = self.qdict.get('variable_forward_busy_destination')
+                            forward_busy_destination = self.qdict.get('forward_busy_destination')
                             no_work = False
                             if forward_busy_destination:
                                 etree.SubElement(
@@ -304,10 +205,10 @@ class FailureHandler(HttApiHandlerFunctions):
                 etree.SubElement(x_work, 'hangup', cause='USER_BUSY')
 
         elif originate_disposition == 'NO_ANSWER':
-            forward_no_answer_enabled = self.qdict.get('variable_forward_no_answer_enabled')
+            forward_no_answer_enabled = self.qdict.get('forward_no_answer_enabled')
             if forward_no_answer_enabled:
                 if forward_no_answer_enabled == 'true':
-                    forward_no_answer_destination = self.qdict.get('variable_forward_no_answer_destination')
+                    forward_no_answer_destination = self.qdict.get('forward_no_answer_destination')
                     no_work = False
                     if forward_no_answer_destination:
                         x_log = etree.SubElement(x_work, 'log', level='NOTICE')
@@ -324,11 +225,11 @@ class FailureHandler(HttApiHandlerFunctions):
                 etree.SubElement(x_work, 'hangup', cause='NO_ANSWER')
 
         elif originate_disposition == 'USER_NOT_REGISTERED':
-            forward_user_not_registered_enabled = self.qdict.get('variable_forward_user_not_registered_enabled')
+            forward_user_not_registered_enabled = self.qdict.get('forward_user_not_registered_enabled')
             if forward_user_not_registered_enabled:
                 if forward_user_not_registered_enabled == 'true':
                     forward_user_not_registered_destination = self.qdict.get(
-                        'variable_forward_user_not_registered_destination'
+                        'forward_user_not_registered_destination'
                         )
                     no_work = False
                     if forward_user_not_registered_destination:
@@ -362,14 +263,15 @@ class FailureHandler(HttApiHandlerFunctions):
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
-        return self.return_data(xml)
+        return xml
 
 
-class HangupHandler(HttApiHandlerFunctions):
+class HangupHandler(HttApiHandler):
 
     def get_data(self):
 
-        self.get_common_variables()
+        self.get_domain_variables()
+        self.get_language_variables()
 
         missed_call_app  = self.qdict.get('missed_call_app')        # noqa: E221
         missed_call_data = self.qdict.get('missed_call_data')       # noqa: E221
@@ -409,7 +311,7 @@ class HangupHandler(HttApiHandlerFunctions):
         return self.return_data('Ok\n')
 
 
-class RegisterHandler(HttApiHandlerFunctions):
+class RegisterHandler(HttApiHandler):
 
     def get_data(self):
         ip_address = self.qdict.get('network-ip', '192.168.42.1')
@@ -425,15 +327,19 @@ class RegisterHandler(HttApiHandlerFunctions):
         return self.return_data('Ok\n')
 
 
-class RingGroupHandler(HttApiHandlerFunctions):
+class RingGroupHandler(HttApiHandler):
+
+    def get_variables(self):
+        self.var_list = ['ring_group_uuid']
+        self.var_list.extend(self.domain_var_list)
 
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_common_variables()
+        self.get_domain_variables()
 
-        ringgroup_uuid = self.qdict.get('variable_ring_group_uuid')
+        ringgroup_uuid = self.qdict.get('ring_group_uuid')
         try:
             rgf = RgFunctions(self.domain_uuid, self.domain_name, ringgroup_uuid)
         except:
@@ -451,4 +357,94 @@ class RingGroupHandler(HttApiHandlerFunctions):
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
-        return self.return_data(xml)
+        return xml
+
+
+class RecordingsHandler(HttApiHandler):
+
+    def get_variables(self):
+        self.var_list = ['pin_number', 'recording_prefix']
+        self.var_list.extend(self.domain_var_list)
+
+    def get_data(self):
+        self.get_domain_variables()
+        if self.getfile:
+            rec_file_exists = True
+            try:
+                rec = Recording.objects.get(name=self.fdict['rd_input'].name)
+            except Recording.DoesNotExist:
+                rec_file_exists = False
+                d = Domain.objects.get(pk=self.domain_uuid)
+                rec = Recording.objects.create(name=self.fdict['rd_input'].name, domain_id=d, 
+                        description='via recordings (%s)' % self.qdict.get('Caller-Destination-Number', ''))
+
+            if rec_file_exists:
+                rec.filename.delete(save=False)
+            rec.filename.save(self.fdict['rd_input'].name, self.fdict['rd_input'])
+
+        if self.exiting:
+            return self.return_data('Ok\n')
+
+        x_root = self.XrootApi()
+        etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+
+        if 'next_action' in self.session.json:
+            next_action =  self.session.json['next_action']
+            if next_action == 'chk-pin':
+                pin_number = self.session.json['pin_number']
+                if pin_number == self.qdict.get('pb_input', ''):
+
+                    self.session.json['next_action'] = 'record'
+                    self.session.save()
+                    x_work.append(self.play_and_get_digits('ivr/ivr-id_number.wav'))
+                else:
+                    etree.SubElement(x_work, 'playback', file='phrase:voicemail_fail_auth:#')
+                    etree.SubElement(x_work, 'hangup')
+
+            elif next_action == 'record':
+                rec_no = self.qdict.get('pb_input', '')
+                rec_prefix = self.qdict.get('recording_prefix', 'recording')
+                self.get_sounds_variables()
+                rec_file = '%s%s.wav' % (rec_prefix, rec_no)
+
+                self.session.json['rec_file'] = '%s/%s/%s' % (self.recordings_dir, self.domain_name, rec_file)
+                self.session.json['next_action'] = 'review'
+                self.session.save()
+                etree.SubElement(x_work, 'playback', file='ivr/ivr-recording_started.wav')
+                x_work.append(self.record_and_get_digits(rec_file))
+
+            elif next_action == 'review':
+                rec_file = self.session.json['rec_file']
+                self.session.json['next_action'] = 'rerecord'
+                self.session.save()
+                etree.SubElement(x_work, 'pause', milliseconds='1000')
+                etree.SubElement(x_work, 'playback', file=rec_file)
+                etree.SubElement(x_work, 'pause', milliseconds='500')
+                etree.SubElement(x_work, 'playback', file='voicemail/vm-press.wav')
+                etree.SubElement(x_work, 'playback', file='digits/1.wav')
+                x_work.append(self.play_and_get_digits('voicemail/vm-rerecord.wav', 'pb_input', '~\\d{1}'))
+
+            elif next_action == 'rerecord':
+                re_rec = self.qdict.get('pb_input', '')
+                if re_rec == '1':
+                    rec_file = self.session.json['rec_file']
+                    self.session.json['next_action'] = 'record'
+                    self.session.save()
+                    etree.SubElement(x_work, 'continue')
+                else:
+                    etree.SubElement(x_work, 'playback', file='ivr/ivr-recording_saved.wav')
+                    etree.SubElement(x_work, 'hangup')
+        else:
+            pin_number = self.qdict.get('pin_number')
+            if not pin_number:
+                return self.error_hangup('R2001')
+
+            self.session.json['pin_number'] = pin_number
+            self.session.json['next_action'] = 'chk-pin'
+            self.session.save()
+            x_work.append(self.play_and_get_digits('phrase:voicemail_enter_pass:#'))
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return xml

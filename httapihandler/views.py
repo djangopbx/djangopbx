@@ -42,9 +42,9 @@ from .models import (
 from .serializers import (
     HttApiSessionSerializer,
 )
-from .httapihandlerfunctions import (
+from .httapihandlerclasses import (
     TestHandler, FollowMeHandler, FollowMeToggleHandler, FailureHandler, HangupHandler,
-    RegisterHandler, RingGroupHandler
+    RegisterHandler, RingGroupHandler, RecordingsHandler
 )
 
 
@@ -67,8 +67,7 @@ def processhttapi(request, httapihf):
         return HttpResponseNotFound()
     if not httapihf.address_allowed(request.META['REMOTE_ADDR']):
         return HttpResponseNotFound()
-
-    return HttpResponse(httapihf.get_data(), content_type='text/xml')
+    return HttpResponse(httapihf.htt_get_data(), content_type='text/xml')
 
 
 @csrf_exempt
@@ -97,17 +96,27 @@ def failurehandler(request):
 
 @csrf_exempt
 def hangup(request):
-    httapihf = HangupHandler(request.POST)
+    httapihf = HangupHandler(request.POST, False)
     return processhttapi(request, httapihf)
 
 
 @csrf_exempt
 def register(request):
-    httapihf = RegisterHandler(request.POST)
+    httapihf = RegisterHandler(request.POST, False)
     return processhttapi(request, httapihf)
 
 
 @csrf_exempt
 def ringgroup(request):
     httapihf = RingGroupHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def recordings(request):
+    if request.content_type.startswith('multipart'):
+        post, files = request.parse_file_upload(request.META, request)
+        #request.FILES.update(files)
+        httapihf = RecordingsHandler(post, True, True, files)
+    else:
+        httapihf = RecordingsHandler(request.POST)
     return processhttapi(request, httapihf)

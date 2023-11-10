@@ -54,6 +54,7 @@ class RecordingAdmin(ImportExportModelAdmin):
     list_display = ('name', 'filename', 'description')
     list_filter = (DomainFilter, 'name')
 
+    actions = None
     ordering = [
         'domain_id',
         'name'
@@ -64,6 +65,10 @@ class RecordingAdmin(ImportExportModelAdmin):
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
+
+    def delete_model(self, request, obj):
+        obj.filename.delete(save=False)
+        super().delete_model(request, obj)
 
 
 admin.site.register(Recording, RecordingAdmin)

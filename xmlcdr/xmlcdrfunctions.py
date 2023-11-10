@@ -403,7 +403,10 @@ class XmlCdrFunctions():
         xcdr.conference_uuid = cdr_dict['cdr']['variables'].get('conference_uuid')
         xcdr.conference_member_id = cdr_dict['cdr']['variables'].get('conference_member_id')
         # xcdr.digits_dialed = cdr_dict['cdr']['variables'].get('digits_dialed')
-        xcdr.pin_number = cdr_dict['cdr']['variables'].get('pin_number')
+        pin_number = cdr_dict['cdr']['variables'].get('pin_number')
+        if pin_number:
+            xcdr.pin_number = unquote(pin_number)
+
         xcdr.hangup_cause = cdr_dict['cdr']['variables'].get('hangup_cause')
         xcdr.hangup_cause_q850 = self.str2int(cdr_dict['cdr']['variables'].get('hangup_cause_q850'))
         xcdr.sip_hangup_disposition = cdr_dict['cdr']['variables'].get('sip_hangup_disposition')

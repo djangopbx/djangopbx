@@ -42,4 +42,5 @@ urlpatterns = [
     path('hangup/', views.hangup, name='hangup'),
     path('register/', views.register, name='register'),
     path('ringgroup/', views.ringgroup, name='ringgroup'),
+    path('recordings/', views.recordings, name='recordings'),
 ]
