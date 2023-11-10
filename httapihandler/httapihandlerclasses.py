@@ -376,11 +376,13 @@ class RecordingsHandler(HttApiHandler):
                 rec_file_exists = False
                 d = Domain.objects.get(pk=self.domain_uuid)
                 rec = Recording.objects.create(name=self.fdict['rd_input'].name, domain_id=d, 
-                        description='via recordings (%s)' % self.qdict.get('Caller-Destination-Number', ''))
+                        description='via recordings (%s)' % self.qdict.get('Caller-Destination-Number', ''),
+                        filename=self.fdict['rd_input'])
 
             if rec_file_exists:
                 rec.filename.delete(save=False)
-            rec.filename.save(self.fdict['rd_input'].name, self.fdict['rd_input'])
+                rec.filename.save(self.fdict['rd_input'].name, self.fdict['rd_input'])
+            rec.save()
 
         if self.exiting:
             return self.return_data('Ok\n')
