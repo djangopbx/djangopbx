@@ -28,4 +28,4 @@
 --
 
 -- configuration variables
-    httapi_url = 'http://127.0.0.1:8080'
+    httapi_url = 'http://127.0.0.1:8008'

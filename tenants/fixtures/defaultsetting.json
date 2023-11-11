@@ -4201,7 +4201,7 @@
         "category": "dialplan",
         "subcategory": "httapi_url",
         "value_type": "text",
-        "value": "http://127.0.0.1:8080",
+        "value": "http://127.0.0.1:8008",
         "sequence": "10",
         "enabled": "true",
         "description": null,

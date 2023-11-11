@@ -5,6 +5,6 @@
 		<action application="set" data="recording_id="/>
 		<action application="set" data="recording_prefix=recording"/>
 		<action application="set" data="record_append=false"/>
-		<action application="httapi" data="{httapi_profile=dpbx,url=http://127.0.0.1:8080/httapihandler/recordings/}"/>
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/recordings/}"/>
 	</condition>
 </extension>

@@ -29,6 +29,7 @@
 import uuid
 from django.utils.translation import gettext_lazy as _
 from lxml import etree
+from tenants.pbxsettings import PbxSettings
 from dialplans.models import Dialplan
 from tenants.models import Domain
 from accounts.models import Extension, FollowMeDestination
@@ -209,7 +210,8 @@ class RgFunctions():
                 etree.SubElement(x_condition, "action", application='playback', data=self.rg.greeting)
 
             if self.rg.follow_me_enabled == 'true':
-                etree.SubElement(x_condition, "action", application='httapi', data='{httapi_profile=full,url=http://127.0.0.1:8080/httapihandler/ringgroup/}')
+                httapi_url = PbxSettings().default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)[0]
+                etree.SubElement(x_condition, "action", application='httapi', data='{httapi_profile=dpbx,url=%s/httapihandler/ringgroup/}' % httapi_url)
             else:
                 etree.SubElement(x_condition, "action", application='bridge', data=self.generate_bridge())
                 app_data_list = self.rg.timeout_data.split(':')
