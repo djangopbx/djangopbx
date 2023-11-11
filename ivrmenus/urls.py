@@ -27,45 +27,12 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from rest_framework import viewsets
-from rest_framework import permissions
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import routers
+from . import views
 
+router = routers.DefaultRouter()
+router.register(r'ivrmenus', views.IvrMenusViewSet)
+router.register(r'ivrmenuoptions', views.IvrMenuOptionsViewSet)
 
-from pbx.restpermissions import (
-    AdminApiAccessPermission
-)
-from .models import (
-    IvrMenus, IvrMenuOptions
-)
-from .serializers import (
-    IvrMenusSerializer, IvrMenuOptionsSerializer
-)
-
-
-class IvrMenusViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows IvrMenus to be viewed or edited.
-    """
-    queryset = IvrMenus.objects.all().order_by('domain_id', 'name', 'extension')
-    serializer_class = IvrMenusSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['domain_id', 'enabled']
-    permission_classes = [
-        permissions.IsAuthenticated,
-        AdminApiAccessPermission,
-    ]
-
-
-class IvrMenuOptionsViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows IvrMenuOptions to be viewed or edited.
-    """
-    queryset = IvrMenuOptions.objects.all().order_by('ivr_menu_id', 'sequence')
-    serializer_class = IvrMenuOptionsSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['ivr_menu_id']
-    permission_classes = [
-        permissions.IsAuthenticated,
-        AdminApiAccessPermission,
-    ]
+urlpatterns = [
+]

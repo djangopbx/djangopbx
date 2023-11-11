@@ -65,6 +65,7 @@ from contacts.urls import router as contactsrouter
 from phrases.urls import router as phrasesrouter
 from ringgroups.urls import router as ringgroupsrouter
 from numbertranslations.urls import router as numbertranslationsrouter
+from ivrmenus.urls import router as ivrmenusrouter
 
 
 # This overrides names in site headers and titles
@@ -91,6 +92,7 @@ router.registry.extend(contactsrouter.registry)
 router.registry.extend(phrasesrouter.registry)
 router.registry.extend(ringgroupsrouter.registry)
 router.registry.extend(numbertranslationsrouter.registry)
+router.registry.extend(ivrmenusrouter.registry)
 
 
 urlpatterns = [
