@@ -46,6 +46,13 @@ try:
 except ImportError:
     phrases_available = False
 
+ivrmenus_available = True
+try:
+    from ivrmenus.models import IvrMenus
+except ImportError:
+    ivrmenus_available = False
+
+
 
 @method_decorator(staff_member_required, name="dispatch")
 class ClearCacheView(View):
@@ -93,6 +100,15 @@ class ClearCacheView(View):
 
             if configuration:
                 cache.delete('xmlhandler:allowed_addresses')
+                cache.delete('configuration:acl.conf')
+                cache.delete('configuration:sofia.conf')
+                cache.delete('configuration:local_stream.conf')
+                cache.delete('configuration:translate.conf')
+
+                if ivrmenus_available:
+                    ivrs = IvrMenus.objects.filter(enabled='true', domain_id=domain_uuid)
+                    for ivr in ivrs:
+                        cache.delete('configuration:ivr.conf:%s' % str(ivr.id))
 
             if clearall:
                 cache.clear()

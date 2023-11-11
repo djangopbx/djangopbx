@@ -162,7 +162,7 @@ class SwitchSounds():
         sound_file_list = self.sounds_dir_scan(os.path.join(self.get_sounds_dir(), self.get_voice_dir()))
         return list((a, a) for a in sound_file_list)
 
-    def get_sounds_choices_list(self, domain_name, option = 0):
+    def get_sounds_choices_list(self, domain_name, option=0):
         sounds_choices = []
         if option < 1:
             sounds_choices.append((_('---- Miscellaneous ----------'), [('say:', 'Say'), ('tone_stream:', 'Tone Stream')]))
@@ -173,7 +173,7 @@ class SwitchSounds():
                     sounds_choices.append((_('---- Phrases -------------'), phrase_list))
         if option < 3:
             if os.path.exists(self.get_recordings_dir(domain_name)):
-                sounds_choices.append((_('---- Recordings -------------'), self.get_recordings_list(domain_name)))
+                sounds_choices.append((_('---- Recordings -------------'), self.get_recordings_list(domain_name, True)))
         if option < 4:
             if os.path.exists(self.get_sounds_dir()):
                 sounds_choices.append((_('---- Sounds -----------------'), self.get_sounds_list()))
