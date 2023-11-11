@@ -370,19 +370,20 @@ class RecordingsHandler(HttApiHandler):
         self.get_domain_variables()
         if self.getfile:
             rec_file_exists = True
+            # workaround since freeswitch 10 httapi record prepends a UUID to the filename
+            # this strips it on the known part of the name 'recording'
+            received_file_name = 'recording%s' % self.fdict['rd_input'].name.rsplit('recording', 1)[1]
             try:
-                rec = Recording.objects.get(name=self.fdict['rd_input'].name)
+                rec = Recording.objects.get(name=received_file_name)
             except Recording.DoesNotExist:
                 rec_file_exists = False
                 d = Domain.objects.get(pk=self.domain_uuid)
-                rec = Recording.objects.create(name=self.fdict['rd_input'].name, domain_id=d, 
-                        description='via recordings (%s)' % self.qdict.get('Caller-Destination-Number', ''),
-                        filename=self.fdict['rd_input'])
+                rec = Recording.objects.create(name=received_file_name, domain_id=d, 
+                        description='via recordings (%s)' % self.qdict.get('Caller-Destination-Number', ''))
 
             if rec_file_exists:
                 rec.filename.delete(save=False)
-                rec.filename.save(self.fdict['rd_input'].name, self.fdict['rd_input'])
-            rec.save()
+            rec.filename.save(received_file_name, self.fdict['rd_input'])
 
         if self.exiting:
             return self.return_data('Ok\n')
