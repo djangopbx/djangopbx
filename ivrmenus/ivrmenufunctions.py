@@ -31,84 +31,9 @@ from django.utils.translation import gettext_lazy as _
 from lxml import etree
 from dialplans.models import Dialplan
 from tenants.models import Domain
-from accounts.models import Extension, FollowMeDestination
 from .models import IvrMenus, IvrMenuOptions
-from switch.models import SwitchVariable
 
 
-class IvrDestAction():
-
-    def __init__(self, domain_name, domain_uuid):
-        self.domain_uuid = domain_uuid
-        self.domain_name = domain_name
-
-    def decorate(self, text, decorate):
-        if decorate:
-            return '--- %s ----------' % _(text)
-        else:
-            return _(text)
-
-    def get_ivr_action_choices(self, sep=':', decorate=False):
-        ivr_actions = []
-        e_list = []
-        v_list = []
-        es = Extension.objects.select_related('domain_id').prefetch_related('voicemail').filter(
-                domain_id=uuid.UUID(self.domain_uuid),
-                enabled='true'
-                ).order_by('extension')
-        for e in es:
-            e_list.append(('transfer%s%s XML %s' % (sep, e.extension, e.domain_id), '%s %s' % (e.extension, e.description)))
-            v = e.voicemail.filter(enabled='true').first()
-            if v:
-                v_list.append(
-                    ('transfer%s99%s XML %s' % (sep, e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description))
-                    )
-
-        if len(e_list) > 0:
-            ivr_actions.append((self.decorate('Extensions', decorate), e_list))
-        if len(v_list) > 0:
-            ivr_actions.append((self.decorate('Voicemails', decorate), v_list))
-
-        rg_list = []
-        rgs = Dialplan.objects.filter(domain_id=uuid.UUID(self.domain_uuid),
-                category='Ring group',
-                enabled='true'
-                ).order_by('name')
-        for rg in rgs:
-            rg_list.append(('transfer%s%s XML %s' % (sep, rg.number, self.domain_name), '%s-%s' % (rg.name, rg.number)))
-
-        if len(rg_list) > 0:
-            ivr_actions.append((self.decorate('Ring groups', decorate), rg_list))
-
-        ivr_list = []
-        ivrs = Dialplan.objects.filter(domain_id=uuid.UUID(self.domain_uuid),
-                category='IVR menu',
-                enabled='true'
-                ).order_by('name')
-        for ivr in ivrs:
-            ivr_list.append(('transfer%s%s XML %s' % (sep, ivr.number, self.domain_name), '%s-%s' % (ivr.name, ivr.number)))
-
-        if len(ivr_list) > 0:
-            ivr_actions.append((self.decorate('IVR menus', decorate), ivr_list))
-
-        t_list = []
-        sv = SwitchVariable.objects.filter(category='Tones', enabled='true').order_by('name')
-        for t in sv:
-            t_list.append(('playback%stone_stream://%s' % (sep, t.value), t.name))
-
-        if len(t_list) > 0:
-            ivr_actions.append((self.decorate('Tones', decorate), t_list))
-
-        o_list = []
-        o_list.append(('transfer%s98 XML %s' % (sep, self.domain_name), _('Check Voicemail')))
-        o_list.append(('transfer%s411 XML %s' % (sep,  self.domain_name), _('Company Directory')))
-        o_list.append(('transfer%s732 XML %s' % (sep, self.domain_name), _('Record')))
-        o_list.append(('hangup', _('Hangup')))
-        ivr_actions.append((self.decorate('Other', decorate), o_list))
-
-        return ivr_actions
-
-# may not need below
 class IvrFunctions():
 
     def __init__(self, domain_uuid, domain_name, ivr_uuid=None, user_name='system'):
@@ -132,7 +57,7 @@ class IvrFunctions():
             app_id='6bf14c5d-c76c-4e6f-8782-c62bf7902ea3',
             name=self.ivr.name,
             number=self.ivr.extension,
-            destination='true',
+            destination='false',
             context=self.domain_name,
             category='IVR menu',
             dp_continue='false',

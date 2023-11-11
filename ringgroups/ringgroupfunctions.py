@@ -37,63 +37,6 @@ from .models import RingGroup, RingGroupDestination
 from switch.models import SwitchVariable
 
 
-class RgDestAction():
-
-    def __init__(self, domain_name, domain_uuid):
-        self.domain_uuid = domain_uuid
-        self.domain_name = domain_name
-
-
-    def get_rg_action_choices(self):
-        rg_actions = []
-        e_list = []
-        v_list = []
-        es = Extension.objects.select_related('domain_id').prefetch_related('voicemail').filter(
-                domain_id=uuid.UUID(self.domain_uuid),
-                enabled='true'
-                ).order_by('extension')
-        for e in es:
-            e_list.append(('transfer:%s XML %s' % (e.extension, e.domain_id), '%s %s' % (e.extension, e.description)))
-            v = e.voicemail.filter(enabled='true').first()
-            if v:
-                v_list.append(
-                    ('transfer:99%s XML %s' % (e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description))
-                    )
-
-        if len(e_list) > 0:
-            rg_actions.append((_('Extensions'), e_list))
-        if len(v_list) > 0:
-            rg_actions.append((_('Voicemails'), v_list))
-
-        rg_list = []
-        rgs = Dialplan.objects.filter(domain_id=uuid.UUID(self.domain_uuid),
-                category='Ring group',
-                enabled='true'
-                ).order_by('name')
-        for rg in rgs:
-            rg_list.append(('transfer:%s XML %s' % (rg.number, self.domain_name), '%s-%s' % (rg.name, rg.number)))
-
-        if len(rg_list) > 0:
-            rg_actions.append((_('Ring groups'), rg_list))
-
-        t_list = []
-        sv = SwitchVariable.objects.filter(category='Tones', enabled='true').order_by('name')
-        for t in sv:
-            t_list.append(('playback:tone_stream://%s' % t.value, t.name))
-
-        if len(t_list) > 0:
-            rg_actions.append((_('Tones'), t_list))
-
-        o_list = []
-        o_list.append(('transfer:98 XML %s' % self.domain_name, _('Check Voicemail')))
-        o_list.append(('transfer:411 XML %s' % self.domain_name, _('Company Directory')))
-        o_list.append(('transfer:732 XML %s' % self.domain_name, _('Record')))
-        o_list.append(('hangup', _('Hangup')))
-        rg_actions.append((_('Other'), o_list))
-
-        return rg_actions
-
-
 class RgFunctions():
 
     def __init__(self, domain_uuid, domain_name, ringgroup_uuid=None, user_name='system'):
@@ -122,7 +65,7 @@ class RgFunctions():
             app_id='77578687-8eb7-4bb7-a00a-ddf3e8b7169f',
             name=self.rg.name,
             number=self.rg.extension,
-            destination='true',
+            destination='false',
             context=self.domain_name,
             category='Ring group',
             dp_continue='false',

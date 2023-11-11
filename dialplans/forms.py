@@ -29,7 +29,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from pbx.commonchoices import EnabledTrueFalseChoice
-from .dialplanfunctions import DpDestAction
+from pbx.commondestination import CommonDestAction
 from tenants.pbxsettings import PbxSettings
 import json
 from copy import deepcopy
@@ -88,17 +88,20 @@ class TimeConditionForm(forms.Form):
         if 'domain_uuid' in kwargs:
             i += 1
             domain_uuid = kwargs.pop('domain_uuid')
+        if 'domain_name' in kwargs:
+            i += 1
+            domain_name = kwargs.pop('domain_name')
         super().__init__(*args, **kwargs)
-        if i == 2:
-            self.setup_dynamic_fields(etreeroot, domain_uuid)
+        if i == 3:
+            self.setup_dynamic_fields(etreeroot, domain_uuid, domain_name)
 
-    def setup_dynamic_fields(self, etreeroot, domain_uuid):
+    def setup_dynamic_fields(self, etreeroot, domain_uuid, domain_name):
         tc = TimeConditions()
         tc.build_vr_dict()
-
+        action_choices = CommonDestAction(domain_name, domain_uuid).get_action_choices()
         self.fields['default_action'] = forms.ChoiceField(
             widget=forms.Select(attrs={'class': self.custom_select_classes}),
-            choices=DpDestAction().get_dp_action_choices(domain_uuid), required=False
+            choices=action_choices, required=False
             )
 
         tc_cnd = tc.get_condition_list(True)
@@ -138,7 +141,7 @@ class TimeConditionForm(forms.Form):
 
                                 self.fields[field_name_a] = forms.ChoiceField(
                                     widget=forms.Select(attrs={'class': self.custom_select_classes}),
-                                    choices=DpDestAction().get_dp_action_choices(domain_uuid), required=False
+                                    choices=action_choices, required=False
                                     )
                                 self.a_set_initial_value(field_name_a, '%s:%s' % (a_app, a_data))
                             self.a_set_initial_value('default_action', '%s:%s' % (a_app, a_data))
@@ -251,7 +254,7 @@ class TimeConditionForm(forms.Form):
         self.a_set_initial_value(field_name_s, '%s' % str(500 + (i*10)))
         self.fields[field_name_a] = forms.ChoiceField(
             widget=forms.Select(attrs={'class': self.custom_select_classes}),
-            choices=DpDestAction().get_dp_action_choices(domain_uuid), required=False
+            choices=action_choices, required=False
             )
 
         self.a_setting_condition_count[i] = j

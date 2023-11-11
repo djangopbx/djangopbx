@@ -58,8 +58,9 @@ from .serializers import (
 )
 
 from .forms import NewIbRouteForm, NewObRouteForm, TimeConditionForm
-from .dialplanfunctions import SwitchDp, DpDestAction
+from .dialplanfunctions import SwitchDp
 from pbx.commonfunctions import str2regex
+from pbx.commondestination import CommonDestAction
 from accounts.accountfunctions import AccountFunctions
 from tenants.pbxsettings import PbxSettings
 from tenants.models import Domain
@@ -99,7 +100,7 @@ def newibroute(request):
     if request.method == 'POST':
 
         form = NewIbRouteForm(request.POST)
-        form.fields['action'].choices = DpDestAction().get_dp_action_choices(request.session['domain_uuid'])
+        form.fields['action'].choices = CommonDestAction(request.session['domain_name'], request.session['domain_uuid']).get_action_choices()
 
         if form.is_valid():
 
@@ -187,7 +188,7 @@ def newibroute(request):
             messages.add_message(request, messages.INFO, _('Supplied data is invalid'))
     else:
         form = NewIbRouteForm()
-        form.fields['action'].choices = DpDestAction().get_dp_action_choices(request.session['domain_uuid'])
+        form.fields['action'].choices = CommonDestAction(request.session['domain_name'], request.session['domain_uuid']).get_action_choices()
 
     return render(request, 'dialplans/newibroute.html', {'dp_uuid': dp_uuid, 'form': form, 'refresher': 'newibroute'})
 
@@ -530,6 +531,7 @@ def timecondition(request, dpuuid=None):
     form = TimeConditionForm(
         etreeroot=root,
         domain_uuid=request.session['domain_uuid'],
+        domain_name=request.session['domain_name'],
         initial={
                     'dp_id': tc_id, 'name': tc_name, 'number': tc_number, 'sequence': tc_sequence,
                     'enabled': tc_enabled, 'description': tc_description

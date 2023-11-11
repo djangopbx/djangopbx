@@ -744,52 +744,6 @@ class DpApps():
         return dp_category_uuids
 
 
-class DpDestAction():
-
-    def get_dp_action_choices(self, domain_uuid):
-        dp_actions = []
-        e_list = []
-        v_list = []
-        es = Extension.objects.select_related('domain_id').prefetch_related('voicemail').filter(
-                domain_id=uuid.UUID(domain_uuid),
-                enabled='true'
-                ).order_by('extension')
-        for e in es:
-            e_list.append(('transfer:%s XML %s' % (e.extension, e.domain_id), '%s %s' % (e.extension, e.description)))
-            v = e.voicemail.filter(enabled='true').first()
-            if v:
-                v_list.append(
-                    ('transfer:99%s XML %s' % (e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description))
-                    )
-
-        if len(e_list) > 0:
-            dp_actions.append((_('Extensions'), e_list))
-        if len(v_list) > 0:
-            dp_actions.append((_('Voicemails'), v_list))
-
-        rg_list = []
-        rgs = dialplans.models.Dialplan.objects.select_related('domain_id').filter(
-                domain_id=uuid.UUID(domain_uuid),
-                category='Ring group',
-                 enabled='true'
-                ).order_by('name')
-        for rg in rgs:
-            rg_list.append(('transfer:%s XML %s' % (rg.number, rg.domain_id), '%s-%s' % (rg.name, rg.number)))
-
-        if len(rg_list) > 0:
-            dp_actions.append((_('Ring groups'), rg_list))
-
-        t_list = []
-        sv = SwitchVariable.objects.filter(category='Tones', enabled='true').order_by('name')
-        for t in sv:
-            t_list.append(('playback:tone_stream://%s' % t.value, t.name))
-
-        if len(t_list) > 0:
-            dp_actions.append((_('Tones'), t_list))
-
-        return dp_actions
-
-
 class DialplanDetailStruct():
 
     def __init__(self, dddp, ddtag, ddtype, dddata, ddbreak, ddinline, ddgroup, ddorder):
