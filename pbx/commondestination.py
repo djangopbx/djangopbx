@@ -75,7 +75,8 @@ class CommonDestAction():
                 enabled='true'
                 ).order_by('extension')
         for e in es:
-            e_list.append(('transfer%s%s XML %s' % (sep, e.extension, e.domain_id), '%s %s' % (e.extension, e.description)))
+            e_list.append(('transfer%s%s XML %s' % (sep, e.extension, e.domain_id), '%s %s' % (
+                    e.extension, (e.description if e.description else 'Extension %s' % e.extension))))
             if e.call_group:
                 if ',' in e.call_group:
                     call_groups = e.call_group.split(',')
@@ -90,8 +91,8 @@ class CommonDestAction():
             v = e.voicemail.filter(enabled='true').first()
             if v:
                 v_list.append(
-                    ('transfer%s99%s XML %s' % (sep, e.extension, e.domain_id), '%s(VM) %s' % (e.extension, e.description))
-                    )
+                    ('transfer%s99%s XML %s' % (sep, e.extension, e.domain_id), '%s(VM) %s' % (
+                        e.extension, (v.description if v.description else 'Voicemail %s' % e.extension))))
         if opt < 1:
             if bridges_available:
                 d_list = []
