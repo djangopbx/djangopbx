@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,21 +27,31 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+from rest_framework import viewsets
+from rest_framework import permissions
+from django_filters.rest_framework import DjangoFilterBackend
 
-router = routers.DefaultRouter()
-router.register(r'httapisession', views.HttApiSessionViewSet)
 
-urlpatterns = [
-    path('test/', views.test, name='test'),
-    path('followme/', views.followme, name='followme'),
-    path('followmetoggle/', views.followmetoggle, name='followmetoggle'),
-    path('failurehandler/', views.failurehandler, name='failurehandler'),
-    path('hangup/', views.hangup, name='hangup'),
-    path('register/', views.register, name='register'),
-    path('ringgroup/', views.ringgroup, name='ringgroup'),
-    path('recordings/', views.recordings, name='recordings'),
-    path('callflowtoggle/', views.callflowtoggle, name='callflowtoggle'),
-]
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+from .models import (
+    CallFlows,
+)
+from .serializers import (
+    CallFlowsSerializer,
+)
+
+
+class CallFlowsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows CallFlows to be viewed or edited.
+    """
+    queryset = CallFlows.objects.all().order_by('domain_id', 'name')
+    serializer_class = CallFlowsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['domain_id', 'name']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]

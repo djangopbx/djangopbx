@@ -39,6 +39,8 @@ from pbx.commonfunctions import shcommand
 from ringgroups.ringgroupfunctions import RgFunctions
 from accounts.extensionfunctions import ExtFunctions
 from recordings.models import Recording
+from callflows.models import CallFlows
+from callflows.callflowfunctions import CfFunctions
 
 
 class TestHandler(HttApiHandler):
@@ -440,6 +442,75 @@ class RecordingsHandler(HttApiHandler):
                     etree.SubElement(x_work, 'hangup')
         else:
             pin_number = self.qdict.get('pin_number')
+            if not pin_number:
+                return self.error_hangup('R2001')
+
+            self.session.json['pin_number'] = pin_number
+            self.session.json['next_action'] = 'chk-pin'
+            self.session.save()
+            x_work.append(self.play_and_get_digits('phrase:voicemail_enter_pass:#'))
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return xml
+
+
+class CallFlowToggleHandler(HttApiHandler):
+
+    def get_variables(self):
+        self.var_list = [
+        'callflow_uuid',
+        'callflow_pin',
+        ]
+        self.var_list.extend(self.domain_var_list)
+
+    def get_data(self):
+        if self.exiting:
+            return self.return_data('Ok\n')
+
+        self.get_domain_variables()
+        call_flow_uuid = self.qdict.get('callflow_uuid')
+        try:
+            q = CallFlows.objects.get(pk=call_flow_uuid)
+        except CallFlows.DoesNotExist:
+            self.logger.debug(self.log_header.format('call flow toggle', 'Call Flow UUID not found'))
+            return self.return_data(self.error_hangup('D1001'))
+
+        x_root = self.XrootApi()
+        etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+        if 'next_action' in self.session.json:
+            next_action =  self.session.json['next_action']
+            if next_action == 'chk-pin':
+                pin_number = self.session.json['pin_number']
+                if pin_number == self.qdict.get('pb_input', ''):
+                    etree.SubElement(x_work, 'pause', milliseconds='1000')
+                    if q.status == 'true':
+                        etree.SubElement(
+                            x_work, 'playback',
+                            file='ivr/ivr-night_mode.wav'
+                            )
+                        q.status = 'false'
+                    else:
+                        etree.SubElement(
+                            x_work, 'playback',
+                            file='ivr/ivr-day_mode.wav'
+                            )
+                        q.status = 'true'
+                    q.save()
+                    cff = CfFunctions(self.domain_uuid, self.domain_name, str(q.id))
+                    cff.generate_xml()
+                    etree.SubElement(x_work, 'pause', milliseconds='1000')
+                    etree.SubElement(x_work, 'playback', file='voicemail/vm-goodbye.wav')
+                    etree.SubElement(x_work, 'hangup')
+                    directory_cache_key = 'dialplan:%s' % self.domain_name
+                    cache.delete(directory_cache_key)
+                else:
+                    etree.SubElement(x_work, 'playback', file='phrase:voicemail_fail_auth:#')
+                    etree.SubElement(x_work, 'hangup')
+
+        else:
+            pin_number = self.qdict.get('callflow_pin')
             if not pin_number:
                 return self.error_hangup('R2001')
 

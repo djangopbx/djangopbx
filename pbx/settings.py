@@ -98,7 +98,7 @@ INSTALLED_APPS = [
     'utilities.apps.UtilitiesConfig',
     'numbertranslations.apps.NumbertranslationsConfig',
     'ivrmenus.apps.IvrmenusConfig',
-#    'callflows.apps.CallflowsConfig',
+    'callflows.apps.CallflowsConfig',
 ]
 
 MIDDLEWARE = [

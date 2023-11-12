@@ -66,6 +66,7 @@ from phrases.urls import router as phrasesrouter
 from ringgroups.urls import router as ringgroupsrouter
 from numbertranslations.urls import router as numbertranslationsrouter
 from ivrmenus.urls import router as ivrmenusrouter
+from callflows.urls import router as callflowsrouter
 
 
 # This overrides names in site headers and titles
@@ -93,6 +94,7 @@ router.registry.extend(phrasesrouter.registry)
 router.registry.extend(ringgroupsrouter.registry)
 router.registry.extend(numbertranslationsrouter.registry)
 router.registry.extend(ivrmenusrouter.registry)
+router.registry.extend(callflowsrouter.registry)
 
 
 urlpatterns = [

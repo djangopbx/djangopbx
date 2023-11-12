@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,21 +27,21 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+from rest_framework import serializers
+from .models import (
+    CallFlows
+)
 
-router = routers.DefaultRouter()
-router.register(r'httapisession', views.HttApiSessionViewSet)
 
-urlpatterns = [
-    path('test/', views.test, name='test'),
-    path('followme/', views.followme, name='followme'),
-    path('followmetoggle/', views.followmetoggle, name='followmetoggle'),
-    path('failurehandler/', views.failurehandler, name='failurehandler'),
-    path('hangup/', views.hangup, name='hangup'),
-    path('register/', views.register, name='register'),
-    path('ringgroup/', views.ringgroup, name='ringgroup'),
-    path('recordings/', views.recordings, name='recordings'),
-    path('callflowtoggle/', views.callflowtoggle, name='callflowtoggle'),
-]
+class CallFlowsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CallFlows
+        fields = [
+                    'url', 'id', 'domain_id', 'name', 'extension', 'feature_code',
+                    'status', 'pin_number',
+                    'label', 'sound', 'app', 'data',
+                    'alternate_label', 'alternate_sound', 'alternate_app', 'alternate_data',
+                    'context', 'description', 'dialplan_id',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]

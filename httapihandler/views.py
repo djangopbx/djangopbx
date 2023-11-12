@@ -44,7 +44,7 @@ from .serializers import (
 )
 from .httapihandlerclasses import (
     TestHandler, FollowMeHandler, FollowMeToggleHandler, FailureHandler, HangupHandler,
-    RegisterHandler, RingGroupHandler, RecordingsHandler
+    RegisterHandler, RingGroupHandler, RecordingsHandler, CallFlowToggleHandler
 )
 
 
@@ -69,42 +69,35 @@ def processhttapi(request, httapihf):
         return HttpResponseNotFound()
     return HttpResponse(httapihf.htt_get_data(), content_type='text/xml')
 
-
 @csrf_exempt
 def test(request):
     httapihf = TestHandler(request.POST)
     return processhttapi(request, httapihf)
-
 
 @csrf_exempt
 def followmetoggle(request):
     httapihf = FollowMeToggleHandler(request.POST)
     return processhttapi(request, httapihf)
 
-
 @csrf_exempt
 def followme(request):
     httapihf = FollowMeHandler(request.POST)
     return processhttapi(request, httapihf)
-
 
 @csrf_exempt
 def failurehandler(request):
     httapihf = FailureHandler(request.POST)
     return processhttapi(request, httapihf)
 
-
 @csrf_exempt
 def hangup(request):
     httapihf = HangupHandler(request.POST, False)
     return processhttapi(request, httapihf)
 
-
 @csrf_exempt
 def register(request):
     httapihf = RegisterHandler(request.POST, False)
     return processhttapi(request, httapihf)
-
 
 @csrf_exempt
 def ringgroup(request):
@@ -119,4 +112,9 @@ def recordings(request):
         httapihf = RecordingsHandler(post, True, True, files)
     else:
         httapihf = RecordingsHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def callflowtoggle(request):
+    httapihf = CallFlowToggleHandler(request.POST)
     return processhttapi(request, httapihf)
