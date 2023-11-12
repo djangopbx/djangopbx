@@ -29,14 +29,8 @@
 import uuid
 from django.utils.translation import gettext_lazy as _
 from dialplans.models import Dialplan
-from accounts.models import Extension
+from accounts.models import Extension, Bridge
 from switch.models import SwitchVariable
-
-bridges_available = True
-try:
-    from bridges.models import Bridges
-except ImportError:
-    bridges_available = False
 
 
 class CommonDestAction():
@@ -94,13 +88,12 @@ class CommonDestAction():
                     ('transfer%s99%s XML %s' % (sep, e.extension, e.domain_id), '%s(VM) %s' % (
                         e.extension, (v.description if v.description else 'Voicemail %s' % e.extension))))
         if opt < 1:
-            if bridges_available:
-                d_list = []
-                qs = Bridges.objects.filter(domain_id=uuid.UUID(self.domain_uuid), enabled='true').order_by('name')
-                for q in qs:
-                    d_list.append(('bridge%s%s' % (sep, q.destination), q.name))
-                if e_list:
-                    cd_actions.append((self.decorate('Bridges', decorate), d_list))
+            d_list = []
+            qs = Bridge.objects.filter(domain_id=uuid.UUID(self.domain_uuid), enabled='true').order_by('name')
+            for q in qs:
+                d_list.append(('bridge%s%s' % (sep, q.destination), q.name))
+            if e_list:
+                cd_actions.append((self.decorate('Bridges', decorate), d_list))
 
         # Placeholder: Call Centers
 
