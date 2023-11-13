@@ -8,10 +8,10 @@ r"""
 """
 
 __title__ = 'DjangoPBX'
-__version__ = '0.3.1'
+__version__ = '0.5.0'
 __author__ = 'Adrian Fretwell'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2006-2022 A2 Engineering Services'
+__copyright__ = 'Copyright 2006-2023 A2 Engineering Services'
 
 # Version synonym
 VERSION = __version__
