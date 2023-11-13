@@ -1,4 +1,3 @@
-#
 #    DjangoPBX
 #
 #    MIT License
@@ -27,13 +26,37 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-class FsEvent:
+from django.conf import settings
+from pbx.fseventsocket import EventSocket
+from pbx.scripts.resources.pbx.fsevent import FsEvent
 
-    def __init__(self, eventname):
-        self.headers = ['sendevent %s' % eventname]
 
-    def addHeader(self, hdr_name, value):
-        self.headers.append('%s: %s' % (hdr_name, value))
+class PresenceIn():
 
-    def getEvent(self):
-        return '\n'.join(self.headers)
+    def __init__(self, cf_uuid, status, feature_code, domain_name):
+        self.cf_uuid = cf_uuid
+        self.status = status
+        self.feature_code = feature_code
+        self.domain_name = domain_name
+        self.es = EventSocket()
+
+    def send(self):
+        if not self.es.connect(*settings.EVSKT):
+            return False
+        user_id = '%s@%s' % (self.feature_code, self.domain_name)
+        fse = FsEvent('PRESENCE_IN')
+        fse.addHeader('proto', 'sip');
+        fse.addHeader('event_type', 'presence');
+        fse.addHeader('alt_event_type', 'dialog');
+        fse.addHeader('Presence-Call-Direction', 'outbound');
+        fse.addHeader('from', user_id);
+        fse.addHeader('login', user_id);
+        fse.addHeader('unique-id', self.cf_uuid);
+        fse.addHeader('status', 'Active (1 waiting)');
+        if self.status == 'true':
+            fse.addHeader('answer-state', 'terminated');
+        else:
+            fse.addHeader('answer-state', 'confirmed');
+            fse.addHeader('rpid', 'unknown');
+            fse.addHeader('event_count', '1');
+        return self.es.send(fse.getEvent())

@@ -41,6 +41,7 @@ from accounts.extensionfunctions import ExtFunctions
 from recordings.models import Recording
 from callflows.models import CallFlows
 from callflows.callflowfunctions import CfFunctions
+from callflows.callflowevents import PresenceIn
 
 
 class TestHandler(HttApiHandler):
@@ -505,6 +506,8 @@ class CallFlowToggleHandler(HttApiHandler):
                     etree.SubElement(x_work, 'hangup')
                     directory_cache_key = 'dialplan:%s' % self.domain_name
                     cache.delete(directory_cache_key)
+                    pe = PresenceIn(str(q.id), q.status, q.feature_code, self.domain_name)
+                    pe.send()
                 else:
                     etree.SubElement(x_work, 'playback', file='phrase:voicemail_fail_auth:#')
                     etree.SubElement(x_work, 'hangup')
