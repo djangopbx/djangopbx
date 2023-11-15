@@ -193,7 +193,7 @@ class IvrMenusAdmin(ImportExportModelAdmin):
 
     def get_formsets_with_inlines(self, request, obj=None):
         ivra = CommonDestAction(request.session['domain_name'], request.session['domain_uuid'])
-        option_param_choices = ivra.get_action_choices(' ', True, 4)
+        option_param_choices = ivra.get_action_choices(' ', True, 0b1011111111111111)
         for inline in self.get_inline_instances(request, obj):
             inline.form.Meta.widgets['option_param'].choices=option_param_choices
             yield inline.get_formset(request, obj), inline

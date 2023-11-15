@@ -48,6 +48,7 @@ class HttApiHandler():
 #
 
     log_header = 'HttApi Handler: {}: {}'
+    handler_name = 'base'
 
     def __init__(self, qdict, getVar=True, getFile=False, fdict={}):
         self.logger = logging.getLogger(__name__)
@@ -60,14 +61,15 @@ class HttApiHandler():
         self.first_call = False
         self.session_id = qdict.get('session_id')
         if self.session_id:
-            if getVar:
-                self.first_call = self.get_httapi_session()
+            self.get_httapi_session()
         else:
             self.exiting = True
         if qdict.get('exiting', 'false') == 'true':
-            if getVar:
-                self.destroy_httapi_session()
+            self.destroy_httapi_session()
             self.exiting = True
+
+        self.first_call = self.get_first_call()
+
         if self.debug:
             self.logger.debug(self.log_header.format('request\n', self.qdict))
         self.var_list = []
@@ -89,7 +91,8 @@ class HttApiHandler():
         'default_voice',
         ]
 
-        self.get_variables()
+        if getVar:
+            self.get_variables()
 
     def get_variables(self):
         pass
@@ -143,6 +146,15 @@ class HttApiHandler():
         xml = str(etree.tostring(x_root), "utf-8")
         return xml
 
+    def httapi_break(self):
+        x_root = self.XrootApi()
+        etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+        etree.SubElement(x_work, 'break')
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return xml
+
     def get_allowed_addresses(self):
         cache_key = 'httapihandler:allowed_addresses'
         aa = cache.get(cache_key)
@@ -161,15 +173,29 @@ class HttApiHandler():
         else:
             return False
 
+    def get_first_call(self):
+        if self.handler_name in self.session.json:
+            if 'first_call' in self.session.json[self.handler_name]:
+                if self.session.json[self.handler_name]['first_call']:
+                    self.session.json[self.handler_name]['first_call'] = False
+                    self.session.save()
+                    return False
+            else:
+                self.session.json[self.handler_name].update({'first_call': True})
+                self.session.save()
+                return True
+        else:
+            self.session.json.update({self.handler_name: {'first_call': True}})
+            self.session.save()
+        return self.session.json[self.handler_name]['first_call']
+
     def get_httapi_session(self):
-        new = False
         try:
             self.session = HttApiSession.objects.get(pk=self.session_id)
         except HttApiSession.DoesNotExist:
             s_name = self.qdict.get('url', '/n/None/').rstrip('/').rsplit('/', 1)[1]
-            self.session = HttApiSession.objects.create(id=self.session_id, name=s_name, json={'Default': 'true'})
-            new = True
-        return new
+            self.session = HttApiSession.objects.create(id=self.session_id, name=s_name, json={self.handler_name: {}})
+        return
 
     def destroy_httapi_session(self):
         try:

@@ -44,7 +44,8 @@ from .serializers import (
 )
 from .httapihandlerclasses import (
     TestHandler, FollowMeHandler, FollowMeToggleHandler, FailureHandler, HangupHandler,
-    RegisterHandler, RingGroupHandler, RecordingsHandler, CallFlowToggleHandler
+    RegisterHandler, RingGroupHandler, RecordingsHandler, CallFlowToggleHandler,
+    CallBlockHandler
 )
 
 
@@ -117,4 +118,9 @@ def recordings(request):
 @csrf_exempt
 def callflowtoggle(request):
     httapihf = CallFlowToggleHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def callblock(request):
+    httapihf = CallBlockHandler(request.POST)
     return processhttapi(request, httapihf)

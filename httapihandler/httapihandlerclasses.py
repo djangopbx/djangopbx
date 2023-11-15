@@ -28,6 +28,7 @@
 #
 
 from django.core.cache import cache
+from django.db.models import Q
 from lxml import etree
 from .httapihandler import HttApiHandler
 from tenants.models import Domain
@@ -42,9 +43,12 @@ from recordings.models import Recording
 from callflows.models import CallFlows
 from callflows.callflowfunctions import CfFunctions
 from callflows.callflowevents import PresenceIn
+from callblock.models import CallBlock
 
 
 class TestHandler(HttApiHandler):
+
+    handler_name = 'test'
 
     def get_data(self):
         if self.exiting:
@@ -69,6 +73,8 @@ class TestHandler(HttApiHandler):
 
 
 class FollowMeToggleHandler(HttApiHandler):
+
+    handler_name = 'followmetoggle'
 
     def get_variables(self):
         self.var_list = [
@@ -116,6 +122,8 @@ class FollowMeToggleHandler(HttApiHandler):
 
 class FollowMeHandler(HttApiHandler):
 
+    handler_name = 'followme'
+
     def get_variables(self):
         self.var_list = [
         'call_direction',
@@ -144,6 +152,8 @@ class FollowMeHandler(HttApiHandler):
 
 
 class FailureHandler(HttApiHandler):
+
+    handler_name = 'failure'
 
     def get_variables(self):
         self.var_list = [
@@ -271,6 +281,8 @@ class FailureHandler(HttApiHandler):
 
 class HangupHandler(HttApiHandler):
 
+    handler_name = 'hangup'
+
     def get_data(self):
 
         self.get_domain_variables()
@@ -316,6 +328,8 @@ class HangupHandler(HttApiHandler):
 
 class RegisterHandler(HttApiHandler):
 
+    handler_name = 'register'
+
     def get_data(self):
         ip_address = self.qdict.get('network-ip', '192.168.42.1')
         status = self.qdict.get('status', 'N/A')
@@ -331,6 +345,8 @@ class RegisterHandler(HttApiHandler):
 
 
 class RingGroupHandler(HttApiHandler):
+
+    handler_name = 'ringgroup'
 
     def get_variables(self):
         self.var_list = ['ring_group_uuid']
@@ -365,6 +381,8 @@ class RingGroupHandler(HttApiHandler):
 
 class RecordingsHandler(HttApiHandler):
 
+    handler_name = 'recordings'
+
     def get_variables(self):
         self.var_list = ['pin_number', 'recording_prefix']
         self.var_list.extend(self.domain_var_list)
@@ -395,13 +413,13 @@ class RecordingsHandler(HttApiHandler):
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
 
-        if 'next_action' in self.session.json:
-            next_action =  self.session.json['next_action']
+        if 'next_action' in self.session.json[self.handler_name]:
+            next_action =  self.session.json[self.handler_name]['next_action']
             if next_action == 'chk-pin':
-                pin_number = self.session.json['pin_number']
+                pin_number = self.session.json[self.handler_name]['pin_number']
                 if pin_number == self.qdict.get('pb_input', ''):
 
-                    self.session.json['next_action'] = 'record'
+                    self.session.json[self.handler_name]['next_action'] = 'record'
                     self.session.save()
                     x_work.append(self.play_and_get_digits('ivr/ivr-id_number.wav'))
                 else:
@@ -414,15 +432,15 @@ class RecordingsHandler(HttApiHandler):
                 self.get_sounds_variables()
                 rec_file = '%s%s.wav' % (rec_prefix, rec_no)
 
-                self.session.json['rec_file'] = '%s/%s/%s' % (self.recordings_dir, self.domain_name, rec_file)
-                self.session.json['next_action'] = 'review'
+                self.session.json[self.handler_name]['rec_file'] = '%s/%s/%s' % (self.recordings_dir, self.domain_name, rec_file)
+                self.session.json[self.handler_name]['next_action'] = 'review'
                 self.session.save()
                 etree.SubElement(x_work, 'playback', file='ivr/ivr-recording_started.wav')
                 x_work.append(self.record_and_get_digits(rec_file))
 
             elif next_action == 'review':
-                rec_file = self.session.json['rec_file']
-                self.session.json['next_action'] = 'rerecord'
+                rec_file = self.session.json[self.handler_name]['rec_file']
+                self.session.json[self.handler_name]['next_action'] = 'rerecord'
                 self.session.save()
                 etree.SubElement(x_work, 'pause', milliseconds='1000')
                 etree.SubElement(x_work, 'playback', file=rec_file)
@@ -434,8 +452,8 @@ class RecordingsHandler(HttApiHandler):
             elif next_action == 'rerecord':
                 re_rec = self.qdict.get('pb_input', '')
                 if re_rec == '1':
-                    rec_file = self.session.json['rec_file']
-                    self.session.json['next_action'] = 'record'
+                    rec_file = self.session.json[self.handler_name]['rec_file']
+                    self.session.json[self.handler_name]['next_action'] = 'record'
                     self.session.save()
                     etree.SubElement(x_work, 'continue')
                 else:
@@ -446,8 +464,8 @@ class RecordingsHandler(HttApiHandler):
             if not pin_number:
                 return self.error_hangup('R2001')
 
-            self.session.json['pin_number'] = pin_number
-            self.session.json['next_action'] = 'chk-pin'
+            self.session.json[self.handler_name]['pin_number'] = pin_number
+            self.session.json[self.handler_name]['next_action'] = 'chk-pin'
             self.session.save()
             x_work.append(self.play_and_get_digits('phrase:voicemail_enter_pass:#'))
 
@@ -457,6 +475,8 @@ class RecordingsHandler(HttApiHandler):
 
 
 class CallFlowToggleHandler(HttApiHandler):
+
+    handler_name = 'callflowtoggle'
 
     def get_variables(self):
         self.var_list = [
@@ -480,10 +500,10 @@ class CallFlowToggleHandler(HttApiHandler):
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
-        if 'next_action' in self.session.json:
-            next_action =  self.session.json['next_action']
+        if 'next_action' in self.session.json[self.handler_name]:
+            next_action =  self.session.json[self.handler_name]['next_action']
             if next_action == 'chk-pin':
-                pin_number = self.session.json['pin_number']
+                pin_number = self.session.json[self.handler_name]['pin_number']
                 if pin_number == self.qdict.get('pb_input', ''):
                     etree.SubElement(x_work, 'pause', milliseconds='1000')
                     if q.status == 'true':
@@ -517,11 +537,50 @@ class CallFlowToggleHandler(HttApiHandler):
             if not pin_number:
                 return self.error_hangup('R2001')
 
-            self.session.json['pin_number'] = pin_number
-            self.session.json['next_action'] = 'chk-pin'
+            self.session.json[self.handler_name]['pin_number'] = pin_number
+            self.session.json[self.handler_name]['next_action'] = 'chk-pin'
             self.session.save()
             x_work.append(self.play_and_get_digits('phrase:voicemail_enter_pass:#'))
 
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return xml
+
+class CallBlockHandler(HttApiHandler):
+
+    handler_name = 'callblock'
+
+    def get_variables(self):
+        self.var_list.extend(self.domain_var_list)
+
+    def get_data(self):
+        if self.exiting:
+            return self.return_data('Ok\n')
+
+        self.get_domain_variables()
+        caller_id_name = self.qdict.get('Caller-Orig-Caller-ID-Name', 'None')
+        caller_id_number = self.qdict.get('Caller-Orig-Caller-ID-Number', 'None')
+
+        x_root = self.XrootApi()
+        etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+
+        if not 'run' in self.session.json[self.handler_name]:
+            self.session.json[self.handler_name]['run'] = False
+            self.session.save()
+
+            qs = CallBlock.objects.filter(
+                ((Q(name=caller_id_name) | Q(name__isnull=True)) |
+                (Q(number=caller_id_number) | Q(number__isnull=True)) |
+                (Q(name=caller_id_name) & Q(number=caller_id_number))),
+                domain_id=self.domain_uuid, enabled='true')
+            if not qs:
+                self.logger.debug(self.log_header.format('call block', 'No Call Block records found'))
+            else:
+                act = qs[0].data.split(':')
+                etree.SubElement(x_work, 'execute', application=act[0], data=act[1])
+
+        etree.SubElement(x_work, 'break')
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         return xml

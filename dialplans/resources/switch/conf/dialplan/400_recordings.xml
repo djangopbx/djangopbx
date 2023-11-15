@@ -1,4 +1,4 @@
-<extension name="recordings" number="*732" context="${domain_name}" continue="false" app_uuid="430737df-5385-42d1-b933-22600d3fb79e" order="400">
+<extension name="recordings" number="*732" context="${domain_name}" continue="false" app_uuid="83913217-c7a2-9e90-925d-a866eb40b60e" order="400">
 	<condition field="destination_number" expression="^\*(732)$">
 		<action application="answer"/>
 		<action application="set" data="pin_number={v_pin_number}"/>

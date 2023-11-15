@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,22 +27,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+from django.apps import AppConfig
+from django.utils.translation import gettext_lazy as _
 
-router = routers.DefaultRouter()
-router.register(r'httapisession', views.HttApiSessionViewSet)
 
-urlpatterns = [
-    path('test/', views.test, name='test'),
-    path('followme/', views.followme, name='followme'),
-    path('followmetoggle/', views.followmetoggle, name='followmetoggle'),
-    path('failurehandler/', views.failurehandler, name='failurehandler'),
-    path('hangup/', views.hangup, name='hangup'),
-    path('register/', views.register, name='register'),
-    path('ringgroup/', views.ringgroup, name='ringgroup'),
-    path('recordings/', views.recordings, name='recordings'),
-    path('callflowtoggle/', views.callflowtoggle, name='callflowtoggle'),
-    path('callblock/', views.callblock, name='callblock'),
-]
+class CallblockConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'callblock'
+    verbose_name = _('Call Block')
+    pbx_uuid = '9dd4f155-18e3-4bfe-8304-8f19e9facf16'
+    pbx_category = 'Switch'
+    pbx_subcategory = ''
+    pbx_version = '1.0'
+    pbx_license = 'MIT License'

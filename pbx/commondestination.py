@@ -58,7 +58,7 @@ class CommonDestAction():
             d_list.append(('transfer%s%s XML %s' % (self.sep, q.number, self.domain_name), '%s-%s' % (q.name, q.number)))
         return d_list
 
-    def get_action_choices(self, sep=':', decorate=False, opt=0):
+    def get_action_choices(self, sep=':', decorate=False, opt=65535):
         self.sep = sep
         cd_actions = []
         e_list = []
@@ -87,7 +87,7 @@ class CommonDestAction():
                 v_list.append(
                     ('transfer%s99%s XML %s' % (sep, e.extension, e.domain_id), '%s(VM) %s' % (
                         e.extension, (v.description if v.description else 'Voicemail %s' % e.extension))))
-        if opt < 1:
+        if opt & 1 == 1:
             d_list = []
             qs = Bridge.objects.filter(domain_id=uuid.UUID(self.domain_uuid), enabled='true').order_by('name')
             for q in qs:
@@ -96,49 +96,53 @@ class CommonDestAction():
                 cd_actions.append((self.decorate('Bridges', decorate), d_list))
 
         # Placeholder: Call Centers
+        #if opt & 2 == 2:
 
-        if opt < 20:
+
+        if opt & 4 == 4:
             d_list = self.get_dp_list('Call flows')
             if d_list:
                 cd_actions.append((self.decorate('Call flows', decorate), d_list))
 
-        if opt < 4:
+        if opt & 8 == 8:
             if cg_list:
                 cd_actions.append((self.decorate('Call groups', decorate), cg_list))
 
+        #if opt & 16 == 16:
         # Placeholder: Conferences
 
-        if opt < 20:
+        if opt & 32 == 32:
             d_list = self.get_dp_list('N/A', True)
             if d_list:
                 cd_actions.append((self.decorate('Dialplans', decorate), d_list))
 
-        if opt < 20:
+        if opt & 64 == 64:
             if e_list:
                 cd_actions.append((self.decorate('Extensions', decorate), e_list))
 
-        if opt < 20:
+        if opt & 128 == 128:
             d_list = self.get_dp_list('IVR menu')
             if d_list:
                 cd_actions.append((self.decorate('IVR menus', decorate), d_list))
 
+        #if opt & 256 == 256:
         # Placeholder: Recordings - needs httapi handler
 
-        if opt < 20:
+        if opt & 512 == 512:
             d_list = self.get_dp_list('Ring group')
             if d_list:
                 cd_actions.append((self.decorate('Ring groups', decorate), d_list))
 
-        if opt < 20:
+        if opt & 1024 == 1024:
             d_list = self.get_dp_list('Time condition')
             if d_list:
                 cd_actions.append((self.decorate('Time Conditions', decorate), d_list))
 
-        if opt < 20:
+        if opt & 2048 == 2048:
             if v_list:
                 cd_actions.append((self.decorate('Voicemails', decorate), v_list))
 
-        if opt < 5:
+        if opt & 4096 == 4096:
             t_list = []
             sv = SwitchVariable.objects.filter(category='Tones', enabled='true').order_by('name')
             for t in sv:
@@ -147,12 +151,12 @@ class CommonDestAction():
             if len(t_list) > 0:
                 cd_actions.append((self.decorate('Tones', decorate), t_list))
 
-        if opt < 20:
+        if opt & 8192 == 8192:
             o_list = []
             o_list.append(('transfer%s98 XML %s' % (sep, self.domain_name), _('Check Voicemail')))
             o_list.append(('transfer%s411 XML %s' % (sep, self.domain_name), _('Company Directory')))
             o_list.append(('transfer%s732 XML %s' % (sep, self.domain_name), _('Record')))
-            if opt < 2:
+            if opt & 16384 == 16384:
                 o_list.append(('hangup', _('Hangup')))
             cd_actions.append((self.decorate('Other', decorate), o_list))
 
