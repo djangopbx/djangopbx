@@ -27,6 +27,11 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.test import TestCase
+from rest_framework import routers
+from . import views
 
-# Create your tests here.
+router = routers.DefaultRouter()
+router.register(r'callblock', views.CallBlockViewSet)
+
+urlpatterns = [
+]

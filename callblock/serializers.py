@@ -27,6 +27,18 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.test import TestCase
+from rest_framework import serializers
+from .models import (
+    CallBlock
+)
 
-# Create your tests here.
+
+class CallBlockSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CallBlock
+        fields = [
+                    'url', 'id', 'domain_id', 'name', 'number', 'block_count',
+                    'app', 'data', 'enabled', 'description',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
