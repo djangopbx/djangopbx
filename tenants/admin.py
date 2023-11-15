@@ -33,7 +33,10 @@ from django.contrib import admin
 from .models import (
     Profile, ProfileSetting, Domain, DomainSetting, DefaultSetting,
 )
-from import_export.admin import ImportExportModelAdmin, ImportExportMixin, ExportMixin
+from import_export.admin import (
+    ExportActionModelAdmin, ImportExportModelAdmin,
+    ImportExportMixin, ExportMixin
+    )
 from import_export import resources
 
 # includes for log entry
@@ -328,7 +331,7 @@ class DefaultSettingResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
-class DefaultSettingAdmin(ImportExportModelAdmin):
+class DefaultSettingAdmin(ImportExportModelAdmin, ExportActionModelAdmin):
     resource_class = DefaultSettingResource
     save_as = True
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
