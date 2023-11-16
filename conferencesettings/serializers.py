@@ -29,7 +29,8 @@
 
 from rest_framework import serializers
 from .models import (
-    ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams
+    ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
+    ConferenceRoomUser, ConferenceRooms, ConferenceCentres,
 )
 
 
@@ -69,5 +70,40 @@ class ConferenceProfileParamsSerializer(serializers.ModelSerializer):
         model = ConferenceProfileParams
         fields = [
                     'url', 'id', 'conf_profile_id', 'name', 'value', 'enabled', 'description',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
+
+class ConferenceCentresSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ConferenceCentres
+        fields = [
+                    'url', 'id', 'domain_id', 'name', 'extension', 'greeting',
+                    'enabled', 'description', 'dialplan_id',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
+
+class ConferenceRoomsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ConferenceRooms
+        fields = [
+                    'url', 'id', 'c_centre_id', 'name', 'c_profile_id', 
+                    'moderator_pin', 'participant_pin',
+                    'max_members', 'start_time', 'stop_time',
+                    'record', 'wait_mod', 'announce', 'sounds', 'mute',
+                    'enabled', 'description',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
+
+class ConferenceRoomUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ConferenceRoomUser
+        fields = [
+                    'url', 'id', 'c_room_id', 'user_uuid',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]

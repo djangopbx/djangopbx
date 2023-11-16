@@ -43,6 +43,7 @@ from phrases.models import PhraseDetails
 from musiconhold.models import MusicOnHold
 from numbertranslations.models import NumberTranslations
 from ivrmenus.models import IvrMenus
+from conferencesettings.models import ConferenceControls, ConferenceProfiles
 
 
 class DirectoryHandler(XmlHandler):
@@ -868,6 +869,38 @@ class ConfigHandler(XmlHandler):
             etree.SubElement(x_menu, "entry", action='menu-exec-app', digits='/^(\d{2,11})$/',
                 param='transfer ${cond(${user_exists} == true ? $1 XML %s)}' % ivr.context, description='direct dial')
 
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(configuration_cache_key, xml)
+        if self.debug:
+            print(xml)
+        return xml
+
+    def GetConference(self):
+        configuration_cache_key = 'configuration:conference.conf'
+        xml = cache.get(configuration_cache_key)
+        if xml:
+            return xml
+
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='configuration')
+        x_conf_name = etree.SubElement(x_section, 'configuration', name='conference.conf', description='Audio Conference')
+        x_caller_controls = etree.SubElement(x_conf_name, 'caller-controls')
+        ccl = ConferenceControls.objects.filter(enabled='true').order_by('name')
+        for cc in ccl:
+            x_group = etree.SubElement(x_caller_controls, 'group', name=cc.name)
+            ccds = cc.conferencecontroldetails_set.filter(enabled='true').order_by('digits')
+            for ccd in ccds:
+                    etree.SubElement(x_group, 'control', digits=ccd.digits, action=ccd.action, data=(ccd.data if ccd.data else ''))
+
+        x_profiles = etree.SubElement(x_conf_name, 'profiles')
+        cpl = ConferenceProfiles.objects.filter(enabled='true').order_by('name')
+        for cp in cpl:
+            x_profile = etree.SubElement(x_profiles, 'profile', name=cp.name)
+            cpps = cc.conferenceprofileparams_set.filter(enabled='true').order_by('name')
+            for cpp in cpps:
+                    etree.SubElement(x_group, 'control', param=cpp.name, value=(cpp.value if cpp.value else ''))
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")

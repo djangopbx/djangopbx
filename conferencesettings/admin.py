@@ -28,8 +28,12 @@
 #
 
 from django.contrib import admin
+from pbx.commonfunctions import DomainFilter, DomainUtils
+from switch.switchsounds import SwitchSounds
+from django.forms import ModelForm, Select
 from .models import (
-    ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams
+    ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
+    ConferenceRoomUser, ConferenceRooms, ConferenceCentres,
 )
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
@@ -190,6 +194,137 @@ class ConferenceProfilesAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class ConferenceRoomUserResource(resources.ModelResource):
+    class Meta:
+        model = ConferenceRoomUser
+        import_id_fields = ('id', )
+
+
+class ConferenceRoomUserAdmin(ImportExportModelAdmin):
+    resource_class = ConferenceRoomUserResource
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['user_uuid']
+    fieldsets = [
+        (None,  {'fields': ['user_uuid', ]}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('c_room_id', 'user_uuid',)
+    list_filter = ()
+    ordering = [
+        'c_room_id','user_uuid'
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
+
+class ConferenceRoomUserInLine(admin.TabularInline):
+    model = ConferenceRoomUser
+    extra = 1
+    fieldsets = [
+        (None,          {'fields': ['user_uuid']}),
+    ]
+    ordering = [
+        'user_uuid'
+    ]
+
+
+class ConferenceRoomsResource(resources.ModelResource):
+    class Meta:
+        model = ConferenceRooms
+        import_id_fields = ('id', )
+
+
+class ConferenceRoomsAdmin(ImportExportModelAdmin):
+    resource_class = ConferenceRoomsResource
+    save_as = True
+
+    class Media:
+        css = {
+            'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
+        }
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['name', 'descrption']
+    fieldsets = [
+        (None,  {'fields': ['c_centre_id', 'name', 'c_profile_id', 'moderator_pin', 'participant_pin',
+                    'max_members', ('start_time', 'stop_time'),
+                    'record', 'wait_mod', 'announce', 'sounds', 'mute',
+                    'enabled', 'description']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('name', 'enabled', 'description')
+    list_filter = ('enabled', )
+    ordering = [
+        'name'
+    ]
+    inlines = [ConferenceRoomUserInLine]
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for obj in formset.deleted_objects:
+            obj.delete()
+        for instance in instances:
+            instance.updated_by = request.user.username
+            instance.save()
+        formset.save_m2m()
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        super().save_model(request, obj, form, change)
+
+
+class ConferenceCentresAdminForm(ModelForm):
+
+    class Meta:
+        model = ConferenceCentres
+        widgets = {
+            "greeting": Select(choices=[('', 'List unavailable')], attrs={'style': 'width:350px'}),
+        }
+        fields = '__all__'
+
+
+class ConferenceCentresResource(resources.ModelResource):
+    class Meta:
+        model = ConferenceCentres
+        import_id_fields = ('id', )
+
+
+class ConferenceCentresAdmin(ImportExportModelAdmin):
+    resource_class = ConferenceCentresResource
+    form = ConferenceCentresAdminForm
+    save_as = True
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['name', 'descrption']
+    fieldsets = [
+        (None,  {'fields': ['domain_id', 'name', 'extension', 'greeting',
+                    'enabled', 'description']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('name', 'extension', 'enabled', 'description')
+    list_filter = (DomainFilter, 'enabled')
+    ordering = [
+        'name'
+    ]
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        ss = SwitchSounds()
+        # this is required for access to the request object so the domain_name session
+        # variable can be passed to the chioces function
+        self.form.Meta.widgets['greeting'].choices=ss.get_sounds_choices_list(request.session['domain_name'])
+        return super().get_form(request, obj, change, **kwargs)
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        if not change:
+            obj.domain_id = DomainUtils().domain_from_session(request)
+        super().save_model(request, obj, form, change)
+
+
+admin.site.register(ConferenceCentres, ConferenceCentresAdmin)
+admin.site.register(ConferenceRooms, ConferenceRoomsAdmin)
 admin.site.register(ConferenceControls, ConferenceControlsAdmin)
 admin.site.register(ConferenceProfiles, ConferenceProfilesAdmin)
 

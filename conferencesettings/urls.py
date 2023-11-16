@@ -35,6 +35,9 @@ router.register(r'conferencecontrols', views.ConferenceControlsViewSet)
 router.register(r'conferencecontroldetails', views.ConferenceControlDetailsViewSet)
 router.register(r'conferenceprofiles', views.ConferenceProfilesViewSet)
 router.register(r'conferenceprofileparams', views.ConferenceProfileParamsViewSet)
+router.register(r'conferencecentres', views.ConferenceCentresViewSet)
+router.register(r'conferencerooms', views.ConferenceRoomsViewSet)
+router.register(r'conferenceroomuser', views.ConferenceRoomUserViewSet)
 
 urlpatterns = [
 ]

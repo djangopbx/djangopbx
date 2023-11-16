@@ -36,10 +36,12 @@ from pbx.restpermissions import (
 )
 from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
+    ConferenceRoomUser, ConferenceRooms, ConferenceCentres,
 )
 from .serializers import (
     ConferenceControlsSerializer, ConferenceControlDetailsSerializer, ConferenceProfilesSerializer,
-    ConferenceProfileParamsSerializer,
+    ConferenceProfileParamsSerializer, ConferenceRoomUserSerializer, ConferenceRoomsSerializer,
+    ConferenceCentresSerializer,
 )
 
 
@@ -93,6 +95,48 @@ class ConferenceProfileParamsViewSet(viewsets.ModelViewSet):
     serializer_class = ConferenceProfileParamsSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name', 'value', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ConferenceCentresViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ConferenceCentres to be viewed or edited.
+    """
+    queryset = ConferenceCentres.objects.all().order_by('domain_id', 'name')
+    serializer_class = ConferenceCentresSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['domain_id', 'name', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ConferenceRoomsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ConferenceRooms to be viewed or edited.
+    """
+    queryset = ConferenceRooms.objects.all().order_by('c_centre_id', 'name')
+    serializer_class = ConferenceRoomsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['c_centre_id', 'name', 'enabled']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ConferenceRoomUserViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ConferenceRoomUser to be viewed or edited.
+    """
+    queryset = ConferenceRoomUser.objects.all().order_by('c_room_id', 'user_uuid')
+    serializer_class = ConferenceRoomUserSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['c_room_id']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

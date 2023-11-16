@@ -34,7 +34,7 @@ from django.utils.translation import gettext_lazy as _
 class ConferencesettingsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'conferencesettings'
-    verbose_name = _('Conference Settings')
+    verbose_name = _('Conference Centre')
     pbx_uuid = '33fb6c93-0c69-4702-bf62-725b66493ce6'
     pbx_category = 'Switch'
     pbx_subcategory = ''
