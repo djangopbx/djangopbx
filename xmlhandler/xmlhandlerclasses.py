@@ -27,17 +27,17 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-import re
 from django.core.cache import cache
 from lxml import etree
 from django.db.models import Q
+from .xmlhandler import XmlHandler
 from dialplans.models import Dialplan
 from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, ExtensionUser, Gateway
 from voicemail.models import Voicemail
 from switch.models import (
-    SwitchVariable, AccessControl, AccessControlNode, SipProfile
+    AccessControl, AccessControlNode, SipProfile
     )
 from phrases.models import PhraseDetails
 from musiconhold.models import MusicOnHold
@@ -45,110 +45,7 @@ from numbertranslations.models import NumberTranslations
 from ivrmenus.models import IvrMenus
 
 
-class XmlHandlerFunctions():
-
-    def __init__(self):
-        self.debug = False
-
-    def NotFoundXml(self):
-        return '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="freeswitch/xml">
-  <section name="result">
-    <result status="not found" />
-  </section>
-</document>
-'''
-
-    def NotFoundPublic(self, xml_list):
-        xml_list.append('''<extension name="not-found" continue="false" uuid="9913df49-0757-414b-8cf9-bcae2fd81ae7">
-  <condition field="" expression="">
-    <action application="set" data="call_direction=inbound" inline="true"/>
-    <action application="log" data="WARNING [inbound routes] 404 not found ${sip_network_ip}" inline="true"/>
-  </condition>
-</extension>
-''')
-        return xml_list
-
-    def XmlHeader(self, name, context):
-        xml = '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="freeswitch/xml">
-    <section name="{}" description="">
-        <context name="{}">
-'''
-        return xml.format(name, context)
-
-    def XmlFooter(self):
-        return '''    </context>
-  </section>
-</document>
-'''
-
-    def XrootDynamic(self):
-        return etree.XML(
-                b'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n'
-                b'<document type=\"freeswitch/xml\"></document>'
-                )
-
-    def XrootStatic(self):
-        return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
-
-    def get_allowed_addresses(self):
-        cache_key = 'xmlhandler:allowed_addresses'
-        aa = cache.get(cache_key)
-        if aa:
-            allowed_addresses = aa.split(',')
-        else:
-            allowed_addresses = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
-            aa = ','.join(allowed_addresses)
-            cache.set(cache_key, aa)
-        return allowed_addresses
-
-    def get_default_language(self):
-        cache_key = 'xmlhandler:lang:default_language'
-        cv = cache.get(cache_key)
-        if cv:
-            return cv
-        sv = SwitchVariable.objects.filter(category='defaults', name='default_language', enabled='true').first()
-        if sv is None:
-            cv = 'en'
-        else:
-            cv = sv.value
-        cache.set(cache_key, cv)
-        return cv
-
-    def get_default_dialect(self):
-        cache_key = 'xmlhandler:lang:default_dialect'
-        cv = cache.get(cache_key)
-        if cv:
-            return cv
-        sv = SwitchVariable.objects.filter(category='defaults', name='default_dialect', enabled='true').first()
-        if sv is None:
-            cv = 'us'
-        else:
-            cv = sv.value
-        cache.set(cache_key, cv)
-        return cv
-
-    def get_default_voice(self):
-        cache_key = 'xmlhandler:lang:default_voice'
-        cv = cache.get(cache_key)
-        if cv:
-            return cv
-        sv = SwitchVariable.objects.filter(category='defaults', name='default_voice', enabled='true').first()
-        if sv is None:
-            cv = 'callie'
-        else:
-            cv = sv.value
-        cache.set(cache_key, cv)
-        return cv
-
-    def valid_uuid4(self, uuid):
-        regex = re.compile('[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}', re.I)
-        match = regex.match(uuid)
-        return bool(match)
-
-
-class DirectoryHandler(XmlHandlerFunctions):
+class DirectoryHandler(XmlHandler):
 
     def DirectoryAddDomain(self, domain, x_section, params=True, variables=True, groups=True):
         x_domain = etree.SubElement(x_section, "domain", name=domain, alias='true')
@@ -606,7 +503,7 @@ class DirectoryHandler(XmlHandlerFunctions):
         return xml
 
 
-class DialplanHandler(XmlHandlerFunctions):
+class DialplanHandler(XmlHandler):
 
     def GetDialplan(self, caller_context, hostname, destination_number):
         xml_list = list()
@@ -696,7 +593,7 @@ class DialplanHandler(XmlHandlerFunctions):
         return self.NotFoundXml()
 
 
-class LanguagesHandler(XmlHandlerFunctions):
+class LanguagesHandler(XmlHandler):
 
     def GetLanguage(self, lang, macro_name):
         if not self.valid_uuid4(macro_name):
@@ -744,7 +641,7 @@ class LanguagesHandler(XmlHandlerFunctions):
         return xml
 
 
-class ConfigHandler(XmlHandlerFunctions):
+class ConfigHandler(XmlHandler):
 
     def GetACL(self):
         configuration_cache_key = 'configuration:acl.conf'

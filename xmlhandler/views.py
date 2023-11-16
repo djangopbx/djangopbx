@@ -30,7 +30,7 @@
 import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-from .xmlhandlerfunctions import DirectoryHandler, DialplanHandler, LanguagesHandler, ConfigHandler
+from .xmlhandlerclasses import DirectoryHandler, DialplanHandler, LanguagesHandler, ConfigHandler
 
 logger = logging.getLogger(__name__)
 
