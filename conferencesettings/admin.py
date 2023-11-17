@@ -28,6 +28,7 @@
 #
 
 from django.contrib import admin
+from django.http import HttpResponseRedirect
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from switch.switchsounds import SwitchSounds
 from django.forms import ModelForm
@@ -39,6 +40,7 @@ from .models import (
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
+from .conferencefunctions import CnfFunctions
 
 
 class ConferenceControlDetailsResource(resources.ModelResource):
@@ -295,6 +297,7 @@ class ConferenceCentresResource(resources.ModelResource):
 class ConferenceCentresAdmin(ImportExportModelAdmin):
     resource_class = ConferenceCentresResource
     form = ConferenceCentresAdminForm
+    change_form_template = "conferencesettings/conferencesettings_changeform.html"
     save_as = True
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
@@ -322,6 +325,15 @@ class ConferenceCentresAdmin(ImportExportModelAdmin):
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
+
+    def response_change(self, request, obj):
+        if "_generate-xml" in request.POST:
+            cnf = CnfFunctions(request.session['domain_uuid'], request.session['domain_name'], str(obj.id), request.user.username)
+            obj.dialplan_id = cnf.generate_xml()
+            obj.save()
+            self.message_user(request, "XML Generated")
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)
 
 
 admin.site.register(ConferenceCentres, ConferenceCentresAdmin)

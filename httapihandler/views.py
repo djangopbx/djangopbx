@@ -45,7 +45,7 @@ from .serializers import (
 from .httapihandlerclasses import (
     TestHandler, FollowMeHandler, FollowMeToggleHandler, FailureHandler, HangupHandler,
     RegisterHandler, RingGroupHandler, RecordingsHandler, CallFlowToggleHandler,
-    CallBlockHandler
+    CallBlockHandler, ConferenceHandler,
 )
 
 
@@ -109,7 +109,6 @@ def ringgroup(request):
 def recordings(request):
     if request.content_type.startswith('multipart'):
         post, files = request.parse_file_upload(request.META, request)
-        #request.FILES.update(files)
         httapihf = RecordingsHandler(post, True, True, files)
     else:
         httapihf = RecordingsHandler(request.POST)
@@ -123,4 +122,13 @@ def callflowtoggle(request):
 @csrf_exempt
 def callblock(request):
     httapihf = CallBlockHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def conference(request):
+    if request.content_type.startswith('multipart'):
+        post, files = request.parse_file_upload(request.META, request)
+        httapihf = ConferenceHandler(post, True, True, files)
+    else:
+        httapihf = ConferenceHandler(request.POST)
     return processhttapi(request, httapihf)

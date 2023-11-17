@@ -45,4 +45,5 @@ urlpatterns = [
     path('recordings/', views.recordings, name='recordings'),
     path('callflowtoggle/', views.callflowtoggle, name='callflowtoggle'),
     path('callblock/', views.callblock, name='callblock'),
+    path('conference/', views.conference, name='conference'),
 ]

@@ -30,7 +30,7 @@
 from rest_framework import serializers
 from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
-    ConferenceRoomUser, ConferenceRooms, ConferenceCentres,
+    ConferenceRoomUser, ConferenceRooms, ConferenceCentres, ConferenceSessions
 )
 
 
@@ -105,5 +105,16 @@ class ConferenceRoomUserSerializer(serializers.ModelSerializer):
         model = ConferenceRoomUser
         fields = [
                     'url', 'id', 'c_room_id', 'user_uuid',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
+
+class ConferenceSessionsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ConferenceSessions
+        fields = [
+                    'url', 'id', 'c_room_id', 'caller_id_name', 'caller_id_number',
+                    'profile', 'live', 'recording', 'start', 'end',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]

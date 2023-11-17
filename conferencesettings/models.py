@@ -181,3 +181,26 @@ class ConferenceRoomUser(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class ConferenceSessions(models.Model):
+    id               = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Conference Session'))                            # noqa: E501, E221
+    c_room_id        = models.ForeignKey('ConferenceRooms', on_delete=models.CASCADE, verbose_name=_('Conference Room'))                                       # noqa: E501, E221
+    caller_id_name   = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Caller Id Name'))                                               # noqa: E501, E221
+    caller_id_number = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Caller Id Number'))                                              # noqa: E501, E221
+    profile          = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Profile'))                                                       # noqa: E501, E221
+    live             = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Live'))    # noqa: E501, E221
+    recording        = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Recording'))                                                    # noqa: E501, E221
+    start            = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Start'))                                                 # noqa: E501, E221
+    end              = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('End'))                                                       # noqa: E501, E221
+    created          = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                               # noqa: E501, E221
+    updated          = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                   # noqa: E501, E221
+    synchronised     = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                             # noqa: E501, E221
+    updated_by       = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                           # noqa: E501, E221
+
+    class Meta:
+        verbose_name_plural = 'Conference Sessions'
+        db_table = 'pbx_conference_sessions'
+
+    def __str__(self):
+        return str(self.id)

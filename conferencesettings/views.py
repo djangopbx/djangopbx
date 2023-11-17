@@ -36,12 +36,12 @@ from pbx.restpermissions import (
 )
 from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
-    ConferenceRoomUser, ConferenceRooms, ConferenceCentres,
+    ConferenceRoomUser, ConferenceRooms, ConferenceCentres, ConferenceSessions,
 )
 from .serializers import (
     ConferenceControlsSerializer, ConferenceControlDetailsSerializer, ConferenceProfilesSerializer,
     ConferenceProfileParamsSerializer, ConferenceRoomUserSerializer, ConferenceRoomsSerializer,
-    ConferenceCentresSerializer,
+    ConferenceCentresSerializer, ConferenceSessionsSerializer,
 )
 
 
@@ -137,6 +137,20 @@ class ConferenceRoomUserViewSet(viewsets.ModelViewSet):
     serializer_class = ConferenceRoomUserSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['c_room_id']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+
+class ConferenceSessionsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows ConferenceSessions to be viewed or edited.
+    """
+    queryset = ConferenceSessions.objects.all().order_by('c_room_id')
+    serializer_class = ConferenceSessionsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['c_room_id', 'live']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
