@@ -35,8 +35,10 @@ class ConferencesettingsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'conferencesettings'
     verbose_name = _('Conference Centre')
-    pbx_uuid = '33fb6c93-0c69-4702-bf62-725b66493ce6'
+    pbx_uuid = 'da23e762-de58-4c39-b6e5-f3b209a80a16'
     pbx_category = 'Switch'
     pbx_subcategory = ''
     pbx_version = '1.0'
     pbx_license = 'MIT License'
+    pbx_dialplan = True
+    pbx_dialplan_category = 'Conference centre'

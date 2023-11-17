@@ -30,7 +30,8 @@
 from django.contrib import admin
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from switch.switchsounds import SwitchSounds
-from django.forms import ModelForm, Select
+from django.forms import ModelForm
+from pbx.commonwidgets import ListTextWidget
 from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
     ConferenceRoomUser, ConferenceRooms, ConferenceCentres,
@@ -280,7 +281,7 @@ class ConferenceCentresAdminForm(ModelForm):
     class Meta:
         model = ConferenceCentres
         widgets = {
-            "greeting": Select(choices=[('', 'List unavailable')], attrs={'style': 'width:350px'}),
+            "greeting": ListTextWidget(choices=[('', 'List unavailable')], attrs={'style': 'width:350px'}),
         }
         fields = '__all__'
 
@@ -313,7 +314,7 @@ class ConferenceCentresAdmin(ImportExportModelAdmin):
         ss = SwitchSounds()
         # this is required for access to the request object so the domain_name session
         # variable can be passed to the chioces function
-        self.form.Meta.widgets['greeting'].choices=ss.get_sounds_choices_list(request.session['domain_name'])
+        self.form.Meta.widgets['greeting'].choices=ss.get_sounds_choices_list(request.session['domain_name'], True)
         return super().get_form(request, obj, change, **kwargs)
 
     def save_model(self, request, obj, form, change):

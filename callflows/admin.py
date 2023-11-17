@@ -96,7 +96,7 @@ class CallFlowsAdmin(ImportExportModelAdmin):
         cda = CommonDestAction(request.session['domain_name'], request.session['domain_uuid'])
         # this is required for access to the request object so the domain_name session
         # variable can be passed to the chioces function
-        sound_choices = ss.get_sounds_choices_list(request.session['domain_name'])
+        sound_choices = ss.get_sounds_choices_list(request.session['domain_name'], True)
         action_choices = cda.get_action_choices()
         self.form.Meta.widgets['sound'].choices=sound_choices
         self.form.Meta.widgets['data'].choices=action_choices

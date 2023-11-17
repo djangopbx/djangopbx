@@ -132,7 +132,7 @@ class PhrasesAdmin(ImportExportModelAdmin):
     inlines = [PhraseDetailsInLine]
 
     def get_formsets_with_inlines(self, request, obj=None):
-        data_choices = SwitchSounds().get_sounds_choices_list(request.session['domain_name'], 2)
+        data_choices = SwitchSounds().get_sounds_choices_list(request.session['domain_name'], True, 0b11111100)
         for inline in self.get_inline_instances(request, obj):
             inline.form.Meta.widgets['data'].choices=data_choices
             yield inline.get_formset(request, obj), inline

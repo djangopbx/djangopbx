@@ -162,22 +162,27 @@ class SwitchSounds():
         sound_file_list = self.sounds_dir_scan(os.path.join(self.get_sounds_dir(), self.get_voice_dir()))
         return list((a, a) for a in sound_file_list)
 
-    def get_sounds_choices_list(self, domain_name, option=0):
+    def decorate(self, text, decorate):
+        if decorate:
+            return '--- %s ----------' % _(text)
+        else:
+            return _(text)
+
+    def get_sounds_choices_list(self, domain_name, decorate=False, opt=255):
         sounds_choices = []
-        if option < 1:
-            sounds_choices.append((_('---- Miscellaneous ----------'), [('say:', 'Say'), ('tone_stream:', 'Tone Stream')]))
-        if option < 2:
+        if opt & 1 == 1:
+            sounds_choices.append((self.decorate('Miscellaneous', decorate), [('say:', 'Say'), ('tone_stream:', 'Tone Stream')]))
+        if opt & 2 == 2:
             if phrases_available:
                 phrase_list = self.get_phrases_list(domain_name)
                 if phrases_available:
-                    sounds_choices.append((_('---- Phrases -------------'), phrase_list))
-        if option < 3:
+                    sounds_choices.append((self.decorate('Phrases', decorate), phrase_list))
+        if opt & 4 == 4:
             if os.path.exists(self.get_recordings_dir(domain_name)):
-                sounds_choices.append((_('---- Recordings -------------'), self.get_recordings_list(domain_name, True)))
-        if option < 4:
+                sounds_choices.append((self.decorate('Recordings', decorate), self.get_recordings_list(domain_name, True)))
+        if opt & 8 == 8:
             if os.path.exists(self.get_sounds_dir()):
-                sounds_choices.append((_('---- Sounds -----------------'), self.get_sounds_list()))
-
+                sounds_choices.append((self.decorate('Sounds', decorate), self.get_sounds_list()))
         return sounds_choices
 
     def get_tones(self, category):

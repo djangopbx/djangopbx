@@ -38,7 +38,6 @@ from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
 from django.forms import ModelForm, Select
-from switch.switchsounds import SwitchSounds
 
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from pbx.commondestination import CommonDestAction
