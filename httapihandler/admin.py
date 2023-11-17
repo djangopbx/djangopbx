@@ -1,7 +1,9 @@
 #
+#    DjangoPBX
+#
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +27,27 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-# from django.contrib import admin
+from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
+from django.http import HttpResponseRedirect
+from tenants.pbxsettings import PbxSettings
+from .models import HttApiSession
 
-# Register your models here.
+
+class HttApiSessionAdmin(admin.ModelAdmin):
+
+    readonly_fields = ['id', 'name', 'xml', 'json', 'created']
+    search_fields = ['name']
+    fieldsets = [
+        (None,  {'fields': ['id', 'name', 'xml', 'json', 'created']}),
+    ]
+    list_display = ('id', 'name', 'created')
+    list_filter = ('name', )
+    ordering = [
+        'name', 'created'
+    ]
+
+
+#  Needs a reload for this to take effect becuase it is only parsed on startup.
+if PbxSettings().default_settings('httapihandler', 'show_admin', 'boolean', 'false', True)[0] == 'true':
+    admin.site.register(HttApiSession, HttApiSessionAdmin)
