@@ -42,4 +42,4 @@ class HttApiSession(models.Model):
         db_table = 'pbx_httapi_session'
 
     def __str__(self):
-        return self.id
+        return str(self.id)
