@@ -257,7 +257,7 @@ class ConferenceRoomsAdmin(ImportExportModelAdmin):
                     'enabled', 'description']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
-    list_display = ('name', 'enabled', 'description')
+    list_display = ('name', 'participant_pin', 'moderator_pin', 'enabled', 'description')
     list_filter = ('enabled', )
     ordering = [
         'name'

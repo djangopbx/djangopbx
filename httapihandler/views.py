@@ -42,11 +42,17 @@ from .models import (
 from .serializers import (
     HttApiSessionSerializer,
 )
-from .httapihandlerclasses import (
-    TestHandler, FollowMeHandler, FollowMeToggleHandler, FailureHandler, HangupHandler,
-    RegisterHandler, RingGroupHandler, RecordingsHandler, CallFlowToggleHandler,
-    CallBlockHandler, ConferenceHandler,
-)
+from .callblockhandler import CallBlockHandler
+from .callflowtogglehandler import CallFlowToggleHandler
+from .ringgrouphandler import RingGroupHandler
+from .registerhandler import RegisterHandler
+from .hanguphandler import HangupHandler
+from .failurehandler import FailureHandler
+from .followmetogglehandler import FollowMeToggleHandler
+from .followmehandler import FollowMeHandler
+from .testhandler import TestHandler
+from .recordingshandler import RecordingsHandler
+from .conferencehandler import ConferenceHandler
 
 
 class HttApiSessionViewSet(viewsets.ModelViewSet):

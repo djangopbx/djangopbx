@@ -261,7 +261,22 @@
         "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
         "digits": "0",
         "action": "execute_application",
-        "data": "python mute non_moderator",
+        "data": "lua conference_mute non_moderator",
+        "enabled": "true",
+        "created": "2023-01-04T21:44:32.517Z",
+        "updated": "2023-01-04T21:44:32.517Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "conferencesettings.conferencecontroldetails",
+    "pk": "9a2aec3e-5831-4730-9496-6f21f14cda46",
+    "fields": {
+        "conf_ctrl_id": "43035977-3602-413c-945f-ecf9006cd62e",
+        "digits": "*",
+        "action": "execute_application",
+        "data": "lua conference_unmute non_moderator",
         "enabled": "true",
         "created": "2023-01-04T21:44:32.517Z",
         "updated": "2023-01-04T21:44:32.517Z",
