@@ -127,8 +127,6 @@ class ConferenceHandler(HttApiHandler):
             self.session.json[self.handler_name]['flags'] = '|'.join(flag_list)
             self.session.json[self.handler_name]['member_type'] = member_type
 
-            print(self.session.json[self.handler_name]['conf_name'])
-
             if self.get_live_session_count(cnfroom.id) > cnfroom.max_members:
                 etree.SubElement(self.x_work, 'playback', file='conference/conf-locked.wav')
                 etree.SubElement(self.x_work, 'hangup', cause='CALL_REGECTED')
@@ -183,9 +181,9 @@ class ConferenceHandler(HttApiHandler):
             self.session.json[self.handler_name]['rec_tmp_flag_file'] = rec_tmp_flag_file
             self.session.save()
             self.conf_session.recording = rec_full_path
-            self.conf_session.caller_id_name = self.caller_id_name
-            self.conf_session.caller_id_number = self.caller_id_number
-            self.conf_session.save()
+        self.conf_session.caller_id_name = self.caller_id_name
+        self.conf_session.caller_id_number = self.caller_id_number
+        self.conf_session.save()
 
         if self.session.json[self.handler_name]['announce'] == 'true':
             announce_data = 'res=${sched_api +1 none conference %s play file_string://%s!conference/conf-has_joined.wav}' % (self.session.json[self.handler_name]['conf_name'], self.session.json[self.handler_name]['name_recording']) # noqa: E501

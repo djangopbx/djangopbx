@@ -35,7 +35,7 @@ from django.forms import ModelForm
 from pbx.commonwidgets import ListTextWidget
 from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
-    ConferenceRoomUser, ConferenceRooms, ConferenceCentres,
+    ConferenceRoomUser, ConferenceRooms, ConferenceCentres, ConferenceSessions,
 )
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
@@ -336,10 +336,28 @@ class ConferenceCentresAdmin(ImportExportModelAdmin):
         return super().response_change(request, obj)
 
 
+class ConferenceSessionsAdmin(admin.ModelAdmin):
+
+    readonly_fields = ['id', 'c_room_id', 'caller_id_name', 'caller_id_number', 'profile',
+                        'recording', 'start', 'end', 'created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['c_room_id', 'caller_id_name', 'caller_id_number']
+    fieldsets = [
+        (None,  {'fields': ['id', 'c_room_id', 'caller_id_name', 'caller_id_number',
+                    'profile', 'live', 'recording', 'start', 'end']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('c_room_id', 'caller_id_name', 'caller_id_number', 'profile', 'start', 'end')
+    list_filter = ('c_room_id', 'live')
+    ordering = [
+        '-created'
+    ]
+
+
 admin.site.register(ConferenceCentres, ConferenceCentresAdmin)
 admin.site.register(ConferenceRooms, ConferenceRoomsAdmin)
 admin.site.register(ConferenceControls, ConferenceControlsAdmin)
 admin.site.register(ConferenceProfiles, ConferenceProfilesAdmin)
+admin.site.register(ConferenceSessions, ConferenceSessionsAdmin)
 
 if settings.PBX_ADMIN_SHOW_ALL:
     admin.site.register(ConferenceControlDetails, ConferenceControlDetailsAdmin)
