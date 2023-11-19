@@ -112,6 +112,7 @@ class ConferenceHandler(HttApiHandler):
                 flag_list.append('mute')
             if member_type == 1:
                 flag_list.append('moderator')
+                etree.SubElement(self.x_work, 'execute', application='set', data='conference_controls=moderator')
 
             self.session.json[self.handler_name]['conf_name'] = '%s-%s-%s' % (self.domain_name, cnfroom.c_centre_id.name.replace(' ', '_' ), cnfroom.name.replace(' ', '_' )) # noqa: E501
             self.session.json[self.handler_name]['conf_uuid'] = str(cnfroom.id)
