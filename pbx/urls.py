@@ -68,6 +68,7 @@ from numbertranslations.urls import router as numbertranslationsrouter
 from ivrmenus.urls import router as ivrmenusrouter
 from callflows.urls import router as callflowsrouter
 from callblock.urls import router as callblockrouter
+from callcentres.urls import router as callcentresrouter
 
 
 # This overrides names in site headers and titles
@@ -97,6 +98,7 @@ router.registry.extend(numbertranslationsrouter.registry)
 router.registry.extend(ivrmenusrouter.registry)
 router.registry.extend(callflowsrouter.registry)
 router.registry.extend(callblockrouter.registry)
+router.registry.extend(callcentresrouter.registry)
 
 
 urlpatterns = [

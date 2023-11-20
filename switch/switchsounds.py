@@ -208,3 +208,10 @@ class SwitchSounds():
         ringback_choices.append((_('Ringtones'), self.get_tones('Ringtones')))
         ringback_choices.append((_('Tones'), self.get_tones('Tones')))
         return ringback_choices
+
+    def get_record_template(self, domain_name):
+        rec_dir = self.get_recordings_dir(domain_name)
+        return '%s/archive/${strftime(%%Y)}/${strftime(%%b)}/${strftime(%%d)}/${uuid}.${record_ext}' % rec_dir
+
+    def get_cc_record(self, domain_name):
+        return [('', 'False'), (self.get_record_template(domain_name), 'True')]

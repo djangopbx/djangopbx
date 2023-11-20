@@ -41,4 +41,4 @@ class CallflowsConfig(AppConfig):
     pbx_version = '1.0'
     pbx_license = 'MIT License'
     pbx_dialplan = True
-    pbx_dialplan_category = 'Call flows'
+    pbx_dialplan_category = 'Call flow'

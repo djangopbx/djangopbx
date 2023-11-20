@@ -60,7 +60,7 @@ class CfFunctions():
             number=self.cf.extension,
             destination='false',
             context=self.domain_name,
-            category='IVR menu',
+            category='Call flow',
             dp_continue='false',
             sequence=101,
             enabled='true',

@@ -29,7 +29,7 @@
 import uuid
 from django.utils.translation import gettext_lazy as _
 from dialplans.models import Dialplan
-from accounts.models import Extension, Bridge
+from accounts.models import Extension, Bridge, Gateway
 from switch.models import SwitchVariable
 
 
@@ -98,7 +98,6 @@ class CommonDestAction():
         # Placeholder: Call Centers
         #if opt & 2 == 2:
 
-
         if opt & 4 == 4:
             d_list = self.get_dp_list('Call flows')
             if d_list:
@@ -159,5 +158,31 @@ class CommonDestAction():
             if opt & 16384 == 16384:
                 o_list.append(('hangup', _('Hangup')))
             cd_actions.append((self.decorate('Other', decorate), o_list))
+
+        return cd_actions
+
+    def get_contact_choices(self, decorate=False, opt=255):
+        cd_actions = []
+        e_list = []
+        es = Extension.objects.select_related('domain_id').filter(
+                domain_id=uuid.UUID(self.domain_uuid),
+                enabled='true'
+                ).order_by('extension')
+        for e in es:
+            e_list.append(('user/%s@%s' % (e.extension, e.domain_id), '%s %s' % (
+                    e.extension, (e.description if e.description else 'Extension %s' % e.extension))))
+
+        if opt & 1 == 1:
+            if e_list:
+                cd_actions.append((self.decorate('Extensions', decorate), e_list))
+
+        if opt & 2 == 2:
+            g_list = []
+            gw = Gateway.objects.filter(domain_id=uuid.UUID(self.domain_uuid), enabled='true').order_by('gateway')
+            for g in gw:
+                g_list.append(('sofia/gateway/%s' % str(g.id), '%s@%s' % (g.domain_id.name, g.gateway)))
+
+            if len(g_list) > 0:
+                cd_actions.append((self.decorate('Gateways', decorate), g_list))
 
         return cd_actions

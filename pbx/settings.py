@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'ivrmenus.apps.IvrmenusConfig',
     'callflows.apps.CallflowsConfig',
     'callblock.apps.CallblockConfig',
+    'callcentres.apps.CallcentresConfig',
 ]
 
 MIDDLEWARE = [
