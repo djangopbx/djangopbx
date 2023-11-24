@@ -1,0 +1,12 @@
+<context name="{v_context}">
+    <extension name="agent_status" number="*22" continue="false" app_uuid="48b0bd79-021d-4151-b59e-06370fc686cd" order="200">
+	<condition field="destination_number" expression="^\*22$" break="on-true">
+		<action application="set" data="agent_id=${sip_from_user}"/>
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/agentstatus/}"/>
+	</condition>
+	<condition field="destination_number" expression="^(agent\+)(.+)$">
+		<action application="set" data="agent_id=$1"/>
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/agentstatus/}"/>
+	</condition>
+    </extension>
+</context>

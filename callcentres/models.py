@@ -37,6 +37,22 @@ from pbx.commonchoices import EnabledTrueFalseChoice
 def random_pin():
     return str(random.randint(10000, 99999))
 
+def get_agent_contact(cca):
+    confirm = 'group_confirm_file=ivr/ivr-accrpt_reject.wav,group_confirm_key=1,group_confirm_read_timeout=2000,leg_timeout=%s' % cca.call_timeout
+
+    if '}' in cca.contact:
+        parts = cca.contact.partition('}')
+        if 'sofia/gateway' in cca.contact:
+            agent_contact = '%s,%s,call_timeout=%s,sip_h_caller_destination=${caller_destination}}%s' % (parts[0], confirm, cca.call_timeout, parts[2])
+        else:
+            agent_contact = '%s,call_timeout=%s,domain_uuid=%s,Domain_name=%s,sip_h_caller_destination=${caller_destination}}%s' % (parts[0], cca.call_timeout, str(cca.domain_id), cca.domain_id.name, parts[2])
+    else:
+        if 'sofia/gateway' in cca.contact:
+            agent_contact = '{%s,call_timeout=%s,sip_h_caller_destination=${caller_destination}}%s' % (confirm, cca.call_timeout, cca.contact)
+        else:
+            agent_contact = '{call_timeout=%s,domain_uuid=%s,Domain_name=%s,sip_h_caller_destination=${caller_destination}}%s' % (cca.call_timeout, str(cca.domain_id), cca.domain_id.name, cca.contact)
+    return agent_contact
+
 
 class CallCentreQueueTimeBScoreChoice(models.TextChoices):
     CSYSTEM = 'system', _('System') # noqa: E221
@@ -93,6 +109,7 @@ class CallCentreAgents(models.Model):
     class Meta:
         verbose_name_plural = 'Call Centre Agents'
         db_table = 'pbx_call_centre_agents'
+        unique_together = ('domain_id', 'agent_id')
 
     def __str__(self):
         return f'{self.name}-{self.agent_id}'

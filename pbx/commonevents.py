@@ -27,23 +27,26 @@
 #
 
 from django.conf import settings
-from pbx.fseventsocket import EventSocket
-from pbx.scripts.resources.pbx.fsevent import FsEvent
+from .fseventsocket import EventSocket
+from .scripts.resources.pbx.fsevent import FsEvent
 
 
 class PresenceIn():
 
-    def __init__(self, cf_uuid, status, feature_code, domain_name):
-        self.cf_uuid = cf_uuid
-        self.status = status
-        self.feature_code = feature_code
-        self.domain_name = domain_name
+    def __init__(self):
+        self.connected = False
         self.es = EventSocket()
+        self.connect()
 
-    def send(self):
-        if not self.es.connect(*settings.EVSKT):
+    def connect(self):
+        if self.es.connect(*settings.EVSKT):
+            self.connected = True
+        return
+
+    def send(self, user_uuid, status, user_code, domain_name):
+        if not self.connected:
             return False
-        user_id = '%s@%s' % (self.feature_code, self.domain_name)
+        user_id = '%s@%s' % (user_code, domain_name)
         fse = FsEvent('PRESENCE_IN')
         fse.addHeader('proto', 'sip');
         fse.addHeader('event_type', 'presence');
@@ -51,9 +54,9 @@ class PresenceIn():
         fse.addHeader('Presence-Call-Direction', 'outbound');
         fse.addHeader('from', user_id);
         fse.addHeader('login', user_id);
-        fse.addHeader('unique-id', self.cf_uuid);
+        fse.addHeader('unique-id', user_uuid);
         fse.addHeader('status', 'Active (1 waiting)');
-        if self.status == 'true':
+        if status == 'true':
             fse.addHeader('answer-state', 'terminated');
         else:
             fse.addHeader('answer-state', 'confirmed');

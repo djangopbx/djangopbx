@@ -27,11 +27,13 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from time import sleep
 from django.contrib import admin
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 
 from .models import (
-    CallCentreAgents, CallCentreQueues, CallCentreTiers
+    CallCentreAgents, CallCentreQueues, CallCentreTiers, get_agent_contact
 )
 from tenants.models import Profile
 from import_export.admin import ImportExportModelAdmin
@@ -42,6 +44,7 @@ from switch.switchsounds import SwitchSounds
 from pbx.commonwidgets import ListTextWidget
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from pbx.commondestination import CommonDestAction
+from pbx.fseventsocket import EventSocket
 from .callcentrefunctions import CcFunctions
 
 
@@ -75,6 +78,54 @@ class CallCentreTiersAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         super().save_model(request, obj, form, change)
+        self.fire_fs_events(obj, change)
+
+    def delete_model(self, request, obj):
+        self.fire_fs_events(obj, False, True)
+        super().delete_model(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            self.fire_fs_events(obj, False, True)
+        super().delete_queryset(request, queryset)
+
+    def fire_fs_events(self, obj, change, delete=False):
+        ret = True
+        s = 0.0001
+        es = EventSocket()
+        if not es.connect(*settings.EVSKT):
+            return False
+
+        if delete:
+            # delete the tier
+            cmd = 'api callcenter_config tier del %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id))
+            result = es.send(cmd)
+            if '-ERR' in result:
+                ret = False
+            return ret
+
+        if not change:
+            # add the tier
+            cmd = 'api callcenter_config tier add %s %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_level), str(obj.tier_position))
+            result = es.send(cmd)
+            if '-ERR' in result:
+                ret = False
+            sleep(s)
+
+        # tier set level
+        cmd = 'api callcenter_config tier set level %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_level))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+
+        # tier set position
+        cmd = 'api callcenter_config tier set position %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_position))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+        return ret
 
 
 class CallCentreTiersInLine(admin.TabularInline):
@@ -114,6 +165,8 @@ class CallCentreAgentsAdminForm(ModelForm):
 class CallCentreAgentsAdmin(ImportExportModelAdmin):
     resource_class = CallCentreAgentsResource
     form = CallCentreAgentsAdminForm
+    save_as = True
+    change_list_template = "callcentres/cc_agent_changelist.html"
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['name', 'agent_id']
     fieldsets = [
@@ -145,6 +198,91 @@ class CallCentreAgentsAdmin(ImportExportModelAdmin):
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
+        if self.fire_fs_events(obj, change):
+            self.message_user(request, "Callentre Configuration Updated")
+
+    def delete_model(self, request, obj):
+        self.fire_fs_events(obj, False, True)
+        super().delete_model(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            self.fire_fs_events(obj, False, True)
+        super().delete_queryset(request, queryset)
+
+    def fire_fs_events(self, obj, change, delete=False):
+        ret = True
+        s = 0.0001
+        es = EventSocket()
+        if not es.connect(*settings.EVSKT):
+            return False
+
+        if delete:
+            # delete the agent
+            cmd = 'api callcenter_config agent del %s' % str(obj.id)
+            result = es.send(cmd)
+            if '-ERR' in result:
+                ret = False
+            return ret
+
+        if not change:
+            # add the agent
+            cmd = 'api callcenter_config agent add %s %s' % (str(obj.id), obj.agent_type)
+            result = es.send(cmd)
+            if '-ERR' in result:
+                ret = False
+            sleep(s)
+
+        # agent set contact
+        cmd = 'api callcenter_config agent set contact %s %s' % (str(obj.id), get_agent_contact(obj))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+
+        # agent set status
+        if obj.status:
+            cmd = 'api callcenter_config agent set status %s %s' % (str(obj.id), obj.status)
+            result = es.send(cmd)
+            if '-ERR' in result:
+                ret = False
+            sleep(s)
+
+        # agent set reject delay time
+        cmd = 'api callcenter_config agent set reject_delay_time %s %s' % (str(obj.id), str(obj.reject_delay_time))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+
+        # agent set busy delay time
+        cmd = 'api callcenter_config agent set busy_delay_time %s %s' % (str(obj.id), str(obj.busy_delay_time))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+
+        # agent set no answer delay time
+        cmd = 'api callcenter_config agent set no_answer_delay_time %s %s' % (str(obj.id), str(obj.no_answer_delay_time))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+
+        # agent set max no answer
+        cmd = 'api callcenter_config agent set max_no_answer %s %s' % (str(obj.id), str(obj.max_no_answer))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+
+        # agent set wrap up time
+        cmd = 'api callcenter_config agent set wrap_up_time %s %s' % (str(obj.id), str(obj.wrap_up_time))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+        return ret
 
 
 class CallCentreQueuesResource(resources.ModelResource):
@@ -169,7 +307,8 @@ class CallCentreQueuesAdminForm(ModelForm):
 class CallCentreQueuesAdmin(ImportExportModelAdmin):
     resource_class = CallCentreQueuesResource
     form = CallCentreQueuesAdminForm
-    change_form_template = "callcentres/callcentre_changeform.html"
+    save_as = True
+    change_form_template = "callcentres/cc_queue_changeform.html"
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
@@ -222,11 +361,23 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
         self.form.Meta.widgets['timeout_action'].choices=cda.get_action_choices(':', False, 0b1111111111111110)
         return super().get_form(request, obj, change, **kwargs)
 
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for obj in formset.deleted_objects:
+            self.fire_fs_tier_events(obj, change, delete=True)
+            obj.delete()
+        for instance in instances:
+            instance.updated_by = request.user.username
+            instance.save()
+            self.fire_fs_tier_events(instance, change)
+        formset.save_m2m()
+
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
+        self.fire_fs_queue_events(obj, change, delete=False)
 
     def response_change(self, request, obj):
         if "_generate-xml" in request.POST:
@@ -236,6 +387,72 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
             self.message_user(request, "XML Generated")
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
+
+    def fire_fs_tier_events(self, obj, change, delete=False):
+        ret = True
+        s = 0.0001
+        es = EventSocket()
+        if not es.connect(*settings.EVSKT):
+            return False
+
+        if delete:
+            # delete the tier
+            cmd = 'api callcenter_config tier del %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id))
+            result = es.send(cmd)
+            if '-ERR' in result:
+                ret = False
+            return ret
+
+        # add the tier
+        cmd = 'api callcenter_config tier add %s %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_level), str(obj.tier_position))
+        result = es.send(cmd)
+        if not '-ERR Tier already exist' in result:
+            if '-ERR' in result:
+                ret = False
+        sleep(s)
+
+        # tier set level
+        cmd = 'api callcenter_config tier set level %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_level))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+
+        # tier set position
+        cmd = 'api callcenter_config tier set position %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_position))
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        sleep(s)
+        return ret
+
+    def fire_fs_queue_events(self, obj, change, delete=False):
+        ret = True
+        es = EventSocket()
+        if not es.connect(*settings.EVSKT):
+            return False
+
+        if delete:
+            # unload the queue
+            cmd = 'api callcenter_config queue unload %s' % str(obj.id)
+            result = es.send(cmd)
+            if '-ERR' in result:
+                ret = False
+            return ret
+
+        if not change:
+            # load the queue
+            cmd = 'api callcenter_config queue load %s' % str(obj.id)
+            result = es.send(cmd)
+            if '-ERR' in result:
+                ret = False
+
+        # reload the queue
+        cmd = 'api callcenter_config queue reload %s' % str(obj.id)
+        result = es.send(cmd)
+        if '-ERR' in result:
+            ret = False
+        return ret
 
 
 admin.site.register(CallCentreAgents, CallCentreAgentsAdmin)

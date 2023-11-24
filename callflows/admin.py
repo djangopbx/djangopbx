@@ -43,7 +43,7 @@ from pbx.commonwidgets import ListTextWidget
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from pbx.commondestination import CommonDestAction
 from .callflowfunctions import CfFunctions
-from .callflowevents import PresenceIn
+from pbx.commonevents import PresenceIn
 
 
 class CallFlowsAdminForm(ModelForm):
@@ -106,8 +106,8 @@ class CallFlowsAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        pe = PresenceIn(str(obj.id), obj.status, obj.feature_code, request.session['domain_name'])
-        pe.send()
+        pe = PresenceIn()
+        pe.send(str(obj.id), obj.status, obj.feature_code, request.session['domain_name'])
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']

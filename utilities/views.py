@@ -104,6 +104,7 @@ class ClearCacheView(View):
                 cache.delete('configuration:sofia.conf')
                 cache.delete('configuration:local_stream.conf')
                 cache.delete('configuration:translate.conf')
+                cache.delete('configuration:callcentre.conf')
 
                 if ivrmenus_available:
                     ivrs = IvrMenus.objects.filter(enabled='true', domain_id=domain_uuid)

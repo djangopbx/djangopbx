@@ -44,6 +44,7 @@ from musiconhold.models import MusicOnHold
 from numbertranslations.models import NumberTranslations
 from ivrmenus.models import IvrMenus
 from conferencesettings.models import ConferenceControls, ConferenceProfiles
+from callcentres.models import CallCentreQueues, CallCentreAgents, CallCentreTiers, get_agent_contact
 
 
 class DirectoryHandler(XmlHandler):
@@ -905,6 +906,109 @@ class ConfigHandler(XmlHandler):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
+        if self.debug:
+            print(xml)
+        return xml
+
+    def GetCallcentre(self):
+        configuration_cache_key = 'configuration:callcentre.conf'
+        xml = cache.get(configuration_cache_key)
+        if xml:
+            return xml
+
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='configuration')
+        x_conf_name = etree.SubElement(x_section, 'configuration', name='callcenter.conf', description='Call Centre')
+        x_settings = etree.SubElement(x_conf_name, 'settings')
+        # dsn or dsn_callcenter can go in here if defined and/or required
+        #etree.SubElement(x_settings, 'param', name='odbc-dsn', value='dsn:user:pass')
+
+        x_queues = etree.SubElement(x_conf_name, 'queues')
+        ccqs = CallCentreQueues.objects.filter(enabled='true')
+        for ccq in ccqs:
+            x_queue = etree.SubElement(x_queues, 'queue', name=str(ccq.id), label='%s@%s' % (ccq.name.replace(' ', '-'), ccq.domain_id.name))
+            etree.SubElement(x_queue, 'param', name='strategy', value=ccq.strategy)
+            etree.SubElement(x_queue, 'param', name='moh-sound', value=ccq.moh_sound)
+            if ccq.record_template:
+                etree.SubElement(x_queue, 'param', name='record-template', value=ccq.record_template)
+            etree.SubElement(x_queue, 'param', name='time-base-score', value=ccq.time_base_score)
+            etree.SubElement(x_queue, 'param', name='max-wait-time', value=str(ccq.max_wait_time))
+            etree.SubElement(x_queue, 'param', name='max-wait-time-with-no-agent', value=str(ccq.max_wait_time_na))
+            etree.SubElement(x_queue, 'param', name='max-wait-time-with-no-agent-time-reached', value=str(ccq.max_wait_time_natr))
+            etree.SubElement(x_queue, 'param', name='tier-rules-apply', value=ccq.tier_rules_apply)
+            etree.SubElement(x_queue, 'param', name='tier-rule-wait-second', value=str(ccq.tier_rule_wait_sec))
+            etree.SubElement(x_queue, 'param', name='tier-rule-wait-multiply-level', value=ccq.tier_rule_wm_level)
+            etree.SubElement(x_queue, 'param', name='tier-rule-no-agent-no-wait', value=ccq.tier_rule_nanw)
+            etree.SubElement(x_queue, 'param', name='discard-abandoned-after', value=str(ccq.discard_abndnd_after))
+            etree.SubElement(x_queue, 'param', name='abandoned-resume-allowed', value=ccq.abndnd_resume_allowed)
+            if ccq.announce_sound:
+                etree.SubElement(x_queue, 'param', name='announce-sound', value=ccq.announce_sound)
+            if ccq.announce_frequency:
+                etree.SubElement(x_queue, 'param', name='announce-frequency', value=str(ccq.announce_frequency))
+
+        x_agents = etree.SubElement(x_conf_name, 'agents')
+        ccas = CallCentreAgents.objects.all()
+        for cca in ccas:
+            agent_contact = get_agent_contact(cca)
+            x_agent = etree.SubElement(x_agents, 'agent', name=str(cca.id))
+            x_agent.set('label', '%s@%s' % (cca.name.replace(' ', '-'), cca.domain_id.name))
+            x_agent.set('type', cca.agent_type)
+            x_agent.set('contact', agent_contact)
+            if cca.status:
+                x_agent.set('status', cca.status)
+            x_agent.set('no-answer-delay-time', str(cca.no_answer_delay_time))
+            x_agent.set('max-no-answer', str(cca.max_no_answer))
+            x_agent.set('wrap-up-time', str(cca.wrap_up_time))
+            x_agent.set('reject-delay-time', str(cca.reject_delay_time))
+            x_agent.set('busy-delay-time', str(cca.busy_delay_time))
+
+        x_tiers = etree.SubElement(x_conf_name, 'tiers')
+        ccts = CallCentreTiers.objects.all()
+        for cct in ccts:
+            x_tier = etree.SubElement(x_tiers, 'tier', agent=str(cct.agent_id.id), queue=str(cct.queue_id.id))
+            x_tier.set('domain_name', cct.queue_id.domain_id.name)
+            x_tier.set('level', str(cct.tier_level))
+            x_tier.set('position', str(cct.tier_position))
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        cache.set(configuration_cache_key, xml)
+        if self.debug:
+            print(xml)
+        return xml
+
+    def GetCallcentreQueue(self, queue_id):
+        x_root = self.XrootDynamic()
+        x_section = etree.SubElement(x_root, "section", name='configuration')
+        x_conf_name = etree.SubElement(x_section, 'configuration', name='callcenter.conf', description='Call Centre')
+        x_settings = etree.SubElement(x_conf_name, 'settings')
+        # dsn or dsn_callcenter can go in here if defined and/or required
+        #etree.SubElement(x_settings, 'param', name='odbc-dsn', value='dsn:user:pass')
+
+        x_queues = etree.SubElement(x_conf_name, 'queues')
+        ccq = CallCentreQueues.objects.get(pk=queue_id)
+        x_queue = etree.SubElement(x_queues, 'queue', name=str(ccq.id), label='%s@%s' % (ccq.name.replace(' ', '-'), ccq.domain_id.name))
+        etree.SubElement(x_queue, 'param', name='strategy', value=ccq.strategy)
+        etree.SubElement(x_queue, 'param', name='moh-sound', value=ccq.moh_sound)
+        if ccq.record_template:
+            etree.SubElement(x_queue, 'param', name='record-template', value=ccq.record_template)
+        etree.SubElement(x_queue, 'param', name='time-base-score', value=ccq.time_base_score)
+        etree.SubElement(x_queue, 'param', name='max-wait-time', value=str(ccq.max_wait_time))
+        etree.SubElement(x_queue, 'param', name='max-wait-time-with-no-agent', value=str(ccq.max_wait_time_na))
+        etree.SubElement(x_queue, 'param', name='max-wait-time-with-no-agent-time-reached', value=str(ccq.max_wait_time_natr))
+        etree.SubElement(x_queue, 'param', name='tier-rules-apply', value=ccq.tier_rules_apply)
+        etree.SubElement(x_queue, 'param', name='tier-rule-wait-second', value=str(ccq.tier_rule_wait_sec))
+        etree.SubElement(x_queue, 'param', name='tier-rule-wait-multiply-level', value=ccq.tier_rule_wm_level)
+        etree.SubElement(x_queue, 'param', name='tier-rule-no-agent-no-wait', value=ccq.tier_rule_nanw)
+        etree.SubElement(x_queue, 'param', name='discard-abandoned-after', value=str(ccq.discard_abndnd_after))
+        etree.SubElement(x_queue, 'param', name='abandoned-resume-allowed', value=ccq.abndnd_resume_allowed)
+        if ccq.announce_sound:
+            etree.SubElement(x_queue, 'param', name='announce-sound', value=ccq.announce_sound)
+        if ccq.announce_frequency:
+            etree.SubElement(x_queue, 'param', name='announce-frequency', value=str(ccq.announce_frequency))
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
         if self.debug:
             print(xml)
         return xml

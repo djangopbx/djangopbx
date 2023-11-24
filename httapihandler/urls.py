@@ -46,4 +46,5 @@ urlpatterns = [
     path('callflowtoggle/', views.callflowtoggle, name='callflowtoggle'),
     path('callblock/', views.callblock, name='callblock'),
     path('conference/', views.conference, name='conference'),
+    path('agentstatus/', views.agentstatus, name='agentstatus'),
 ]

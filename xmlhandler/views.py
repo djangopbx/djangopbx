@@ -194,6 +194,12 @@ def configuration(request):
         xml = xmlhf.GetTranslate()
     elif key_value == 'ivr.conf':
         xml = xmlhf.GetIvr(request.POST.get('Menu-Name', ''))
+    elif key_value == 'callcenter.conf':
+        cc_queue = request.POST.get('CC-Queue', False)
+        if cc_queue:
+            xml = xmlhf.GetCallcentreQueue(cc_queue)
+        else:
+            xml = xmlhf.GetCallcentre()
     else:
         xml = xmlhf.NotFoundXml()
 

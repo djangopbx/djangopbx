@@ -1,10 +1,12 @@
-<extension name="recordings" number="*732" context="${domain_name}" continue="false" app_uuid="83913217-c7a2-9e90-925d-a866eb40b60e" order="400">
-	<condition field="destination_number" expression="^\*(732)$">
-		<action application="answer"/>
-		<action application="set" data="pin_number={v_pin_number}"/>
-		<action application="set" data="recording_id="/>
-		<action application="set" data="recording_prefix=recording"/>
-		<action application="set" data="record_append=false"/>
-		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/recordings/}"/>
-	</condition>
-</extension>
+<context name="{v_context}">
+	<extension name="recordings" number="*732" continue="false" app_uuid="83913217-c7a2-9e90-925d-a866eb40b60e" order="400">
+		<condition field="destination_number" expression="^\*(732)$">
+			<action application="answer"/>
+			<action application="set" data="pin_number={v_pin_number}"/>
+			<action application="set" data="recording_id="/>
+			<action application="set" data="recording_prefix=recording"/>
+			<action application="set" data="record_append=false"/>
+			<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/recordings/}"/>
+		</condition>
+	</extension>
+</context>

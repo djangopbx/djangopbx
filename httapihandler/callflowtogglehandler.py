@@ -32,7 +32,7 @@ from lxml import etree
 from .httapihandler import HttApiHandler
 from callflows.models import CallFlows
 from callflows.callflowfunctions import CfFunctions
-from callflows.callflowevents import PresenceIn
+from pbx.commonevents import PresenceIn
 
 
 class CallFlowToggleHandler(HttApiHandler):
@@ -87,8 +87,8 @@ class CallFlowToggleHandler(HttApiHandler):
                     etree.SubElement(x_work, 'hangup')
                     directory_cache_key = 'dialplan:%s' % self.domain_name
                     cache.delete(directory_cache_key)
-                    pe = PresenceIn(str(q.id), q.status, q.feature_code, self.domain_name)
-                    pe.send()
+                    pe = PresenceIn()
+                    pe.send(str(q.id), q.status, q.feature_code, self.domain_name)
                 else:
                     etree.SubElement(x_work, 'playback', file='phrase:voicemail_fail_auth:#')
                     etree.SubElement(x_work, 'hangup')

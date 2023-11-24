@@ -53,6 +53,7 @@ from .followmehandler import FollowMeHandler
 from .testhandler import TestHandler
 from .recordingshandler import RecordingsHandler
 from .conferencehandler import ConferenceHandler
+from .agentstatushandler import AgentStatusHandler
 
 
 class HttApiSessionViewSet(viewsets.ModelViewSet):
@@ -137,4 +138,9 @@ def conference(request):
         httapihf = ConferenceHandler(post, True, True, files)
     else:
         httapihf = ConferenceHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def agentstatus(request):
+    httapihf = AgentStatusHandler(request.POST)
     return processhttapi(request, httapihf)

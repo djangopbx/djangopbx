@@ -1,0 +1,16 @@
+{% extends 'admin/change_list.html' %}
+{% load i18n static %}
+{% block content %}
+    {% if cl.has_filters %}
+        {% for spec in cl.filter_specs %}
+            {% if spec.title == 'Domain' %}
+                {% if spec.value %}
+                    <p><b>{% translate 'Be careful' %}</b><br>
+                    {% translate 'When editing a record that does not belong to your currently selected domain,' %}<br>
+                    {% translate 'foreign keys may be missing from validation lists.  Check before saving!' %}</p>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{{ block.super }}
+{% endblock %}
