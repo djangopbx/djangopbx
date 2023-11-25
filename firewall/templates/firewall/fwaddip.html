@@ -8,7 +8,7 @@
             <i class="fa fa-key"></i> {% translate 'Add IP Address to Firewall' %}
         </div>
         <div class="card-body cardbody1">
-            <div class="container p-3 my-3 border">
+            <div class="container p-3 my-3 border" style="background-color: #fcfcfc;">
             <h6>{% translate 'Add to Block list (Bans unconditionally)' %}</h6>
             <form action="{% url 'fwaddip' %}" method="post">
                 {% csrf_token %}
@@ -34,7 +34,7 @@
             </form>
             </div>
 
-            <div class="container p-3 my-3 border">
+            <div class="container p-3 my-3 border" style="background-color: #fcfcfc;">
             <h6>{% translate 'Add to White list (Only Our Trusted Addresses)' %}</h6>
             <form action="{% url 'fwaddip' %}" method="post">
                 {% csrf_token %}
@@ -60,7 +60,7 @@
             </form>
             </div>
 
-            <div class="container p-3 my-3 border">
+            <div class="container p-3 my-3 border" style="background-color: #fcfcfc;">
             <h6>{% translate 'Add to SIP Customer list (Trusted Customer Addresses)' %}</h6>
             <form action="{% url 'fwaddip' %}" method="post">
                 {% csrf_token %}
@@ -86,7 +86,7 @@
             </form>
             </div>
 
-            <div class="container p-3 my-3 border">
+            <div class="container p-3 my-3 border" style="background-color: #fcfcfc;">
             <h6>{% translate 'Add to SIP Gateway list (Only Supplier Gateways)' %}</h6>
             <form action="{% url 'fwaddip' %}" method="post">
                 {% csrf_token %}

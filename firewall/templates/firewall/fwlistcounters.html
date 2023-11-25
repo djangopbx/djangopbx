@@ -11,19 +11,21 @@
             </div>
         </div>
         <div class="card-body cardbody1">
-        <table class="pbxtable">
+        <div class="table-container table-responsive">
+
+        <table class="pbxformtable">
         <tr>
             <th><u>Counter</u></th><th><u>Packets</u></th><th><u>Bytes</u></th>
         </tr>
         {% for counter in counters %}
-            <tr>
+            <tr class="{% cycle 'odd' 'even' %}">
                 <td>{{ counter|get_item_humanize:'name' }}</td>
                 <td>{{ counter|get_item_humanize:'packets' }}</td>
                 <td>{{ counter|get_item_humanize:'bytes' }}</td>
             </tr>
         {% endfor %}
         </table>
-
+        </div>
         </div>
     </div>
 

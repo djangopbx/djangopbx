@@ -159,6 +159,10 @@ CSS for log in screen
     transition: background-color 0.2s;
 }
 
+tr.nobttm {
+    border-bottom: none !important;
+}
+
 nav.navbar {
     background-color: #e0e0e0;
     padding: .2rem 1rem;
@@ -273,6 +277,9 @@ table.pbxformtable tr.even {
     background-color: white;
 }
 
+table.pbxformtable tr {
+    background-color: white;
+}
 
 .table-borderless th {
     border: 0;

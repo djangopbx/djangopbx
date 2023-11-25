@@ -13,16 +13,26 @@
         <div class="card-body cardbody1">
             <div class="row">
             <div class="col-lg-6">
-                <h6><u>{{ title }} - IPv4</u></h6>
-                {% for ip in ipv4 %}
-                    {{ ip|ip_prefix }} <br>
-                {% endfor %}
+                <div class="table-container table-responsive">
+                <table width="60%" class="pbxformtable">
+                    <tr><th>{{ title }} - IPv4</th></tr>
+                    {% for ip in ipv4 %}
+                    <tr class="{% cycle 'odd' 'even' %}">
+                        <td>{{ ip|ip_prefix }}</td>
+                    {% endfor %}
+                </table>
+                </div>
             </div>
             <div class="col-lg-6">
-                <h6><u>{{ title }} - IPv6</u></h6>
-                {% for ip in ipv6 %}
-                    {{ ip|ip_prefix }} <br>
-                {% endfor %}
+                <div class="table-container table-responsive">
+                <table width="80%" class="pbxformtable">
+                    <tr><th>{{ title }} - IPv6</th></tr>
+                    {% for ip in ipv6 %}
+                    <tr class="{% cycle 'odd' 'even' %}">
+                        <td>{{ ip|ip_prefix }}</td>
+                    {% endfor %}
+                </table>
+                </div>
             </div>
             </div>
         </div>
