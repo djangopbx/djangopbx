@@ -127,7 +127,7 @@ class IvrMenusResource(resources.ModelResource):
 class IvrMenusAdmin(ImportExportModelAdmin):
     resource_class = IvrMenusResource
     form = IvrMenusAdminForm
-    change_form_template = "ivrmenus/ivrmenu_changeform.html"
+    change_form_template = "admin_genhtml_changeform.html"
     save_as = True
 
     class Media:

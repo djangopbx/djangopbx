@@ -139,7 +139,7 @@ class RingGroupResource(resources.ModelResource):
 class RingGroupAdmin(ImportExportModelAdmin):
     resource_class = RingGroupResource
     form = RingGroupAdminForm
-    change_form_template = "ringgroups/ringgroup_changeform.html"
+    change_form_template = "admin_genhtml_changeform.html"
     save_as = True
 
     class Media:

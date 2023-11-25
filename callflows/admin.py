@@ -68,7 +68,7 @@ class CallFlowsResource(resources.ModelResource):
 class CallFlowsAdmin(ImportExportModelAdmin):
     resource_class = CallFlowsResource
     form = CallFlowsAdminForm
-    change_form_template = "callflows/callflow_changeform.html"
+    change_form_template = "admin_genhtml_changeform.html"
     save_as = True
 
     class Media:

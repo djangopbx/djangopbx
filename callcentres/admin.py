@@ -166,7 +166,7 @@ class CallCentreAgentsAdmin(ImportExportModelAdmin):
     resource_class = CallCentreAgentsResource
     form = CallCentreAgentsAdminForm
     save_as = True
-    change_list_template = "callcentres/cc_agent_changelist.html"
+    change_list_template = "admin_changelist.html"
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['name', 'agent_id']
     fieldsets = [
@@ -308,7 +308,7 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
     resource_class = CallCentreQueuesResource
     form = CallCentreQueuesAdminForm
     save_as = True
-    change_form_template = "callcentres/cc_queue_changeform.html"
+    change_form_template = "admin_genhtml_changeform.html"
     class Media:
         css = {
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline

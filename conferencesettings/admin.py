@@ -297,7 +297,7 @@ class ConferenceCentresResource(resources.ModelResource):
 class ConferenceCentresAdmin(ImportExportModelAdmin):
     resource_class = ConferenceCentresResource
     form = ConferenceCentresAdminForm
-    change_form_template = "conferencesettings/conferencesettings_changeform.html"
+    change_form_template = "admin_genhtml_changeform.html"
     save_as = True
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
