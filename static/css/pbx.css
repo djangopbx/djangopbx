@@ -159,6 +159,20 @@ CSS for log in screen
     transition: background-color 0.2s;
 }
 
+.dash-card-head {
+    background-color: #fafafa;
+    color: #555555;
+    text-align: center;
+    margin-bottom: 0px;
+    padding: 0 0 0 0;
+
+}
+
+.dash-card-head h1{
+    font-size: 48pt;
+    text-shadow: 3px 3px 3px grey;
+}
+
 tr.nobttm {
     border-bottom: none !important;
 }

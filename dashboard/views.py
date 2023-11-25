@@ -28,11 +28,15 @@
 #
 
 from django.shortcuts import render
+from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaulttags import register
+from django.conf import settings
+from django.utils import timezone
 
-from datetime import timedelta
+import datetime
 import platform
 import distro
 import os
@@ -40,6 +44,17 @@ import multiprocessing
 import psutil
 from psutil._common import bytes2human
 import time
+from pbx.fseventsocket import EventSocket
+
+from tenants.models import Domain, Profile
+from provision.models import Devices
+from accounts.models import Extension, Gateway
+from dialplans.models import Dialplan
+from callcentres.models import CallCentreQueues
+from ivrmenus.models import IvrMenus
+from ringgroups.models import RingGroup
+from voicemail.models import Voicemail
+from xmlcdr.models import XmlCdr
 
 
 @register.filter
@@ -149,7 +164,7 @@ class OsDashboard():
         try:
             with open('/proc/uptime', 'r') as f:
                 uptime_seconds = float(f.readline().split()[0])
-                uptime_time = str(timedelta(seconds=uptime_seconds))
+                uptime_time = str(datetime.timedelta(seconds=uptime_seconds))
                 data = uptime_time.split('.', 1)[0]
 
         except Exception as err:
@@ -243,11 +258,183 @@ class OsDashboard():
             data = str(err)
         return data
 
+class SwDashboard():
+    s = 0.001
+    esconnected = False
+    sw_counts = {}
+    sw_live = {}
+    sw_status = []
+    sw_status_title = ''
+
+    def __init__(self):
+        self.es = EventSocket()
+        if self.es.connect(*settings.EVSKT):
+            self.esconnected = True
+        self.get_config_counts()
+        self.get_sw_status()
+        self.get_live_counts()
+
+    def get_live_counts(self):
+        if not self.esconnected:
+            return
+        result = self.es.send('api show calls count')
+        time.sleep(self.s)
+        if result:
+            self.sw_live['Calls'] = {'c': result.replace(' total.', '')}
+        result = self.es.send('api show channels count')
+        time.sleep(self.s)
+        if result:
+            self.sw_live['Channels'] = {'c': result.replace(' total.', '')}
+        result = self.es.send('api show registrations count')
+        time.sleep(self.s)
+        if result:
+            self.sw_live['Registrations'] = {'c': result.replace(' total.', '')}
+
+
+    def get_config_counts(self):
+        self.sw_counts['Destinations'] = {}
+        self.sw_counts['Destinations']['t'] = Dialplan.objects.filter(category='Inbound route').count()
+        self.sw_counts['Destinations']['e'] = Dialplan.objects.filter(category='Inbound route', enabled='true').count()
+        self.sw_counts['Devices'] = {}
+        self.sw_counts['Devices']['t'] = Devices.objects.all().count()
+        self.sw_counts['Devices']['e'] = Devices.objects.filter(enabled='true').count()
+        self.sw_counts['Domains'] = {}
+        self.sw_counts['Domains']['t'] = Domain.objects.all().count()
+        self.sw_counts['Domains']['e'] = Domain.objects.filter(enabled='true').count()
+        self.sw_counts['Extensions'] = {}
+        self.sw_counts['Extensions']['t'] = Extension.objects.all().count()
+        self.sw_counts['Extensions']['e'] = Extension.objects.filter(enabled='true').count()
+        self.sw_counts['Gateways'] = {}
+        self.sw_counts['Gateways']['t'] = Gateway.objects.all().count()
+        self.sw_counts['Gateways']['e'] = Gateway.objects.filter(enabled='true').count()
+        self.sw_counts['Users'] = {}
+        self.sw_counts['Users']['t'] = Profile.objects.all().count()
+        self.sw_counts['Users']['e'] = Profile.objects.filter(enabled='true').count()
+        self.sw_counts['CC Queues'] = {}
+        self.sw_counts['CC Queues']['t'] = CallCentreQueues.objects.all().count()
+        self.sw_counts['CC Queues']['e'] = CallCentreQueues.objects.filter(enabled='true').count()
+        self.sw_counts['IVR Menus'] = {}
+        self.sw_counts['IVR Menus']['t'] = IvrMenus.objects.all().count()
+        self.sw_counts['IVR Menus']['e'] = IvrMenus.objects.filter(enabled='true').count()
+        self.sw_counts['Ring Groups'] = {}
+        self.sw_counts['Ring Groups']['t'] = RingGroup.objects.all().count()
+        self.sw_counts['Ring Groups']['e'] = RingGroup.objects.filter(enabled='true').count()
+        self.sw_counts['Voicemails'] = {}
+        self.sw_counts['Voicemails']['t'] = Voicemail.objects.all().count()
+        self.sw_counts['Voicemails']['e'] = Voicemail.objects.filter(enabled='true').count()
+
+    def get_sw_status(self):
+        self.sw_status = []
+        if self.esconnected:
+            result = self.es.send('api show status')
+            time.sleep(self.s)
+        if result:
+            lines = result.splitlines()
+            for line in lines:
+                if 'UP' in line:
+                    pts = line.split(',')
+                    self.sw_status.append('%s, %s, %s, %s, %s' % (pts[0].replace(' years', 'y'),
+                            pts[1].replace(' days', 'd'), pts[2].replace(' hours', 'h'),
+                            pts[3].replace(' minutes', 'm'), pts[4].replace(' seconds', 's')))
+                    self.sw_status_title = '%s:%s:%s:%s' % (pts[0].replace(' years', '').replace('UP ', ''),
+                            pts[1].replace(' days', ''), pts[2].replace(' hours', ''),
+                            pts[3].replace(' minutes', ''))
+                    self.sw_status_title = self.sw_status_title.replace(' ', '')
+                else:
+                    self.sw_status.append(line)
+
+
+class UsrDashboard():
+    s = 0.001
+    esconnected = False
+    c_dict = {}
+    c_count = 0
+    missed = {}
+    missed_count = 0
+    recent = {}
+    recent_count = 0
+    vm = {}
+    vm_count = 0
+
+    call_dir = {
+                'inbound': '<i class=\"fa fa-arrow-circle-down\"></i>',
+                'outbound': '<i class=\"fa fa-arrow-circle-up\"></i>',
+                'local': '<i class=\"fa fa-arrow-circle-right\"></i>'
+                }
+
+    def __init__(self, request):
+        self.request = request
+        self.es = EventSocket()
+        self.extnuuids = self.request.session['extension_list_uuid'].split(',')
+        self.extns = self.request.session['extension_list'].split(',')
+        self.time_24_hours_ago = timezone.now() - timezone.timedelta(1)
+        if self.es.connect(*settings.EVSKT):
+            self.esconnected = True
+        self.get_recent_calls()
+        self.get_missed_calls()
+        self.get_voicemails()
+
+    def get_recent_calls(self):
+        qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'],
+            extension_id__in=self.extnuuids, end_stamp__gte=self.time_24_hours_ago,
+            hangup_cause='NORMAL_CLEARING').order_by('-start_stamp', 'extension_id')
+        self.get_calls(qs)
+        self.recent_count = self.c_count
+        self.recent = self.c_dict
+
+    def get_missed_calls(self):
+        qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'],
+            extension_id__in=self.extnuuids, end_stamp__gte=self.time_24_hours_ago).exclude(
+            hangup_cause='NORMAL_CLEARING').order_by('-start_stamp', 'extension_id')
+        self.get_calls(qs)
+        self.missed_count = self.c_count
+        self.missed = self.c_dict
+
+    def get_calls(self, qs):
+        self.c_dict = {}
+        count = 0
+        for q in qs:
+            count += 1
+            if count > 24:
+                continue
+            self.c_dict[str(q.id)] = {}
+            self.c_dict[str(q.id)]['dir'] = self.call_dir[q.direction]
+            self.c_dict[str(q.id)]['dest'] = q.caller_destination
+            self.c_dict[str(q.id)]['time'] = q.start_stamp.strftime('%m/%d %H:%M')
+        self.c_count = count
+
+    def get_voicemails(self):
+        info = {}
+        count = 0
+        for e in self.extns:
+            info[e] = {}
+            info[e]['count'] = 0
+            vmstr = self.es.send('api vm_list %s@%s' % (e, self.request.session['domain_name']))
+            if '-ERR no reply' in vmstr:
+                info[e]['msg'] = _('No Voicemail Messages')
+            else:
+                count += 1
+                vmlist = vmstr.split('\n')
+                for vm in vmlist:
+                    parts = vm.split(':')
+                    info[e]['count'] += 1
+        self.vm = info
+        self.vm_count = count
+
 
 @staff_member_required
 def osdashboard(request):
-
-    # uptime = get_uptime()
     dash = OsDashboard()
-    # print(dash.get_cpus())
     return render(request, 'dashboard/osdashboard.html', {'d': dash})
+
+
+@staff_member_required
+def swdashboard(request):
+    dash = SwDashboard()
+    return render(request, 'dashboard/swdashboard.html', {'d': dash})
+
+
+@login_required
+def usrdashboard(request):
+    dash = UsrDashboard(request)
+    return render(request, 'dashboard/usrdashboard.html', {'d': dash})

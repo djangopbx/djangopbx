@@ -1,0 +1,79 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+{% load custom_template_tag %}
+
+    {% block content %}
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 100%;">
+            <div class="card-header">
+                <i class="fa fa-server"></i> {% translate 'Configuration Statistics' %}
+            </div>
+            <div class="card-body cardbody1">
+                <div class="dash-card-head">
+                    <h1>{{ d.sw_counts.Domains.e }}</h1>
+                    <h6>{% translate 'Active Domains' %}</h6>
+                </div>
+                <div class="table-container table-responsive">
+                <table width="100%" class="pbxformtable">
+                    <tr><th>{% translate 'Item' %}</th><th>{% translate 'Enabled' %}</th><th>{% translate 'Total' %}</th></tr>
+                {% for key, value in d.sw_counts.items %}
+                <tr class="{% cycle 'odd' 'even' %}"><td><b>{% translate key %}</b></td><td>{{ value.e }}</td><td>{{ value.t }}</td></tr>
+                {% endfor %}
+                </table>
+                </div>
+            </div>
+            </div>
+
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 100%;">
+            <div class="card-header">
+                <i class="fa fa-thermometer-half"></i> {% translate 'Switch Status' %}
+            </div>
+                <div class="card-body cardbody1">
+                <div class="dash-card-head">
+                    <h1>{{ d.sw_status_title }}</h1>
+                    <h6>{% translate 'Uptime' %}</h6>
+                </div>
+                <div class="table-container table-responsive">
+                <table width="100%" class="pbxformtable">
+                    <tr><th>{% translate 'Status' %}</th></tr>
+                {% for value in d.sw_status %}
+                <tr class="{% cycle 'odd' 'even' %}"><td>{% translate value %}</td></tr>
+                {% endfor %}
+                </table>
+                </div>
+
+            </div>
+            </div>
+
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 90%;">
+            <div class="card-header">
+                <i class="fa fa-random"></i> {% translate 'Traffic' %}
+            </div>
+            <div class="card-body cardbody1">
+                <div class="dash-card-head">
+                    <h1>{{ d.sw_live.Calls.c }}</h1>
+                    <h6>{% translate 'Active Calls' %}</h6>
+                </div>
+                <div class="table-container table-responsive">
+                <table width="100%" class="pbxformtable">
+                    <tr><th>{% translate 'Item' %}</th><th>{% translate 'Count' %}</th></tr>
+                {% for key, value in d.sw_live.items %}
+                <tr class="{% cycle 'odd' 'even' %}"><td><b>{% translate key %}</b></td><td>{{ value.c }}</td></tr>
+                {% endfor %}
+                </table>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    {% endblock %}
+

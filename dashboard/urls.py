@@ -32,4 +32,6 @@ from . import views
 
 urlpatterns = [
     path('osdashboard/', views.osdashboard, name='osdashboard'),
+    path('swdashboard/', views.swdashboard, name='swdashboard'),
+    path('usrdashboard/', views.usrdashboard, name='usrdashboard'),
 ]

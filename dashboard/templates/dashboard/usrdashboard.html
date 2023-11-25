@@ -1,0 +1,79 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+{% load custom_template_tag %}
+
+    {% block content %}
+    <div class="row" style="margin-bottom: 20px;">
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 100%;">
+            <div class="card-header">
+                <i class="fa fa-info"></i> {% translate 'Voicemails' %}
+            </div>
+            <div class="card-body cardbody1">
+                <div class="dash-card-head">
+                    <h1>{{ d.vm_count }}</h1>
+                    <h6>{% translate 'Messages' %}</h6>
+                </div>
+                <div class="table-container table-responsive">
+                <table width="100%" class="pbxformtable">
+                    <tr><th>{% translate 'Voicemail' %}</th><th width="20%">{% translate 'Messages' %}</th></tr>
+                {% for key, value in d.vm.items %}
+                <tr class="{% cycle 'odd' 'even' %}"><td><a hfef="voicemail/listvoicemails/">{{ key }}</a></td><td>{{ value.count }}</td></tr>
+                {% endfor %}
+                </table>
+                </div>
+            </div>
+            </div>
+
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 100%;">
+            <div class="card-header">
+                <i class="fa fa-eject"></i> {% translate 'Missed Calls' %}
+            </div>
+                <div class="card-body cardbody1">
+                <div class="dash-card-head">
+                    <h1>{{ d.missed_count }}</h1>
+                    <h6>{% translate 'Last 24 Hours' %}</h6>
+                </div>
+                <div class="table-container table-responsive">
+                <table width="100%" class="pbxformtable">
+                    <tr><th width="5%"></th><th>{% translate 'Number' %}</th><th width="20%">{% translate 'Date/Time' %}</th></tr>
+                {% for key, value in d.missed.items %}
+                <tr class="{% cycle 'odd' 'even' %}"><td>{{ value.dir|safe }}</td><td>{{ value.dest }}</td><td>{{ value.time }}</td></tr>
+                {% endfor %}
+                </table>
+                </div>
+
+            </div>
+            </div>
+
+        </div>
+        <div class="col-lg-4">
+            <div class="card" style="margin-left: 5%; width: 90%;">
+            <div class="card-header">
+                <i class="fas fa-exchange-alt"></i> {% translate 'Recent Calls' %}
+            </div>
+            <div class="card-body cardbody1">
+                <div class="dash-card-head">
+                    <h1>{{ d.recent_count }}</h1>
+                    <h6>{% translate 'Last 24 Hours' %}</h6>
+                </div>
+                <div class="table-container table-responsive">
+                <table width="100%" class="pbxformtable">
+                    <tr><th width="5%"></th><th>{% translate 'Number' %}</th><th width="20%">{% translate 'Date/Time' %}</th></tr>
+                {% for key, value in d.recent.items %}
+                <tr class="{% cycle 'odd' 'even' %}"><td>{{ value.dir|safe }}</td><td>{{ value.dest }}</td><td>{{ value.time }}</td></tr>
+                {% endfor %}
+                </table>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    {% endblock %}
+
