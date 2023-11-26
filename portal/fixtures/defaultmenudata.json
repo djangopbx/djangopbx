@@ -96,6 +96,25 @@
 },
 {
     "model": "portal.menuitem",
+    "pk": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": null,
+        "title": "Call Routing",
+        "link": "dropdown",
+        "icon": "fas fa-exchange-alt",
+        "category": "internal",
+        "protected": "true",
+        "sequence": "20000",
+        "description": "",
+        "created": "2022-11-30T09:58:15.586Z",
+        "updated": "2023-11-26T11:54:17.584Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitem",
     "pk": "acb1aac0-459f-4d52-acb3-f58ddc46bd3f",
     "fields": {
         "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",

@@ -30,7 +30,7 @@
 from django.contrib import admin
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from import_export.admin import ImportExportModelAdmin
+from import_export.admin import ImportExportModelAdmin, ExportActionModelAdmin
 from import_export import resources
 
 
@@ -80,7 +80,7 @@ class MenuItemResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
-class MenuItemAdmin(ImportExportModelAdmin):
+class MenuItemAdmin(ImportExportModelAdmin, ExportActionModelAdmin):
     resource_class = MenuItemResource
     save_as = True
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
