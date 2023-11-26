@@ -53,7 +53,7 @@
         <div class="col-lg-4">
             <div class="card" style="margin-left: 5%; width: 90%;">
             <div class="card-header">
-                <i class="fas fa-exchange-alt"></i> {% translate 'Recent Calls' %}
+                <i class="fa fa-phone"></i> {% translate 'Recent Calls' %}
             </div>
             <div class="card-body cardbody1">
                 <div class="dash-card-head">
@@ -76,10 +76,40 @@
 
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-lg-6">
+            <div class="card" style="margin-left: 5%; width: 90%;">
+            <div class="card-header">
+                <i class="fas fa-exchange-alt"></i> {% translate 'Call Routing' %}
+            </div>
+            <div class="card-body cardbody1">
+                <div class="table-container table-responsive">
+                <table width="100%" class="pbxformtable">
+                    <tr><th width="5%">{% translate 'Extension' %}</th><th width="5%">{% translate 'Call Forward' %}</th><th width="5%">{% translate 'Follow Me' %}</th><th width="5%">{% translate 'Do Not Disturb' %}</th><th width="5%">{% translate 'Description' %}</th></tr>
+                {% for key, value in d.callrouting.items %}
+                <tr class="{% cycle 'odd' 'even' %}"><td>{{ key|safe }}</td><td>{{ value.cf|safe }}</td><td>{{ value.fm|safe }}</td><td>{{ value.dnd|safe }}</td><td>{{ value.desc }}</td></tr>
+                {% endfor %}
+                </table>
+                </div>
+            </div>
+            </div>
 
         </div>
 
         <div class="col-lg-6">
+            <div class="card" style="margin-left: 5%; width: 90%;">
+            <div class="card-header">
+                <i class="fas fa-exchange-alt"></i> {% translate 'Ring Groups' %}
+            </div>
+            <div class="card-body cardbody1">
+                <div class="table-container table-responsive">
+                <table width="100%" class="pbxformtable">
+                    <tr><th width="5%">{% translate 'Number' %}</th><th width="5%">{% translate 'Name' %}</th><th width="5%">{% translate 'Extension' %}</th><th width="5%">{% translate 'Forwarding' %}</th></tr>
+                {% for key, value in d.ringgroup.items %}
+                <tr class="{% cycle 'odd' 'even' %}"><td>{{ key|safe }}</td><td>{{ value.name }}</td><td>{{ value.ext }}</td><td>{{ value.fwd|safe }}</td></tr>
+                {% endfor %}
+                </table>
+                </div>
+            </div>
+            </div>
 
         </div>
     </div>

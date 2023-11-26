@@ -356,11 +356,18 @@ class UsrDashboard():
     recent_count = 0
     vm = {}
     vm_count = 0
+    callrouting = {}
+    ringgroup = {}
 
     call_dir = {
                 'inbound': '<i class=\"fa fa-arrow-circle-down\"></i>',
                 'outbound': '<i class=\"fa fa-arrow-circle-up\"></i>',
                 'local': '<i class=\"fa fa-arrow-circle-right\"></i>'
+                }
+
+    cr_flags = {
+                'true': '<i class=\"fa fa-check\"></i>',
+                'false': '<i class=\"fa fa-times\"></i>',
                 }
 
     def __init__(self, request):
@@ -375,6 +382,8 @@ class UsrDashboard():
         self.get_recent_calls()
         self.get_missed_calls()
         self.get_voicemails()
+        self.get_call_routing()
+        self.get_ring_group()
 
     def get_recent_calls(self):
         qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'],
@@ -422,6 +431,24 @@ class UsrDashboard():
                     info[e]['count'] += 1
         self.vm = info
         self.vm_count = count
+
+    def get_call_routing(self):
+        self.callrouting = {}
+        extension_list = self.request.session['extension_list_uuid'].split(',')
+        clean_uuid4_list(extension_list)
+        if self.request.user.is_superuser:
+            qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'])
+        else:
+            qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'], extension_id__in=extension_list)
+        for q in qs:
+            self.callrouting[q.extension] = {}
+            self.callrouting[q.extension]['cf'] = self.cr_flags[q.forward_all_enabled]
+            self.callrouting[q.extension]['fm'] = self.cr_flags[q.follow_me_enabled]
+            self.callrouting[q.extension]['dnd'] = self.cr_flags[q.do_not_disturb]
+            self.callrouting[q.extension]['desc'] = q.description
+
+    def get_ring_group(self):
+        self.ringgroup = {}
 
 
 @staff_member_required

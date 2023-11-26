@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.urls import path
 from rest_framework import routers
 from . import views
 
@@ -37,4 +38,6 @@ router.register(r'gateways', views.GatewayViewSet)
 router.register(r'bridges', views.BridgeViewSet)
 
 urlpatterns = [
+    path('callrouting/', views.CallRoutingViewer.as_view(), name='callroutingviewer'),
+    path('callroutingedit/<pk>/', views.CallRoutingEdit.as_view(), name='callroutingedit'),
 ]

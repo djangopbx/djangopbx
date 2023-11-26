@@ -1,0 +1,39 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <i class="fas fa-exchange-alt"></i> {% translate 'Change Call Routing - Extention:' %} <b>{{ object.extension }}</b>
+        </div>
+        <div class="card-body cardbody1">
+            {% if request.user.is_superuser %}
+                <a href="/admin/accounts/extension/{{ form.instance.id }}/change/">{% translate 'Go to Extension in Admin:' %}</a>
+            {% endif %}
+            <div class="container-fluid p-3 my-3 border" style="background-color: #fcfcfc;">
+            <form action="{% url 'callroutingedit' form.instance.id %}" method="post">
+                {% csrf_token %}
+                {{ followme_formset.management_form }}
+                <table class="pbxformtable" style="border: none;">
+                {{ form.as_table }}
+                {% for form in followme_formset %}
+                    <tr style="border: none;"><th></th><td>
+                    {% for field in form %}
+                        {% if field.is_hidden %}
+                        {{ field }}
+                        {% else %}
+                        {{ field.label_tag }} {{ field }}
+                        {% endif %}
+                    {% endfor %}
+                    </td></tr>
+                {% endfor %}
+                </table>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-info btn-sm" value="{% translate 'Update Call Routing' %}">
+            </form>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
