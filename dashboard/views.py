@@ -395,7 +395,7 @@ class UsrDashboard():
     def get_missed_calls(self):
         qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'],
             extension_id__in=self.extnuuids, end_stamp__gte=self.time_24_hours_ago).exclude(
-            hangup_cause='NORMAL_CLEARING').order_by('-start_stamp', 'extension_id')
+            hangup_cause='NORMAL_CLEARING').exclude(direction='outbound').order_by('-start_stamp', 'extension_id')
         self.get_calls(qs)
         self.missed_count = self.c_count
         self.missed = self.c_dict
@@ -423,9 +423,9 @@ class UsrDashboard():
             if '-ERR no reply' in vmstr:
                 info[e]['msg'] = _('No Voicemail Messages')
             else:
-                count += 1
                 vmlist = vmstr.split('\n')
                 for vm in vmlist:
+                    count += 1
                     parts = vm.split(':')
                     info[e]['count'] += 1
         self.vm = info
@@ -441,10 +441,16 @@ def osdashboard(request):
 @staff_member_required
 def swdashboard(request):
     dash = SwDashboard()
-    return render(request, 'dashboard/swdashboard.html', {'d': dash})
+    if dash.esconnected:
+        return render(request, 'dashboard/swdashboard.html', {'d': dash})
+    else:
+        return render(request, 'error.html', {'back': '/portal/', 'info': {'Message': _('Unable to connect to the FreeSWITCH Event Socket')}, 'title': 'Event Socket Error'})
 
 
 @login_required
 def usrdashboard(request):
     dash = UsrDashboard(request)
-    return render(request, 'dashboard/usrdashboard.html', {'d': dash})
+    if dash.esconnected:
+        return render(request, 'dashboard/usrdashboard.html', {'d': dash})
+    else:
+        return render(request, 'error.html', {'back': '/portal/', 'info': {'Message': _('Unable to connect to the Event Socket')}, 'title': 'Event Socket Error'})
