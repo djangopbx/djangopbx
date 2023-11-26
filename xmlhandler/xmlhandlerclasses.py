@@ -29,6 +29,7 @@
 
 from django.core.cache import cache
 from lxml import etree
+from pbx.commonvalidators import valid_uuid4
 from django.db.models import Q
 from .xmlhandler import XmlHandler
 from dialplans.models import Dialplan
@@ -598,7 +599,7 @@ class DialplanHandler(XmlHandler):
 class LanguagesHandler(XmlHandler):
 
     def GetLanguage(self, lang, macro_name):
-        if not self.valid_uuid4(macro_name):
+        if not valid_uuid4(macro_name):
             return self.NotFoundXml()
 
         languages_cache_key = 'languages:%s:%s' % (lang, macro_name)

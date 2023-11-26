@@ -27,7 +27,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-import re
 from django.core.cache import cache
 from lxml import etree
 from tenants.pbxsettings import PbxSettings
@@ -131,7 +130,3 @@ class XmlHandler():
         cache.set(cache_key, cv)
         return cv
 
-    def valid_uuid4(self, uuid):
-        regex = re.compile('[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}', re.I)
-        match = regex.match(uuid)
-        return bool(match)

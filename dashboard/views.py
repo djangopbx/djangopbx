@@ -44,8 +44,8 @@ import multiprocessing
 import psutil
 from psutil._common import bytes2human
 import time
-import re
 from pbx.fseventsocket import EventSocket
+from pbx.commonvalidators import clean_uuid4_list
 
 from tenants.models import Domain, Profile
 from provision.models import Devices
@@ -367,9 +367,7 @@ class UsrDashboard():
         self.request = request
         self.es = EventSocket()
         self.extnuuids = self.request.session['extension_list_uuid'].split(',')
-        for uuid in self.extnuuids:
-            if not self.valid_uuid4(uuid):
-                self.extnuuids.remove(uuid)
+        clean_uuid4_list(self.extnuuids)
         self.extns = self.request.session['extension_list'].split(',')
         self.time_24_hours_ago = timezone.now() - timezone.timedelta(1)
         if self.es.connect(*settings.EVSKT):
@@ -377,12 +375,6 @@ class UsrDashboard():
         self.get_recent_calls()
         self.get_missed_calls()
         self.get_voicemails()
-
-    def valid_uuid4(self, uuid):
-        regex = re.compile('[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}', re.I)
-        match = regex.match(uuid)
-        return bool(match)
-
 
     def get_recent_calls(self):
         qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'],

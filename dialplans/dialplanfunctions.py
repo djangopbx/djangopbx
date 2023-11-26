@@ -42,7 +42,7 @@ from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension
 from switch.models import SwitchVariable
-
+from pbx.commonvalidators import valid_uuid4
 
 class DpFunctions():
 
@@ -87,11 +87,6 @@ class DpFunctions():
 
         # return the result
         return string
-
-    def valid_uuid4(self, uuid):
-        regex = re.compile('[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}', re.I)
-        match = regex.match(uuid)
-        return bool(match)
 
 
 class SwitchDp():
@@ -686,10 +681,10 @@ class SwitchDp():
         return dpd
 
     def dp_app_exists(self, dp_domain_uuid, dp_app_uuid):
-        if not DpFunctions().valid_uuid4(dp_app_uuid):
+        if not valid_uuid4(dp_app_uuid):
             return True  # Better to return True than create a dialplan with an invalid uuid
 
-        if DpFunctions().valid_uuid4(dp_domain_uuid):
+        if valid_uuid4(dp_domain_uuid):
             dpextist = dialplans.models.Dialplan.objects.filter(
                 (Q(domain_id=dp_domain_uuid) | Q(domain_id__isnull=True)),
                 app_id=dp_app_uuid
@@ -699,10 +694,10 @@ class SwitchDp():
         return dpextist
 
     def dp_app_remove(self, dp_domain_uuid, dp_app_uuid):
-        if not DpFunctions().valid_uuid4(dp_app_uuid):
+        if not valid_uuid4(dp_app_uuid):
             return False
 
-        if DpFunctions().valid_uuid4(dp_domain_uuid):  # do not remove global dialplans
+        if valid_uuid4(dp_domain_uuid):  # do not remove global dialplans
             dialplans.models.Dialplan.objects.filter(domain_id=dp_domain_uuid, app_id=dp_app_uuid).delete()
         else:
             return False

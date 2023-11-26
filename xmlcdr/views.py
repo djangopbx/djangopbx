@@ -45,7 +45,7 @@ from django_filters.views import FilterView
 import django_filters as filters
 
 from tenants.pbxsettings import PbxSettings
-
+from pbx.commonvalidators import clean_uuid4_list
 from pbx.restpermissions import (
     AdminApiAccessPermission
 )
@@ -159,6 +159,7 @@ class CdrViewer(tables.SingleTableMixin, FilterView):
 
     def get_queryset(self):
         extension_list = self.request.session['extension_list_uuid'].split(',')
+        clean_uuid4_list(extension_list)
         if self.request.user.is_superuser:
             qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'])
         else:
@@ -183,6 +184,7 @@ def selectcdr(request, cdruuid=None):
         cache.set(cache_key, switch_record_path)
 
     extension_list = request.session['extension_list_uuid'].split(',')
+    clean_uuid4_list(extension_list)
     info = {}
     if request.user.is_superuser:
         cdr = XmlCdr.objects.get(domain_id=request.session['domain_uuid'], id=cdruuid)
