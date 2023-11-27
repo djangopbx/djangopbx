@@ -27,9 +27,15 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.views.generic.edit import UpdateView
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django_tables2 import Table, SingleTableView, LazyPaginator
+from django.utils.html import format_html
 
 
 from pbx.restpermissions import (
@@ -83,3 +89,69 @@ class RingGroupUserViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+
+class RingGroupViewerList(Table):
+    class Meta:
+        model = RingGroup
+        attrs = {"class": "paleblue"}
+        fields = (
+            'name',
+            'extension',
+            'forward_enabled',
+            'forward_destination',
+            'description'
+            )
+        order_by = 'name'
+
+    def render_name(self, value, record):
+        return format_html('<a href=\"/ringgroups/fwdedit/{}/\">{}</a>', record.id, value)
+
+    def render_forward_enabled(self, value, record):
+        return format_html(self.checkbox_conversion(value))
+
+    def checkbox_conversion(self, value):
+        if value == 'True':
+            return '<i class=\"fa fa-check\"></i>'
+        else:
+            return '<i class=\"fa fa-times\"></i>'
+
+
+@method_decorator(login_required, name='dispatch')
+class RingGroupViewer(SingleTableView):
+    table_class = RingGroupViewerList
+    model = RingGroup
+    template_name = "ringgroups/group.html"
+    paginator_class = LazyPaginator
+
+    table_pagination = {
+        "per_page": 25
+    }
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            qs = RingGroup.objects.filter(domain_id=self.request.session['domain_uuid']).order_by('name')
+        else:
+            qs = RingGroup.objects.filter(domain_id=self.request.session['domain_uuid'],
+                ringgroupuser__user_uuid=self.request.session['user_uuid']).order_by('name')
+        return qs
+
+
+class FwdEdit(LoginRequiredMixin, UpdateView):
+    template_name = "ringgroups/fwd_edit.html"
+    model = RingGroup
+    fields = [
+            'forward_enabled',
+            'forward_destination',
+            ]
+    success_url = '/ringgroups/groups/'
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user.username
+        return super().form_valid(form)
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        for key, f in form.fields.items():
+            f.widget.attrs['class'] = 'form-control form-control-sm'
+        return form

@@ -437,11 +437,13 @@ class UsrDashboard():
         extension_list = self.request.session['extension_list_uuid'].split(',')
         clean_uuid4_list(extension_list)
         if self.request.user.is_superuser:
-            qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'])
+            qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid']).order_by('extension')[:10]
         else:
-            qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'], extension_id__in=extension_list)
+            qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'],
+                    extension_id__in=extension_list).order_by('extension')[:10]
         for q in qs:
             self.callrouting[q.extension] = {}
+            self.callrouting[q.extension]['id'] = str(q.id)
             self.callrouting[q.extension]['cf'] = self.cr_flags[q.forward_all_enabled]
             self.callrouting[q.extension]['fm'] = self.cr_flags[q.follow_me_enabled]
             self.callrouting[q.extension]['dnd'] = self.cr_flags[q.do_not_disturb]
@@ -449,6 +451,17 @@ class UsrDashboard():
 
     def get_ring_group(self):
         self.ringgroup = {}
+        if self.request.user.is_superuser:
+            qs = RingGroup.objects.filter(domain_id=self.request.session['domain_uuid']).order_by('extension')[:10]
+        else:
+            qs = RingGroup.objects.filter(domain_id=self.request.session['domain_uuid'],
+                        ringgroupuser__user_uuid=self.request.session['user_uuid']).order_by('extension')[:10]
+        for q in qs:
+            self.ringgroup[q.extension] = {}
+            self.ringgroup[q.extension]['id'] = str(q.id)
+            self.ringgroup[q.extension]['name'] = q.name
+            self.ringgroup[q.extension]['fwd'] = self.cr_flags[q.forward_enabled]
+            self.ringgroup[q.extension]['dest'] = (q.forward_destination if q.forward_destination else '')
 
 
 @staff_member_required

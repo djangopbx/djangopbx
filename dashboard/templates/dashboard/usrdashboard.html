@@ -77,15 +77,20 @@
     <div class="row" style="margin-bottom: 20px;">
         <div class="col-lg">
             <div class="card" style="margin: 0px 5px 0px 5px; width: 100%;">
-            <div class="card-header">
-                <i class="fas fa-exchange-alt"></i> {% translate 'Call Routing' %}
-            </div>
+             <div class="card-header">
+              <div class="row">
+               <div class="col-lg-6"><i class="fas fa-exchange-alt"></i> {% translate 'Call Routing' %}</div>
+               <div class="col-lg-6 text-right">
+                 <a href="/accounts/callrouting/" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Show All' %}"></a>
+               </div>
+              </div>
+             </div>
             <div class="card-body cardbody1">
                 <div class="table-container table-responsive">
                 <table width="100%" class="pbxformtable">
                     <tr><th width="5%">{% translate 'Extension' %}</th><th width="5%">{% translate 'Call Forward' %}</th><th width="5%">{% translate 'Follow Me' %}</th><th width="5%">{% translate 'Do Not Disturb' %}</th><th width="5%">{% translate 'Description' %}</th></tr>
                 {% for key, value in d.callrouting.items %}
-                <tr class="{% cycle 'odd' 'even' %}"><td>{{ key|safe }}</td><td>{{ value.cf|safe }}</td><td>{{ value.fm|safe }}</td><td>{{ value.dnd|safe }}</td><td>{{ value.desc }}</td></tr>
+                <tr class="{% cycle 'odd' 'even' %}"><td><a href="/accounts/callroutingedit/{{ value.id }}">{{ key }}</a></td><td>{{ value.cf|safe }}</td><td>{{ value.fm|safe }}</td><td>{{ value.dnd|safe }}</td><td>{{ value.desc }}</td></tr>
                 {% endfor %}
                 </table>
                 </div>
@@ -96,15 +101,20 @@
 
         <div class="col-lg">
             <div class="card" style="margin: 0px 5px 0px 5px; width: 100%;">
-            <div class="card-header">
-                <i class="fas fa-exchange-alt"></i> {% translate 'Ring Groups' %}
-            </div>
+             <div class="card-header">
+              <div class="row">
+               <div class="col-lg-6"><i class="fas fa-exchange-alt"></i> {% translate 'Ring Groups' %}</div>
+               <div class="col-lg-6 text-right">
+                 <a href="/ringgroups/groups/" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Show All' %}"></a>
+               </div>
+              </div>
+             </div>
             <div class="card-body cardbody1">
                 <div class="table-container table-responsive">
                 <table width="100%" class="pbxformtable">
-                    <tr><th width="5%">{% translate 'Number' %}</th><th width="5%">{% translate 'Name' %}</th><th width="5%">{% translate 'Extension' %}</th><th width="5%">{% translate 'Forwarding' %}</th></tr>
+                    <tr><th width="5%">{% translate 'Name' %}</th><th width="5%">{% translate 'Extension' %}</th><th width="5%">{% translate 'Forwarding' %}</th><th width="5%">{% translate 'Destination' %}</th></tr>
                 {% for key, value in d.ringgroup.items %}
-                <tr class="{% cycle 'odd' 'even' %}"><td>{{ key|safe }}</td><td>{{ value.name }}</td><td>{{ value.ext }}</td><td>{{ value.fwd|safe }}</td></tr>
+                <tr class="{% cycle 'odd' 'even' %}"><td><a href="/ringgroups/fwdedit/{{ value.id }}">{{ value.name }}</a></td><td>{{ key }}</td><td>{{ value.fwd|safe }}</td><td>{{ value.dest }}</td></tr>
                 {% endfor %}
                 </table>
                 </div>

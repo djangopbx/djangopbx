@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.urls import path
 from rest_framework import routers
 from . import views
 
@@ -36,4 +37,6 @@ router.register(r'ringgroupdestinations', views.RingGroupDestinationViewSet)
 router.register(r'ringgroupusers', views.RingGroupUserViewSet)
 
 urlpatterns = [
+    path('groups/', views.RingGroupViewer.as_view(), name='ringgroupviewer'),
+    path('fwdedit/<pk>/', views.FwdEdit.as_view(), name='fwdedit'),
 ]
