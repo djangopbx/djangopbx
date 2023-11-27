@@ -33,6 +33,7 @@ from django.http import HttpResponseRedirect
 from .models import (
     RingGroup, RingGroupDestination, RingGroupUser
 )
+from tenants.models import Profile
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
@@ -65,6 +66,11 @@ class RingGroupUserAdmin(ImportExportModelAdmin):
         'ring_group_id','user_uuid'
     ]
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user_uuid':
+            kwargs["queryset"] = Profile.objects.filter(domain_id=DomainUtils().domain_from_session(request))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         super().save_model(request, obj, form, change)
@@ -79,6 +85,11 @@ class RingGroupUserInLine(admin.TabularInline):
     ordering = [
         'user_uuid'
     ]
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user_uuid':
+            kwargs["queryset"] = Profile.objects.filter(domain_id=DomainUtils().domain_from_session(request))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class RingGroupDestinationResource(resources.ModelResource):
@@ -141,6 +152,7 @@ class RingGroupAdmin(ImportExportModelAdmin):
     form = RingGroupAdminForm
     change_form_template = "admin_genhtml_changeform.html"
     save_as = True
+    change_list_template = "admin_changelist.html"
 
     class Media:
         css = {

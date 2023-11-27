@@ -35,6 +35,7 @@ from django.contrib import messages
 from .models import (
     Extension, FollowMeDestination, ExtensionUser, Gateway, Bridge,
 )
+from tenants.models import Profile
 from voicemail.models import Voicemail
 from django.forms.widgets import Select
 from django.forms import ModelForm
@@ -87,6 +88,11 @@ class ExtensionUserAdmin(ImportExportModelAdmin):
 
     ordering = ['user_uuid']
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user_uuid':
+            kwargs["queryset"] = Profile.objects.filter(domain_id=DomainUtils().domain_from_session(request))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         super().save_model(request, obj, form, change)
@@ -100,6 +106,11 @@ class ExtensionUserInLine(admin.TabularInline):
         (None,          {'fields': ['user_uuid', 'default_user',]}),
     ]
     ordering = ['user_uuid']
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user_uuid':
+            kwargs["queryset"] = Profile.objects.filter(domain_id=DomainUtils().domain_from_session(request))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class FollowMeDestinationResource(resources.ModelResource):
@@ -157,6 +168,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
     form = ExtensionAdminForm
     save_on_top = True
     save_as = True
+    change_list_template = "admin_changelist.html"
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = [
