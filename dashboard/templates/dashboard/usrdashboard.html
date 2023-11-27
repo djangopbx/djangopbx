@@ -75,6 +75,7 @@
     </div>
 
     <div class="row" style="margin-bottom: 20px;">
+        {% if d.callrouting_visible %}
         <div class="col-lg">
             <div class="card" style="margin: 0px 5px 0px 5px; width: 100%;">
              <div class="card-header">
@@ -96,9 +97,9 @@
                 </div>
             </div>
             </div>
-
         </div>
-
+        {% endif %}
+        {% if d.ringgroup_visible %}
         <div class="col-lg">
             <div class="card" style="margin: 0px 5px 0px 5px; width: 100%;">
              <div class="card-header">
@@ -120,8 +121,8 @@
                 </div>
             </div>
             </div>
-
         </div>
+        {% endif %}
     </div>
 
     {% endblock %}

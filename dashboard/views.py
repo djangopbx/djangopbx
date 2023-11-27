@@ -358,6 +358,8 @@ class UsrDashboard():
     vm_count = 0
     callrouting = {}
     ringgroup = {}
+    callrouting_visible = False
+    ringgroup_visible = False
 
     call_dir = {
                 'inbound': '<i class=\"fa fa-arrow-circle-down\"></i>',
@@ -384,6 +386,7 @@ class UsrDashboard():
         self.get_voicemails()
         self.get_call_routing()
         self.get_ring_group()
+        self.groupList = list(request.user.groups.values_list('name', flat=True))
 
     def get_recent_calls(self):
         qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'],
@@ -437,10 +440,13 @@ class UsrDashboard():
         extension_list = self.request.session['extension_list_uuid'].split(',')
         clean_uuid4_list(extension_list)
         if self.request.user.is_superuser:
+            self.callrouting_visible = True
             qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid']).order_by('extension')[:10]
         else:
             qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'],
                     extension_id__in=extension_list).order_by('extension')[:10]
+            if 'call_routing' in self.groupList:
+                self.callrouting_visible = True
         for q in qs:
             self.callrouting[q.extension] = {}
             self.callrouting[q.extension]['id'] = str(q.id)
@@ -452,10 +458,13 @@ class UsrDashboard():
     def get_ring_group(self):
         self.ringgroup = {}
         if self.request.user.is_superuser:
+            self.ringgroup_visible = True
             qs = RingGroup.objects.filter(domain_id=self.request.session['domain_uuid']).order_by('extension')[:10]
         else:
             qs = RingGroup.objects.filter(domain_id=self.request.session['domain_uuid'],
                         ringgroupuser__user_uuid=self.request.session['user_uuid']).order_by('extension')[:10]
+            if 'ringgroup_fwd' in self.groupList:
+                self.ringgroup_visible = True
         for q in qs:
             self.ringgroup[q.extension] = {}
             self.ringgroup[q.extension]['id'] = str(q.id)

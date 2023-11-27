@@ -198,5 +198,12 @@
     "name": "minor_admin_api",
     "permissions": []
   }
-}
+},
+{
+  "model": "auth.group",
+  "pk": 26,
+  "fields": {
+    "name": "call_routing",
+    "permissions": []
+  }
 ]
