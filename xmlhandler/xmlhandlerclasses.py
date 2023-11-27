@@ -114,7 +114,7 @@ class DirectoryHandler(XmlHandler):
         etree.SubElement(x_params, "param", name='password', value=e.password)
         etree.SubElement(x_params, "param", name='vm-enabled', value=vm_enabled)
         if flag_vm_enabled:
-            etree.SubElement(x_params, "param", name='vm-password', value=v.password)
+            etree.SubElement(x_params, "param", name='vm-password', value=(v.password if v.password else ''))
 
             if v.mail_to:
                 etree.SubElement(x_params, "param", name='vm-email-all-messages', value=vm_enabled)
