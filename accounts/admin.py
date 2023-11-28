@@ -258,7 +258,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
             super().save_model(request, obj, form, change)
         else:
             obj.domain_id = DomainUtils().domain_from_session(request)
-            obj.context = request.session['domain_name']
+            obj.user_context = request.session['domain_name']
             super().save_model(request, obj, form, change)
             Voicemail.objects.create(
                 extension_id=obj,
