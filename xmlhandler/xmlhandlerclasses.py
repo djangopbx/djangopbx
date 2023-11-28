@@ -136,8 +136,9 @@ class DirectoryHandler(XmlHandler):
         etree.SubElement(x_variables, "variable", name='domain_name', value=domain)
         etree.SubElement(x_variables, "variable", name='extension_uuid', value=str(e.id))
         if eu:
-            etree.SubElement(x_variables, "variable", name='user_uuid', value=str(eu.user_uuid.user_uuid))
-            etree.SubElement(x_variables, "variable", name='user_name', value=str(eu.user_uuid))
+            if eu.user_uuid:
+                etree.SubElement(x_variables, "variable", name='user_uuid', value=str(eu.user_uuid.user_uuid))
+                etree.SubElement(x_variables, "variable", name='user_name', value=str(eu.user_uuid))
 
         etree.SubElement(x_variables, "variable", name='call_timeout', value=str(e.call_timeout))
         etree.SubElement(x_variables, "variable", name='caller_id_name', value=e.extension)
