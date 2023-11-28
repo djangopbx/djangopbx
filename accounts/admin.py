@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from time import sleep
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
@@ -44,7 +45,7 @@ from import_export import resources
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from musiconhold.musiconholdfunctions import MohSource
 from switch.switchfunctions import SipProfileChoice
-from .accountfunctions import AccountFunctions
+from .accountfunctions import AccountFunctions, GatewayFunctions
 
 
 class ExtensionAdminForm(ModelForm):
@@ -273,7 +274,7 @@ class GatewayResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
-@admin.action(permissions=['change'], description='Write gateway.conf.xml file')
+@admin.action(permissions=['change'], description=_('Write static gateway.conf.xml file'))
 def write_gateway_file(modeladmin, request, queryset):
     rc = 0
     for obj in queryset:
@@ -288,6 +289,36 @@ def write_gateway_file(modeladmin, request, queryset):
         messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
     if r == -3:
         messages.add_message(request, messages.WARN, _('Error writing to file.'))
+
+
+@admin.action(permissions=['change'], description=_('Reload gateway profile'))
+def rescan_sofia_profile(modeladmin, request, queryset):
+    rc = 0
+    current_profile = ''
+    for obj in queryset:
+        if not current_profile == obj.profile:
+            current_profile = obj.profile
+            r = GatewayFunctions().rescan_sofia_profile(obj.profile)
+            if r > 0:
+                rc += r
+    if rc > 0:
+        messages.add_message(request, messages.INFO, _('%s gateway profil(s) rescanned.' % rc))
+    if r == -1:
+        messages.add_message(request, messages.WARN, _('Event Socket Error'))
+
+
+@admin.action(permissions=['change'], description=_('Stop gateway'))
+def sofia_stop_gateway(modeladmin, request, queryset):
+    rc = 0
+    for obj in queryset:
+        r = GatewayFunctions().sofia_stop_gateway(obj.profile, str(obj.id))
+        sleep(0.1)
+        if r > 0:
+            rc += r
+    if rc > 0:
+        messages.add_message(request, messages.INFO, _('%s gateway(s) stopped.' % rc))
+    if r == -1:
+        messages.add_message(request, messages.WARN, _('Event Socket Error'))
 
 
 class GatewayAdmin(ImportExportModelAdmin):
@@ -339,13 +370,24 @@ class GatewayAdmin(ImportExportModelAdmin):
     )
 
     ordering = ['gateway']
-    actions = [write_gateway_file]
+    actions = [write_gateway_file, rescan_sofia_profile, sofia_stop_gateway]
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
+
+    def delete_model(self, request, obj):
+        GatewayFunctions().sofia_stop_gateway(obj.profile, str(obj.id))
+        super().delete_model(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            GatewayFunctions().sofia_stop_gateway(obj.profile, str(obj.id))
+            sleep(0.1)
+        super().delete_queryset(request, queryset)
+
 
 
 class BridgeResource(resources.ModelResource):

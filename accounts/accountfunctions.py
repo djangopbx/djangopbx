@@ -29,10 +29,13 @@
 
 import os
 import uuid
+from django.core.cache import cache
 from django.db.models import CharField, Value as V
 from django.db.models.functions import Concat
 from lxml import etree
+from pbx.fseventsocket import EventSocket
 from .models import Gateway, Bridge, ExtensionUser
+from django.conf import settings
 from tenants.pbxsettings import PbxSettings
 
 
@@ -198,3 +201,28 @@ class AccountFunctions():
             return 1
         else:
             return -1
+
+
+class GatewayFunctions():
+    esconnected = False
+    configuration_cache_key = 'configuration:sofia.conf'
+
+    def __init__(self):
+        self.es = EventSocket()
+        if self.es.connect(*settings.EVSKT):
+            self.esconnected = True
+
+    def rescan_sofia_profile(self, profile):
+        cache.delete(self.configuration_cache_key)
+        cmd = 'api sofia profile %s rescan' % profile
+        result = self.es.send(cmd)
+        if '-ERR' in result:
+            return -1
+        return 1
+
+    def sofia_stop_gateway(self, profile, gateway_id):
+        cmd = 'api sofia profile %s killgw %s' % (profile, gateway_id)
+        result = self.es.send(cmd)
+        if '-ERR' in result:
+            return -1
+        return 1
