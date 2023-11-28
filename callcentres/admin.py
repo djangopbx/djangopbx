@@ -35,6 +35,7 @@ from django.http import HttpResponseRedirect
 from .models import (
     CallCentreAgents, CallCentreQueues, CallCentreTiers, get_agent_contact
 )
+from dialplans.models import Dialplan
 from tenants.models import Profile
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
@@ -377,7 +378,7 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
-        self.fire_fs_queue_events(obj, change, delete=False)
+        self.fire_fs_queue_events(obj, change, False)
 
     def response_change(self, request, obj):
         if "_generate-xml" in request.POST:
@@ -387,6 +388,21 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
             self.message_user(request, "XML Generated")
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
+
+    def delete_model(self, request, obj):
+        if obj.dialplan_id:
+            Dialplan.objects.get(pk=obj.dialplan_id).delete()
+            self.fire_fs_tier_events(obj, True, True)
+            self.fire_fs_queue_events(obj, True, True)
+        super().delete_model(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            if obj.dialplan_id:
+                Dialplan.objects.get(pk=obj.dialplan_id).delete()
+                self.fire_fs_tier_events(obj, True, True)
+                self.fire_fs_queue_events(obj, True, True)
+        super().delete_queryset(request, queryset)
 
     def fire_fs_tier_events(self, obj, change, delete=False):
         ret = True

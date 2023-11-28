@@ -37,6 +37,7 @@ from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
     ConferenceRoomUser, ConferenceRooms, ConferenceCentres, ConferenceSessions,
 )
+from dialplans.models import Dialplan
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
@@ -334,6 +335,17 @@ class ConferenceCentresAdmin(ImportExportModelAdmin):
             self.message_user(request, "XML Generated")
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
+
+    def delete_model(self, request, obj):
+        if obj.dialplan_id:
+            Dialplan.objects.get(pk=obj.dialplan_id).delete()
+        super().delete_model(request, obj)
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            if obj.dialplan_id:
+                Dialplan.objects.get(pk=obj.dialplan_id).delete()
+        super().delete_queryset(request, queryset)
 
 
 class ConferenceSessionsAdmin(admin.ModelAdmin):
