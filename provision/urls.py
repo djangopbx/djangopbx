@@ -46,6 +46,7 @@ router.register(r'devicesettings', views.DeviceSettingsViewSet)
 
 urlpatterns = [
     re_path(r'^device_config/(?P<mac>[A-Fa-f0-9]{12})\.(xml|cfg)$', views.device_config, name='deviceconfig'),
+    re_path(r'^device_config/(?P<macboot>[A-Fa-f0-9]{12})\.boot$', views.device_config, name='deviceconfig'),
     re_path(r'^device_config/(?P<file>y[0-9]{12}\.cfg)$', views.device_config, name='deviceconfig'),
     re_path(r'^device_config/(?P<file>y0{12}\.boot)$', views.device_config, name='deviceconfig'),
 ]

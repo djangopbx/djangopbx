@@ -206,19 +206,23 @@ def chk_prov_auth(request, host, pbxs):
     if not domain:
         return (False, HttpResponseNotFound())
 
-    http_auth_enabled = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_enabled', 'boolean')[0]
-    if not http_auth_enabled:
+    http_auth_enabled = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_enabled', 'boolean', 'false', True)[0]
+    if http_auth_enabled == 'false':
         return (False, HttpResponseNotFound())
 
     if not http_auth_enabled == 'true':
         return (False, HttpResponseNotFound())
 
-    http_usr = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_username')[0]
-    if not http_usr:
+    http_usr = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_username')
+    if http_usr:
+        http_usr = http_usr[0]
+    else:
         return (False, HttpResponseNotFound())
 
-    http_pwd = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_password')[0]
-    if not http_pwd:
+    http_pwd = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_password')
+    if http_pwd:
+        http_pwd = http_pwd[0]
+    else:
         return (False, HttpResponseNotFound())
 
     if 'HTTP_AUTHORIZATION' in request.META:
@@ -261,6 +265,10 @@ def device_config(request, *args, **kwargs):
 
     if 'mac' in kwargs:
         mac = kwargs['mac']
+
+    if 'macboot' in kwargs:
+        cfgfile = 'y000000000000.boot'
+
 # Hard coded MAC for testing revove!!!!!!!!!!!!
 #    mac = '001565a6699b'
     if not mac:
@@ -296,7 +304,7 @@ def device_config(request, *args, **kwargs):
     expansion_5_keys = pf.device_keys(device, 'expansion-5')
     expansion_6_keys = pf.device_keys(device, 'expansion-6')
 
-    prov_defs = {'domain_name': device.domain_id}
+    prov_defs = {'domain_name': device.domain_id, 'mac': mac.replace(':', '')}
     prov_defs = pbxs.default_provision_settings(prov_defs)
     prov_defs = pbxs.domain_provision_settings(prov_defs, device.domain_id)
     if device.user_id:

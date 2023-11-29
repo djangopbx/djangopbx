@@ -386,6 +386,8 @@ class DevicesAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
+        if ':' not in obj.mac_address:
+            obj.mac_address = ':'.join(obj.mac_address.upper()[i:i+2] for i in range(0,12,2))
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
