@@ -85,7 +85,7 @@ class CommonDestAction():
             v = e.voicemail.filter(enabled='true').first()
             if v:
                 v_list.append(
-                    ('transfer%s99%s XML %s' % (sep, e.extension, e.domain_id), '%s(VM) %s' % (
+                    ('transfer%s*99%s XML %s' % (sep, e.extension, e.domain_id), '%s(VM) %s' % (
                         e.extension, (v.description if v.description else 'Voicemail %s' % e.extension))))
         if opt & 1 == 1:
             d_list = []

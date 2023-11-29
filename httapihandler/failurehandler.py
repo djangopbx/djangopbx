@@ -51,7 +51,6 @@ class FailureHandler(HttApiHandler):
         self.var_list.extend(self.domain_var_list)
 
     def get_data(self):
-        no_work = True
         if self.exiting:
             return self.return_data('Ok\n')
 
@@ -78,7 +77,6 @@ class FailureHandler(HttApiHandler):
                     if forward_busy_enabled:
                         if forward_busy_enabled == 'true':
                             forward_busy_destination = self.qdict.get('forward_busy_destination')
-                            no_work = False
                             if forward_busy_destination:
                                 etree.SubElement(
                                     x_work, 'execute', application='set',
@@ -94,15 +92,12 @@ class FailureHandler(HttApiHandler):
                                 x_log = etree.SubElement(x_work, 'log', level='NOTICE')
                                 x_log.text = 'forwarding on busy with empty destination: hangup(USER_BUSY)'
                                 etree.SubElement(x_work, 'hangup', cause='USER_BUSY')
-            if no_work:
-                etree.SubElement(x_work, 'hangup', cause='USER_BUSY')
 
         elif originate_disposition == 'NO_ANSWER':
             forward_no_answer_enabled = self.qdict.get('forward_no_answer_enabled')
             if forward_no_answer_enabled:
                 if forward_no_answer_enabled == 'true':
                     forward_no_answer_destination = self.qdict.get('forward_no_answer_destination')
-                    no_work = False
                     if forward_no_answer_destination:
                         x_log = etree.SubElement(x_work, 'log', level='NOTICE')
                         x_log.text = 'forwarding on no answer to: %s' % forward_no_answer_destination
@@ -114,8 +109,6 @@ class FailureHandler(HttApiHandler):
                         x_log = etree.SubElement(x_work, 'log', level='NOTICE')
                         x_log.text = 'forwarding on no answer with empty destination: hangup(NO_ANSWER)'
                         etree.SubElement(x_work, 'hangup', cause='NO_ANSWER')
-            if no_work:
-                etree.SubElement(x_work, 'hangup', cause='NO_ANSWER')
 
         elif originate_disposition == 'USER_NOT_REGISTERED':
             forward_user_not_registered_enabled = self.qdict.get('forward_user_not_registered_enabled')
@@ -124,7 +117,6 @@ class FailureHandler(HttApiHandler):
                     forward_user_not_registered_destination = self.qdict.get(
                         'forward_user_not_registered_destination'
                         )
-                    no_work = False
                     if forward_user_not_registered_destination:
                         x_log = etree.SubElement(x_work, 'log', level='NOTICE')
                         x_log.text = 'forwarding on not registerd to: %s' % forward_user_not_registered_destination
@@ -136,22 +128,15 @@ class FailureHandler(HttApiHandler):
                         x_log = etree.SubElement(x_work, 'log', level='NOTICE')
                         x_log.text = 'forwarding on user not registered with empty destination: hangup(NO_ANSWER)'
                         etree.SubElement(x_work, 'hangup', cause='NO_ANSWER')
-            if no_work:
-                etree.SubElement(x_work, 'hangup', cause='NO_ANSWER')
 
         elif originate_disposition == 'SUBSCRIBER_ABSENT':
-            no_work = False
             x_log = etree.SubElement(x_work, 'log', level='NOTICE')
             x_log.text = 'subscriber absent: %s' % dialed_extension
             etree.SubElement(x_work, 'hangup', cause='UNALLOCATED_NUMBER')
 
         elif originate_disposition == 'CALL_REJECTED':
-            no_work = False
             x_log = etree.SubElement(x_work, 'log', level='NOTICE')
             x_log.text = 'call rejected'
-            etree.SubElement(x_work, 'hangup')
-
-        if no_work:
             etree.SubElement(x_work, 'hangup')
 
         etree.indent(x_root)
