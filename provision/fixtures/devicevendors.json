@@ -1,0 +1,15 @@
+[
+{
+    "model": "provision.devicevendors",
+    "pk": "30ae187d-6c83-4a59-87bb-7d50be4b7cc4",
+    "fields": {
+        "name": "yealink",
+        "enabled": "true",
+        "description": null,
+        "created": "2023-04-28T16:35:55.745Z",
+        "updated": "2023-04-29T17:16:39.590Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]
