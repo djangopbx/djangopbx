@@ -1,36 +1,15 @@
 DjangoPBX
 --------------------------------------
-DjangoPBX - A full-featured domain based multi-tenant PBX driven by Django and FreeSWITCH.
+DjangoPBX - A full-featured domain based multi-tenant PBX driven by [Django](https://www.djangoproject.com/) and [FreeSWITCH™](https://freeswitch.com).
 
-The objective of this project is to provide a GUI wrap around FreeSWITCH using Django and the 
-Python language and also code all the support scripts in Python (freeswitch-mod-python3) to 
-provide a platform that is easy to learn and code owing to it's use of just one programming language.
+The objective of this project is to provide a GUI wrap around FreeSWITCH™ using Django and the
+Python language. To minimise the number of .lua support scripts by utilising the FreeSWITCH modules
+mod_xml_curl and mod_httapi, and also provide a platform that is easy to learn and code owing to
+it's use of just one programming language.
 
 DjangoPBX basically does two things.  
 1. It provides a portal for end users and device configuration.
 2. It generates FreeSITCH configuration from the data you provide in the Admin interface.
-
-FreeSWITCH configuration can be delivered in 3 ways: dynamically with mod-xml_curl
-```xml
-<configuration name="xml_curl.conf" description="cURL XML Gateway">
-  <bindings>
-    <binding name="example">
-      <param name="gateway-url" value="http://127.0.0.1/xmlhandler/" bindings="dialplan|directory"/>
-    </binding>
-  </bindings>
-</configuration>
-
-```
-or
-semi-statically using wget (dialplan example):
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<include>
-    <X-PRE-PROCESS cmd="exec" data="wget -qO - http://127.0.0.1/xmlhandler/dialplan.xml" />
-</include>
-```
-or
-statically by writing out the XML files to the filing system.
 
 ## Key features
 * Simple, straight forward and un-complicated.
@@ -40,5 +19,25 @@ statically by writing out the XML files to the filing system.
 * Easily extended by adding new application modules.
 * Full REST API provided by the Django REST Framework.
 
+From an ITSP or end user perspective DjangoPBX provides all the facilities of a modern call handling platform.
+Telephony features include:
+
+- Multi Tenancy
+- Device Provisioning
+- Voicemail
+- Messages and notifications by email
+- Call Centres
+- Conference Centres
+- Music on Hold
+- Call Parking
+- Dynamic Call Routing
+- Ring Groups
+- IVR Menus
+- Find Me / Follow Me
+- Ability to directly edit XML in the Web UI
+
 ## Under development
-The code in this repository is not yet ready for download or testing.
+This code has entered a stage of Alpha Testing.
+Several test deployments have been made and testing is underway.
+
+Installation has been scripted at [djangopbx-install.sh](https://github.com/djangopbx/djangopbx-install.sh)
