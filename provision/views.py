@@ -29,6 +29,7 @@
 
 import base64
 import re
+from django.utils import timezone
 #import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
@@ -196,6 +197,7 @@ class DeviceSettingsViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+ipf = IpFunctions()
 
 def chk_prov_auth(request, host, pbxs):
     realm = host
@@ -236,9 +238,9 @@ def chk_prov_auth(request, host, pbxs):
                     return (True, domain)
                 else:
                     meta = request.META
-                    ip = IpFunctions().get_client_ip(meta)
+                    ip = ipf.get_client_ip(meta)
                     if ip:
-                        IpFunctions().update_web_fail_ip(ip, uname)
+                        ipf.update_web_fail_ip(ip, uname)
 
     response = HttpResponse()
     response.status_code = 401
@@ -315,6 +317,10 @@ def device_config(request, *args, **kwargs):
 
     prov_defs = pf.device_settings(prov_defs)
 
+    device.provisioned_date = timezone.now()
+    device.provisioned_method = request.scheme
+    device.provisioned_ip = ipf.get_client_ip(request.META)
+    device.save()
 
     # Set Content type
     contype = 'text/plain'
