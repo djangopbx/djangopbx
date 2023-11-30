@@ -103,9 +103,16 @@ def line_reassemble(l,l1):
                 l = l.replace('dpbx-%s' % str(i), '{%% %s %s %%}' % (l1[i][0], l1[i][1]))
             else:
                 l = l.replace('dpbx-%s' % str(i), '{%% %s %%}' % l1[i][0])
-    l = l.replace('/app/provision/?file=', '/provision/')
+    l = l.replace('/app/provision/?file=', '/provision/device_config/')
+    l = l.replace('/provision/device_config/directory.xml&contacts=users', '/provision/device_config/contacts/users/directory.xml')
+    l = l.replace('/provision/device_config/directory.xml&contacts=groups', '/provision/device_config/contacts/groups/directory.xml')
+    l = l.replace('/provision/device_config/directory.xml&contacts=extensions', '/provision/device_config/contacts/extensions/directory.xml')
     l = l.replace('{{ mac }}', '{{ prov_defs.mac }}')
     l = l.replace('&&', 'and').replace('||', 'or')
+    l = l.replace('smarty.get.contacts == \"users\" and ', '')
+    l = l.replace('smarty.get.contacts == \"groups\" and ', '')
+    l = l.replace('smarty.get.contacts == \"extensions\" and ', '')
+    l = l.replace('smarty.get.contacts == \"all\"', 'row.category == \"all\"')
     return l
 
 def file_action(op, f):

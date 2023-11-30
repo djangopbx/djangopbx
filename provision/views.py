@@ -48,6 +48,9 @@ from .models import (
     DeviceVendors, DeviceVendorFunctions, DeviceVendorFunctionGroups, DeviceProfiles,
     DeviceProfileSettings, DeviceProfileKeys, Devices, DeviceLines, DeviceKeys, DeviceSettings
 )
+from accounts.models import Extension
+from contacts.models import Contact
+
 from .serializers import (
     DeviceVendorsSerializer, DeviceVendorFunctionsSerializer, DeviceVendorFunctionGroupsSerializer,
     DeviceProfilesSerializer, DeviceProfileSettingsSerializer, DeviceProfileKeysSerializer,
@@ -249,6 +252,7 @@ def chk_prov_auth(request, host, pbxs):
 
 def device_config(request, *args, **kwargs):
     mac = None
+    contacts = []
     host = request.META['HTTP_HOST']
     if ':' in host:
         host = host.split(':')[0]
@@ -292,6 +296,44 @@ def device_config(request, *args, **kwargs):
 
     if not device:
         return HttpResponseNotFound()
+
+    if 'contacts' in kwargs:
+        contact_type = kwargs['contacts']
+        if contact_type == 'users' or contact_type == 'groups':
+            if not device.user_id:
+                return HttpResponseNotFound()
+            if  contact_type == 'users':
+                qs = Contact.objects.filter(domain_id=device.domain_id, user_id=device.user_id, enabled='true')
+            else:
+                qs = Contact.objects.filter(domain_id=device.domain_id,
+                    contactgroup__group_id__in=device.user_id.user.groups.all(), enabled='true')
+            for q in qs:
+                c_dict = {}
+                c_dict['category'] = contact_type
+                org = q.contactorg_set.first()
+                if org:
+                    c_dict['contact_organization'] = org.organisation_name
+                c_dict['contact_name_given'] = q.given_name
+                c_dict['contact_name_family'] = q.family_name
+                c_dict['numbers'] = []
+                ns = q.contacttel_set.all()
+                for n in ns:
+                    n_dict = {}
+                    c_dict['phone_number'] = n.number
+                    c_dict['numbers'].append(c_dict)
+                contacts.append(c_dict)
+        elif contact_type == 'extensions':
+            qs = Extension.objects.filter(domain_id=device.domain_id, enabled='true')
+            for q in qs:
+                c_dict = {}
+                c_dict['category'] = contact_type
+                c_dict['effective_caller_id_name'] = q.effective_caller_id_name
+                c_dict['phone_number'] = q.effective_caller_id_number
+                c_dict['phone_extension'] = q.extension
+                contacts.append(c_dict)
+        else:
+            return HttpResponseNotFound()
+
 
     # Get default settings, domain settings, then user settings, then device settings, lines and keys
     prov_lines = DeviceLines.objects.filter(enabled='true', device_id=device).order_by('line_number')
@@ -345,7 +387,8 @@ def device_config(request, *args, **kwargs):
             'expansion_3_keys': expansion_3_keys,
             'expansion_4_keys': expansion_4_keys,
             'expansion_5_keys': expansion_5_keys,
-            'expansion_6_keys': expansion_6_keys
+            'expansion_6_keys': expansion_6_keys,
+            'contacts': contacts
             }, 'application/octet-stream',
             200, 'uft-8', 'django', h_dict
             )
@@ -367,7 +410,8 @@ def device_config(request, *args, **kwargs):
             'expansion_3_keys': expansion_3_keys,
             'expansion_4_keys': expansion_4_keys,
             'expansion_5_keys': expansion_5_keys,
-            'expansion_6_keys': expansion_6_keys
+            'expansion_6_keys': expansion_6_keys,
+            'contacts': contacts
             }, contype
             )
 

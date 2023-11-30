@@ -1,6 +1,6 @@
 <YealinkIPPhoneDirectory>
 {% for row in contacts %}
-{% if smarty.get.contacts == "users" and row.category == "users" %}
+{% if row.category == "users" %}
 <DirectoryEntry>
 {% if row.contact_organization and row.contact_name_given and row.contact_name_family %}
 	<Name>{{ row.contact_organization }}, {{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
@@ -23,7 +23,7 @@
 {% endif %}
 {% endfor %}
 </DirectoryEntry>
-{% elif smarty.get.contacts == "groups" and row.category == "groups" %}
+{% elif row.category == "groups" %}
 <DirectoryEntry>
 {% if row.contact_organization and row.contact_name_given and row.contact_name_family %}
 	<Name>{{ row.contact_organization }}, {{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
@@ -46,7 +46,7 @@
 {% endif %}
 {% endfor %}
 </DirectoryEntry>
-{% elif smarty.get.contacts == "extensions" and row.category == "extensions" %}
+{% elif row.category == "extensions" %}
 <DirectoryEntry>
 {% if row.contact_name_given %}
 	<Name>{{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
@@ -59,7 +59,7 @@
 	<Telephone>{{ row.phone_extension }}</Telephone>
 {% endif %}
 </DirectoryEntry>
-{% elif smarty.get.contacts == "all" %}
+{% elif row.category == "all" %}
 <DirectoryEntry>
 {% if row.contact_organization and row.contact_name_given and row.contact_name_family %}
 	<Name>{{ row.contact_organization }}, {{ row.contact_name_given }} {{ row.contact_name_family }}</Name>

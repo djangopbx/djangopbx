@@ -49,4 +49,7 @@ urlpatterns = [
     re_path(r'^device_config/(?P<macboot>[A-Fa-f0-9]{12})\.boot$', views.device_config, name='deviceconfig'),
     re_path(r'^device_config/(?P<file>y[0-9]{12}\.cfg)$', views.device_config, name='deviceconfig'),
     re_path(r'^device_config/(?P<file>y0{12}\.boot)$', views.device_config, name='deviceconfig'),
+    re_path(r'^device_config/contacts/(?P<contacts>(users|groups|extensions))/(?P<file>directory\.xml)$', views.device_config, name='deviceconfig'),
+    re_path(r'^device_config/(?P<file>favorite_setting\.(xml|cfg))$', views.device_config, name='deviceconfig'),
+    re_path(r'^device_config/(?P<file>super_search\.(xml|cfg))$', views.device_config, name='deviceconfig'),
 ]
