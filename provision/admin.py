@@ -34,13 +34,12 @@ from .models import (
     DeviceProfiles, DeviceProfileSettings, DeviceProfileKeys,
     Devices, DeviceLines, DeviceKeys, DeviceSettings,
     DeviceVendorFunctionChoice)
-
+from tenants.models import Profile
 from .forms import DeviceForm, DeviceLinesForm, DeviceKeysForm
 
 from django.conf import settings
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from .provisionfunctions import ProvisionFunctions
 
@@ -210,7 +209,7 @@ class DeviceProfilesAdmin(ImportExportModelAdmin):
         'domain_id', 'name'
     ]
     #inlines = [DeviceProfileKeysInLine, DeviceProfileSettingsInLine]
-    # Only show inlines once the device record has been created, then we know who othe vendor is...
+    # Only show inlines once the device record has been created, then we know who the vendor is...
     def get_inlines(self, request, obj=None):
         if obj:
             return (DeviceProfileKeysInLine, DeviceProfileSettingsInLine)
@@ -364,16 +363,22 @@ class DevicesAdmin(ImportExportModelAdmin):
     ]
     list_display = ('mac_address', 'label', 'template', 'profile_id', 'enabled', 'provisioned_date', 'provisioned_method', 'provisioned_ip', 'description')
     list_filter = (DomainFilter, 'vendor', 'template', 'enabled')
+
     ordering = [
         'domain_id', 'label', 'mac_address'
     ]
     #inlines = [DeviceLinesInLine, DeviceKeysInLine, DeviceSettingsInLine]
-    # Only show inlines once the device record has been created, then we know who othe vendor is...
+    # Only show inlines once the device record has been created, then we know who the vendor is...
     def get_inlines(self, request, obj=None):
         if obj:
             return (DeviceLinesInLine, DeviceKeysInLine, DeviceSettingsInLine)
         else:
             return ()
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'user_id':
+            kwargs["queryset"] = Profile.objects.filter(domain_id=DomainUtils().domain_from_session(request))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
