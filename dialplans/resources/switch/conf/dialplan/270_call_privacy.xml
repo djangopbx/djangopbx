@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="call_privacy" number="*67[d+]" continue="false" app_uuid="eb478e66-f637-4ae7-b1eb-9a7b87a1bd9e" order="270">
+	<extension name="call_privacy" number="*67[d+]" continue="false" app_uuid="45df6b20-68ca-4aa6-9590-67a0f25a0dc0" order="270">
 		<condition field="destination_number" expression="^\*67(\d+)$">
 			<action application="privacy" data="full"/>
 			<action application="set" data="sip_h_Privacy=id"/>

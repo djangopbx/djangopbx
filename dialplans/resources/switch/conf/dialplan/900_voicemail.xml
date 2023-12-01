@@ -1,5 +1,5 @@
 <context name="${domain_name}">
-	<extension name="voicemail" number="[ext]" continue="false" app_uuid="e3c14f2f-7697-4b5d-9c62-2443c0e22bf2" global="true" order="900">
+	<extension name="voicemail" number="[ext]" continue="false" app_uuid="4e6a1039-6d66-4625-8005-0f287607342a" global="true" order="900">
 		<condition field="${user_exists}" expression="true">
 			<action application="answer"/>
 			<action application="sleep" data="1000"/>

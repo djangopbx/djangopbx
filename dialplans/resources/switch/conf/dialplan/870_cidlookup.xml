@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="cidlookup" number="" continue="true" app_uuid="a0cb498c-6e09-441f-83ea-a7684565c44e" enabled="false" order="870">
+	<extension name="cidlookup" number="" continue="true" app_uuid="a7ee6fff-a1a6-49a6-9098-6a946146c36f" enabled="false" order="870">
 		<condition field="${user_exists}" expression="^true$" break="never"/>
 		<condition field="${call_direction}" expression="^inbound$" break="never"/>
 		<condition field="${module_exists(mod_cidlookup)}" expression="^true$" break="never"/>

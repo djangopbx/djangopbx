@@ -1,5 +1,5 @@
 <context name="{v_context}">
-	<extension name="call_block" number="" continue="true" app_uuid="9dd4f155-18e3-4bfe-8304-8f19e9facf16" enabled="false" order="26">
+	<extension name="call_block" number="" continue="true" app_uuid="b7d39de4-e585-4302-adb9-e812321a6a3b" enabled="false" order="26">
 		<condition field="${call_direction}" expression="^inbound$" >
 			<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/callblock/}"/>
 		</condition>

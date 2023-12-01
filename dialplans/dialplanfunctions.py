@@ -568,6 +568,7 @@ class SwitchDp():
                     number=dp_number,
                     destination='false',
                     context=dp_context,
+                    category='Default',
                     dp_continue=xml_dp_continue,
                     sequence=dp_order,
                     enabled=dp_enabled,
@@ -698,7 +699,8 @@ class SwitchDp():
             return False
 
         if valid_uuid4(dp_domain_uuid):  # do not remove global dialplans
-            dialplans.models.Dialplan.objects.filter(domain_id=dp_domain_uuid, app_id=dp_app_uuid).delete()
+            dialplans.models.Dialplan.objects.filter(domain_id=dp_domain_uuid,
+                    category='Default', app_id=dp_app_uuid).delete()
         else:
             return False
         return True
@@ -716,6 +718,8 @@ class DpApps():
 
     def get_dp_apps_choices(self):
         dp_category_choices = [
+            ('Default',  _('Default')),
+            ('Default Modified',  _('Default Modified')),
             ('Outbound route',  _('Outbound route')),
             ('Inbound route',   _('Inbound route')),
             ('Time condition',  _('Time condition')),
