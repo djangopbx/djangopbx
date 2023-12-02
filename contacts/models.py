@@ -100,6 +100,7 @@ class ContactTel(models.Model):
     contact_id   = models.ForeignKey('Contact', on_delete=models.CASCADE, verbose_name=_('Contact'))                                                                                            # noqa: E501, E221
     tel_type     = models.CharField(max_length=32, choices=TelTypeChoice.choices, default=TelTypeChoice.CWORK, verbose_name=_('Type of Phone Number'), help_text=_('for example WORK or HOME')) # noqa: E501, E221
     number       = models.CharField(max_length=128, verbose_name=_('Number'))                                                                                                                   # noqa: E501, E221
+    speed_dial   = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Speed Dial'))                                                                                         # noqa: E501, E221
     created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                                                    # noqa: E501, E221
     updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                                        # noqa: E501, E221
     synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                                                  # noqa: E501, E221

@@ -49,7 +49,7 @@ class ContactTelAdmin(ImportExportModelAdmin):
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['tel_type', 'number']
     fieldsets = [
-        (None,  {'fields': ['contact_id', 'tel_type', 'number']}),
+        (None,  {'fields': ['contact_id', 'tel_type', 'number', 'speed_dial']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('tel_type', 'number')
@@ -67,7 +67,7 @@ class ContactTelInLine(admin.TabularInline):
     model = ContactTel
     extra = 1
     fieldsets = [
-        (None,          {'fields': ['tel_type', 'number']}),
+        (None,          {'fields': ['tel_type', 'number', 'speed_dial']}),
     ]
     ordering = [
         'number'
@@ -378,7 +378,7 @@ class ContactAdmin(ImportExportModelAdmin):
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
         }
 
-    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    readonly_fields = ['fn', 'created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['fn', 'family_name', 'given_name', 'nickname']
     fieldsets = [
         (None,  {'fields': ['domain_id', 'user_id', 'fn', 'family_name', 'given_name', 'additional_name',
@@ -414,6 +414,14 @@ class ContactAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
+        obj.fn = '%s %s %s %s %s' % (
+            obj.honorific_prefix if obj.honorific_prefix else '',
+            obj.given_name if obj.given_name else '',
+            obj.additional_name if obj.additional_name else '',
+            obj.family_name if obj.family_name else '',
+            obj.honorific_suffix if obj.honorific_suffix else '',
+                                )
+        obj.fn = obj.fn.replace('  ', ' ').strip()
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
