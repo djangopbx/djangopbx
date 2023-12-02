@@ -45,7 +45,7 @@ from import_export import resources
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from musiconhold.musiconholdfunctions import MohSource
 from switch.switchfunctions import SipProfileChoice
-from .accountfunctions import AccountFunctions, GatewayFunctions
+from .accountfunctions import AccountFunctions, GatewayFunctions, ExtRelatedFunctions
 
 
 class ExtensionAdminForm(ModelForm):
@@ -158,6 +158,30 @@ class ExtensionResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
+@admin.action(permissions=['change'], description=_('Create User for selected extensions'))
+def create_user_for_extension(modeladmin, request, queryset):
+    rc = 0
+    extrf = ExtRelatedFunctions()
+    for obj in queryset:
+        r = extrf.create_user(obj, request)
+        if r > 0:
+            rc += r
+    if rc > 0:
+        messages.add_message(request, messages.INFO, _('%s user(s) created.' % rc))
+
+
+@admin.action(permissions=['change'], description=_('Create Device for selected extensions'))
+def create_device_for_extension(modeladmin, request, queryset):
+    rc = 0
+    extrf = ExtRelatedFunctions()
+    for obj in queryset:
+        r = extrf.create_device(obj, request)
+        if r > 0:
+            rc += r
+    if rc > 0:
+        messages.add_message(request, messages.INFO, _('%s device(s) created.' % rc))
+
+
 class ExtensionAdmin(ImportExportModelAdmin):
     resource_class = ExtensionResource
 
@@ -240,6 +264,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
     )
 
     ordering = ['extension']
+    actions = [create_user_for_extension, create_device_for_extension]
     inlines = [ExtensionUserInLine, FollowMeDestinationInLine]
 
     def save_formset(self, request, form, formset, change):

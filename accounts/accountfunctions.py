@@ -35,6 +35,8 @@ from django.db.models.functions import Concat
 from lxml import etree
 from pbx.fseventsocket import EventSocket
 from .models import Gateway, Bridge, ExtensionUser
+from provision.models import Devices, DeviceLines
+from django.contrib.auth.models import User, Group
 from django.conf import settings
 from tenants.pbxsettings import PbxSettings
 
@@ -226,3 +228,57 @@ class GatewayFunctions():
         if '-ERR' in result:
             return -1
         return 1
+
+
+class ExtRelatedFunctions():
+
+    def create_user(self, obj, request):
+        ret = 0
+        username = '%s@%s' % (obj.extension, obj.domain_id.name)
+        if not User.objects.filter(username=username).exists():
+            user = User.objects.create_user(username, username, obj.password)
+            user.first_name = obj.effective_caller_id_name.replace (' ', '-')
+            user.last_name = obj.effective_caller_id_number
+            user.save()
+            ret = 1
+            user_group = Group.objects.get(name='user')
+            if user_group:
+                user_group.user_set.add(user)
+            user.profile.domain_id = obj.domain_id
+            user.profile.username = username
+            user.profile.enabled = 'true'
+            user.profile.updated_by = request.user.username
+            user.profile.save()
+            ExtensionUser.objects.create(
+                extension_id = obj,
+                user_uuid = user.profile,
+                updated_by = request.user.username
+            )
+        return ret
+
+    def create_device(self, obj, request):
+        ret = 0
+        user = None
+        mac = ':'.join(str(uuid.uuid4())[24:].upper()[i:i+2] for i in range(0,12,2))
+        if not Devices.objects.filter(domain_id=obj.domain_id_id, label=obj.extension).exists():
+            extuser = obj.extensionuser.filter(default_user='true').first()
+            ret = 1
+            if extuser:
+                user = extuser.user_uuid
+            device = Devices.objects.create(
+                domain_id=obj.domain_id,
+                user_id=user,
+                mac_address=mac,
+                label=obj.extension,
+                updated_by=request.user.username
+            )
+        DeviceLines.objects.create(
+                device_id=device,
+                line_number=1,
+                server_address=obj.domain_id,
+                display_name=obj.extension,
+                user_id=obj.extension,
+                auth_id=obj.extension,
+                password=obj.password
+        )
+        return ret

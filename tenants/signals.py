@@ -28,11 +28,14 @@
 #
 
 from .models import Profile
-
+from django.contrib.auth.models import Group
 
 def create_or_edit_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+        user_group = Group.objects.get(name='user')
+        if user_group:
+            user_group.user_set.add(instance)
 
     try:
         instance.profile.username = instance.username
