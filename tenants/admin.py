@@ -29,10 +29,12 @@
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.template.response import TemplateResponse
 
 from .models import (
     Profile, ProfileSetting, Domain, DomainSetting, DefaultSetting,
 )
+from .forms import CopySettingsToDomainForm
 from import_export.admin import (
     ExportActionModelAdmin, ImportExportModelAdmin,
     ImportExportMixin, ExportMixin
@@ -51,6 +53,7 @@ from django.contrib.auth.admin import UserAdmin, GroupAdmin
 
 from dialplans.dialplanfunctions import SwitchDp
 from pbx.commonfunctions import DomainFilter, DomainUtils
+from django.contrib import messages
 
 
 class UserResource(resources.ModelResource):
@@ -331,6 +334,51 @@ class DefaultSettingResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
+@admin.action(permissions=['change'], description=_('Copy selected to domain...'))
+def copy_settings_to_domain(modeladmin, request, queryset):
+    title = _("Copy settings?")
+    opts = modeladmin.model._meta
+    app_label = opts.app_label
+    if 'apply' in request.POST:
+        c = 0
+        if not request.POST['domain']:
+            return None
+        d = Domain.objects.get(pk=request.POST['domain'])
+        dss = request.POST.getlist('_selected_action')
+        qs = DefaultSetting.objects.filter(id__in=dss)
+        for q in qs:
+            if DomainSetting.objects.filter(domain_id=d.id, category=q.category,
+                subcategory=q.subcategory, enabled='true').exists():
+                continue
+            c += 1
+            DomainSetting.objects.create(
+                domain_id = d,
+                category=q.category,
+                subcategory=q.subcategory,
+                value_type=q.value_type,
+                value=q.value,
+                sequence=q.sequence,
+                enabled='true',
+                description=q.description,
+                updated_by=request.user.username
+            )
+        modeladmin.message_user(
+            request,
+            _('Successfully copied %s settings' % str(c)),
+            messages.SUCCESS
+        )
+        # Return None to display the change list page again.
+        return None
+    form = CopySettingsToDomainForm(initial={'_selected_action': queryset.values_list('pk', flat=True)})
+    request.current_app = modeladmin.admin_site.name
+    return TemplateResponse(
+        request,
+        "admin/copy_settings_to_domain.html",
+        {**modeladmin.admin_site.each_context(request), 'title': title,
+        'items': queryset, 'form': form, 'opts': opts, 'media': modeladmin.media}
+    )
+
+
 class DefaultSettingAdmin(ImportExportModelAdmin, ExportActionModelAdmin):
     resource_class = DefaultSettingResource
     save_as = True
@@ -344,6 +392,7 @@ class DefaultSettingAdmin(ImportExportModelAdmin, ExportActionModelAdmin):
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     ordering = ['category', 'subcategory', 'sequence']
+    actions = [copy_settings_to_domain]
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
