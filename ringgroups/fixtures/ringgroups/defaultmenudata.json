@@ -1,0 +1,47 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "be939b6f-fd81-4a08-a5a1-7e33cdb03d56",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "73ce309c-95ee-45fe-9e69-919b61a855f8",
+        "title": "Ring Groups",
+        "link": "/ringgroups/groups/",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "30710",
+        "description": "",
+        "created": "2023-12-03T17:42:00.985Z",
+        "updated": "2023-12-03T17:42:20.923Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitemgroup",
+    "pk": "70b054d7-e3a5-47b6-9676-50e80fea926a",
+    "fields": {
+        "menu_item_id": "be939b6f-fd81-4a08-a5a1-7e33cdb03d56",
+        "name": "ringgroup_adm",
+        "group_id": 16,
+        "created": "2023-12-03T17:42:00.989Z",
+        "updated": "2023-12-03T17:42:00.989Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitemgroup",
+    "pk": "9da4bbd8-d473-4015-afe9-fc0718743bea",
+    "fields": {
+        "menu_item_id": "be939b6f-fd81-4a08-a5a1-7e33cdb03d56",
+        "name": "ringgroup_fwd",
+        "group_id": 17,
+        "created": "2023-12-03T17:42:00.991Z",
+        "updated": "2023-12-03T17:42:00.991Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

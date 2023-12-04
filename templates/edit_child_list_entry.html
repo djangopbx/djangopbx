@@ -1,0 +1,29 @@
+{% load i18n static %}
+<div style="margin-top: 10px;"><span style="color: #500000;font-weight: bold;">{% translate title %}</span>
+<a class="float-right" href="{{ a_url }}" target="_self"><input type="button" style="margin-bottom: 5px;" class="btn btn-info btn-sm" value="{% translate 'Add' %}"></a></div>
+<table class="pbxformtable" style="border: none;" width="100%">
+{% for key1, value1 in data.items %}
+    <tr>
+    {% if forloop.first %}
+    {% for key2, value2 in value1.items %}
+        <th>{{ key2 }}</th>
+    {% endfor %}
+    <th></th>
+    </tr><tr>
+    {% endif %}
+    {% for key2, value2 in value1.items %}
+    {% if forloop.first %}
+        <td style="font-size: 10pt;">{% if g_url %}<a href="{{ g_url }}{{ value2 }}/">{{ value2 }}</a>{% else %}{{ value2 }}{% endif %}</td>
+    {% else %}
+        <td style="font-size: 10pt;">{{ value2 }}</td>
+    {% endif %}
+    {% endfor %}
+        <td class="float-right" style="font-size: 10pt;">
+            <a href="{{ e_url }}{{ key1 }}/"><img src="/static/admin/img/icon-changelink.svg" alt="Change"></a>
+            <a href="{{ d_url }}{{ key1 }}/"><img src="/static/admin/img/icon-deletelink.svg" alt="Delete"></a>
+        </td>
+    </tr>
+{% empty %}
+    <tr><td>{% translate 'Sorry, no records to show.' %}</td></tr>
+{% endfor %}
+</table>

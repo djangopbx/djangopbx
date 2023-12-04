@@ -1,0 +1,23 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <i class="{{ listicon|default:'fa fa-table' }}"></i> {% translate title %}
+        </div>
+        <div class="card-body cardbody1">
+            <div class="container p-3 my-3 border" style="background-color: #fcfcfc;">
+            <form action="{% url url_name form.instance.id %}" method="post">
+                {% csrf_token %}
+                <table class="pbxformtable" style="border: none;">
+                {{ form.as_table }}
+                </table>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-info btn-sm" value="{% translate 'Update' %}">
+                {% if back %}<a  href="{{ back }}" target="_self"><input type="button" style="margin-top: 10px;" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>{% endif %}
+            </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

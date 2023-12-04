@@ -118,6 +118,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('utilities/', include('utilities.urls')),
     path('ringgroups/', include('ringgroups.urls')),
+    path('contacts/', include('contacts.urls')),
 
     # Wire up our API using automatic URL routing.
     # Additionally, we include login URLs for the browsable API.

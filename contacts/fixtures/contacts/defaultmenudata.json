@@ -1,0 +1,34 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "9649fa84-a4ce-4de9-946a-2266c91b2bc3",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "73ce309c-95ee-45fe-9e69-919b61a855f8",
+        "title": "Contacts",
+        "link": "/contacts/contactlist/",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "30020",
+        "description": "",
+        "created": "2023-12-03T16:51:45.969Z",
+        "updated": "2023-12-03T17:54:24.730Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitemgroup",
+    "pk": "06b06aab-5b48-4110-8b62-5edb7fc80cb2",
+    "fields": {
+        "menu_item_id": "9649fa84-a4ce-4de9-946a-2266c91b2bc3",
+        "name": "user",
+        "group_id": 23,
+        "created": "2023-12-03T16:51:45.971Z",
+        "updated": "2023-12-03T16:51:45.971Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]
