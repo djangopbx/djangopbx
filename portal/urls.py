@@ -42,7 +42,7 @@ router.register(r'menu_item_groups', views.MenuItemGroupViewSet)
 urlpatterns = [
     path('', views.index, name='index'),
     path('domainselect/', views.DomainSelector.as_view(), name='domainselect'),
-    path(r'selectdomain/<domainuuid>/', views.selectdomain, name='selectdomain'),
+    path('selectdomain/<domainuuid>/', views.selectdomain, name='selectdomain'),
     path(
         'favicon.ico',
         RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
@@ -51,4 +51,5 @@ urlpatterns = [
         r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>.*)/(?P<fdom>.*)/(?P<fpath>.*))$',
         views.servefsmedia, name='servefsmedia'
         ),
+    re_path(r'clickdial/(?P<dest>[A-Za-z0-9\.@]+)/', views.ClickDial.as_view(), name='clickdial'),
 ]

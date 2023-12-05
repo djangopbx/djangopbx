@@ -294,10 +294,18 @@ def newobroute(request):
                         x_condition, 'action', application='set',
                         data='effective_caller_id_name=${emergency_caller_id_name}'
                         )
+                    etree.SubElement(
+                        x_condition, 'action', application='set',
+                        data='effective_caller_id_number=${emergency_caller_id_number}'
+                        )
                 else:
                     etree.SubElement(
                         x_condition, 'action', application='set',
                         data='effective_caller_id_name=${outbound_caller_id_name}'
+                        )
+                    etree.SubElement(
+                        x_condition, 'action', application='set',
+                        data='effective_caller_id_number=${outbound_caller_id_number}'
                         )
 
                 etree.SubElement(x_condition, 'action', application='set', data='inherit_codec=true')

@@ -29,12 +29,15 @@
 
 import os
 from django.conf import settings
+from django.views import View
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext_lazy as _
-from django.http import HttpResponseRedirect
+from django.http import (
+    HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+    )
 from django.contrib import messages
-from django.http import HttpResponseNotFound
 import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
@@ -52,6 +55,9 @@ from .models import (
 from tenants.models import (
     Domain,
 )
+from accounts.models import (
+    Extension, ExtensionUser,
+)
 from tenants.pbxsettings import (
     PbxSettings,
 )
@@ -60,6 +66,8 @@ from .serializers import (
 )
 
 from accounts.accountfunctions import AccountFunctions
+from switch.switchsounds import SwitchSounds
+from pbx.fseventsocket import EventSocket
 
 
 @login_required
@@ -236,3 +244,42 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+
+class ClickDial(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        c_vars = []
+        dest = kwargs.get('dest', '')
+        if dest:
+            ss = SwitchSounds()
+            eu = ExtensionUser.objects.filter(user_uuid=request.user.profile.user_uuid, default_user='true').first()
+            extn = eu.extension_id.extension
+            context = eu.extension_id.user_context
+            dest_exists = Extension.objects.filter(domain_id=request.session['domain_uuid'], extension=extn )
+            c_vars.append('click_to_call=true')
+            c_vars.append('origination_caller_id_name=%s' % eu.extension_id.effective_caller_id_name)
+            c_vars.append('origination_caller_id_number=%s' % eu.extension_id.effective_caller_id_number)
+            c_vars.append('outbound_caller_id_name=%s' % eu.extension_id.outbound_caller_id_name)
+            c_vars.append('outbound_caller_id_number=%s' % eu.extension_id.outbound_caller_id_number)
+            c_vars.append('instant_ringback=true')
+            c_vars.append('ringback=%s' % ss.get_default_ringback())
+            c_vars.append('presence_id=%s@%s' % (extn, request.session['domain_name']))
+            c_vars.append('call_direction=%s' % ('local' if dest_exists else 'outbound'))
+            if eu.extension_id.toll_allow:
+                c_vars.append('toll_allow=%s' % eu.extension_id.toll_allow)
+
+            ch_vars = '{%s}' % ','.join(c_vars)
+            if '@' in dest:
+                cmd = 'api originate %suser/%s@%s &bridge(%s/sofia/external/%s)' % (ch_vars, extn, context, ch_vars, dest)
+            else:
+                cmd = 'api originate %suser/%s@%s %s XML %s' % (ch_vars, extn, context, dest, context)
+
+            es = EventSocket()
+            if es.connect(*settings.EVSKT):
+                print(cmd)
+                print(es.send(cmd))
+
+        if request.META.get('HTTP_REFERER'):
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            return HttpResponse('')

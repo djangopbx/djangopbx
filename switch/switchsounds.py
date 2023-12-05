@@ -215,3 +215,12 @@ class SwitchSounds():
 
     def get_cc_record(self, domain_name):
         return [('', 'False'), (self.get_record_template(domain_name), 'True')]
+
+    def get_default_ringback(self):
+        dfr = SwitchVariable.objects.filter(enabled='true', category='Defaults', name='ringback').first()
+        if dfr.value:
+            dr = dfr.value.replace('$', '').replace('{', '').replace('}', '')
+            r = SwitchVariable.objects.filter(enabled='true', category='Ringtones', name=dr).first()
+            if r:
+                return r.value
+        return '%(400,200,400,450);%(400,2000,400,450)'
