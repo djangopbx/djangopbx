@@ -31,21 +31,21 @@ import os
 from django.conf import settings
 from django.views import View
 from django.shortcuts import render
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext_lazy as _
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.http import (
-    HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+    HttpResponse, HttpResponseRedirect, HttpResponseNotFound, FileResponse
     )
 from django.contrib import messages
 import django_tables2 as tables
-from django_filters.views import FilterView
 import django_filters as filters
+from django_filters.views import FilterView
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions
-from django.http import FileResponse
-
 from pbx.restpermissions import (
     AdminApiAccessPermission
 )
@@ -146,6 +146,18 @@ def index(request):
         submenudata = submenu.data
         request.session['portalsubmenu'] = submenudata
 
+        redirect_to = request.POST.get(
+            'next', request.GET.get('next', '')
+        )
+        if redirect_to:
+            print(redirect_to)
+            if url_has_allowed_host_and_scheme(
+                url=redirect_to,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                return HttpResponseRedirect(redirect_to)
+
     return render(request, 'portal/index.html', {})
 
 
@@ -244,6 +256,24 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+
+class PbxLoginView(LoginView):
+    # override function to pass ?next= to the LOGIN_REDIRECT_URL
+    def get_redirect_url(self):
+        """Return the user-originating redirect URL if it's safe."""
+        redirect_to = self.request.POST.get(self.redirect_field_name, '')
+        if not redirect_to:
+            redirect_to = self.request.GET.get(self.redirect_field_name, '')
+            if redirect_to:
+                redirect_to = '%s?next=%s' % (settings.LOGIN_REDIRECT_URL, redirect_to)
+
+        url_is_safe = url_has_allowed_host_and_scheme(
+            url=redirect_to,
+            allowed_hosts=self.get_success_url_allowed_hosts(),
+            require_https=self.request.is_secure(),
+        )
+        return redirect_to if url_is_safe else ''
 
 
 class ClickDial(LoginRequiredMixin, View):
