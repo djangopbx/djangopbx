@@ -53,7 +53,7 @@ urlpatterns = [
         ),
     re_path(r'clickdial/(?P<dest>[A-Za-z0-9\.@]+)/', views.ClickDial.as_view(), name='clickdial'),
 
-    # This overrides the contrib/auth login because it gets found first
-    path("auth/login/", views.PbxLoginView.as_view(), name="login"),
+#    # This overrides the contrib/auth login because it gets found first
+#    path("auth/login/", views.PbxLoginView.as_view(), name="login"),
 
 ]

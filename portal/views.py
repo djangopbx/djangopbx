@@ -31,7 +31,6 @@ import os
 from django.conf import settings
 from django.views import View
 from django.shortcuts import render
-from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext_lazy as _
@@ -150,7 +149,6 @@ def index(request):
             'next', request.GET.get('next', '')
         )
         if redirect_to:
-            print(redirect_to)
             if url_has_allowed_host_and_scheme(
                 url=redirect_to,
                 allowed_hosts={request.get_host()},
@@ -256,24 +254,6 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
-
-
-class PbxLoginView(LoginView):
-    # override function to pass ?next= to the LOGIN_REDIRECT_URL
-    def get_redirect_url(self):
-        """Return the user-originating redirect URL if it's safe."""
-        redirect_to = self.request.POST.get(self.redirect_field_name, '')
-        if not redirect_to:
-            redirect_to = self.request.GET.get(self.redirect_field_name, '')
-            if redirect_to:
-                redirect_to = '%s?next=%s' % (settings.LOGIN_REDIRECT_URL, redirect_to)
-
-        url_is_safe = url_has_allowed_host_and_scheme(
-            url=redirect_to,
-            allowed_hosts=self.get_success_url_allowed_hosts(),
-            require_https=self.request.is_secure(),
-        )
-        return redirect_to if url_is_safe else ''
 
 
 class ClickDial(LoginRequiredMixin, View):
