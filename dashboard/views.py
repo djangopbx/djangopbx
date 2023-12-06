@@ -375,9 +375,9 @@ class UsrDashboard():
     def __init__(self, request):
         self.request = request
         self.es = EventSocket()
-        self.extnuuids = self.request.session['extension_list_uuid'].split(',')
+        self.extnuuids = self.request.session.get('extension_list_uuid', '').split(',')
         clean_uuid4_list(self.extnuuids)
-        self.extns = self.request.session['extension_list'].split(',')
+        self.extns = self.request.session.get('extension_list', '').split(',')
         self.time_24_hours_ago = timezone.now() - timezone.timedelta(1)
         if self.es.connect(*settings.EVSKT):
             self.esconnected = True
@@ -437,7 +437,7 @@ class UsrDashboard():
 
     def get_call_routing(self):
         self.callrouting = {}
-        extension_list = self.request.session['extension_list_uuid'].split(',')
+        extension_list = self.request.session.get('extension_list_uuid', '').split(',')
         clean_uuid4_list(extension_list)
         if self.request.user.is_superuser:
             self.callrouting_visible = True
