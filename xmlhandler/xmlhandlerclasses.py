@@ -696,7 +696,7 @@ class ConfigHandler(XmlHandler):
             x_profile = etree.SubElement(x_profiles, 'profile', name=p.name)
             etree.SubElement(x_profile, 'aliases')
             x_gateways = etree.SubElement(x_profile, 'gateways')
-            etree.SubElement(x_gateways, 'X-PRE-PROCESS', cmd='include', data='%s/*.xml' % p.name)
+            etree.SubElement(x_gateways, 'X-PRE-PROCESS', cmd='include', data='sip_profiles/%s/*.xml' % p.name)
             for gw in gws:
                 x_gateway = etree.SubElement(x_gateways, 'gateway', name=str(gw.id))
                 if gw.username:
