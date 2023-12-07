@@ -48,6 +48,5 @@ class HttApiSessionAdmin(admin.ModelAdmin):
     ]
 
 
-#  Needs a reload for this to take effect becuase it is only parsed on startup.
-if PbxSettings().default_settings('httapihandler', 'show_admin', 'boolean', 'false', True)[0] == 'true':
-    admin.site.register(HttApiSession, HttApiSessionAdmin)
+# Uncomment below if required for debugging httapi sesions
+#admin.site.register(HttApiSession, HttApiSessionAdmin)
