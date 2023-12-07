@@ -167,6 +167,8 @@ def selectdomain(request, domainuuid):
     request.session['domain_uuid'] = str(d.id)
     request.session['domain_change'] = 'yes'
     messages.add_message(request, messages.INFO, _('Selected Domain changed to ') + d.name)
+    if request.META['HTTP_REFERER'].endswith('/admin/tenants/domain/'):
+        return HttpResponseRedirect('/admin/')
     return HttpResponseRedirect('/')
 
 
