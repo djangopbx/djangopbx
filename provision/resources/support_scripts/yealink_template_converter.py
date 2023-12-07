@@ -46,6 +46,8 @@ dir_out = 'templates_out'
 t_d = {'if': 'if', 'else': 'else', 'elseif': 'elif', 'foreach': 'for', '/if': 'endif', '/foreach': 'endfor', 'var': 'var', '\"\"': 'err'}
 
 var_name_conv = {}
+var_name_conv['row in keys[\"line\"]'] = 'row in line_keys'
+var_name_conv['row in keys[\'line\']'] = 'row in line_keys'
 var_name_conv['row in keys[\"expansion\"]'] = 'row in expansion_1_keys'
 var_name_conv['row in keys[\"expansion-1\"]'] = 'row in expansion_1_keys'
 var_name_conv['row in keys[\"expansion-2\"]'] = 'row in expansion_2_keys'
@@ -142,6 +144,4 @@ if __name__ == "__main__":
             for f2 in os.scandir(f1.path):
                 if f2.is_file():
                     file_action(out_path, f2)
-
-
 

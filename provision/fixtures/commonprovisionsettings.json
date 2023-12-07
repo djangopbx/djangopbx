@@ -330,7 +330,7 @@
         "app_uuid": null,
         "category": "provision",
         "subcategory": "http_auth_password",
-        "value_type": "array",
+        "value_type": "text",
         "value": "!INSECURE!",
         "sequence": "10",
         "enabled": "true",

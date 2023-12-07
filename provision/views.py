@@ -336,7 +336,7 @@ def device_config(request, *args, **kwargs):
 
 
     # Get default settings, domain settings, then user settings, then device settings, lines and keys
-    prov_lines = DeviceLines.objects.filter(enabled='true', device_id=device).order_by('line_number')
+    prov_lines = DeviceLines.objects.filter(enabled='true', device_id=device, auth_id__isnull=False).order_by('line_number')
 
     line_keys = pf.device_keys(device, 'line')
     memory_keys = pf.device_keys(device, 'memory')

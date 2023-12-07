@@ -91,12 +91,12 @@ class ProvisionFunctions():
         if device.profile_id:
             dk = DeviceKeys.objects.values(
                 'key_id', 'key_type', 'line', 'value', 'extension', 'label', 'icon'
-                ).filter(device_id=device, category=category).order_by('key_id').union(
+                ).filter(device_id=device, category=category, key_type__isnull=False).order_by('key_id').union(
                     DeviceProfileKeys.objects.values(
                     'key_id', 'key_type', 'line', 'value', 'extension', 'label', 'icon'
-                    ).filter(profile_id=device.profile_id, category=category))
+                    ).filter(profile_id=device.profile_id, category=category, key_type__isnull=False))
         else:
             dk = DeviceKeys.objects.values(
                 'key_id', 'key_type', 'line', 'value', 'extension', 'label', 'icon'
-                ).filter(device_id=device, category=category).order_by('key_id')
+                ).filter(device_id=device, category=category, key_type__isnull=False).order_by('key_id')
         return dk

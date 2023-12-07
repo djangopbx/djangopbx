@@ -3,15 +3,15 @@
         <context name="default">
                 <extension name="demo">
                         <condition field="to" expression="^(.*)$">
-                                <!-- <action application="python" data="test"/> -->
-                                <!-- <action application="reply" data="Hello, you said: ${_body}"/> -->
+                                <!-- <action application="httapi" data="{httapi_profile=dpbx,url=http://127.0.0.1:8008/httapihandler/chattest/}"/> -->
+                                <action application="reply" data="Hello, you said: ${_body}"/>
                         </condition>
                 </extension>
         </context>   
         <context name="public">
                 <extension name="demo">
                         <condition field="to" expression="^(.*)$">
-                                <!-- <action application="python" data="sms outbound"/> -->
+                                <!-- <action application="httapi" data="{httapi_profile=dpbx,url=http://127.0.0.1:8008/httapihandler/sms_outbound/}"/> -->
                         </condition>
                 </extension>
         </context>
