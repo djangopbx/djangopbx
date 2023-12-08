@@ -5,3 +5,4 @@ __pycache__/
 *.ahf_save
 django-pbx.sock
 ahftest.py
+ahftest.msg

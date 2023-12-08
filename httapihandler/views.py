@@ -55,6 +55,7 @@ from .recordingshandler import RecordingsHandler
 from .conferencehandler import ConferenceHandler
 from .agentstatushandler import AgentStatusHandler
 from .speeddialhandler import SpeedDialHandler
+from .indexhandler import IndexHandler
 
 
 class HttApiSessionViewSet(viewsets.ModelViewSet):
@@ -149,4 +150,9 @@ def agentstatus(request):
 @csrf_exempt
 def speeddial(request):
     httapihf = SpeedDialHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def httapiindex(request):
+    httapihf = IndexHandler(request.POST)
     return processhttapi(request, httapihf)

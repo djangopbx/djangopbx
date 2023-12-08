@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,26 +27,23 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+from lxml import etree
+from .httapihandler import HttApiHandler
 
-router = routers.DefaultRouter()
-router.register(r'httapisession', views.HttApiSessionViewSet)
 
-urlpatterns = [
-    path('index/', views.httapiindex, name='index'),
-    path('test/', views.test, name='test'),
-    path('followme/', views.followme, name='followme'),
-    path('followmetoggle/', views.followmetoggle, name='followmetoggle'),
-    path('failurehandler/', views.failurehandler, name='failurehandler'),
-    path('hangup/', views.hangup, name='hangup'),
-    path('register/', views.register, name='register'),
-    path('ringgroup/', views.ringgroup, name='ringgroup'),
-    path('recordings/', views.recordings, name='recordings'),
-    path('callflowtoggle/', views.callflowtoggle, name='callflowtoggle'),
-    path('callblock/', views.callblock, name='callblock'),
-    path('conference/', views.conference, name='conference'),
-    path('agentstatus/', views.agentstatus, name='agentstatus'),
-    path('speeddial/', views.speeddial, name='speeddial'),
-]
+class IndexHandler(HttApiHandler):
+
+    handler_name = 'index'
+
+    def get_data(self):
+        if self.exiting:
+            return self.return_data('Ok\n')
+
+        x_root = self.XrootApi()
+        etree.SubElement(x_root, 'params')
+        x_work = etree.SubElement(x_root, 'work')
+        etree.SubElement(x_work, 'break')
+
+        etree.indent(x_root)
+        xml = str(etree.tostring(x_root), "utf-8")
+        return xml

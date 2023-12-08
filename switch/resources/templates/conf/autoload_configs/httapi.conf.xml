@@ -85,7 +85,7 @@
       
       <params>
 	<!-- default url can be overridden by app data -->
-	<param name="gateway-url" value="http://127.0.0.1:80/httapi/index" />
+	<param name="gateway-url" value="http://127.0.0.1:8008/httapihandler/index/" />
 	
 	<param name="method" value="POST"/> -->
 
@@ -176,7 +176,7 @@
       
       <params>
 	<!-- default url can be overridden by app data -->
-	<param name="gateway-url" value="http://127.0.0.1:80/httapi/index" />
+	<param name="gateway-url" value="http://127.0.0.1:8008/httapihandler/index/" />
 	
 	<param name="method" value="POST"/> -->
       </params>
@@ -221,7 +221,7 @@
       
       <params>
 	<!-- default url can be overridden by app data -->
-	<param name="gateway-url" value="http://127.0.0.1:8080/httapi/index" />
+	<param name="gateway-url" value="http://127.0.0.1:8008/httapihandler/index/" />
 	<param name="method" value="POST"/> -->
       </params>
     </profile>
