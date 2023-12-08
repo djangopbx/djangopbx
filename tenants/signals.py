@@ -33,7 +33,10 @@ from django.contrib.auth.models import Group
 def create_or_edit_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-        user_group = Group.objects.get(name='user')
+        try:
+            user_group = Group.objects.get(name='user')
+        except Group.DoesNotExist:
+            user_group = False
         if user_group:
             user_group.user_set.add(instance)
 
