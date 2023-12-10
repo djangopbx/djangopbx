@@ -276,6 +276,7 @@ class SwDashboard():
         self.get_live_counts()
 
     def get_live_counts(self):
+        result = False
         if not self.esconnected:
             return
         result = self.es.send('api show calls count')
@@ -326,6 +327,7 @@ class SwDashboard():
 
     def get_sw_status(self):
         self.sw_status = []
+        result = False
         if self.esconnected:
             result = self.es.send('api show status')
             time.sleep(self.s)
