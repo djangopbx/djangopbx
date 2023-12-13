@@ -120,7 +120,7 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
         'LOCATION': '127.0.0.1:11211',
         'TIMEOUT': 300,
-        'KEY_PREFIX': 'pbx_',
+        'KEY_PREFIX': 'pbx',
         "OPTIONS": {
             "no_delay": True,
             "ignore_exc": True,

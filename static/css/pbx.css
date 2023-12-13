@@ -93,6 +93,80 @@ CSS for colours
     font-size: 11pt;
 }
 
+.ccwb-card-hdr {
+    background-color: #6c757e !important;
+    color: white;
+    font-size: 1vw;
+}
+
+.ccwb-clock {
+    background-color: #0078ff !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-queue {
+    background-color: #0078ff !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-logged-out {
+    background-color: #6c757e !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-logged-in {
+    background-color: #00a2ba !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-info {
+    background-color: #00a2ba !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-ok {
+    background-color: #13a93d !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-warn {
+    background-color: #ffc200 !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-crit {
+    background-color: #e02f40 !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-big {
+    color: white;
+    font-size: 2.5vw;
+}
+
+.ccwb-footer {
+    color: white;
+    font-size: 1vw;
+    margin-bottom: 0;
+}
+
+
 /*
 CSS for log in screen
 */

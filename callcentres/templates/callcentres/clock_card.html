@@ -1,0 +1,46 @@
+{% load i18n static %}
+
+<div class="col-lg">
+    <div class="card" style="margin: 0px 5px 0px 5px; width: 100%;">
+        <div class="card-header ccwb-card-hdr">
+            <div class="text-center" id="wb_clock">{% translate 'Date Time' %}</div>
+        </div>
+        <div class="card-body ccwb-clock text-center">
+            <div id="qtime"><p class="ccwb-big">00:00:00</p></div><div id="qdate"><p class="ccwb-footer">{{ q_date }}</p></div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+
+    var clock = document.getElementById("qtime");
+
+    // But there is a little problem
+    // we need to pad 0-9 with an extra
+    // 0 on the left for hours, seconds, minutes
+
+    var pad = function(x) {
+    return x < 10 ? '0'+x : x;
+    };
+
+    var ticktock = function() {
+    var d = new Date();
+
+    var h = pad( d.getHours() );
+    var m = pad( d.getMinutes() );
+    var s = pad( d.getSeconds() );
+
+    var current_time = [h,m,s].join(':');
+
+    clock.innerHTML = "<p class=\"ccwb-big\">" + current_time + "</p>";
+
+    };
+
+    ticktock();
+
+    // Calling ticktock() every 1 second
+    setInterval(ticktock, 1000);
+
+}());
+</script>

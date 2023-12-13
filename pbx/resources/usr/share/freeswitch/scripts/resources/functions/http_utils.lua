@@ -38,3 +38,15 @@
         end
         return ''
     end
+
+    function url_escape(s)
+        s = string.gsub(
+            s,
+            '([\r\n"#%%&+:;<=>?@^`{|}%\\%[%]%(%)$!~,/\'])',
+            function (c)
+                return '%'..string.format("%02X", string.byte(c));
+            end
+        );
+        s = string.gsub(s, "%s", "+");
+        return s;
+    end

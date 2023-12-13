@@ -56,6 +56,7 @@ from .conferencehandler import ConferenceHandler
 from .agentstatushandler import AgentStatusHandler
 from .speeddialhandler import SpeedDialHandler
 from .indexhandler import IndexHandler
+from .cceventhandler import CcEventHandler
 
 
 class HttApiSessionViewSet(viewsets.ModelViewSet):
@@ -155,4 +156,9 @@ def speeddial(request):
 @csrf_exempt
 def httapiindex(request):
     httapihf = IndexHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def ccevent(request):
+    httapihf = CcEventHandler(request.POST, False)
     return processhttapi(request, httapihf)

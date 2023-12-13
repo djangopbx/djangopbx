@@ -137,7 +137,7 @@ class AgentStatusHandler(HttApiHandler):
             self.pe.send(str(self.cca.id), blf_status, 'agent+%s' % self.cca.name.replace(' ', '-'), self.domain_name)
 
         etree.SubElement(self.x_work, 'pause', milliseconds='2000')
-        self.pe.es.send('api callcenter_config agent set status %s %s' % (str(self.cca.id), self.cca.user_uuid.status))
+        self.pe.es.send('api callcenter_config agent set status %s \'%s\'' % (str(self.cca.id), self.cca.user_uuid.status))
         self.pe.es.send('api uuid_display %s %s' % (self.uuid, self.cca.user_uuid.status))
         etree.SubElement(self.x_work, 'hangup')
         return

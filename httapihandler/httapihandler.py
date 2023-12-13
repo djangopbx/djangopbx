@@ -174,6 +174,8 @@ class HttApiHandler():
             return False
 
     def get_first_call(self):
+        if self.exiting:
+            return False
         if self.handler_name in self.session.json:
             if 'first_call' in self.session.json[self.handler_name]:
                 if self.session.json[self.handler_name]['first_call']:

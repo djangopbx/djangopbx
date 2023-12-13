@@ -27,16 +27,14 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+from .httapihandler import HttApiHandler
 
-router = routers.DefaultRouter()
-router.register(r'callcentrequeues', views.CallCentreQueuesViewSet)
-router.register(r'callcentreagents', views.CallCentreAgentsViewSet)
-router.register(r'callcentretiers', views.CallCentreTiersViewSet)
 
-urlpatterns = [
-    path('wbqueues/', views.CcQueueList.as_view(), name='wbqueues'),
-    path('wbsinglequeue/<ccq_id>/', views.WbSingleQueueView.as_view(), name='wbsinglequeue'),
-]
+class CcEventHandler(HttApiHandler):
+
+    handler_name = 'ccevent'
+
+    def get_data(self):
+        print('hello')
+        print(self.qdict)
+        return self.return_data('Ok\n')

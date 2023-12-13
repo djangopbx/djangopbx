@@ -49,4 +49,5 @@ urlpatterns = [
     path('conference/', views.conference, name='conference'),
     path('agentstatus/', views.agentstatus, name='agentstatus'),
     path('speeddial/', views.speeddial, name='speeddial'),
+    path('ccevent/', views.ccevent, name='ccevent'),
 ]

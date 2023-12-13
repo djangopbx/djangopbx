@@ -27,10 +27,19 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from datetime import datetime
+from django.core.cache import cache
+from django.views import View
+from django.http import HttpResponse
+from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django_tables2 import Table, SingleTableView, LazyPaginator
+from django.utils.html import format_html
+from django.shortcuts import get_object_or_404
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -83,3 +92,84 @@ class CallCentreTiersViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+
+class CcQueueListList(Table):
+    class Meta:
+        model = CallCentreQueues
+        attrs = {"class": "paleblue"}
+        fields = (
+            'name',
+            'extension',
+            'description'
+            )
+        order_by = 'name'
+
+    def render_name(self, value, record):
+        return format_html('<a href=\"/callcentres/wbsinglequeue/{}/\">{}</a>', record.id, value)
+
+
+
+@method_decorator(login_required, name='dispatch')
+class CcQueueList(SingleTableView):
+    table_class = CcQueueListList
+    model = CallCentreQueues
+    template_name = "callcentres/queue_list.html"
+    paginator_class = LazyPaginator
+
+    table_pagination = {
+        "per_page": 25
+    }
+
+    def get_queryset(self):
+        qs = CallCentreQueues.objects.filter(domain_id=self.request.session['domain_uuid'], enabled='true').order_by('name')
+        return qs
+
+
+class WbSingleQueueView(View):
+    template_name = "callcentres/wb_single_queue.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.cache_key = 'callcentres:agents'
+        self.queue = get_object_or_404(CallCentreQueues, pk=kwargs['ccq_id'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        agents = {}
+        data = {'agents': agents, 'queue': {}}
+        ccts = CallCentreTiers.objects.filter(queue_id=self.queue.id)
+        agent_count = 0;
+        for cct in ccts:
+            agent_count += 1
+            agents[str(cct.agent_id.id)] = {'name': cct.agent_id.name}
+            agents[str(cct.agent_id.id)]['status'] = cache.get('fs:cc:a:%s:agent-status' % cct.agent_id.id, 'logged out')
+            agents[str(cct.agent_id.id)]['status-time'] = cache.get('fs:cc:a:%s:agent-status-time' % cct.agent_id.id, 0)
+
+        cache.set(self.cache_key, agents)
+        data['queue']['name'] = self.queue.name
+        data['queue']['q_date'] = datetime.now().strftime("%d %b %Y")
+        data['queue']['agent_count'] = str(agent_count)
+        data['queue']['members-count'] = cache.get('fs:cc:q:%s:members-count' % self.queue.id, b'0').decode()
+        data['queue']['answered'] = cache.get('fs:cc:q:%s:ctrs:answered' % self.queue.id, b'0').decode()
+        data['queue']['abandoned'] = cache.get('fs:cc:q:%s:ctrs:BREAK_OUT' % self.queue.id, b'0').decode()
+
+        print(data)
+        return render(request, self.template_name, {'d': data})
+
+
+class WbSingleQueueJson(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        self.cache_key = 'callcentres:agents'
+        self.ccq_id = kwargs['ccq_id']
+
+    def get(self, request, *args, **kwargs):
+        agents = cache.get(cache_key)
+        if not agents:
+            ccts = CallCentreTiers.objects.filter(queue_id=self.ccq_id)
+            for cct in ccts:
+                agents[str(cct.agent_id.id)] = cct.agent_id.name
+            cache.set(self.cache_key, agents)
+
+        data = {}
+        return HttpResponse(data, mimetype='application/json')

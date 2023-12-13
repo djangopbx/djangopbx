@@ -1,0 +1,15 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="row" style="margin-bottom: 20px;">
+    {% include 'callcentres/clock_card.html' with q_date=d.queue.q_date %}
+    {% include 'callcentres/queue_card.html' with q_name=d.queue.name q_agents=d.queue.agent_count %}
+    {% include 'callcentres/counting_card.html' with colour='ccwb-ok' title='Trying' value=d.queue.trying %}
+    {% include 'callcentres/counting_card.html' with colour='ccwb-ok' title='Waiting' value=d.queue.waiting %}
+    {% include 'callcentres/counting_card.html' with colour='ccwb-info' title='Answered' value=d.queue.answered %}
+    {% include 'callcentres/counting_card.html' with colour='ccwb-ok' title='Abandoned' value=d.queue.abandoned %}
+    </div>
+    {% endblock %}
+
