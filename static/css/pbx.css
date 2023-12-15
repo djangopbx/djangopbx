@@ -120,6 +120,13 @@ CSS for colours
     padding-bottom: 0;
 }
 
+.ccwb-on-break {
+    background-color: #06637a !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
 .ccwb-logged-in {
     background-color: #00a2ba !important;
     color: white;

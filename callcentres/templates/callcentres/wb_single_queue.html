@@ -11,5 +11,45 @@
     {% include 'callcentres/counting_card.html' with colour='ccwb-info' title='Answered' value=d.queue.answered %}
     {% include 'callcentres/counting_card.html' with colour='ccwb-ok' title='Abandoned' value=d.queue.abandoned %}
     </div>
-    {% endblock %}
+    <div class="row" style="margin-bottom: 20px;">
+    {% for key, value in d.agents.items %}
+    {% include 'callcentres/agent_card.html' with agent_id=key colour=value.wb_colour status=value.wb_status status_change=value.status_time name=value.name %}
+    {% endfor %}
+    </div>
 
+<script>
+(function() {
+    var wbrefresh = function() {
+    fetch('/callcentres/wbsinglequeuejson/{{ d.queue.id }}/{{ d.queue.token }}')
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            document.getElementById('qdate').innerHTML = '<p class="ccwb-footer">' + data.queue.q_date + '</p>';
+            document.getElementById('queue-agents').innerHTML = data.queue.agent_count;
+            document.getElementById('Trying').innerHTML = '<p class=\"ccwb-big\">' + data.queue.trying + '</p>';
+            document.getElementById('Waiting-colour').classList.remove('ccwb-ok', 'ccwb-warn', 'ccwb-crit');
+            document.getElementById('Waiting-colour').classList.add(data.queue.waiting_colour);
+            document.getElementById('Waiting').innerHTML = '<p class=\"ccwb-big\">' + data.queue.waiting + '</p>';
+            document.getElementById('Answered').innerHTML = '<p class=\"ccwb-big\">' + data.queue.answered + '</p>';
+            document.getElementById('Abandoned-colour').classList.remove('ccwb-ok', 'ccwb-warn', 'ccwb-crit');
+            document.getElementById('Abandoned-colour').classList.add(data.queue.abandoned_colour);
+            document.getElementById('Abandoned').innerHTML = '<p class=\"ccwb-big\">' + data.queue.abandoned + '</p>';
+            {% for key, value in d.agents.items %}
+            document.getElementById('{{ key }}-colour').classList.remove('ccwb-ok', 'ccwb-info', 'ccwb-warn', 'ccwb-logged-out', 'ccwb-on-break');
+            document.getElementById('{{ key }}-colour').classList.add(data.agents.{{ key }}.wb_colour);
+            document.getElementById('{{ key }}-status').innerHTML = data.agents.{{ key }}.wb_status;
+            document.getElementById('{{ key }}-change').innerHTML = data.agents.{{ key }}.status_time;
+            {% endfor %}
+        })
+        .catch(function(error) {
+             console.log(error);
+        });
+    };
+    wbrefresh();
+    // Calling wbrefresh() every 4 seconds
+    setInterval(wbrefresh, 4000);
+}());
+</script>
+
+    {% endblock %}
