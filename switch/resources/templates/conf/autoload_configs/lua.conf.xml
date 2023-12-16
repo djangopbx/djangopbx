@@ -37,8 +37,10 @@
 
     <!-- Subscribe to events -->
     <!--<hook event="PHONE_FEATURE_SUBSCRIBE" subclass="" script="app.lua feature_event"/>-->
-    <!-- <hook event="CUSTOM" subclass="callcenter::info" script="lt_cc_events.lua"/> -->
+    <!-- Subscribe to Register events -->
     <hook event="CUSTOM" subclass="sofia::register" script="eh_sofia_register.lua"/>
+    <!-- Subscribe to Call centre events -->
+    <hook event="CUSTOM" subclass="callcenter::info" script="eh_call_centre.lua"/>
 
   </settings>
 </configuration>

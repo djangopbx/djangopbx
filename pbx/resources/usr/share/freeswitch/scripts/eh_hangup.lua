@@ -32,7 +32,7 @@
     require "resources.functions.http_utils"
 
 -- prepare the API object
-    local api = freeswitch.API()
+    local api = freeswitch.API();
 
 -- take action based on originate_disposition
     originate_disposition = env:getHeader("originate_disposition");
@@ -45,15 +45,15 @@
 
 -- get the POST vars ready from env.
     post_vars = 'session_id=' .. env:getHeader('uuid');
-    post_vars = post_vars .. post_add('domain_uuid', true)
-    post_vars = post_vars .. post_add('domain_name', true)
-    post_vars = post_vars .. post_add('sip_to_user', false)
-    post_vars = post_vars .. post_add('dialed_user', false)
-    post_vars = post_vars .. post_add('missed_call_app', false)
-    post_vars = post_vars .. post_add('missed_call_data', false)
-    post_vars = post_vars .. post_add('default_language', true)
-    post_vars = post_vars .. post_add('default_dialect', true)
-    post_vars = post_vars .. post_add('originate_disposition', false)
+    post_vars = post_vars .. post_add('domain_uuid', true);
+    post_vars = post_vars .. post_add('domain_name', true);
+    post_vars = post_vars .. post_add('sip_to_user', false);
+    post_vars = post_vars .. post_add('dialed_user', false);
+    post_vars = post_vars .. post_add('missed_call_app', false);
+    post_vars = post_vars .. post_add('missed_call_data', false);
+    post_vars = post_vars .. post_add('default_language', true);
+    post_vars = post_vars .. post_add('default_dialect', true);
+    post_vars = post_vars .. post_add('originate_disposition', false);
 
 -- get the Caller ID
     caller_id_name = env:getHeader("caller_id_name");
@@ -66,11 +66,11 @@
     end
 
     if (caller_id_name ~= nil) then
-        post_vars = post_vars .. '&caller_id_name=' .. caller_id_name
+        post_vars = post_vars .. '&caller_id_name=' .. caller_id_name;
     end
     if (caller_id_number ~= nil) then
-        post_vars = post_vars .. '&caller_id_number=' .. caller_id_number
+        post_vars = post_vars .. '&caller_id_number=' .. caller_id_number;
     end
 
 -- post the data to webserver
-    post_response = api:execute('curl', httapi_url .. '/httapihandler/hangup/ timeout 2 post ' .. post_vars)
+    post_response = api:execute('curl', httapi_url .. '/httapihandler/hangup/ timeout 2 post ' .. post_vars);

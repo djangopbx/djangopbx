@@ -29,14 +29,15 @@
 
 -- include config.lua
     require "resources.pbx.config"
+    require "resources.functions.http_utils"
 
 -- prepare the API object
     local api = freeswitch.API()
 
 -- get the POST vars ready from event.
     post_vars = 'session_id=' .. event:getHeader('Core-UUID')
-    post_vars = post_vars .. '&status=' .. event:getHeader('status')
-    post_vars = post_vars .. '&network-ip=' .. event:getHeader('network-ip')
+    post_vars = post_vars .. '&status=' .. url_escape(event:getHeader('status'))
+    post_vars = post_vars .. '&network-ip=' .. url_escape(event:getHeader('network-ip'))
 
 -- post the data to webserver
     post_response = api:execute('curl', httapi_url .. '/httapihandler/register/ timeout 2 post ' .. post_vars)

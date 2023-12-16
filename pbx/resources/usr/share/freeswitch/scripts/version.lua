@@ -1,2 +1,2 @@
-freeswitch.consoleLog("INFO", 'Lua version: ' .. _VERSION)
-print(_VERSION)
+freeswitch.consoleLog("INFO", 'Lua version: ' .. _VERSION);
+print(_VERSION);

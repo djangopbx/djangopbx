@@ -31,12 +31,12 @@
         data = env:getHeader(name);
         if (data ~= nil) then
             if (v) then
-                return '&' .. 'variable_' .. name .. '=' .. data
+                return '&' .. 'variable_' .. name .. '=' .. data;
             else
-                return '&' .. name .. '=' .. data
+                return '&' .. name .. '=' .. data;
             end
         end
-        return ''
+        return '';
     end
 
     function url_escape(s)
