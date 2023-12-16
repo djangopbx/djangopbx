@@ -27,6 +27,7 @@ Telephony features include:
 - Voicemail
 - Messages and notifications by email
 - Call Centres
+- Call Centre Wallboards
 - Conference Centres
 - Music on Hold
 - Call Parking
