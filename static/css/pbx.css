@@ -99,6 +99,12 @@ CSS for colours
     font-size: 1vw;
 }
 
+.ccwb-fill-card-hdr {
+    background-color: #e1e1e1 !important;
+    color: white;
+    font-size: 1vw;
+}
+
 .ccwb-clock {
     background-color: #0078ff !important;
     color: white;
@@ -157,6 +163,13 @@ CSS for colours
 
 .ccwb-crit {
     background-color: #e02f40 !important;
+    color: white;
+    font-size: 1vw;
+    padding-bottom: 0;
+}
+
+.ccwb-fill {
+    background-color: #e1e1e1 !important;
     color: white;
     font-size: 1vw;
     padding-bottom: 0;

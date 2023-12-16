@@ -1,6 +1,9 @@
 {% extends "portal.html" %}
 
 {% load i18n static %}
+{% load cc_math_filters %}
+{% block menu-nav %}
+{% endblock %}
 
     {% block content %}
     <div class="row" style="margin-bottom: 20px;">
@@ -11,10 +14,21 @@
     {% include 'callcentres/counting_card.html' with colour='ccwb-info' title='Answered' value=d.queue.answered %}
     {% include 'callcentres/counting_card.html' with colour='ccwb-ok' title='Abandoned' value=d.queue.abandoned %}
     </div>
+    {% if d.queue.settings.sa == 1 %}
     <div class="row" style="margin-bottom: 20px;">
     {% for key, value in d.agents.items %}
     {% include 'callcentres/agent_card.html' with agent_id=key colour=value.wb_colour status=value.wb_status status_change=value.status_time name=value.name %}
+    {% if forloop.counter|divisibleby:d.queue.settings.apr %}
+    </div>
+    <div class="row" style="margin-bottom: 20px;">
+    {% endif %}
+    {% if forloop.last %}
+    {% for n in forloop.counter|rowfill:d.queue.settings.apr %}
+    {% include 'callcentres/agent_filler.html' %}
     {% endfor %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
     </div>
 
 <script>
@@ -35,12 +49,14 @@
             document.getElementById('Abandoned-colour').classList.remove('ccwb-ok', 'ccwb-warn', 'ccwb-crit');
             document.getElementById('Abandoned-colour').classList.add(data.queue.abandoned_colour);
             document.getElementById('Abandoned').innerHTML = '<p class=\"ccwb-big\">' + data.queue.abandoned + '</p>';
+            {% if d.queue.settings.sa == 1 %}
             {% for key, value in d.agents.items %}
             document.getElementById('{{ key }}-colour').classList.remove('ccwb-ok', 'ccwb-info', 'ccwb-warn', 'ccwb-logged-out', 'ccwb-on-break');
             document.getElementById('{{ key }}-colour').classList.add(data.agents.{{ key }}.wb_colour);
             document.getElementById('{{ key }}-status').innerHTML = data.agents.{{ key }}.wb_status;
             document.getElementById('{{ key }}-change').innerHTML = data.agents.{{ key }}.status_time;
             {% endfor %}
+            {% endif %}
         })
         .catch(function(error) {
              console.log(error);
@@ -51,5 +67,4 @@
     setInterval(wbrefresh, 4000);
 }());
 </script>
-
     {% endblock %}

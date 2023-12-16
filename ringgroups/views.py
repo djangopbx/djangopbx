@@ -155,3 +155,8 @@ class FwdEdit(LoginRequiredMixin, UpdateView):
         for key, f in form.fields.items():
             f.widget.attrs['class'] = 'form-control form-control-sm'
         return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['back'] = '/ringgroups/groups/'
+        return context

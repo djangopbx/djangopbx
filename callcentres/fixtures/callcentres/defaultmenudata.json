@@ -1,0 +1,47 @@
+[
+{
+    "model": "portal.menuitem",
+    "pk": "b6824ee2-79b5-48d1-9f7c-faaa2ed369bb",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "73ce309c-95ee-45fe-9e69-919b61a855f8",
+        "title": "Call Centres",
+        "link": "/callcentres/ccqueues/",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "30015",
+        "description": "",
+        "created": "2023-12-16T13:21:57.720Z",
+        "updated": "2023-12-16T17:25:36.727Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitemgroup",
+    "pk": "e144a7b5-8be9-4ff6-9540-44fa3632de88",
+    "fields": {
+        "menu_item_id": "b6824ee2-79b5-48d1-9f7c-faaa2ed369bb",
+        "name": "call_centre_view",
+        "group_id": 27,
+        "created": "2023-12-16T13:25:17.996Z",
+        "updated": "2023-12-16T13:25:17.996Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitemgroup",
+    "pk": "f1872ad1-df50-416a-b7d9-1f4ce1ea6b52",
+    "fields": {
+        "menu_item_id": "b6824ee2-79b5-48d1-9f7c-faaa2ed369bb",
+        "name": "wallboard",
+        "group_id": 20,
+        "created": "2023-12-16T13:21:57.722Z",
+        "updated": "2023-12-16T13:21:57.722Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

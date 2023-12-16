@@ -1,210 +1,218 @@
 [
 {
-  "model": "auth.group",
-  "pk": 1,
-  "fields": {
-    "name": "contact_view",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+        "name": "contact_view",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 2,
-  "fields": {
-    "name": "admin",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {
+        "name": "admin",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 3,
-  "fields": {
-    "name": "agent",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+        "name": "agent",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 4,
-  "fields": {
-    "name": "user_api",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 4,
+    "fields": {
+        "name": "user_api",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 5,
-  "fields": {
-    "name": "call_block",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 5,
+    "fields": {
+        "name": "call_block",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 6,
-  "fields": {
-    "name": "call_flow",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 6,
+    "fields": {
+        "name": "call_flow",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 7,
-  "fields": {
-    "name": "call_rec_dl",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 7,
+    "fields": {
+        "name": "call_rec_dl",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 8,
-  "fields": {
-    "name": "conference",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 8,
+    "fields": {
+        "name": "conference",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 9,
-  "fields": {
-    "name": "contact_edit",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 9,
+    "fields": {
+        "name": "contact_edit",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 10,
-  "fields": {
-    "name": "device_profile",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 10,
+    "fields": {
+        "name": "device_profile",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 11,
-  "fields": {
-    "name": "ext_adm",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 11,
+    "fields": {
+        "name": "ext_adm",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 12,
-  "fields": {
-    "name": "minor_admin",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 12,
+    "fields": {
+        "name": "minor_admin",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 13,
-  "fields": {
-    "name": "mobile_prov",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 13,
+    "fields": {
+        "name": "mobile_prov",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 14,
-  "fields": {
-    "name": "op_panel",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 14,
+    "fields": {
+        "name": "op_panel",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 15,
-  "fields": {
-    "name": "op_panel_admin",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 15,
+    "fields": {
+        "name": "op_panel_admin",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 16,
-  "fields": {
-    "name": "ringgroup_adm",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 16,
+    "fields": {
+        "name": "ringgroup_adm",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 17,
-  "fields": {
-    "name": "ringgroup_fwd",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 17,
+    "fields": {
+        "name": "ringgroup_fwd",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 18,
-  "fields": {
-    "name": "time_cond_adm",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 18,
+    "fields": {
+        "name": "time_cond_adm",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 19,
-  "fields": {
-    "name": "user_recordings",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 19,
+    "fields": {
+        "name": "user_recordings",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 20,
-  "fields": {
-    "name": "wallboard",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 20,
+    "fields": {
+        "name": "wallboard",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 21,
-  "fields": {
-    "name": "public",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 21,
+    "fields": {
+        "name": "public",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 22,
-  "fields": {
-    "name": "superadmin",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 22,
+    "fields": {
+        "name": "superadmin",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 23,
-  "fields": {
-    "name": "user",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 23,
+    "fields": {
+        "name": "user",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 24,
-  "fields": {
-    "name": "admin_api",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 24,
+    "fields": {
+        "name": "admin_api",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 25,
-  "fields": {
-    "name": "minor_admin_api",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 25,
+    "fields": {
+        "name": "minor_admin_api",
+        "permissions": []
+    }
 },
 {
-  "model": "auth.group",
-  "pk": 26,
-  "fields": {
-    "name": "call_routing",
-    "permissions": []
-  }
+    "model": "auth.group",
+    "pk": 26,
+    "fields": {
+        "name": "call_routing",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 27,
+    "fields": {
+        "name": "call_centre_view",
+        "permissions": []
+    }
 }
 ]

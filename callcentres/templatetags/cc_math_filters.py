@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,16 +27,13 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django import template
+from django.template import Library
 
-register = template.Library()
+register = Library()
 
-
-@register.simple_tag
-def setvar(val=None):
-    return val
-
-
-@register.simple_tag
-def incvar(val=0):
-    return int(val) + 1
+@register.filter
+def rowfill(value, arg):
+    c = value % arg
+    if c == 0:
+        return ''
+    return ''.join(['x' for x in range(int(arg - c))])

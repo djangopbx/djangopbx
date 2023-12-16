@@ -31,7 +31,8 @@ import uuid
 from datetime import datetime
 from django.core.cache import cache
 from django.views import View
-from django.http import HttpResponse, HttpResponseNotFound
+from django.views.generic.edit import UpdateView
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets
@@ -111,8 +112,7 @@ class CcQueueListList(Table):
         order_by = 'name'
 
     def render_name(self, value, record):
-        return format_html('<a href=\"/callcentres/wbsinglequeue/{}/\">{}</a>', record.id, value)
-
+        return format_html('<a href=\"/callcentres/ccqueueedit/{}/\">{}</a>', record.id, value)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -131,6 +131,37 @@ class CcQueueList(SingleTableView):
         return qs
 
 
+class CcQueueEdit(LoginRequiredMixin, UpdateView):
+    template_name = "callcentres/queue_edit.html"
+    model = CallCentreQueues
+    fields = [
+            'name',
+            'description',
+            'wb_wait_warn_level',
+            'wb_wait_crit_level',
+            'wb_aban_warn_level',
+            'wb_aban_crit_level',
+            'wb_show_agents',
+            'wb_agents_per_row',
+            ]
+    success_url = '/callcentres/ccqueues/'
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user.username
+        return super().form_valid(form)
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        for key, f in form.fields.items():
+            f.widget.attrs['class'] = 'form-control form-control-sm'
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['back'] = '/callcentres/ccqueues/'
+        return context
+
+
 class WbSingleQueueBase(View):
     wb_status = 'wb_status'
     wb_colour = 'wb_colour'
@@ -140,6 +171,7 @@ class WbSingleQueueBase(View):
     wb_ccwb_crit = 'ccwb-crit'
     wb_abandoned_colour = 'abandoned_colour'
     wb_waiting_colour = 'waiting_colour'
+    default_q_settings = {'ww': 5, 'wc': 20, 'aw': 5, 'ac': 20, 'sa': 1, 'apr': 6 }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -197,13 +229,15 @@ class WbSingleQueueBase(View):
         self.queue['q_date'] = datetime.now().strftime("%d %b %Y")
         self.queue['agent_count'] = _('%s Agents' % str(self.agent_count))
         self.queue['trying'] = str(self.trying_count)
+        q_settings = cache.get('fs:cc:q:%s:settings' % self.ccq_id, self.default_q_settings)
+        self.queue['settings'] = q_settings
         try:
             waiting = int(cache.get('fs:cc:q:%s:members-count' % self.ccq_id, b'0').decode())
         except ValueError:
             waiting = 0
-        if waiting > 5:
+        if waiting > q_settings['ww'] and waiting <= q_settings['wc']:
             self.queue[self.wb_waiting_colour] = self.wb_ccwb_warn
-        elif waiting > 10:
+        elif waiting > q_settings['wc']:
             self.queue[self.wb_waiting_colour] = self.wb_ccwb_crit
         else:
             self.queue[self.wb_waiting_colour] = self.wb_ccwb_ok
@@ -213,9 +247,9 @@ class WbSingleQueueBase(View):
             abandoned = int(cache.get('fs:cc:q:%s:ctrs:BREAK_OUT' % self.ccq_id, b'0').decode())
         except ValueError:
             abandoned = 0
-        if abandoned > 5:
+        if abandoned > q_settings['aw'] and abandoned <= q_settings['ac']:
             self.queue[self.wb_abandoned_colour] = self.wb_ccwb_warn
-        elif abandoned > 10:
+        elif abandoned > q_settings['ac']:
             self.queue[self.wb_abandoned_colour] = self.wb_ccwb_crit
         else:
             self.queue[self.wb_abandoned_colour] = self.wb_ccwb_ok
@@ -230,9 +264,18 @@ class WbSingleQueueView(LoginRequiredMixin, WbSingleQueueBase):
         self.q = get_object_or_404(CallCentreQueues, pk=self.ccq_id)
         self.queue_name = self.q.name
         self.token = str(uuid.uuid4())
+        q_settings = {}
+        q_settings['ww'] = self.q.wb_wait_warn_level
+        q_settings['wc'] = self.q.wb_wait_crit_level
+        q_settings['aw'] = self.q.wb_aban_warn_level
+        q_settings['ac'] = self.q.wb_aban_crit_level
+        q_settings['sa'] = (1 if self.q.wb_show_agents == 'true' else 0)
+        q_settings['apr'] = self.q.wb_agents_per_row
+
         #  Set cache expire to None (never expire) for these set calls
         cache.set('fs:cc:q:%s:token' % self.ccq_id, self.token, None)
         cache.set('fs:cc:q:%s:name' % self.ccq_id, self.queue_name, None)
+        cache.set('fs:cc:q:%s:settings' % self.ccq_id, q_settings, None)
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
@@ -240,7 +283,6 @@ class WbSingleQueueView(LoginRequiredMixin, WbSingleQueueBase):
         self.get_queue_detail()
         data = {'agents': self.agents, 'queue': self.queue}
         return render(request, self.template_name, {'d': data})
-
 
 
 class WbSingleQueueJson(WbSingleQueueBase):
@@ -299,3 +341,18 @@ class WbSingleQueueJson(WbSingleQueueBase):
         self.get_queue_detail()
         data = {'agents': self.agents, 'queue': self.queue}
         return JsonResponse(data)
+
+
+class WbQueueResetCounters(LoginRequiredMixin, View):
+    template_name = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.ccq_id = kwargs.get('ccq_id')
+        self.q = get_object_or_404(CallCentreQueues, pk=self.ccq_id)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        #  Set cache expire to None (never expire) for these set calls
+        cache.set('fs:cc:q:%s:ctrs:answered' % self.ccq_id, b'0', None)
+        cache.set('fs:cc:q:%s:ctrs:BREAK_OUT' % self.ccq_id, b'0', None)
+        return HttpResponseRedirect('/callcentres/ccqueues/')

@@ -33,7 +33,8 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 
 from .models import (
-    CallCentreAgents, CallCentreQueues, CallCentreTiers, get_agent_contact
+    CallCentreAgents, CallCentreQueues, CallCentreTiers,
+    CallCentreAgentStatusLog, get_agent_contact
 )
 from dialplans.models import Dialplan
 from tenants.models import Profile
@@ -342,6 +343,8 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
                             'enabled',
                             'description',
                             'domain_id']}),
+        ('wallboard settings',   {'fields': ['wb_wait_warn_level', 'wb_wait_crit_level', 'wb_aban_warn_level',
+                            'wb_aban_crit_level', 'wb_show_agents', 'wb_agents_per_row'], 'classes': ['collapse']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('name', 'extension', 'strategy', 'tier_rules_apply', 'enabled', 'description')
@@ -471,8 +474,35 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
         return ret
 
 
+class CallCentreAgentStatusLogResource(resources.ModelResource):
+    class Meta:
+        model = CallCentreAgentStatusLog
+        import_id_fields = ('id', )
+
+
+class CallCentreAgentStatusLogAdmin(ImportExportModelAdmin):
+    resource_class = CallCentreAgentStatusLogResource
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    search_fields = ['agent_id']
+    fieldsets = [
+        (None,  {'fields': ['agent_id', 'status']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('created', 'agent_id', 'status')
+    list_filter = ('status',)
+    ordering = [
+        'created','agent_id'
+    ]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
 admin.site.register(CallCentreAgents, CallCentreAgentsAdmin)
 admin.site.register(CallCentreQueues, CallCentreQueuesAdmin)
+admin.site.register(CallCentreAgentStatusLog, CallCentreAgentStatusLogAdmin)
 
 if settings.PBX_ADMIN_SHOW_ALL:
     admin.site.register(CallCentreTiers, CallCentreTiersAdmin)

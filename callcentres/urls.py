@@ -37,7 +37,9 @@ router.register(r'callcentreagents', views.CallCentreAgentsViewSet)
 router.register(r'callcentretiers', views.CallCentreTiersViewSet)
 
 urlpatterns = [
-    path('wbqueues/', views.CcQueueList.as_view(), name='wbqueues'),
+    path('ccqueues/', views.CcQueueList.as_view(), name='ccqueues'),
+    path('ccqueueedit/<pk>/', views.CcQueueEdit.as_view(), name='ccqueueedit'),
     path('wbsinglequeue/<ccq_id>/', views.WbSingleQueueView.as_view(), name='wbsinglequeue'),
     path('wbsinglequeuejson/<ccq_id>/<token>/', views.WbSingleQueueJson.as_view(), name='wbsinglequeuejson'),
+    path('wbqueueresetcounters/<ccq_id>/', views.WbQueueResetCounters.as_view(), name='wbqueueresetcounters'),
 ]

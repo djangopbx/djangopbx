@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,25 +27,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from .httapihandler import HttApiHandler
-from callcentres.models import  CallCentreAgents, CallCentreAgentStatusLog
-from django.shortcuts import get_object_or_404
+from django.template import Library
+
+register = Library()
 
 
-class CcEventHandler(HttApiHandler):
+@register.simple_tag
+def setvar(val=None):
+    return val
 
-    handler_name = 'ccevent'
 
-    def get_data(self):
-        action = self.qdict.get('CC-Action', 'None')
-        if action == 'agent-status-change':
-            agent = self.qdict.get('CC-Agent')
-            if agent:
-                q = get_object_or_404(CallCentreAgents, pk=agent)
-                status = self.qdict.get('CC-Agent-Status', 'Unknown')
-                CallCentreAgentStatusLog.objects.create(
-                        agent_id=q,
-                        status=status,
-                        updated_by='system'
-                    )
-        return self.return_data('Ok\n')
+@register.simple_tag
+def incvar(val=0):
+    return int(val) + 1

@@ -1,0 +1,6 @@
+{% extends "portal.html" %}
+{% load i18n static %}
+
+    {% block content %}
+        {% include 'pbx_table_listing.html' with pbxlistingname='Call Centre Queues' %}
+    {% endblock %}
