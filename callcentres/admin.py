@@ -29,6 +29,8 @@
 
 from time import sleep
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
+from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 
@@ -306,6 +308,22 @@ class CallCentreQueuesAdminForm(ModelForm):
         }
 
 
+@admin.action(permissions=['change'], description=_('Reload selected Call Centre Queues'))
+def cc_queue_reload(modeladmin, request, queryset):
+    es = EventSocket()
+    if not es.connect(*settings.EVSKT):
+        messages.add_message(request, messages.ERR, _('Event Socket Connect Problem'))
+        return
+    rc = 0
+    for obj in queryset:
+        cmd = 'api callcenter_config queue reload %s' % str(obj.id)
+        result = es.send(cmd)
+        if '+OK' in result:
+            rc += 1
+    if rc > 0:
+        messages.add_message(request, messages.INFO, _('%s Queue(s) reloaded.' % rc))
+
+
 class CallCentreQueuesAdmin(ImportExportModelAdmin):
     resource_class = CallCentreQueuesResource
     form = CallCentreQueuesAdminForm
@@ -353,6 +371,7 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
         'name'
     ]
     inlines = [CallCentreTiersInLine]
+    actions = [cc_queue_reload]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         ss = SwitchSounds()
