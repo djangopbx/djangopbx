@@ -65,6 +65,7 @@
       <!--<param name="record-comment" value="Your Comment"/>-->
       <!--<param name="record-title" value="Your Title"/>-->
       <!--<param name="record-copyright" value="Your Copyright"/>-->
+      <param name="dbname" value="/var/lib/freeswitch/vm_db/voicemail_default.db"/>
     </profile>
   </profiles>
 </configuration>
