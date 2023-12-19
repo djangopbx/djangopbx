@@ -1,0 +1,7 @@
+{% extends 'admin/change_form.html' %}
+{% load i18n static %}
+{% block content %}
+<p><b>REST API</b> {% translate 'If you know the numeric ID of the user, type it in the box below.' %}<br>
+{% translate 'Otherwise click the Search icon to pop up a list of users.' %}</p>
+{{ block.super }}
+{% endblock %}

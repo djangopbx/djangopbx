@@ -93,7 +93,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all().order_by('username')
     serializer_class = ProfileSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['donain_id', 'username']
+    filterset_fields = ['domain_id', 'username']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

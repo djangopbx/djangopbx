@@ -51,6 +51,12 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 
+# includes for REST Framework TokenAdmin (TokenAuthentication)
+from rest_framework.authtoken.admin import TokenAdmin
+TokenAdmin.raw_id_fields = ['user']
+TokenAdmin.change_list_template = "api_token_admin_changelist.html"
+TokenAdmin.change_form_template = "api_token_admin_changeform.html"
+
 from dialplans.dialplanfunctions import SwitchDp
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from django.contrib import messages

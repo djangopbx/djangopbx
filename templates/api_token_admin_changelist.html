@@ -1,0 +1,8 @@
+{% extends 'admin/change_list.html' %}
+{% load i18n static %}
+{% block content %}
+<p><b>REST API</b> {% translate 'This is where you can create Tokens for API access' %}<br>
+{% translate 'The Token shoudl be used in the HTTP header.  Curl example below:' %}</p>
+<p><code>curl -X GET https://&lt;api url&gt; -H 'Authorization: Token &lt;token&gt;'</code></p>
+{{ block.super }}
+{% endblock %}

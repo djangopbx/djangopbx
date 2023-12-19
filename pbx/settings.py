@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'fontawesome',
     'django_filters',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_tables2',
     'django_ace',
     'portal.apps.PortalConfig',
@@ -263,7 +264,8 @@ LOGIN_REDIRECT_URL = '/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     # Use Django's standard `django.contrib.auth` permissions,
