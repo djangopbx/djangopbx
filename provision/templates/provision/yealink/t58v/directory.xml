@@ -1,0 +1,91 @@
+<YealinkIPPhoneDirectory>
+{% for row in contacts %}
+{% if row.category == "users" %}
+<DirectoryEntry>
+{% if row.contact_organization and row.contact_name_given and row.contact_name_family %}
+	<Name>{{ row.contact_organization }}, {{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_organization and row.contact_name_given == "" and row.contact_name_family == "" %}
+	<Name>{{ row.contact_organization }}</Name>
+{% elif row.contact_name_given and row.contact_name_family and row.contact_organization == "" %}
+	<Name>{{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_name_given and row.contact_name_family %}
+	<Name>{{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_name_given %}
+	<Name>{{ row.contact_name_given }}</Name>
+{% elif row.contact_name_family %}
+	<Name>{{ row.contact_name_family }}</Name>
+{% endif %}
+{% for number in row.numbers %}
+{% if number.phone_number %}
+	<Telephone>{{ number.phone_number }}</Telephone>
+{% else %}
+	<Telephone>{{ number.phone_extension }}</Telephone>
+{% endif %}
+{% endfor %}
+</DirectoryEntry>
+{% elif row.category == "groups" %}
+<DirectoryEntry>
+{% if row.contact_organization and row.contact_name_given and row.contact_name_family %}
+	<Name>{{ row.contact_organization }}, {{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_organization and row.contact_name_given == "" and row.contact_name_family == "" %}
+	<Name>{{ row.contact_organization }}</Name>
+{% elif row.contact_name_given and row.contact_name_family and row.contact_organization == "" %}
+	<Name>{{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_name_given and row.contact_name_family %}
+	<Name>{{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_name_given %}
+	<Name>{{ row.contact_name_given }}</Name>
+{% elif row.contact_name_family %}
+	<Name>{{ row.contact_name_family }}</Name>
+{% endif %}
+{% for number in row.numbers %}
+{% if number.phone_number %}
+	<Telephone>{{ number.phone_number }}</Telephone>
+{% else %}
+	<Telephone>{{ number.phone_extension }}</Telephone>
+{% endif %}
+{% endfor %}
+</DirectoryEntry>
+{% elif row.category == "extensions" %}
+<DirectoryEntry>
+{% if row.contact_name_given %}
+	<Name>{{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% else %}
+	<Name>{{ row.effective_caller_id_name }}</Name>
+{% endif %}
+{% if row.phone_number %}
+	<Telephone>{{ row.phone_number }}</Telephone>
+{% else %}
+	<Telephone>{{ row.phone_extension }}</Telephone>
+{% endif %}
+</DirectoryEntry>
+{% elif row.category == "all" %}
+<DirectoryEntry>
+{% if row.contact_organization and row.contact_name_given and row.contact_name_family %}
+	<Name>{{ row.contact_organization }}, {{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_organization and row.contact_name_given == "" and row.contact_name_family == "" %}
+	<Name>{{ row.contact_organization }}</Name>
+{% elif row.contact_name_given and row.contact_name_family and row.contact_organization == "" %}
+	<Name>{{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_name_given and row.contact_name_family %}
+	<Name>{{ row.contact_name_given }} {{ row.contact_name_family }}</Name>
+{% elif row.contact_name_given %}
+	<Name>{{ row.contact_name_given }}</Name>
+{% elif row.contact_name_family %}
+	<Name>{{ row.contact_name_family }}</Name>
+{% endif %}
+{% if row.numbers %}
+{% for number in row.numbers %}
+{% if number.phone_number %}
+	<Telephone>{{ number.phone_number }}</Telephone>
+{% else %}
+	<Telephone>{{ number.phone_extension }}</Telephone>
+{% endif %}
+{% endfor %}
+{% else %}
+	<Telephone>{{ row.phone_extension }}</Telephone>
+{% endif %}
+</DirectoryEntry>
+{% endif %}
+{% endfor %}
+</YealinkIPPhoneDirectory>
