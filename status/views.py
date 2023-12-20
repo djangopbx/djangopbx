@@ -175,7 +175,10 @@ def fsregistrations(request, realm=None):
                 sip_user = '%s@%s' % (i['reg_user'], i['realm'])
                 rows.append('%s|%s|%s' % (i['reg_user'], i['realm'], sip_profile))
                 rows.append('<a href="/status/fsregdetail/%s/%s">%s</a>' % (sip_profile, sip_user, sip_user))
-                rows.append(i['token'].split('@')[1])
+                if 'token' in i and '@' in i['token']:
+                    rows.append(i['token'].split('@')[1])
+                else:
+                    rows.append('')                
                 rows.append(i['network_ip'])
                 rows.append(i['network_port'])
                 rows.append(i['network_proto'])
