@@ -166,9 +166,8 @@ def fsregistrations(request, realm=None):
     act = {'unregister': 'Un-Register', 'check_sync': 'Provision', 'reboot': 'Reboot'}
 
     unixts = int(datetime.datetime.now().timestamp())
-    registrations = es.send('api show registrations as json')
-    if registrations:
-        registrations = json.loads(registrations)
+    registrations = json.loads(es.send('api show registrations as json'))
+    if registrations['row_count'] > 0:    
         for i in registrations['rows']:
             if realm == 'all' or realm == i['realm']:
                 sip_profile = i['url'].split('/')[1]
