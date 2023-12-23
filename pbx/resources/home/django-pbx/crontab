@@ -1,2 +1,7 @@
 # min hour dayofmonth month dayofweek cmd
 */4  * * * * cd /home/django-pbx/pbx/pbx/scripts; ./call_flow_monitor.py > /dev/null 2>&1
+15 6 1 * * cd /home/django-pbx/pbx; python3 manage.py timedreport --frequency month > /dev/null 2>&1
+30 6 * * 1 cd /home/django-pbx/pbx; python3 manage.py timedreport --frequency week > /dev/null 2>&1
+45 6 * * * cd /home/django-pbx/pbx; python3 manage.py timedreport --frequency day > /dev/null 2>&1
+# Uncomment below if hourly reports are really needed.
+#0 9-17 * * * cd /home/django-pbx/pbx; python3 manage.py timedreport --frequency hour > /dev/null 2>&1

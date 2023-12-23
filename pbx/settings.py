@@ -102,6 +102,7 @@ INSTALLED_APPS = [
     'callflows.apps.CallflowsConfig',
     'callblock.apps.CallblockConfig',
     'callcentres.apps.CallcentresConfig',
+    'autoreports.apps.AutoreportsConfig',
 ]
 
 MIDDLEWARE = [

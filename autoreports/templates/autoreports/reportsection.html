@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<p class=textsubtitle1>{{ title }}</p>
+<table border=1>
+<tr>
+{% for h in columns %}
+<th class="th">{{ h|title }}</th>
+{% endfor %}
+</tr>
+{% for r in rows %}
+<tr  class="{% cycle 'tdo' 'tde' %}">
+    {% for d in r %}
+<td>{{ d }}</td>
+    {% endfor %}
+</tr>
+{% endfor %}
+</table>
+<p class="text">{{ message|linebreaksbr }}</p>

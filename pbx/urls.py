@@ -69,6 +69,7 @@ from ivrmenus.urls import router as ivrmenusrouter
 from callflows.urls import router as callflowsrouter
 from callblock.urls import router as callblockrouter
 from callcentres.urls import router as callcentresrouter
+from autoreports.urls import router as autoreportsrouter
 
 
 # This overrides names in site headers and titles
@@ -99,6 +100,7 @@ router.registry.extend(ivrmenusrouter.registry)
 router.registry.extend(callflowsrouter.registry)
 router.registry.extend(callblockrouter.registry)
 router.registry.extend(callcentresrouter.registry)
+router.registry.extend(autoreportsrouter.registry)
 
 
 urlpatterns = [
@@ -120,6 +122,7 @@ urlpatterns = [
     path('ringgroups/', include('ringgroups.urls')),
     path('contacts/', include('contacts.urls')),
     path('callcentres/', include('callcentres.urls')),
+    path('autoreports/', include('autoreports.urls')),
 
     # Wire up our API using automatic URL routing.
     # Additionally, we include login URLs for the browsable API.
