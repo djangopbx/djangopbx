@@ -195,8 +195,7 @@ class XmlCdrFunctions():
         network_addr = '-'
 
         callflows = cdr_dict['cdr'].get('callflow')
-
-        if type(callflows) is dict():
+        if type(callflows) is dict:
             context = self.uq(callflows['caller_profile'].get('context'))
             destination_number = self.uq(callflows['caller_profile'].get('destination_number'))
             network_addr = self.uq(callflows['caller_profile'].get('network_addr'))
@@ -207,7 +206,7 @@ class XmlCdrFunctions():
                 if tmpstr:
                     caller_id_number = tmpstr
 
-        elif type(callflows) is list():
+        elif type(callflows) is list:
             i = 0
             for callflow in callflows:
                 if i == 0:
@@ -220,6 +219,7 @@ class XmlCdrFunctions():
                 tmpstr = callflow['caller_profile'].get('caller_id_number')
                 if tmpstr:
                     caller_id_number = tmpstr
+                i += 1
 
         tmpstr = cdr_dict['cdr']['variables'].get('last_sent_callee_id_number')
         if tmpstr and leg == 'a':
