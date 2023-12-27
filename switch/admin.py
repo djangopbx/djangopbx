@@ -41,6 +41,7 @@ from import_export import resources
 from switch.switchfunctions import SwitchFunctions
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from pbx.commonfunctions import shcommand
+from .ipregisterfunctions import IpRegisterFunctions
 
 
 class SipProfileDomainResource(resources.ModelResource):
@@ -403,6 +404,12 @@ class IpRegisterResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
+@admin.action(permissions=['change'], description='Re-instate SIP Customer Firewall List')
+def reinstate_sip_customer_list(modeladmin, request, queryset):
+    iprf = IpRegisterFunctions()
+    iprf.reinstate_fw_sip_customer_list()
+
+
 class IpRegisterAdmin(ImportExportModelAdmin):
     resource_class = IpRegisterResource
     save_as = True
@@ -417,6 +424,17 @@ class IpRegisterAdmin(ImportExportModelAdmin):
     ordering = [
         'address'
     ]
+
+    actions = [reinstate_sip_customer_list]
+
+    # This is a workaround to allow the admin action to be run without selecting any objects.
+    # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
+    def changelist_view(self, request, extra_context=None):
+        if 'action' in request.POST and request.POST['action'] == 'reinstate_sip_customer_list':
+            post = request.POST.copy()
+            post.update({ACTION_CHECKBOX_NAME: 'dd30bc83-ccb8-4f27-a1d6-9340ae7de325'})
+            request._set_post(post)
+        return super(IpRegisterAdmin, self).changelist_view(request, extra_context)
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
