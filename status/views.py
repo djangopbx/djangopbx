@@ -112,7 +112,7 @@ def modules(request, moduuid=None, action=None):
             if '+OK' in m_status:
                 messages.add_message(request, messages.INFO, _('Module %s OK' % cmd))
             else:
-                messages.add_message(request, messages.WARN, _('Module %s Failed' % cmd))
+                messages.add_message(request, messages.WARNING, _('Module %s Failed' % cmd))
 
         mods = Modules.objects.filter(enabled='true').order_by('category', 'label')
         for m in mods:

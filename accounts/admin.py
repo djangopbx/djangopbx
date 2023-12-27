@@ -309,11 +309,11 @@ def write_gateway_file(modeladmin, request, queryset):
     if rc > 0:
         messages.add_message(request, messages.INFO, _('%s gateway file(s) written.' % rc))
     if r == -1:
-        messages.add_message(request, messages.WARN, _('Default setting does not exist: switch->conf'))
+        messages.add_message(request, messages.WARNING, _('Default setting does not exist: switch->conf'))
     if r == -2:
-        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+        messages.add_message(request, messages.WARNING, _('Configuration directory does not exist.'))
     if r == -3:
-        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+        messages.add_message(request, messages.WARNING, _('Error writing to file.'))
 
 
 @admin.action(permissions=['change'], description=_('Reload gateway profile'))
@@ -329,7 +329,7 @@ def rescan_sofia_profile(modeladmin, request, queryset):
     if rc > 0:
         messages.add_message(request, messages.INFO, _('%s gateway profil(s) rescanned.' % rc))
     if r == -1:
-        messages.add_message(request, messages.WARN, _('Event Socket Error'))
+        messages.add_message(request, messages.WARNING, _('Event Socket Error'))
 
 
 @admin.action(permissions=['change'], description=_('Stop gateway'))
@@ -343,7 +343,7 @@ def sofia_stop_gateway(modeladmin, request, queryset):
     if rc > 0:
         messages.add_message(request, messages.INFO, _('%s gateway(s) stopped.' % rc))
     if r == -1:
-        messages.add_message(request, messages.WARN, _('Event Socket Error'))
+        messages.add_message(request, messages.WARNING, _('Event Socket Error'))
 
 
 class GatewayAdmin(ImportExportModelAdmin):

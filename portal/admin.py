@@ -205,7 +205,7 @@ class Failed_loginsAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         if change:
-            messages.add_message(request, messages.WARN, _('A changed IP will not be added to Firewall automatically'))
+            messages.add_message(request, messages.WARNING, _('A changed IP will not be added to Firewall automatically'))
         else:
             if ':' in obj.address:
                 shcommand(["/usr/local/bin/fw-add-ipv6-web-block-list.sh", obj.address])

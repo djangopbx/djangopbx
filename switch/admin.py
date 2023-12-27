@@ -132,11 +132,11 @@ def write_sip_profile_files(modeladmin, request, queryset):
     if r == 0:
         messages.add_message(request, messages.INFO, _('sip profile files written.'))
     if r == 1:
-        messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->sip_profiles')
+        messages.add_message(request, messages.WARNING, _('Default setting does not exist:') + ' switch->sip_profiles')
     if r == 2:
-        messages.add_message(request, messages.WARN, _('Configuration directory could not be created.'))
+        messages.add_message(request, messages.WARNING, _('Configuration directory could not be created.'))
     if r == 3:
-        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+        messages.add_message(request, messages.WARNING, _('Error writing to file.'))
 
 
 class SipProfileAdmin(ImportExportModelAdmin):
@@ -197,11 +197,11 @@ def write_switch_vars_file(modeladmin, request, queryset):
     if r == 0:
         messages.add_message(request, messages.INFO, _('vars.xml file written.'))
     if r == 1:
-        messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->conf')
+        messages.add_message(request, messages.WARNING, _('Default setting does not exist:') + ' switch->conf')
     if r == 2:
-        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+        messages.add_message(request, messages.WARNING, _('Configuration directory does not exist.'))
     if r == 3:
-        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+        messages.add_message(request, messages.WARNING, _('Error writing to file.'))
 
 
 class SwitchVariableAdmin(ImportExportModelAdmin):
@@ -262,11 +262,11 @@ def write_acl_file(modeladmin, request, queryset):
     if r == 0:
         messages.add_message(request, messages.INFO, _('acl.conf.xml file written.'))
     if r == 1:
-        messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->conf')
+        messages.add_message(request, messages.WARNING, _('Default setting does not exist:') + ' switch->conf')
     if r == 2:
-        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+        messages.add_message(request, messages.WARNING, _('Configuration directory does not exist.'))
     if r == 3:
-        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+        messages.add_message(request, messages.WARNING, _('Error writing to file.'))
 
 
 class AccessControlAdmin(ImportExportModelAdmin):
@@ -358,11 +358,11 @@ def write_switch_modules_file(modeladmin, request, queryset):
     if r == 0:
         messages.add_message(request, messages.INFO, _('modules.conf.xml file written.'))
     if r == 1:
-        messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->conf')
+        messages.add_message(request, messages.WARNING, _('Default setting does not exist:') + ' switch->conf')
     if r == 2:
-        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+        messages.add_message(request, messages.WARNING, _('Configuration directory does not exist.'))
     if r == 3:
-        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+        messages.add_message(request, messages.WARNING, _('Error writing to file.'))
 
 
 class ModulesAdmin(ImportExportModelAdmin):
@@ -421,7 +421,7 @@ class IpRegisterAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         if change:
-            messages.add_message(request, messages.WARN, _('A changed IP will not be added to Firewall automatically'))
+            messages.add_message(request, messages.WARNING, _('A changed IP will not be added to Firewall automatically'))
         else:
             if ':' in obj.address:
                 shcommand(["/usr/local/bin/fw-add-ipv6-sip-customer-list.sh", obj.address])

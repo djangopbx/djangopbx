@@ -77,11 +77,11 @@ def write_local_stream_file(modeladmin, request, queryset):
     if r == 0:
         messages.add_message(request, messages.INFO, _('acl.conf.xml file written.'))
     if r == 1:
-        messages.add_message(request, messages.WARN, _('Default setting does not exist:') + ' switch->conf')
+        messages.add_message(request, messages.WARNING, _('Default setting does not exist:') + ' switch->conf')
     if r == 2:
-        messages.add_message(request, messages.WARN, _('Configuration directory does not exist.'))
+        messages.add_message(request, messages.WARNING, _('Configuration directory does not exist.'))
     if r == 3:
-        messages.add_message(request, messages.WARN, _('Error writing to file.'))
+        messages.add_message(request, messages.WARNING, _('Error writing to file.'))
 
 
 class MusicOnHoldAdmin(ImportExportModelAdmin):
