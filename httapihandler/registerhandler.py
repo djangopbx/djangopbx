@@ -40,7 +40,7 @@ class RegisterHandler(HttApiHandler):
         ip_address = self.qdict.get('network-ip', '192.168.42.1')
         status = self.qdict.get('status', 'N/A')
         if status.startswith('Registered'):
-            ip, created = IpRegister.objects.update_or_create(address=ip_address)
+            ip, created = IpRegister.objects.update_or_create(address=ip_address, defaults={"status": 1})
             if created:
                 if ':' in ip.address:
                     shcommand(["/usr/local/bin/fw-add-ipv6-sip-customer-list.sh", ip.address])

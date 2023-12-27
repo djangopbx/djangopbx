@@ -207,7 +207,7 @@ class Devices(models.Model):
     provisioned_method = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Prov. Method'))                                                                # noqa: E501, E221
     enabled            = models.CharField(max_length=8, blank=True, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))   # noqa: E501, E221
     description        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Description'))                                                                # noqa: E501, E221
-    provisioned_ip     = models.GenericIPAddressField(blank=True, null=True, protocol='both', unpack_ipv4=False, unique=True, verbose_name=_('Provisioned Address'))           # noqa: E501, E221
+    provisioned_ip     = models.GenericIPAddressField(blank=True, null=True, protocol='both', unpack_ipv4=False, verbose_name=_('Provisioned Address'))                        # noqa: E501, E221
     created            = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                             # noqa: E501, E221
     updated            = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                 # noqa: E501, E221
     synchronised       = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                           # noqa: E501, E221
