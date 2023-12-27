@@ -1,2 +1,6 @@
 django-pbx ALL=(root) NOPASSWD: /usr/bin/tail
 django-pbx ALL=(root) NOPASSWD: /usr/sbin/nft
+django-pbx ALL=(root) NOPASSWD: /usr/bin/ngrep
+django-pbx ALL=(root) NOPASSWD: /usr/bin/sngrep
+django-pbx ALL=(root) NOPASSWD: /usr/bin/tcpdump
+
