@@ -32,7 +32,7 @@ from switch.ipregisterfunctions import IpRegisterFunctions
 
 
 class Command(BaseCommand):
-    help = 'Reinstate Firewall SIP Customer List'
+    help = 'Obsolete old IP addresses from IP Register'
 
     def handle(self, *args, **kwargs):
-        IpRegisterFunctions().reinstate_fw_sip_customer_list()
+        IpRegisterFunctions().obsolete_old_ip_addresses()

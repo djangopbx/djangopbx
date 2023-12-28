@@ -421,6 +421,7 @@ class IpRegisterAdmin(ImportExportModelAdmin):
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('address', 'status', 'created', 'updated')
+    list_filter = ('status', )
     ordering = [
         'address'
     ]

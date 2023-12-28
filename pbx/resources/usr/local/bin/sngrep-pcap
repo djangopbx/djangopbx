@@ -25,7 +25,7 @@ then
 echo "No file name supplied - using last pcap"
     if [ -f "${HOME}/.django-pbx/last_pcap" ]
     then
-        last_pcap=`cat ${HOME}/.lantec-ipx/last_pcap`
+        last_pcap=`cat ${HOME}/.django-pbx/last_pcap`
     fi
 else
     if [[ "$1" == "list" ]]

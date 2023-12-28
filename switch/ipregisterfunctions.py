@@ -26,6 +26,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.utils import timezone
 from .models import IpRegister
 from pbx.commonfunctions import shcommand
 
@@ -50,3 +51,8 @@ class IpRegisterFunctions():
         qs = IpRegister.objects.raw('select id, address from pbx_ip_register where status=1 and family(address)=6 order by address')
         if qs:
             self.process_data(qs, '/usr/local/bin/fw-add-ipv6-sip-customer-list.sh')
+
+    def obsolete_old_ip_addresses(self):
+        time_24_hours_ago = timezone.now() - timezone.timedelta(1)
+        IpRegister.objects.filter(status=1, updated__lte=time_24_hours_ago).update(status=0)
+
