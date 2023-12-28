@@ -16,7 +16,7 @@ htmx.logger = function(elt, event, data) {
         </div>
         <div class="card-body cardbody1">
             {% if request.user.is_superuser %}
-                {%if dp_uuid %}
+                {%if not dp_uuid == 'New' %}
                     <a href="/admin/dialplans/dialplan/{{ dp_uuid }}/change/">{% translate 'Go to Time condition in Admin:' %}</a>
                 {% endif %}
             {% endif %}
