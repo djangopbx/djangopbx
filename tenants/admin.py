@@ -311,7 +311,7 @@ class ProfileAdmin(ImportExportModelAdmin):
     ]
 
     list_display = ('username', 'domain_id', 'email', 'enabled')
-    list_filter = (DomainFilter, 'username', 'domain_id', 'email', 'enabled')
+    list_filter = (DomainFilter, 'enabled')
     inlines = [ProfileSettingInLine]
 
     def save_formset(self, request, form, formset, change):
