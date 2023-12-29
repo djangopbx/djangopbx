@@ -306,7 +306,7 @@ class ProfileAdmin(ImportExportModelAdmin):
     search_fields = ['username', 'email']
     fieldsets = [
         (None, {'fields': ['domain_id', 'username', 'email', 'user']}),
-        ('Status', {'fields': ['status', 'enabled', 'api_key'], 'classes': ['collapse']}),
+        ('Status', {'fields': ['status', 'enabled'], 'classes': ['collapse']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
 
