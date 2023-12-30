@@ -6,6 +6,7 @@
             <div class="card-header">
                 <i class="{{ listicon|default:'fa fa-table' }}"></i> {% translate pbxlistingname %}
                 {% if add %}<a class="float-right" href="{{ add }}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Add' %}"></a>{% endif %}
+                {% if import %}<a class="float-right" style="margin-right: 5px;" href="{{ import }}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Import' %}"></a>{% endif %}
             </div>
             <div class="card-body cardbody1">
             {% render_table table %}

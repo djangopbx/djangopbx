@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import re
 from django.contrib import admin
 from .models import (
     Contact, ContactTel, ContactEmail, ContactGeo, ContactUrl, ContactOrg,
@@ -414,14 +415,14 @@ class ContactAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        obj.fn = '%s %s %s %s %s' % (
+        fn = '%s %s %s %s %s' % (
             obj.honorific_prefix if obj.honorific_prefix else '',
             obj.given_name if obj.given_name else '',
             obj.additional_name if obj.additional_name else '',
             obj.family_name if obj.family_name else '',
             obj.honorific_suffix if obj.honorific_suffix else '',
                                 )
-        obj.fn = obj.fn.replace('  ', ' ').strip()
+        obj.fn = re.sub('\s+', ' ', fn.strip())
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)

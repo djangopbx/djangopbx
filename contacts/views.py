@@ -27,7 +27,10 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+import re
+import tempfile
+from django.utils.translation import gettext_lazy as _
+from django.views.generic.edit import View, CreateView, UpdateView, DeleteView
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
@@ -45,6 +48,8 @@ from .serializers import (
     ContactUrlSerializer, ContactOrgSerializer, ContactAddressSerializer,
     ContactDateSerializer, ContactCategorySerializer, ContactGroupSerializer,
 )
+from .forms import VcfUploadForm
+from .vcard import VCardParse
 from django.utils.decorators import method_decorator
 from django_tables2 import Table, SingleTableMixin, LazyPaginator
 from django_filters.views import FilterView
@@ -54,7 +59,7 @@ from django.utils.html import format_html
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 
 
 class ContactViewSet(viewsets.ModelViewSet):
@@ -332,14 +337,14 @@ class ContactEdit(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.updated_by = self.request.user.username
-        form.instance.fn = '%s %s %s %s %s' % (
+        fn = '%s %s %s %s %s' % (
             form.instance.honorific_prefix if form.instance.honorific_prefix else '',
             form.instance.given_name if form.instance.given_name else '',
             form.instance.additional_name if form.instance.additional_name else '',
             form.instance.family_name if form.instance.family_name else '',
             form.instance.honorific_suffix if form.instance.honorific_suffix else '',
                                 )
-        form.instance.fn = form.instance.fn.replace('  ', ' ').strip()
+        form.instance.fn = re.sub('\s+', ' ', fn.strip())
 
         if not form.instance.enabled:
             form.instance.enabled = 'false'
@@ -356,6 +361,7 @@ class ContactEdit(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['url_name'] = 'contactedit'
         context['back'] = '/contacts/contactlist/'
+        context['delete'] = '/contacts/contactdel/%s/' % str(self.object.id)
         context['c_tel'] = self.get_c_contacttel()
         context['c_tel_e_url'] = '/contacts/contactteledit/'
         context['c_tel_a_url'] = '/contacts/contactteladd/%s/' % str(self.object.id)
@@ -460,6 +466,22 @@ class ContactEdit(LoginRequiredMixin, UpdateView):
         for cd in cds:
             cdetail[cd.id] = {'Group': cd.group_id}
         return cdetail
+
+
+class ContactDel(LoginRequiredMixin, DeleteView):
+    template_name = "generic_del.html"
+    model = Contact
+
+    def get_success_url(self):
+        return '/contacts/contactlist/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['url_name'] = 'contactdel'
+        context['listicon'] = 'fa fa-user'
+        context['title'] = 'Delete Contact'
+        context['back'] = '/contacts/contactedit/%s/' % str(self.object.id)
+        return context
 
 
 class ContactTelEdit(LoginRequiredMixin, UpdateView):
@@ -1208,3 +1230,42 @@ class ContactGroupDel(LoginRequiredMixin, DeleteView):
         context['title'] = 'Delete Group'
         context['back'] = '/contacts/contactedit/%s/' % str(self.object.contact_id_id)
         return context
+
+
+class ImportVcf(LoginRequiredMixin, View):
+    form_class = VcfUploadForm
+    initial = {'title': 'contacts.vcf'}
+    template_name = "contacts/contact_vcf_upload.html"
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form, 'back': '/contacts/contactlist/'})
+
+    def post(self, request, *args, **kwargs):
+        info = {}
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            vcf = request.FILES['file']
+            with tempfile.NamedTemporaryFile(delete=False) as fp:
+                for chunk in vcf.chunks():
+                    fp.write(chunk)
+                fp.close()
+                with open(fp.name, mode='r') as f:
+                    v = VCardParse(f, request)
+                    v.v_read()
+                    info[_('VCards Read')] = v.v_count
+                    info['-'] = ''
+                    info[_('Contacts Added')] = v.contacts_added
+                    info[_('Numbers Added')] = v.tel_added
+                    info[_('Emails Added')] = v.email_added
+                    info[_('Geographic URIs')] = v.geo_added
+                    info[_('URLs')] = v.url_added
+                    info[_('Organisations')] = v.org_added
+                    info[_('Addresses')] = v.adr_added
+                    info[_('Significant Dates')] = v.dte_added
+                    info[_('Categories')] = v.cat_added
+                    if v.errors:
+                        info['--'] = ''
+                        info[_('Errors')] = v.error_text
+
+        return render(request, 'infotable.html', {'back': 'contactlist', 'info': info, 'title': 'VCard Import Results'})

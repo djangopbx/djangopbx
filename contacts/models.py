@@ -35,10 +35,10 @@ from pbx.commonchoices import EnabledTrueFalseChoice
 
 
 class TelTypeChoice(models.TextChoices):
-    CVOICE = 'VOICE',  _('INTL')         # noqa: E221
-    CHOME  = 'HOME',   _('Home')         # noqa: E221
-    CMSG   = 'MSG',    _('Message')      # noqa: E221
-    CWORK  = 'WORK',   _('Work')         # noqa: E221
+    CVOICE = 'voice',  _('INTL')         # noqa: E221
+    CHOME  = 'home',   _('Home')         # noqa: E221
+    CMSG   = 'msg',    _('Message')      # noqa: E221
+    CWORK  = 'work',   _('Work')         # noqa: E221
     CPREF  = 'pref',   _('Preferred')    # noqa: E221
     CFAX   = 'fax',    _('Fax')          # noqa: E221
     CCELL  = 'cell',   _('Mobile phone') # noqa: E221
@@ -52,16 +52,18 @@ class TelTypeChoice(models.TextChoices):
 
 
 class EmailTypeChoice(models.TextChoices):
-    CINTERNET = 'INTERNET',  _('Internet')  # noqa: E221
+    CINTERNET = 'internet',  _('Internet')  # noqa: E221
+    CHOME     = 'home',      _('Home')      # noqa: E221
+    CWORK     = 'work',      _('Work')      # noqa: E221
     CX400     = 'x400',      _('x400')      # noqa: E221
     CPREF     = 'pref',      _('Preferred') # noqa: E221
 
 
 class AddressTypeChoice(models.TextChoices):
-    CINTL   = 'INTL',    _('INTL')         # noqa: E221
-    CPOSTAL = 'POSTAL',  _('Postal')       # noqa: E221
-    CPARCEL = 'PARCEL',  _('Parcel')       # noqa: E221
-    CWORK   = 'WORK',    _('Work')         # noqa: E221
+    CINTL   = 'intl',    _('INTL')         # noqa: E221
+    CPOSTAL = 'postal',  _('Postal')       # noqa: E221
+    CPARCEL = 'parcel',  _('Parcel')       # noqa: E221
+    CWORK   = 'work',    _('Work')         # noqa: E221
     CDOM    = 'dom',     _('Dom')          # noqa: E221
     CHOME   = 'home',    _('Home')         # noqa: E221
     CPREF   = 'pref',    _('Preferred')    # noqa: E221

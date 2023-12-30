@@ -21,6 +21,7 @@
                 {{ form.as_table }}
                 </table>
                 <input style="margin-top: 10px;" type="submit" class="btn btn-info btn-sm" value="{% translate 'Update Contact' %}">
+                {% if delete %}<a  href="{{ delete }}" target="_self"><input type="button" style="margin-top: 10px;" class="btn btn-danger btn-sm" value="{% translate 'Delete Contact' %}"></a>{% endif %}
                 {% if back %}<a  href="{{ back }}" target="_self"><input type="button" style="margin-top: 10px;" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>{% endif %}
             </form>
             </div>

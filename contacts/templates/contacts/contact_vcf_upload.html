@@ -5,20 +5,20 @@
     {% block content %}
     <div class="card" style="margin-left: 5%; width: 90%;">
         <div class="card-header">
-            <i class="{{ listicon|default:'fa fa-table' }}"></i> {% translate title %}
+            <i class="fa fa-user"></i> {% translate 'VCard File Upload' %}
         </div>
         <div class="card-body cardbody1">
             <div class="container p-3 my-3 border" style="background-color: #fcfcfc;">
-            <form action="{% url url_name object.id %}" method="post">
+            <form action="{% url 'vcfupload' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <p>Are you sure you want to delete "{{ object }}"?</p>
                 <table class="pbxformtable" style="border: none;">
                 {{ form.as_table }}
                 </table>
-                <input style="margin-top: 10px;" type="submit" class="btn btn-danger btn-sm" value="{% translate 'Confirm' %}">
+                <input style="margin-top: 10px;" type="submit" class="btn btn-info btn-sm" value="{% translate 'Upload VCard File' %}">
                 {% if back %}<a  href="{{ back }}" target="_self"><input type="button" style="margin-top: 10px;" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>{% endif %}
             </form>
             </div>
         </div>
     </div>
     {% endblock %}
+

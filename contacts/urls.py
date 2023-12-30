@@ -48,6 +48,7 @@ urlpatterns = [
     path('contactadd/', views.ContactAdd.as_view(), name='contactadd'),
     path('contactadd/<contact_id>/', views.ContactAdd.as_view(), name='contactadd'),
     path('contactedit/<pk>/', views.ContactEdit.as_view(), name='contactedit'),
+    path('contactdel/<pk>/', views.ContactDel.as_view(), name='contactdel'),
 
     path('contactteladd/<contact_id>/', views.ContactTelAdd.as_view(), name='contactteladd'),
     path('contactteledit/<pk>/', views.ContactTelEdit.as_view(), name='contactteledit'),
@@ -84,4 +85,6 @@ urlpatterns = [
     path('contactgroupadd/<contact_id>/', views.ContactGroupAdd.as_view(), name='contactgroupadd'),
     path('contactgroupedit/<pk>/', views.ContactGroupEdit.as_view(), name='contactgroupedit'),
     path('contactgroupdel/<pk>/', views.ContactGroupDel.as_view(), name='contactgroupdel'),
+
+    path('vcfupload/', views.ImportVcf.as_view(), name='vcfupload'),
 ]
