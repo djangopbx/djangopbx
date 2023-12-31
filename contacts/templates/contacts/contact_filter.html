@@ -2,5 +2,5 @@
 {% load i18n static %}
 
     {% block content %}
-        {% include 'pbx_filtertable_listing.html' with pbxlistingname='Contacts' listicon='fa fa-user' add='/contacts/contactadd' import='/contacts/vcfupload' %}
+        {% include 'pbx_filtertable_listing.html' with pbxlistingname='Contacts' listicon='fa fa-user' add='/contacts/contactadd' import='/contacts/vcfupload' export='/contacts/vcfexportmulti' %}
     {% endblock %}

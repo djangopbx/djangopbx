@@ -29,6 +29,7 @@
 
 import re
 import tempfile
+from django.forms import HiddenInput
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import View, CreateView, UpdateView, DeleteView
 from rest_framework import viewsets
@@ -49,7 +50,7 @@ from .serializers import (
     ContactDateSerializer, ContactCategorySerializer, ContactGroupSerializer,
 )
 from .forms import VcfUploadForm
-from .vcard import VCardParse
+from .vcard import VCardParse, VCardExport
 from django.utils.decorators import method_decorator
 from django_tables2 import Table, SingleTableMixin, LazyPaginator
 from django_filters.views import FilterView
@@ -60,6 +61,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse
 
 
 class ContactViewSet(viewsets.ModelViewSet):
@@ -290,6 +292,8 @@ class ContactAdd(LoginRequiredMixin, CreateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        if not self.request.user.is_superuser:
+            form.instance.user_id = self.request.user.profile
         form.instance.domain_id = self.domain
         form.instance.updated_by = self.request.user.username
         form.instance.fn = '%s %s %s %s %s' % (
@@ -309,6 +313,8 @@ class ContactAdd(LoginRequiredMixin, CreateView):
         for key, f in form.fields.items():
             f.widget.attrs['class'] = 'form-control form-control-sm'
         form.fields['user_id'].queryset = Profile.objects.filter(domain_id=self.request.session['domain_uuid'])
+        if not self.request.user.is_superuser:
+            form.fields['user_id'].widget = HiddenInput()
         return form
 
     def get_context_data(self, **kwargs):
@@ -355,12 +361,15 @@ class ContactEdit(LoginRequiredMixin, UpdateView):
         for key, f in form.fields.items():
             f.widget.attrs['class'] = 'form-control form-control-sm'
         form.fields['user_id'].queryset = Profile.objects.filter(domain_id=self.request.session['domain_uuid'])
+        if not self.request.user.is_superuser:
+            form.fields['user_id'].widget = HiddenInput()
         return form
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['url_name'] = 'contactedit'
         context['back'] = '/contacts/contactlist/'
+        context['export'] = '/contacts/vcfexportsingle/%s/' % str(self.object.id)
         context['delete'] = '/contacts/contactdel/%s/' % str(self.object.id)
         context['c_tel'] = self.get_c_contacttel()
         context['c_tel_e_url'] = '/contacts/contactteledit/'
@@ -389,7 +398,7 @@ class ContactEdit(LoginRequiredMixin, UpdateView):
         context['c_geo_e_url'] = '/contacts/contactgeoedit/'
         context['c_geo_a_url'] = '/contacts/contactgeoadd/%s/' % str(self.object.id)
         context['c_geo_d_url'] = '/contacts/contactgeodel/'
-        context['c_geo_g_url'] = 'https://'
+        context['c_geo_g_url'] = 'geo:'
         context['c_dte'] = self.get_c_contactdate()
         context['c_dte_e_url'] = '/contacts/contactdateedit/'
         context['c_dte_a_url'] = '/contacts/contactdateadd/%s/' % str(self.object.id)
@@ -1269,3 +1278,27 @@ class ImportVcf(LoginRequiredMixin, View):
                         info[_('Errors')] = v.error_text
 
         return render(request, 'infotable.html', {'back': 'contactlist', 'info': info, 'title': 'VCard Import Results'})
+
+
+class ExportSingleVcf(LoginRequiredMixin, View):
+    def dispatch(self, request, *args, **kwargs):
+        self.contact = get_object_or_404(Contact, pk=kwargs['contact_id'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        v = VCardExport(request, self.contact)
+        return HttpResponse(v.export(),
+                             headers={
+                                 'Content-Type': 'application/octet-stream',
+                                 'Content-Disposition': 'attachment; filename="%s"' % v.export_filename,
+                             })
+
+
+class ExportMultiVcf(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        v = VCardExport(request)
+        return HttpResponse(v.export(),
+                             headers={
+                                 'Content-Type': 'application/octet-stream',
+                                 'Content-Disposition': 'attachment; filename="%s"' % v.export_filename,
+                             })

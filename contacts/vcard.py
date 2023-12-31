@@ -45,6 +45,7 @@ from .models import (
     ContactDate, ContactCategory, ContactGroup,
 )
 from pbx.commonfunctions import DomainUtils
+from django.db.models import Q
 
 
 class VCardParse():
@@ -163,7 +164,7 @@ class VCardParse():
         if n[self.given_name]:
             self.contact.given_name = n[self.given_name]
         if n[self.additional_name]:
-            self.contact.given_name = n[self.additional_name]
+            self.contact.additional_name = n[self.additional_name]
         if n[self.honorific_prefix]:
             self.contact.honorific_prefix = n[self.honorific_prefix]
         if n[self.honorific_suffix]:
@@ -433,3 +434,139 @@ class VCardParse():
 
         self.v_count = self.card_no
         self.error_text.join(self.import_errors)
+
+
+class VCardExport():
+    vcf_start = 'BEGIN:VCARD'
+    vcf_end = 'END:VCARD'
+    vcf_version = 'VERSION:2.1'
+    export_filename = 'pbx-contacts-export.vcf'
+
+    def __init__(self, request, contact=None):
+        self.request = request
+        self.contact = contact
+        if self.contact:
+            self.export_filename = '%s.vcf' % self.contact.fn.replace(' ', '-').lower()
+
+    def export(self):
+        if self.contact:
+            return self.generate_vcard(self.contact)
+        if self.request.user.is_superuser:
+            qs = Contact.objects.filter(domain_id=self.request.session['domain_uuid'], enabled='true')
+        else:
+            qs = Contact.objects.filter((Q(user_id__user_uuid=self.request.session['user_uuid']) | Q(user_id__isnull=True)),
+                (Q(contactgroup__group_id__in=self.request.user.groups.all()) | Q(contactgroup__group_id__isnull=True)),
+                domain_id=self.request.session['domain_uuid'],
+                )
+        vcf = []
+        for q in qs:
+            vcf.append(self.generate_vcard(q))
+        return '\n'.join(vcf)
+
+    def generate_vcard(self, contact):
+        vcs = [self.vcf_start, self.vcf_version]
+        vcs.append('FN:%s' % contact.fn)
+        vcs.append('N:%s;%s;%s;%s;%s' % (
+                    contact.family_name if contact.family_name else '',
+                    contact.given_name if contact.given_name else '',
+                    contact.additional_name if contact.additional_name else '',
+                    contact.honorific_prefix if contact.honorific_prefix else '',
+                    contact.honorific_suffix if contact.honorific_suffix else ''
+                    ))
+        tag = self.get_c_contacttel(contact)
+        if tag:
+            vcs.append(tag)
+        tag = self.get_c_contactaddress(contact)
+        if tag:
+            vcs.append(tag)
+        tag = self.get_c_contactemail(contact)
+        if tag:
+            vcs.append(tag)
+        tag = self.get_c_contacturl(contact)
+        if tag:
+            vcs.append(tag)
+        tag = self.get_c_contactorg(contact)
+        if tag:
+            vcs.append(tag)
+        tag = self.get_c_contactgeo(contact)
+        if tag:
+            vcs.append(tag)
+        tag = self.get_c_contactdate(contact)
+        if tag:
+            vcs.append(tag)
+        tag = self.get_c_contactcategory(contact)
+        if tag:
+            vcs.append(tag)
+        vcs.append(self.vcf_end)
+        return '\n'.join(vcs)
+
+    def get_c_contacttel(self, contact):
+        cdetail = []
+        cds = contact.contacttel_set.all()
+        for cd in cds:
+            cdetail.append('TEL;%s:%s' % (cd.tel_type.upper(), cd.number))
+        return '\n'.join(cdetail)
+
+    def get_c_contactaddress(self, contact):
+        cdetail = []
+        cds = contact.contactaddress_set.all()
+        for cd in cds:
+            cdetail.append('ADR;%s:%s;%s;%s;%s;%s;%s;%s' % (
+                    cd.addr_type.upper(),
+                    cd.post_office_box if cd.post_office_box else '',
+                    cd.extended_address if cd.extended_address else '',
+                    cd.street_address if cd.street_address else '',
+                    cd.locality if cd.locality else '',
+                    cd.region if cd.region else '',
+                    cd.postal_code if cd.postal_code else '',
+                    cd.country_name if cd.country_name else ''
+                    ))
+        return '\n'.join(cdetail)
+
+    def get_c_contactemail(self, contact):
+        cdetail = []
+        cds = contact.contactemail_set.all()
+        for cd in cds:
+            cdetail.append('EMAIL;%s:%s' % (cd.email_type.upper(), cd.email))
+        return '\n'.join(cdetail)
+
+    def get_c_contacturl(self, contact):
+        cdetail = []
+        cds = contact.contacturl_set.all()
+        for cd in cds:
+            cdetail.append('URL:%s' % cd.url_uri)
+        return '\n'.join(cdetail)
+
+    def get_c_contactorg(self, contact):
+        cdetail = []
+        cds = contact.contactorg_set.all()
+        for cd in cds:
+            cdetail.append('ORG:%s;%s' % (cd.organisation_name, 
+                    cd.organisation_unit if cd.organisation_unit else ''))
+        return '\n'.join(cdetail)
+
+    def get_c_contactgeo(self, contact):
+        cdetail = []
+        cds = contact.contactgeo_set.all()
+        for cd in cds:
+            try:
+                lat, lng = cd.geo_uri.split(',', 1)
+            except ValueError:
+                lat = cd.geo_uri
+                lng = ''
+            cdetail.append('GEO:%s;%s' % (lat, lng))
+        return '\n'.join(cdetail)
+
+    def get_c_contactdate(self, contact):
+        cdetail = []
+        cds = contact.contactdate_set.all()
+        for cd in cds:
+            cdetail.append('BDAY:%s' % cd.sig_date.strftime('%Y%m%d'))
+        return '\n'.join(cdetail)
+
+    def get_c_contactcategory(self, contact):
+        cdetail = []
+        cds = contact.contactcategory_set.all()
+        for cd in cds:
+            cdetail.append('CATEGORIES:%s' % cd.category)
+        return '\n'.join(cdetail)

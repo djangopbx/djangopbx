@@ -34,3 +34,6 @@ from pbx.commonchoices import EnabledTrueFalseChoice
 class VcfUploadForm(forms.Form):
     public = forms.ChoiceField(choices=EnabledTrueFalseChoice.choices, label=_('Make Public'))
     file = forms.FileField(label=_('Select VCard File'))
+
+    public.widget.attrs.update({'class': 'form-control form-control-sm'})
+    file.widget.attrs.update({'class': 'form-control form-control-sm'})

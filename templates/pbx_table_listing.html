@@ -5,6 +5,10 @@
         <div class="card" style="margin-left 1%; margin-right 1%;">
             <div class="card-header">
                 <i class="{{ listicon|default:'fa fa-table' }}"></i> {% translate pbxlistingname %}
+                {% if more %}<a class="float-right pbx-right-spacer" href="{{ more }}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'More' %}"></a>{% endif %}
+                {% if export %}<a class="float-right pbx-right-spacer" href="{{ export }}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Export' %}"></a>{% endif %}
+                {% if import %}<a class="float-right pbx-right-spacer" href="{{ import }}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Import' %}"></a>{% endif %}
+                {% if add %}<a class="float-right pbx-right-spacer" href="{{ add }}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Add' %}"></a>{% endif %}
             </div>
             <div class="card-body cardbody1">
             {% render_table table %}

@@ -87,4 +87,6 @@ urlpatterns = [
     path('contactgroupdel/<pk>/', views.ContactGroupDel.as_view(), name='contactgroupdel'),
 
     path('vcfupload/', views.ImportVcf.as_view(), name='vcfupload'),
+    path('vcfexportsingle/<contact_id>/', views.ExportSingleVcf.as_view(), name='vcfexportsingle'),
+    path('vcfexportmulti/', views.ExportMultiVcf.as_view(), name='vcfexportmulti'),
 ]
