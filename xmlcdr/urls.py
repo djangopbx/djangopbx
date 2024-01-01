@@ -38,4 +38,7 @@ urlpatterns = [
     re_path(r'^xml_cdr_import/.*$', views.xml_cdr_import, name='xmlcdrimport'),
     path('cdrviewer/', views.CdrViewer.as_view(), name='cdrviewer'),
     path('selectcdr/<cdruuid>/', views.selectcdr, name='selectcdr'),
+    path('cdrstatistics/', views.CdrStatistics.as_view(), name='cdrstatistics'),
+    path('cdrstatisticsmos/<int:hours>', views.CdrStatisticsMos.as_view(), name='cdrstatisticsmos'),
+    path('cdrstatisticscalls/<int:hours>/', views.CdrStatisticsCalls.as_view(), name='cdrstatisticscalls'),
 ]

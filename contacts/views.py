@@ -265,7 +265,7 @@ class ContactList(SingleTableMixin, FilterView):
         else:
             qs = Contact.objects.filter((Q(user_id__user_uuid=self.request.session['user_uuid']) | Q(user_id__isnull=True)),
                 (Q(contactgroup__group_id__in=self.request.user.groups.all()) | Q(contactgroup__group_id__isnull=True)),
-                domain_id=self.request.session['domain_uuid'],
+                domain_id=self.request.session['domain_uuid'], enabled='true'
                 )
         return qs
 
@@ -294,6 +294,7 @@ class ContactAdd(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         if not self.request.user.is_superuser:
             form.instance.user_id = self.request.user.profile
+            form.instance.enabled = 'true'
         form.instance.domain_id = self.domain
         form.instance.updated_by = self.request.user.username
         form.instance.fn = '%s %s %s %s %s' % (
@@ -315,6 +316,7 @@ class ContactAdd(LoginRequiredMixin, CreateView):
         form.fields['user_id'].queryset = Profile.objects.filter(domain_id=self.request.session['domain_uuid'])
         if not self.request.user.is_superuser:
             form.fields['user_id'].widget = HiddenInput()
+            form.fields['enabled'].widget = HiddenInput()
         return form
 
     def get_context_data(self, **kwargs):
@@ -363,6 +365,7 @@ class ContactEdit(LoginRequiredMixin, UpdateView):
         form.fields['user_id'].queryset = Profile.objects.filter(domain_id=self.request.session['domain_uuid'])
         if not self.request.user.is_superuser:
             form.fields['user_id'].widget = HiddenInput()
+            form.fields['enabled'].widget = HiddenInput()
         return form
 
     def get_context_data(self, **kwargs):

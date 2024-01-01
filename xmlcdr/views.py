@@ -32,6 +32,8 @@ import logging
 from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.edit import View
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render
@@ -40,9 +42,11 @@ from rest_framework import permissions
 from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils.html import format_html
+from django.utils import timezone
 import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
+from django.db.models import Count, Sum, Min, Max, Avg
 
 from tenants.pbxsettings import PbxSettings
 from pbx.commonvalidators import clean_uuid4_list
@@ -158,11 +162,11 @@ class CdrViewer(tables.SingleTableMixin, FilterView):
     }
 
     def get_queryset(self):
-        extension_list = self.request.session['extension_list_uuid'].split(',')
-        clean_uuid4_list(extension_list)
         if self.request.user.is_superuser:
             qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'])
         else:
+            extension_list = self.request.session['extension_list_uuid'].split(',')
+            clean_uuid4_list(extension_list)
             qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'], extension_id__in=extension_list)
         return qs
 
@@ -215,3 +219,86 @@ def selectcdr(request, cdruuid=None):
                 )
 
     return render(request, 'infotable.html', {'back': 'cdrviewer', 'info': info, 'title': 'Call Detail Record'})
+
+
+class CdrStatistics(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'xmlcdr/xmlcdr_statistics.html', {'back': 'cdrviewer', 'title': 'CDR Statistics'})
+
+
+class CdrStatisticsMos(PermissionRequiredMixin, View):
+    permission_required = "view_xmlcdr"
+
+    def get(self, request, *args, **kwargs):
+        hours = kwargs.get('hours', 24)
+        time_x_hours_ago = timezone.now() - timezone.timedelta(hours)
+        qs = XmlCdr.objects.filter(end_stamp__gte=time_x_hours_ago,
+            hangup_cause='NORMAL_CLEARING',
+            rtp_audio_in_mos__gt=0,
+            ).values('domain_name').annotate(
+                    mos_score_max=Max('rtp_audio_in_mos', default=0),
+                    mos_score_min=Min('rtp_audio_in_mos', default=0),
+                    mos_score_avg=Avg('rtp_audio_in_mos', default=0))
+        labels = []
+        datasets = {}
+        datasets['Min'] = []
+        datasets['Max'] = []
+        datasets['Avg'] = []
+        for q in qs:
+            labels.append(q['domain_name'])
+            datasets['Max'].append(q['mos_score_max'])
+            datasets['Min'].append(q['mos_score_min'])
+            datasets['Avg'].append(q['mos_score_avg'])
+        return render(request, 'generic_chart.html', {'back': 'cdrstatistics',
+            'horizontal': True, 'title': 'MOS Scores for the last %s hours' % hours, 'type': 'bar',
+            'xtitle': 'Mean Opinion Score', 'labels': labels, 'datasets': datasets})
+
+
+class CdrStatisticsCalls(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        hours = kwargs.get('hours', 24)
+        time_x_hours_ago = timezone.now() - timezone.timedelta(hours)
+        if self.request.user.is_superuser:
+            qsca = XmlCdr.objects.filter(end_stamp__gte=time_x_hours_ago, direction='inbound',
+                hangup_cause='NORMAL_CLEARING',
+                domain_id=self.request.session['domain_uuid']
+                ).values('end_stamp__hour').annotate(volume=Count('id'), bill_sec=Sum('billsec', default=0))
+            qscm = XmlCdr.objects.filter(end_stamp__gte=time_x_hours_ago, direction='inbound',
+                hangup_cause='ORIGINATOR_CANCEL',
+                domain_id=self.request.session['domain_uuid']
+                ).values('end_stamp__hour').annotate(volume=Count('id'), bill_sec=Sum('billsec', default=0))
+        else:
+            extension_list = request.session['extension_list_uuid'].split(',')
+            clean_uuid4_list(extension_list)
+            qsca = XmlCdr.objects.filter(end_stamp__gte=time_x_hours_ago, direction='inbound',
+                hangup_cause='NORMAL_CLEARING',
+                domain_id=self.request.session['domain_uuid'],
+                extension_id__in=extension_list
+                ).values('end_stamp__hour').annotate(volume=Count('id'), bill_sec=Sum('billsec', default=0))
+            qscm = XmlCdr.objects.filter(end_stamp__gte=time_x_hours_ago, direction='inbound',
+                hangup_cause='ORIGINATOR_CANCEL',
+                domain_id=self.request.session['domain_uuid'],
+                extension_id__in=extension_list
+                ).values('end_stamp__hour').annotate(volume=Count('id'), bill_sec=Sum('billsec', default=0))
+
+        labels = [str(n) for n in range(0, 24)]
+        datasets = {}
+        datasets['Calls'] = [0 for n in range(0, 24)]
+        datasets['Missed'] = [0 for n in range(0, 24)]
+        datasets['Answered'] = [0 for n in range(0, 24)]
+        datasets['Minutes'] = [0 for n in range(0, 24)]
+        datasets['Calls per Minute'] = [0 for n in range(0, 24)]
+        for q in qsca:
+            datasets['Answered'][q['end_stamp__hour']] = q['volume']
+            datasets['Calls'][q['end_stamp__hour']] = q['volume']
+            datasets['Minutes'][q['end_stamp__hour']] = round((q['bill_sec'] / 60), 1)
+        for q in qscm:
+            datasets['Missed'][q['end_stamp__hour']] = q['volume']
+            datasets['Calls'][q['end_stamp__hour']] += q['volume']
+        for i in range(0, 24):
+            datasets['Calls per Minute'][i] = round((datasets['Calls'][i] / 60), 1)
+
+        return render(request, 'generic_chart.html', {'back': 'cdrstatistics',
+            'title': 'Call Statistics for the last %s hours' % hours, 'type': 'bar',
+            'xtitle': 'Hours of the Day', 'labels': labels, 'datasets': datasets})
+

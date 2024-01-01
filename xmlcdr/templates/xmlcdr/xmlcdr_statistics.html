@@ -1,0 +1,36 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <div class="row">
+            <div class="col-lg-6"><i class="fa fa-chart"></i> {% translate title %}</div>
+            <div class="col-lg-6 text-right">
+            {% if back %}<a href="{% url back %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>{% endif %}
+            {% if refresher %}<a href="{% url refresher %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></a>{% endif %}
+            </div>
+            </div>
+        </div>
+        <div class="card-body cardbody1">
+            {% if request.user.is_superuser %}
+        <dl class="row">
+             <dt class="col-sm-3"><a  href="{% url 'cdrstatisticsmos' 4 %}" target="_self"><button type="button" class="btn btn-info btn-sm mb-1 w-100"><i class="fa fa-chart-bar mr-1"></i>{% translate 'MOS Scores last 4 Hours' %}</button></a></dt>
+             <dd class="col-sm-9">Average MOS scores by Domain for the last 4 hours.</li>
+             <dt class="col-sm-3"><a  href="{% url 'cdrstatisticsmos' 24 %}" target="_self"><button type="button" class="btn btn-info btn-sm mb-1 w-100"><i class="fa fa-chart-bar mr-1"></i>{% translate 'MOS Scores last 24 Hours' %}</button></a></dt>
+             <dd class="col-sm-9">Average MOS scores by Domain for the last 24 hours.</li>
+        </dl>
+            {% endif %}
+        <dl class="row">
+             <dt class="col-sm-3"><a  href="{% url 'cdrstatisticscalls' 24 %}" target="_self"><button type="button" class="btn btn-info btn-sm mb-1 w-100"><i class="fa fa-chart-bar mr-1"></i>{% translate 'Calls last 24 Hours' %}</button></a></dt>
+             <dd class="col-sm-9">Call statistics for the last 24 hours.</li>
+             <dt class="col-sm-3"><a  href="{% url 'cdrstatisticscalls' 168 %}" target="_self"><button type="button" class="btn btn-info btn-sm mb-1 w-100"><i class="fa fa-chart-bar mr-1"></i>{% translate 'Calls last 7 Days' %}</button></a></dt>
+             <dd class="col-sm-9">Call statistics for the last 7 days.</li>
+             <dt class="col-sm-3"><a  href="{% url 'cdrstatisticscalls' 672 %}" target="_self"><button type="button" class="btn btn-info btn-sm mb-1 w-100"><i class="fa fa-chart-bar mr-1"></i>{% translate 'Calls last 28 Days' %}</button></a></dt>
+             <dd class="col-sm-9">Call statistics for the last 28 days.</li>
+        </dl>
+        </div>
+    </div>
+
+    {% endblock %}

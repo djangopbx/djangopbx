@@ -1,0 +1,59 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <script src="{% static 'script/chartjs/chart.umd.min.js' %}"></script>
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <div class="row">
+            <div class="col-lg-6"><i class="fa fa-info"></i> {% translate title %}</div>
+            <div class="col-lg-6 text-right">
+            {% if back %}<a href="{% url back %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>{% endif %}
+            {% if refresher %}<a href="{% url refresher %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></a>{% endif %}
+            </div>
+            </div>
+        </div>
+        <div class="card-body cardbody1">
+        {% block chart %}
+            <div style="margin-left: 5%; width:90%;">
+                <canvas id="statChart"></canvas>
+            </div>
+        {% endblock %}
+        {% block belowchart %}
+        {% endblock %}
+        </div>
+    </div>
+    <script>
+      const ctx = document.getElementById('statChart');
+      new Chart(ctx, {
+        type: '{{ type }}',
+        data: {
+          labels: [{% for v in labels %}'{% translate v %}'{% if not forloop.last %},{% endif %}{% endfor %}],
+          datasets: [{% for k, vv in datasets.items %}{
+            label: '{% translate k %}',
+            data: [{% for v in vv %}{{ v }}{% if not forloop.last %},{% endif %}{% endfor %}],
+            borderWidth: 1
+          }{% if not forloop.last %},{% endif %}{% endfor %}]
+        },
+        options: {
+          {% if horizontal %}indexAxis: 'y',{% endif %}
+          scales: {
+            x: {
+              title: {
+                display: {% if xtitle %}true{% else %}false{% endif %},
+                text: '{% translate xtitle %}'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: {% if ytitle %}true{% else %}false{% endif %},
+                text: '{% translate ytitle %}'
+              }
+            }
+          }
+        }
+      });
+    </script>
+    {% endblock %}

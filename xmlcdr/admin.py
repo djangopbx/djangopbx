@@ -35,6 +35,7 @@ import json
 from django.forms import ModelForm
 from django_ace import AceWidget
 from .models import XmlCdr
+from .listfilters import MosScoreListFilter
 
 
 class PrettyJSONWidget(AceWidget):
@@ -143,7 +144,7 @@ class XmlCdrAdmin(ImportExportModelAdmin):
         'extension_id', 'caller_id_name', 'caller_id_number', 'caller_destination',
         'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause'
         )
-    list_filter = (DomainFilter, 'direction', 'hangup_cause',)
+    list_filter = (DomainFilter, 'direction', 'hangup_cause', MosScoreListFilter)
 
     ordering = [
         '-start_stamp', 'extension_id'

@@ -383,12 +383,12 @@ class ContactAdmin(ImportExportModelAdmin):
     search_fields = ['fn', 'family_name', 'given_name', 'nickname']
     fieldsets = [
         (None,  {'fields': ['domain_id', 'user_id', 'fn', 'family_name', 'given_name', 'additional_name',
-                            'honorific_prefix', 'honorific_suffix', 'nickname', 'timezone']}),
+                            'honorific_prefix', 'honorific_suffix', 'nickname', 'timezone', 'enabled']}),
         ('Notes',   {'fields': ['notes',], 'classes': ['collapse']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('fn', 'given_name', 'family_name', 'nickname')
-    list_filter = (DomainFilter, 'fn', 'given_name', 'family_name', 'nickname')
+    list_filter = (DomainFilter, 'enabled', 'user_id')
     ordering = [
         'fn'
     ]
