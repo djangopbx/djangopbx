@@ -230,7 +230,12 @@ class CdrStatisticsMos(PermissionRequiredMixin, View):
     permission_required = "view_xmlcdr"
 
     def get(self, request, *args, **kwargs):
-        hours = kwargs.get('hours', 24)
+        title_number = hours = kwargs.get('hours', 24)
+        title_unit = 'hours'
+        if title_number > 24:
+            title_number = round(hours / 24)
+            title_unit = 'days'
+        title = 'MOS Scores for the last %s %s' % (title_number, title_unit)
         time_x_hours_ago = timezone.now() - timezone.timedelta(hours)
         qs = XmlCdr.objects.filter(end_stamp__gte=time_x_hours_ago,
             hangup_cause='NORMAL_CLEARING',
@@ -256,7 +261,12 @@ class CdrStatisticsMos(PermissionRequiredMixin, View):
 
 class CdrStatisticsCalls(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        hours = kwargs.get('hours', 24)
+        title_number = hours = kwargs.get('hours', 24)
+        title_unit = 'hours'
+        if title_number > 24:
+            title_number = round(hours / 24)
+            title_unit = 'days'
+        title = 'Call Statistics for the last %s %s' % (title_number, title_unit)
         time_x_hours_ago = timezone.now() - timezone.timedelta(hours)
         if self.request.user.is_superuser:
             qsca = XmlCdr.objects.filter(end_stamp__gte=time_x_hours_ago, direction='inbound',
@@ -299,6 +309,6 @@ class CdrStatisticsCalls(LoginRequiredMixin, View):
             datasets['Calls per Minute'][i] = round((datasets['Calls'][i] / 60), 1)
 
         return render(request, 'generic_chart.html', {'back': 'cdrstatistics',
-            'title': 'Call Statistics for the last %s hours' % hours, 'type': 'bar',
+            'title': title, 'type': 'bar',
             'xtitle': 'Hours of the Day', 'labels': labels, 'datasets': datasets})
 
