@@ -179,8 +179,7 @@ class XmlCdrFunctions():
                     extension_found = True
 
             if not extension_found:
-                logger.warn('XML CDR request {}: Unable to find extension.'.format(t_uuid))
-                return False
+                logger.info('XML CDR request {}: Unable to find extension.'.format(t_uuid))
 
         caller_id_name = cdr_dict['cdr']['variables'].get('effective_caller_id_name')
         if not caller_id_name:
@@ -320,8 +319,9 @@ class XmlCdrFunctions():
                 record_name = os.path.basename(path)
                 record_length = self.str2int(cdr_dict['cdr']['variables'].get('duration'))
 
-        xcdr = XmlCdr(domain_id=d, extension_id=e)
-
+        xcdr = XmlCdr(domain_id=d)
+        if extension_found:
+            xcdr.extension_id=e
         xcdr.domain_name = domain_name
         xcdr.accountcode = cdr_dict['cdr']['variables'].get('accountcode')
         xcdr.direction = cdr_dict['cdr']['variables'].get('call_direction', nonestr)
