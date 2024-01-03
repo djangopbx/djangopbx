@@ -36,6 +36,26 @@ from .models import DefaultSetting, DomainSetting, ProfileSetting, Domain
 #
 class PbxSettings():
 
+    def default_brand_settings(self):
+        branding = {}
+        dsl = DefaultSetting.objects.filter(
+                category='brand',
+                value_type='text',
+                enabled='true').order_by('sequence')
+        for ds in dsl:
+            branding[ds.subcategory] = ds.value
+        return branding
+
+    def domain_brand_settings(self, bs_dict, domain):
+        dsl = DomainSetting.objects.filter(
+                domain_id=domain,
+                category='brand',
+                value_type='text',
+                enabled='true').order_by('sequence')
+        for ds in dsl:
+            bs_dict[ds.subcategory] = ds.value
+        return bs_dict
+
     def default_email_settings(self):
         email_cfg = {}
         dsl = DefaultSetting.objects.filter(
@@ -44,7 +64,6 @@ class PbxSettings():
                 enabled='true').order_by('sequence')
         for ds in dsl:
             email_cfg[ds.subcategory] = ds.value
-
         return email_cfg
 
     def default_provision_settings(self, ps_dict):

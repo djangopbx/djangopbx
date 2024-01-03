@@ -71,9 +71,11 @@ from pbx.fseventsocket import EventSocket
 
 @login_required
 def index(request):
+    local_message = None
+    s = PbxSettings()
+
     dreload = True
     ureload = True
-    local_message = _('Welcome to DjangoPBX')
     if 'domain_name' in request.session:
         pbx_domain_name = request.session['domain_name']
         dreload = False
@@ -86,7 +88,6 @@ def index(request):
     else:
         request.session['domain_uuid'] = 'f4b3b3d2-6287-489c-aa00-64529e46f2d7'
 
-
     if 'domain_change' in request.session:
         if request.session['domain_change'] == 'yes':
             dreload = True
@@ -95,6 +96,15 @@ def index(request):
             local_message = _('Domain changed to: ') + request.session['domain_name']
 
     if dreload:
+        brand = s.default_brand_settings()
+        brand = s.domain_brand_settings(brand, request.user.profile.domain_id.id)
+        request.session['brand_footer'] = brand.get('footer_text', 'DjangoPBX &copy; Adrian Fretwell 2024')
+        request.session['brand_logo'] = brand.get('logo', '/img/logo.png')
+        request.session['brand_portal_text'] = brand.get('portal_text', 'DjangoPBX Portal')
+        request.session['brand_portal_image'] = brand.get('portal_image', '/img/welcome.png')
+        if not local_message:
+            local_message = _(brand.get('welcome_message', 'Welcome to DjangoPBX'))
+
         messages.add_message(request, messages.INFO, local_message)
         if request.user.profile.domain_id:
             pbx_user_uuid = str(request.user.profile.user_uuid)
@@ -113,7 +123,7 @@ def index(request):
                     extension_list.append(ext)
                 request.session['extension_list'] = ','.join(extension_list)
 
-            currentmenu = PbxSettings().settings(
+            currentmenu = s.settings(
                 pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True )[0]
             m = Menu.objects.get(name=currentmenu)
         else:

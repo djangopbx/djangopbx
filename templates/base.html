@@ -60,7 +60,7 @@
     {% block content %}
     {% endblock %}
     <footer class="container">
-        <h5 style="text-align:center; margin-top: 10px; font-size: 12px">DjangoPBX &copy; Adrian Fretwell 2024</h5>
+        <h5 style="text-align:center; margin-top: 10px; font-size: 12px">{{ request.session.brand_footer|safe }}</h5>
     </footer>
     </div>
     <!-- END Container -->

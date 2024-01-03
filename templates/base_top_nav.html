@@ -5,7 +5,7 @@
     {% block menu-nav %}
     {% spaceless %}
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <a href="/" class="navbar-brand"><img id="menu_logo" style="width: auto; max-width: 300px; height: auto; max-height: 27px; align:center; " src="{% static '/img/logo.png' %}">&nbsp;&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}</a>
+    <a href="/" class="navbar-brand"><img id="menu_logo" style="width: auto; max-width: 300px; height: auto; max-height: 27px; align:center; " src="{% static request.session.brand_logo %}">&nbsp;&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
