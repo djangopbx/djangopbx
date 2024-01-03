@@ -28,6 +28,7 @@
 #
 
 from time import sleep
+from django.contrib.auth.base_user import BaseUserManager
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
@@ -266,6 +267,11 @@ class ExtensionAdmin(ImportExportModelAdmin):
     ordering = ['extension']
     actions = [create_user_for_extension, create_device_for_extension]
     inlines = [ExtensionUserInLine, FollowMeDestinationInLine]
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        form.base_fields['password'].initial = BaseUserManager().make_random_password(12)
+        return form
 
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
