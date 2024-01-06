@@ -50,6 +50,7 @@ htmx.logger = function(elt, event, data) {
                         {% endif %}
                     {% endfor %}
                     <tr class="nobttm"><th> </th><td><span class="helptext">{% translate 'Define custom conditions necessary to execute the destination selected above.' %}</span></td>
+                    <tr class="nobttm"><th><hr></th><td><hr></td>
                     {% endfor %}
                     <tr class="nobttm"><th>{% translate 'Presets' %}</th></tr>
                     {% for preset_field in form.get_preset_fields %}
