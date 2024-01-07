@@ -59,12 +59,6 @@ class DialplanTagChoice(models.TextChoices):
     CANTIACTION = 'anti-action', 'Anti Action'         # noqa: E221
 
 
-class DestinationUsageChoice(models.TextChoices):
-    CVOICE = 1,  _('Voice')  # noqa: E221
-    CFAX   = 2,  _('Fax')    # noqa: E221
-    CTEXT  = 3,  _('Text')   # noqa: E221
-
-
 class TimeConditionConditionChoice(models.TextChoices):
     CYEAR     = 'year',          _('Year')           # noqa: E221
     CMON      = 'mon',           _('Month')          # noqa: E221
