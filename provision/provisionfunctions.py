@@ -69,8 +69,8 @@ class ProvisionFunctions():
                         if it.is_dir():
                             relpath = os.path.relpath(it.path, start=self.path_of_templates)
                             self.template_list.append((relpath, relpath))
-        except:
-            pass
+            except:
+                pass
         self.template_list.sort()
         return self.template_list
 
