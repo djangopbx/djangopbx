@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.apps import apps
 from django.db import models
 import uuid
 from django.utils.translation import gettext_lazy as _
@@ -98,13 +99,17 @@ class DeviceVendorFunctions(models.Model):
 
 class DeviceVendorFunctionChoice():
     def choices(self, vendor=None):
-        # This try/except is a workaround to prevent a relation not found error on initial migrate
-        try:
-            if vendor:
-                return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]
-            return [(c.value, '%s -> %s' % (c.vendor_id.name, c.name)) for c in DeviceVendorFunctions.objects.filter(enabled='true')]
-        except:
-            return [('None', 'None')]
+        vfc = [('None', 'None')]
+        if apps.ready:
+            # This try/except is a workaround to prevent a relation not found error on initial migrate
+            try:
+                if vendor:
+                    return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]
+                return [(c.value, '%s -> %s' % (c.vendor_id.name, c.name)) for c in DeviceVendorFunctions.objects.filter(enabled='true')]
+            except:
+                return vfc
+        else:
+            return vfc
 
 
 class DeviceVendorFunctionGroups(models.Model):

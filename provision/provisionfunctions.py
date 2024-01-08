@@ -29,6 +29,7 @@
 
 import os
 #import socket
+from django.apps import apps
 from django.conf import settings
 #from lxml import etree
 #from io import StringIO
@@ -59,14 +60,15 @@ class ProvisionFunctions():
         self.path_of_templates = settings.BASE_DIR / 'provision/templates/provision'
 
     def get_template_list(self):
-        # This try/except is a workaround to prevent a relation not found error on initial migrate
-        try:
-            vendor_list = DeviceVendors.objects.filter(enabled='true')
-            for v in vendor_list:
-                for it in os.scandir(os.path.join(self.path_of_templates, v.name)):
-                    if it.is_dir():
-                        relpath = os.path.relpath(it.path, start=self.path_of_templates)
-                        self.template_list.append((relpath, relpath))
+        if apps.ready:
+            # This try/except is a workaround to prevent a relation not found error on initial migrate
+            try:
+                vendor_list = DeviceVendors.objects.filter(enabled='true')
+                for v in vendor_list:
+                    for it in os.scandir(os.path.join(self.path_of_templates, v.name)):
+                        if it.is_dir():
+                            relpath = os.path.relpath(it.path, start=self.path_of_templates)
+                            self.template_list.append((relpath, relpath))
         except:
             pass
         self.template_list.sort()
