@@ -183,13 +183,13 @@ class IvrMenusAdmin(ImportExportModelAdmin):
         # this is required for access to the request object so the domain_name session
         # variable can be passed to the chioces function
         sound_choices_list = ss.get_sounds_choices_list(request.session['domain_name'], True)
-        self.form.Meta.widgets['language'].choices=ss.get_languages()
-        self.form.Meta.widgets['greet_long'].choices=sound_choices_list
-        self.form.Meta.widgets['greet_short'].choices=sound_choices_list
-        self.form.Meta.widgets['exit_data'].choices=ivra.get_action_choices()
-        self.form.Meta.widgets['ringback'].choices=ss.get_ringback_choices_list(request.session['domain_name'])
-        self.form.Meta.widgets['invalid_sound'].choices=sound_choices_list
-        self.form.Meta.widgets['exit_sound'].choices=sound_choices_list
+        self.form.Meta.widgets['language'].choices = ss.get_languages()
+        self.form.Meta.widgets['greet_long'].choices = sound_choices_list
+        self.form.Meta.widgets['greet_short'].choices = sound_choices_list
+        self.form.Meta.widgets['exit_data'].choices = ivra.get_action_choices()
+        self.form.Meta.widgets['ringback'].choices = ss.get_ringback_choices_list(request.session['domain_name'])
+        self.form.Meta.widgets['invalid_sound'].choices = sound_choices_list
+        self.form.Meta.widgets['exit_sound'].choices = sound_choices_list
         return super().get_form(request, obj, change, **kwargs)
 
     def get_formsets_with_inlines(self, request, obj=None):

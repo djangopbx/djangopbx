@@ -186,9 +186,9 @@ class RingGroupAdmin(ImportExportModelAdmin):
         rga = CommonDestAction(request.session['domain_name'], request.session['domain_uuid'])
         # this is required for access to the request object so the domain_name session
         # variable can be passed to the chioces function
-        self.form.Meta.widgets['greeting'].choices=ss.get_sounds_choices_list(request.session['domain_name'], True)
-        self.form.Meta.widgets['timeout_data'].choices=rga.get_action_choices()
-        self.form.Meta.widgets['ring_group_ringback'].choices=ss.get_ringback_choices_list(request.session['domain_name'])
+        self.form.Meta.widgets['greeting'].choices = ss.get_sounds_choices_list(request.session['domain_name'], True)
+        self.form.Meta.widgets['timeout_data'].choices = rga.get_action_choices()
+        self.form.Meta.widgets['ring_group_ringback'].choices = ss.get_ringback_choices_list(request.session['domain_name'])
         return super().get_form(request, obj, change, **kwargs)
 
     def save_formset(self, request, form, formset, change):

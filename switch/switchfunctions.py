@@ -39,15 +39,10 @@ from tenants.pbxsettings import PbxSettings
 
 class SipProfileChoice():
     def choices(self):
-        ret_val = [('None', 'None')]
-        # Prevent accessing the database during app initialisation.
-        if apps.ready:
-            try:
-                return [(c.name, c.name) for c in switch.models.SipProfile.objects.filter(enabled='true')]
-            except:
-                return ret_val
-        else:
-            return ret_val
+        try:
+            return [(c.name, c.name) for c in switch.models.SipProfile.objects.filter(enabled='true')]
+        except:
+            return [('None', 'None')]
 
 
 class SwitchFunctions():

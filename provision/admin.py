@@ -33,7 +33,7 @@ from .models import (
     DeviceVendors, DeviceVendorFunctions, DeviceVendorFunctionGroups,
     DeviceProfiles, DeviceProfileSettings, DeviceProfileKeys,
     Devices, DeviceLines, DeviceKeys, DeviceSettings,
-    DeviceVendorFunctionChoice)
+    )
 from tenants.models import Profile
 from .forms import DeviceForm, DeviceLinesForm, DeviceKeysForm
 
@@ -41,7 +41,7 @@ from django.conf import settings
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from pbx.commonfunctions import DomainFilter, DomainUtils
-from .provisionfunctions import ProvisionFunctions
+from .provisionfunctions import ProvisionFunctions, DeviceVendorFunctionChoice
 
 
 class DeviceVendorFunctionsInLine(admin.TabularInline):
@@ -158,17 +158,6 @@ class DeviceProfileKeysInLine(admin.TabularInline):
         'key_id'
     ]
 
-    def formfield_for_choice_field(self, db_field, request, **kwargs):
-        if db_field.name == 'key_type':
-            resolved = resolve(request.path_info)
-            if resolved.kwargs:
-                pobj = self.parent_model.objects.get(pk=resolved.kwargs['object_id'])
-                kwargs['choices'] = DeviceVendorFunctionChoice().choices(pobj.vendor)
-            else:
-                kwargs['choices'] = DeviceVendorFunctionChoice().choices()
-            kwargs['choices'] += (('', '-----'),)
-        return super().formfield_for_choice_field(db_field, request, **kwargs)
-
 
 class DeviceProfileSettingsInLine(admin.TabularInline):
     model = DeviceProfileSettings
@@ -215,6 +204,16 @@ class DeviceProfilesAdmin(ImportExportModelAdmin):
             return (DeviceProfileKeysInLine, DeviceProfileSettingsInLine)
         else:
             return ()
+
+    def get_formsets_with_inlines(self, request, obj=None):
+        if obj:
+            dvfchoices = DeviceVendorFunctionChoice().choices(obj.vendor)
+        else:
+            dvfchoices = DeviceVendorFunctionChoice().choices()
+        for inline in self.get_inline_instances(request, obj):
+            if type(inline) is DeviceProfileKeysInLine:
+                inline.form.Meta.widgets['key_type'].choices = dvfchoices
+                yield inline.get_formset(request, obj), inline
 
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
@@ -313,17 +312,6 @@ class DeviceKeysInLine(admin.TabularInline):
         'key_id'
     ]
 
-    def formfield_for_choice_field(self, db_field, request, **kwargs):
-        if db_field.name == 'key_type':
-            resolved = resolve(request.path_info)
-            if resolved.kwargs:
-                pobj = self.parent_model.objects.get(pk=resolved.kwargs['object_id'])
-                kwargs['choices'] = DeviceVendorFunctionChoice().choices(pobj.vendor)
-            else:
-                kwargs['choices'] = DeviceVendorFunctionChoice().choices()
-            kwargs['choices'] += (('', '-----'),)
-        return super().formfield_for_choice_field(db_field, request, **kwargs)
-
 
 class DeviceSettingsInLine(admin.TabularInline):
     model = DeviceSettings
@@ -374,6 +362,20 @@ class DevicesAdmin(ImportExportModelAdmin):
             return (DeviceLinesInLine, DeviceKeysInLine, DeviceSettingsInLine)
         else:
             return ()
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        self.form.Meta.widgets['template'].choices = ProvisionFunctions().get_template_list()
+        return super().get_form(request, obj, change, **kwargs)
+
+    def get_formsets_with_inlines(self, request, obj=None):
+        if obj:
+            dvfchoices = DeviceVendorFunctionChoice().choices(obj.vendor)
+        else:
+            dvfchoices = DeviceVendorFunctionChoice().choices()
+        for inline in self.get_inline_instances(request, obj):
+            if type(inline) is DeviceKeysInLine:
+                inline.form.Meta.widgets['key_type'].choices = dvfchoices
+                yield inline.get_formset(request, obj), inline
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'user_id':

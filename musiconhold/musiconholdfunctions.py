@@ -35,15 +35,10 @@ from lxml import etree
 
 class MohSource():
     def choices(self, prefix='local_stream://'):
-        ret_val = [('None', 'None')]
-        # Prevent accessing the database during app initialisation.
-        if apps.ready:
-            try:
-                return [('%s%s' % (prefix, c.name), c.name) for c in MusicOnHold.objects.distinct('name')]
-            except:
-                return ret_val
-        else:
-            return ret_val
+        try:
+            return [('%s%s' % (prefix, c.name), c.name) for c in MusicOnHold.objects.distinct('name')]
+        except:
+            return [('None', 'None')]
 
 
 class MohFunctions():

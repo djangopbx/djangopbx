@@ -97,21 +97,6 @@ class DeviceVendorFunctions(models.Model):
         return self.name
 
 
-class DeviceVendorFunctionChoice():
-    def choices(self, vendor=None):
-        vfc = [('None', 'None')]
-        # Prevent accessing the database during app initialisation.
-        if apps.ready:
-            try:
-                if vendor:
-                    return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]
-                return [(c.value, '%s -> %s' % (c.vendor_id.name, c.name)) for c in DeviceVendorFunctions.objects.filter(enabled='true')]
-            except:
-                return vfc
-        else:
-            return vfc
-
-
 class DeviceVendorFunctionGroups(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Function'))                                                          # noqa: E501, E221
     function_id  = models.ForeignKey('DeviceVendorFunctions', db_column='function_id', on_delete=models.CASCADE, verbose_name=_('Function'))                                   # noqa: E501, E221
@@ -175,7 +160,7 @@ class DeviceProfileKeys(models.Model):
     category     = models.CharField(max_length=16, blank=True, choices=DeviceKeyCategoryChoice.choices, default=DeviceKeyCategoryChoice.CLINE, verbose_name=_('Category'))        # noqa: E501, E221
     key_id       = models.DecimalField(max_digits=11, decimal_places=0, default=1, verbose_name=_('Key'))                                                                         # noqa: E501, E221
     #vendor_id    = models.ForeignKey('DeviceVendors', db_column='vendor_id', on_delete=models.CASCADE, verbose_name=_('Vendor'))                                                 # noqa: E501, E221
-    key_type     = models.CharField(max_length=64, choices=DeviceVendorFunctionChoice().choices(), verbose_name=_('Key type'))                                                    # noqa: E501, E221
+    key_type     = models.CharField(max_length=64, verbose_name=_('Key type'))                                                                                                    # noqa: E501, E221
     line         = models.DecimalField(max_digits=3, decimal_places=0, default=1, verbose_name=_('Line'))                                                                         # noqa: E501, E221
     value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                                               # noqa: E501, E221
     extension    = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Extension'))                                                                            # noqa: E501, E221
@@ -263,7 +248,7 @@ class DeviceKeys(models.Model):
     category     = models.CharField(max_length=16, blank=True, choices=DeviceKeyCategoryChoice.choices, default=DeviceKeyCategoryChoice.CLINE, verbose_name=_('Category'))        # noqa: E501, E221
     key_id       = models.DecimalField(max_digits=11, decimal_places=0, default=1, verbose_name=_('Key'))                                                                         # noqa: E501, E221
     #vendor_id    = models.ForeignKey('DeviceVendors', db_column='vendor_id', on_delete=models.CASCADE, verbose_name=_('Vendor'))                                                 # noqa: E501, E221
-    key_type     = models.CharField(max_length=64, choices=DeviceVendorFunctionChoice().choices(), verbose_name=_('Key type'))                                                    # noqa: E501, E221
+    key_type     = models.CharField(max_length=64, verbose_name=_('Key type'))                                                                                                    # noqa: E501, E221
     line         = models.DecimalField(max_digits=3, decimal_places=0, default=1, verbose_name=_('Line'))                                                                         # noqa: E501, E221
     value        = models.CharField(max_length=254, blank=True, null=True, verbose_name=_('Value'))                                                                               # noqa: E501, E221
     extension    = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Extension'))                                                                            # noqa: E501, E221

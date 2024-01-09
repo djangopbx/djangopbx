@@ -29,7 +29,6 @@
 
 import os
 #import socket
-from django.apps import apps
 from django.conf import settings
 #from lxml import etree
 #from io import StringIO
@@ -44,7 +43,6 @@ from .models import (
 
 class DeviceVendorFunctionChoice():
     def choices(self, vendor=None):
-        # This try/except is a workaround to prevent a relation not found error on initial migrate
         try:
             if vendor:
                 return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]
@@ -60,17 +58,15 @@ class ProvisionFunctions():
         self.path_of_templates = settings.BASE_DIR / 'provision/templates/provision'
 
     def get_template_list(self):
-        # Prevent accessing the database during app initialisation.
-        if apps.ready:
-            try:
-                vendor_list = DeviceVendors.objects.filter(enabled='true')
-                for v in vendor_list:
-                    for it in os.scandir(os.path.join(self.path_of_templates, v.name)):
-                        if it.is_dir():
-                            relpath = os.path.relpath(it.path, start=self.path_of_templates)
-                            self.template_list.append((relpath, relpath))
-            except:
-                pass
+        try:
+            vendor_list = DeviceVendors.objects.filter(enabled='true')
+            for v in vendor_list:
+                for it in os.scandir(os.path.join(self.path_of_templates, v.name)):
+                    if it.is_dir():
+                        relpath = os.path.relpath(it.path, start=self.path_of_templates)
+                        self.template_list.append((relpath, relpath))
+        except:
+            pass
         self.template_list.sort()
         return self.template_list
 

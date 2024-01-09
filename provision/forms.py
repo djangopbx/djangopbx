@@ -27,7 +27,7 @@
 #
 
 from django import forms
-from .provisionfunctions import ProvisionFunctions, DeviceVendorFunctionChoice
+
 
 class DeviceLinesForm(forms.ModelForm):
 
@@ -57,8 +57,7 @@ class DeviceKeysForm(forms.ModelForm):
         widgets = {
             'category': forms.Select(attrs={'size': 1}),
             'key_id': forms.NumberInput(attrs={'size': 5}),
-#            'key_type': forms.Select(choices=DeviceVendorFunctionChoice().choices()),
-            'key_type': forms.Select(attrs={'size': 1}),
+            'key_type': forms.Select(choices=[('None', 'None')], attrs={'size': 1}),
             'line': forms.NumberInput(attrs={'size': 5}),
             'value': forms.TextInput(attrs={'size': 15}),
             'extension': forms.TextInput(attrs={'size': 15}),
@@ -71,6 +70,6 @@ class DeviceForm(forms.ModelForm):
 
     class Meta:
         widgets = {
-            'template': forms.Select(choices=ProvisionFunctions().get_template_list()),
+            'template': forms.Select(choices=[('None', 'None')]),
         }
         fields = '__all__'

@@ -53,7 +53,7 @@ class ExtensionAdminForm(ModelForm):
     class Meta:
         model = Extension
         widgets = {
-            "hold_music": Select(choices=MohSource().choices()),
+            "hold_music": Select(choices=[('None', 'None')]),
         }
         fields = '__all__'
 
@@ -62,7 +62,7 @@ class GatewayAdminForm(ModelForm):
     class Meta:
         model = Gateway
         widgets = {
-            "profile": Select(choices=SipProfileChoice().choices()),
+            "profile": Select(choices=[('None', 'None')]),
         }
         fields = '__all__'
 
@@ -269,6 +269,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
     inlines = [ExtensionUserInLine, FollowMeDestinationInLine]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
+        self.form.Meta.widgets['hold_music'].choices = MohSource().choices()
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields['password'].initial = BaseUserManager().make_random_password(12)
         return form
@@ -402,6 +403,10 @@ class GatewayAdmin(ImportExportModelAdmin):
 
     ordering = ['gateway']
     actions = [write_gateway_file, rescan_sofia_profile, sofia_stop_gateway]
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        self.form.Meta.widgets['profile'].choices = SipProfileChoice().choices()
+        return super().get_form(request, obj, change, **kwargs)
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
