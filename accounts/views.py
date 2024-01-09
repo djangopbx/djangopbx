@@ -224,5 +224,3 @@ class CallRoutingEdit(LoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form, followme_formset):
         return self.render_to_response(self.get_context_data(form=form, followme_formset=followme_formset))
-
-

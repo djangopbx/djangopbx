@@ -305,3 +305,7 @@ class ClickDial(LoginRequiredMixin, View):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             return HttpResponse('')
+
+@login_required
+def pbxlogout(request):
+    return render(request, 'portal/pbx_logout.html', {})

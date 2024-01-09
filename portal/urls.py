@@ -52,4 +52,5 @@ urlpatterns = [
         views.servefsmedia, name='servefsmedia'
         ),
     re_path(r'clickdial/(?P<dest>[A-Za-z0-9\.@]+)/', views.ClickDial.as_view(), name='clickdial'),
+    path('pbxlogout/', views.pbxlogout, name='pbxlogout'),
 ]
