@@ -29,6 +29,7 @@
 
 import os
 import socket
+from django.apps import apps
 from django.conf import settings
 from lxml import etree
 from io import StringIO
@@ -38,11 +39,15 @@ from tenants.pbxsettings import PbxSettings
 
 class SipProfileChoice():
     def choices(self):
-        # This try/except is a workaround to prevent a relation not found error on initial migrate
-        try:
-            return [(c.name, c.name) for c in switch.models.SipProfile.objects.filter(enabled='true')]
-        except:
-            return [('None', 'None')]
+        ret_val = [('None', 'None')]
+        # Prevent accessing the database during app initialisation.
+        if apps.ready:
+            try:
+                return [(c.name, c.name) for c in switch.models.SipProfile.objects.filter(enabled='true')]
+            except:
+                return ret_val
+        else:
+            return ret_val
 
 
 class SwitchFunctions():

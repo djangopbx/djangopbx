@@ -100,8 +100,8 @@ class DeviceVendorFunctions(models.Model):
 class DeviceVendorFunctionChoice():
     def choices(self, vendor=None):
         vfc = [('None', 'None')]
+        # Prevent accessing the database during app initialisation.
         if apps.ready:
-            # This try/except is a workaround to prevent a relation not found error on initial migrate
             try:
                 if vendor:
                     return [(c.value, c.name) for c in DeviceVendorFunctions.objects.filter(enabled='true', vendor_id_id=vendor)]

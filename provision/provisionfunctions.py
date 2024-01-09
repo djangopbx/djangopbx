@@ -60,8 +60,8 @@ class ProvisionFunctions():
         self.path_of_templates = settings.BASE_DIR / 'provision/templates/provision'
 
     def get_template_list(self):
+        # Prevent accessing the database during app initialisation.
         if apps.ready:
-            # This try/except is a workaround to prevent a relation not found error on initial migrate
             try:
                 vendor_list = DeviceVendors.objects.filter(enabled='true')
                 for v in vendor_list:

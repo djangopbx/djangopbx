@@ -27,6 +27,7 @@
 #
 
 import os
+from django.apps import apps
 from .models import MusicOnHold
 from tenants.pbxsettings import PbxSettings
 from lxml import etree
@@ -34,11 +35,15 @@ from lxml import etree
 
 class MohSource():
     def choices(self, prefix='local_stream://'):
-        # This try/except is a workaround to prevent a relation not found error on initial migrate
-        try:
-            return [('%s%s' % (prefix, c.name), c.name) for c in MusicOnHold.objects.distinct('name')]
-        except:
-            return [('None', 'None')]
+        ret_val = [('None', 'None')]
+        # Prevent accessing the database during app initialisation.
+        if apps.ready:
+            try:
+                return [('%s%s' % (prefix, c.name), c.name) for c in MusicOnHold.objects.distinct('name')]
+            except:
+                return ret_val
+        else:
+            return ret_val
 
 
 class MohFunctions():
