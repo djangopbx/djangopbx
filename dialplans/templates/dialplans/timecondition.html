@@ -3,6 +3,13 @@
 {% load i18n static %}
 
     {% block content %}
+<!-- Popperjs -->
+<script src="{% static 'script/tempusdominus/popper.min.js' %}"></script>
+<!-- Tempus Dominus JavaScript -->
+<script src="{% static 'script/tempusdominus/tempus-dominus.min.js' %}"></script>
+<!-- Tempus Dominus Styles -->
+<link rel="stylesheet" type="text/css" href="{% static 'script/tempusdominus/tempus-dominus.min.css' %}" />
+
 <!--<script>
 htmx.logger = function(elt, event, data) {
     if(console) {
@@ -10,6 +17,35 @@ htmx.logger = function(elt, event, data) {
     }
 }
 </script>-->
+<script>
+var pbxdtps = new Map();
+function dt_click(clicked_id) {
+    if (!pbxdtps.has(clicked_id)) {
+        var picker = new tempusDominus.TempusDominus(document.getElementById(clicked_id), {
+            display: {
+                icons: {
+                    time: 'fas fa-clock',
+                    date: 'fas fa-calendar-alt',
+                    up: 'fas fa-arrow-up',
+                    down: 'fas fa-arrow-down',
+                    previous: 'fas fa-chevron-left',
+                    next: 'fas fa-chevron-right',
+                    today: 'fas fa-calendar-check',
+                    clear: 'fas fa-trash',
+                    close: 'fas fa-times',
+                },
+                components: {
+                  seconds: false
+                }
+            },
+            localization: {
+                format: 'yyyy-MM-dd HH:mm',
+            }
+        });
+        pbxdtps.set(clicked_id, picker)
+    }
+}
+</script>
     <div class="card" style="margin-left: 5%; width: 90%;">
         <div class="card-header">
             <i class="fa fa-calendar"></i> {% translate 'Time Condition' %}

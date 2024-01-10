@@ -26,6 +26,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from datetime import datetime
 from django.utils.translation import gettext_lazy as _
 
 
@@ -34,7 +35,11 @@ class TimeConditions():
     vr_choice = [('', '')]
     vr_dict = {}
 
+    def __init__(self):
+        self.dt_stamp = datetime.now().strftime('%Y-%m-%d %H:%M')
+
     def get_choices(self, idtag, choice):
+        ibidtag = idtag.replace('_c_', '_v_')
         oobidtag = idtag.replace('_c_', '_r_')
         cl = ''
         if choice == 'year':
@@ -54,8 +59,17 @@ class TimeConditions():
         elif choice == 'minute-of-day':
             cl = ''.join(self.tag_wrapped_choice(self.get_timeofday()))
 
-        return '<div id=\"id_%s\" hx-swap-oob=\"innerHTML\">'\
-            '<option value=\"\"></option>%s</div>%s' % (oobidtag, cl, cl)
+        if choice == 'date-time':
+            return '<div id=\"id_%s\" hx-swap-oob=\"outerHTML\">'\
+                '<input onClick=\"dt_click(this.id)\" type=\"text\" name=\"%s\" value=\"%s\" id=\"id_%s\"></div>'\
+                '<input onClick=\"dt_click(this.id)\" type=\"text\" name=\"%s\" value=\"%s\" id=\"id_%s\">' % (oobidtag,
+                                                oobidtag, self.dt_stamp, oobidtag, ibidtag, self.dt_stamp, ibidtag)
+
+        return '<div id=\"id_%s\" hx-swap-oob=\"outerHTML\">'\
+                '<select name=\"%s\" class="custom-select custom-select-sm" id=\"id_%s\">'\
+                '<option value=\"\"></option>%s</select></div>'\
+                '<select name=\"%s\" class="custom-select custom-select-sm" id=\"id_%s\">%s'\
+                '</select>' % (oobidtag, oobidtag, oobidtag, cl, ibidtag, ibidtag, cl)
 
     def tag_wrapped_choice(self, c):
         return ['<option value=\"%s\">%s</option>' % (x[0], x[1]) for x in c]

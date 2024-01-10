@@ -437,7 +437,10 @@ def timecondition(request, dpuuid=None):
                 cond_add = True
                 r = request.POST['settings_r_%s_%s' % (i, j)]
                 if len(r) > 0:
-                    v = '%s-%s' % (request.POST['settings_v_%s_%s' % (i, j)], r)
+                    if c == 'date-time':
+                        v = '%s~%s' % (request.POST['settings_v_%s_%s' % (i, j)], r)
+                    else:
+                        v = '%s-%s' % (request.POST['settings_v_%s_%s' % (i, j)], r)
                 else:
                     v = request.POST['settings_v_%s_%s' % (i, j)]
                 cnd.append('%s=\"%s\"' % (c, v))

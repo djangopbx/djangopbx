@@ -2,7 +2,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -124,7 +124,7 @@ class TimeConditionForm(forms.Form):
                         if a_data[:6] == 'preset':
                             is_preset = True
                             field_name = 'preset_%s' % a_data.split('=')[1]
-                            self.a_set_initial_value(field_name, a_data.split('=')[1])
+                            self.initial[field_name] = a_data.split('=')[1]
 
                     a_app = actchild.get('application')
                     if a_app:
@@ -137,14 +137,14 @@ class TimeConditionForm(forms.Form):
                                     widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm'}),
                                     min_value=500, max_value=999, initial=500, required=False
                                     )
-                                self.a_set_initial_value(field_name_s, '%s' % str(500 + (i*10)))
+                                self.initial[field_name_s] = '%s' % str(500 + (i*10))
 
                                 self.fields[field_name_a] = forms.ChoiceField(
                                     widget=forms.Select(attrs={'class': self.custom_select_classes}),
                                     choices=action_choices, required=False
                                     )
-                                self.a_set_initial_value(field_name_a, '%s:%s' % (a_app, a_data))
-                            self.a_set_initial_value('default_action', '%s:%s' % (a_app, a_data))
+                                self.initial[field_name_a] = '%s:%s' % (a_app, a_data)
+                            self.initial['default_action'] = '%s:%s' % (a_app, a_data)
 
                 if is_preset:
                     continue
@@ -160,10 +160,6 @@ class TimeConditionForm(forms.Form):
                         j += 1
 
                         mval = extchild.get(m)
-                        if '-' in mval:
-                            mval_list = mval.split('-')
-                        else:
-                            mval_list = [mval, '']
 
                         field_name = 'settings_c_%s_%s' % (i, j)
                         field_name_v = 'settings_v_%s_%s' % (i, j)
@@ -173,22 +169,43 @@ class TimeConditionForm(forms.Form):
                             widget=forms.Select(attrs={
                                 'class': self.custom_select_classes,
                                 'hx-get': '/dialplans/tcvrchoice',
+                                'hx-swap': 'outerHTML',
                                 'hx-target': field_name_v_hx
                                 }), choices=tc.get_condition_list(), required=False
                             )
-                        self.a_set_initial_value(field_name, m)
-                        self.fields[field_name_v] = forms.ChoiceField(
-                            widget=forms.Select(attrs={'class': self.custom_select_classes}),
-                            choices=tc.vr_dict[m], required=False
-                            )
-                        empty_option = [('', '')]
-                        empty_option.extend(tc.vr_dict[m])
-                        self.fields[field_name_r] = forms.ChoiceField(
-                            widget=forms.Select(attrs={'class': self.custom_select_classes}),
-                            choices=empty_option, required=False
-                            )
-                        self.a_set_initial_value(field_name_v, mval_list[0])
-                        self.a_set_initial_value(field_name_r, mval_list[1])
+
+                        self.initial[field_name] = m
+                        if m == 'date-time':
+                            if '~' in mval:
+                                mval_list = mval.split('~')
+                            else:
+                                mval_list = [mval, '']
+                            self.fields[field_name_v] = forms.DateTimeField(
+                                widget=forms.DateTimeInput(attrs={'onClick': 'dt_click(this.id)'}),
+                                required=False
+                                )
+                            self.fields[field_name_r] = forms.DateTimeField(
+                                widget=forms.DateTimeInput(attrs={'onClick': 'dt_click(this.id)'}),
+                                required=False
+                                )
+                        else:
+                            if '-' in mval:
+                                mval_list = mval.split('-')
+                            else:
+                                mval_list = [mval, '']
+                            self.fields[field_name_v] = forms.ChoiceField(
+                                widget=forms.Select(attrs={'class': self.custom_select_classes}),
+                                choices=tc.vr_dict[m], required=False
+                                )
+                            empty_option = [('', '')]
+                            empty_option.extend(tc.vr_dict[m])
+                            self.fields[field_name_r] = forms.ChoiceField(
+                                widget=forms.Select(attrs={'class': self.custom_select_classes}),
+                                choices=empty_option, required=False
+                                )
+
+                        self.initial[field_name_v] = mval_list[0]
+                        self.initial[field_name_r] = mval_list[1]
 
                 # Extra empty condition line in each setting
                 j += 1
@@ -198,23 +215,24 @@ class TimeConditionForm(forms.Form):
                     widget=forms.Select(attrs={
                         'class': self.custom_select_classes,
                         'hx-get': '/dialplans/tcvrchoice',
+                        'hx-swap': 'outerHTML',
                         'hx-target': field_name_v_hx
                         }),
                     choices=tc.get_condition_list(), required=False
                     )
-                self.a_set_initial_value(field_name, '')
+                self.initial[field_name] = ''
                 field_name_v = 'settings_v_%s_%s' % (i, j)
                 self.fields[field_name_v] = forms.ChoiceField(
                     widget=forms.Select(attrs={'class': self.custom_select_classes}),
                     choices=tc.vr_choice, required=False
                     )
-                self.a_set_initial_value(field_name_v, '')
+                self.initial[field_name_v] = ''
                 field_name_r = 'settings_r_%s_%s' % (i, j)
                 self.fields[field_name_r] = forms.ChoiceField(
                     widget=forms.Select(attrs={'class': self.custom_select_classes}),
                     choices=tc.vr_choice, required=False
                     )
-                self.a_set_initial_value(field_name_r, '')
+                self.initial[field_name_r] = ''
 
                 self.a_setting_condition_count[i] = j
 
@@ -231,19 +249,19 @@ class TimeConditionForm(forms.Form):
                 }),
             choices=tc.get_condition_list(), required=False
             )
-        self.a_set_initial_value(field_name, '')
+        self.initial[field_name] = ''
         field_name_v = 'settings_v_%s_%s' % (i, j)
         self.fields[field_name_v] = forms.ChoiceField(
             widget=forms.Select(attrs={'class': self.custom_select_classes}),
             choices=tc.vr_choice, required=False
             )
-        self.a_set_initial_value(field_name_v, '')
+        self.initial[field_name_v] = ''
         field_name_r = 'settings_r_%s_%s' % (i, j)
         self.fields[field_name_r] = forms.ChoiceField(
             widget=forms.Select(attrs={'class': self.custom_select_classes}),
             choices=tc.vr_choice, required=False
             )
-        self.a_set_initial_value(field_name_r, '')
+        self.initial[field_name_r] = ''
 
         field_name_a = 'settings_a_%s' % i
         field_name_s = 'settings_s_%s' % i
@@ -251,7 +269,7 @@ class TimeConditionForm(forms.Form):
             widget=forms.NumberInput(attrs={'class': 'form-control form-control-sm'}),
             min_value=500, max_value=999, initial=500, required=False
             )
-        self.a_set_initial_value(field_name_s, '%s' % str(500 + (i*10)))
+        self.initial[field_name_s] = '%s' % str(500 + (i*10))
         self.fields[field_name_a] = forms.ChoiceField(
             widget=forms.Select(attrs={'class': self.custom_select_classes}),
             choices=action_choices, required=False
@@ -261,11 +279,11 @@ class TimeConditionForm(forms.Form):
         self.a_settings_count = i
 
         self.fields['settings_count'] = forms.CharField(widget=forms.HiddenInput(), required=False)
-        self.a_set_initial_value('settings_count', '%s' % str(i))
+        self.initial['settings_count'] = '%s' % str(i)
         self.fields['setting_condition_count'] = forms.CharField(widget=forms.HiddenInput(), required=False)
-        self.a_set_initial_value('setting_condition_count', '%s' % json.dumps(self.a_setting_condition_count))
+        self.initial['setting_condition_count'] = '%s' % json.dumps(self.a_setting_condition_count)
         self.fields['tcregion'] = forms.CharField(widget=forms.HiddenInput(), required=False)
-        self.a_set_initial_value('tcregion', region)
+        self.initial['tcregion'] = region
 
     def get_preset_fields(self):
         for field_name in self.fields:
@@ -291,9 +309,3 @@ class TimeConditionForm(forms.Form):
             dl.append(deepcopy(d))
             d.clear()
         return dl
-
-    def a_set_initial_value(self, field, ival):
-        try:
-            self.initial[field] = ival
-        except IndexError:
-            self.initial[field] = ''
