@@ -725,11 +725,11 @@ class ConfigHandler(XmlHandler):
                     etree.SubElement(x_gateway, 'param', name='register', value=gw.register)
                 if gw.register_transport:
                     if gw.register_transport == 'udp':
-                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.rgister_transport)
+                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.register_transport)
                     elif gw.register_transport == 'tcp':
-                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.rgister_transport)
+                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.register_transport)
                     elif gw.register_transport == 'tls':
-                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.rgister_transport)
+                        etree.SubElement(x_gateway, 'param', name='register-transport', value=gw.register_transport)
                         etree.SubElement(x_gateway, 'param', name='contact-params', value='transport=tls')
                     else:
                         etree.SubElement(x_gateway, 'param', name='register-transport', value='udp')
