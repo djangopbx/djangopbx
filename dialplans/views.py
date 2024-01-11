@@ -285,7 +285,7 @@ def newobroute(request):
                 else:
                     etree.SubElement(
                         x_condition, 'action', application='set',
-                        data='sip_h_X-accountcode=%{accountcode}'
+                        data='sip_h_X-accountcode=${accountcode}'
                         )
 
                 etree.SubElement(x_condition, 'action', application='set', data='hangup_after_bridge=true')
