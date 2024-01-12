@@ -302,7 +302,7 @@ class DeviceLinesInLine(admin.TabularInline):
 
 class DeviceKeysInLine(admin.TabularInline):
     model = DeviceKeys
-    extra = 2
+    extra = 0
 
     form = DeviceKeysForm
     fieldsets = [
@@ -315,7 +315,7 @@ class DeviceKeysInLine(admin.TabularInline):
 
 class DeviceSettingsInLine(admin.TabularInline):
     model = DeviceSettings
-    extra = 2
+    extra = 0
     fieldsets = [
         (None,          {'fields': ['name', 'value', 'description', 'enabled']}),
     ]
