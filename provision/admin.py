@@ -375,7 +375,8 @@ class DevicesAdmin(ImportExportModelAdmin):
         for inline in self.get_inline_instances(request, obj):
             if type(inline) is DeviceKeysInLine:
                 inline.form.Meta.widgets['key_type'].choices = dvfchoices
-                yield inline.get_formset(request, obj), inline
+            yield inline.get_formset(request, obj), inline
+
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'user_id':
