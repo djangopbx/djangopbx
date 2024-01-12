@@ -27,9 +27,11 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import os
 import base64
 import re
 from django.utils import timezone
+from django.conf import settings
 #import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
@@ -297,6 +299,10 @@ def device_config(request, *args, **kwargs):
     if not device:
         return HttpResponseNotFound()
 
+    prov_template = os.path.join('provision/',device.template, cfgfile)
+    if not os.path.isfile(os.path.join(settings.BASE_DIR, 'provision/templates', prov_template)):
+        return HttpResponseNotFound()
+
     if 'contacts' in kwargs:
         contact_type = kwargs['contacts']
         if contact_type == 'users' or contact_type == 'groups':
@@ -376,7 +382,7 @@ def device_config(request, *args, **kwargs):
                     'Pragma': 'public'
                 }
         return render(
-            request, 'provision/%s/%s' % (device.template, cfgfile),
+            request, prov_template,
             {'prov_defs': prov_defs,
             'prov_lines': prov_lines,
             'line_keys': line_keys,
@@ -399,7 +405,7 @@ def device_config(request, *args, **kwargs):
 
 
     return render(
-            request, 'provision/%s/%s' % (device.template, cfgfile),
+            request, prov_template,
             {'prov_defs': prov_defs,
             'prov_lines': prov_lines,
             'line_keys': line_keys,
