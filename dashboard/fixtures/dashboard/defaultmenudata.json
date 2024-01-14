@@ -56,6 +56,7 @@
         "updated_by": "system"
     }
 },
+{
     "model": "portal.menuitemgroup",
     "pk": "e8a9cc9b-c7b0-4b3d-9707-092fcc354025",
     "fields": {
