@@ -1,0 +1,28 @@
+[
+{
+    "model": "portal.menuitemgroup",
+    "pk": "e2d67596-fe41-4676-803e-e839a42c3704",
+    "fields": {
+        "menu_item_id": "1d13580a-3004-4f70-a159-5798103429b2",
+        "name": "user",
+        "group_id": 23,
+        "created": "2022-11-29T22:50:22.275Z",
+        "updated": "2022-11-29T22:50:22.275Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "portal.menuitemgroup",
+    "pk": "e54d5aeb-e340-45b7-b235-959f4a1a1912",
+    "fields": {
+        "menu_item_id": "73ce309c-95ee-45fe-9e69-919b61a855f8",
+        "name": "user",
+        "group_id": 23,
+        "created": "2022-12-11T20:01:53.071Z",
+        "updated": "2022-12-11T20:01:53.071Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+}
+]

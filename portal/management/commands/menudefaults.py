@@ -71,6 +71,14 @@ class Command(BaseCommand):
                 call_command('loaddata', defaults_file, verbosity=0)
                 Path(loaded_file).touch()
 
+        defaults_file = '%s/fixtures/defaultmenuitemgroup.json' % portal_path
+        loaded_file = '%s/fixtures/defaultmenuitemgroup.loaded' % portal_path
+        if not os.path.exists(loaded_file):
+            if os.path.exists(defaults_file):
+                print('Loading Menu for: %s' % defaults_file)
+                call_command('loaddata', defaults_file, verbosity=0)
+                Path(loaded_file).touch()
+
         for acnf in apps.get_app_configs():
             if acnf.name == 'portal':
                 continue
