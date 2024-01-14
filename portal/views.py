@@ -97,7 +97,8 @@ def index(request):
 
     if dreload:
         brand = s.default_brand_settings()
-        brand = s.domain_brand_settings(brand, request.user.profile.domain_id.id)
+        if request.user.profile.domain_id:
+            brand = s.domain_brand_settings(brand, request.user.profile.domain_id.id)
         request.session['brand_footer'] = brand.get('footer_text', 'DjangoPBX &copy; Adrian Fretwell 2024')
         request.session['brand_logo'] = brand.get('logo', '/img/logo.png')
         request.session['brand_portal_text'] = brand.get('portal_text', 'DjangoPBX Portal')

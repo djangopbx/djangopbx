@@ -167,7 +167,7 @@ class CallRoutingViewer(SingleTableView):
         if self.request.user.is_superuser:
             qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'])
         else:
-            qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'], extension_id__in=extension_list)
+            qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'], id__in=extension_list)
         return qs
 
 

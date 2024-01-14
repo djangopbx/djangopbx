@@ -383,12 +383,12 @@ class UsrDashboard():
         self.time_24_hours_ago = timezone.now() - timezone.timedelta(1)
         if self.es.connect(*settings.EVSKT):
             self.esconnected = True
+        self.groupList = list(request.user.groups.values_list('name', flat=True))
         self.get_recent_calls()
         self.get_missed_calls()
         self.get_voicemails()
         self.get_call_routing()
         self.get_ring_group()
-        self.groupList = list(request.user.groups.values_list('name', flat=True))
 
     def get_recent_calls(self):
         qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'],
@@ -446,7 +446,8 @@ class UsrDashboard():
             qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid']).order_by('extension')[:10]
         else:
             qs = Extension.objects.filter(domain_id=self.request.session['domain_uuid'],
-                    extension_id__in=extension_list).order_by('extension')[:10]
+                    id__in=extension_list).order_by('extension')[:10]
+
             if 'call_routing' in self.groupList:
                 self.callrouting_visible = True
         for q in qs:
