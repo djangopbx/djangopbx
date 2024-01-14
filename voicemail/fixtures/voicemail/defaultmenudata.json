@@ -17,5 +17,18 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "portal.menuitemgroup",
+    "pk": "6f2e0778-876d-413d-88f1-21cafc68ff3e",
+    "fields": {
+        "menu_item_id": "ff25c281-dd24-44c9-b014-2ebf2f19a6cc",
+        "name": "user",
+        "group_id": 23,
+        "created": "2022-12-11T18:43:19.834Z",
+        "updated": "2022-12-11T18:43:19.834Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

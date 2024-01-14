@@ -19,6 +19,19 @@
     }
 },
 {
+    "model": "portal.menuitemgroup",
+    "pk": "31ccc6b5-18c9-433b-8efa-0a71e27eb8cf",
+    "fields": {
+        "menu_item_id": "915f0fd9-5b6d-4530-9b5b-099ba9a1bbe7",
+        "name": "user",
+        "group_id": 23,
+        "created": "2023-11-26T11:54:17.587Z",
+        "updated": "2023-11-26T11:54:17.587Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
     "model": "portal.menuitem",
     "pk": "23a7f6d7-a307-4e46-9876-f2c21bcf1c7e",
     "fields": {
