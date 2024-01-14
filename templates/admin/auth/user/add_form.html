@@ -5,7 +5,7 @@
   {% if not is_popup %}
     <p>{% translate 'First, enter a username and password. Then, you’ll be able to edit more user options.' %}</p>
     <p>{% translate 'It is generally recommended to use the format' %}<b> {% translate 'user@domain' %} </b>{% translate 'for most DjangoPBX usernames.' %}</p>
-    <p>{% translate 'When you have finished editing the user(s), go to Profiles, filter by Domain and choose Global.  This will list all user profiles not assigned to a Domain.  Edit profile(s) and assign a Domain.' %}</p>
+    <p>{% translate 'If you are not using the recommended format above or have specified a non existant domain, then when you have finished editing the user(s), go to Profiles, filter by Domain and choose Global.  This will list all user profiles not assigned to a Domain.  Edit profile(s) and manually assign a Domain.' %}</p>
   {% else %}
     <p>{% translate "Enter a username and password." %}</p>
   {% endif %}

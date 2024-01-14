@@ -27,18 +27,26 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from .models import Profile
+from .models import Profile, Domain
 from django.contrib.auth.models import Group
 
 def create_or_edit_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        p = Profile.objects.create(user=instance)
         try:
             user_group = Group.objects.get(name='user')
         except Group.DoesNotExist:
             user_group = False
         if user_group:
             user_group.user_set.add(instance)
+        if '@' in instance.username:
+            d_name = instance.username.split('@')[1]
+            try:
+                d = Domain.objects.get(name=d_name)
+            except (Domain.DoesNotExist):
+                d = None
+            if d:
+                p.domain_id = d
 
     try:
         instance.profile.username = instance.username
