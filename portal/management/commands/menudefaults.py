@@ -39,6 +39,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-r', '--remove', help=_('Remove existing default menu (--remove true)'))
+        parser.add_argument('-f', '--force', help=_('Force dataload ignoring data loaded flags (--force true)'))
 
     def handle(self, *args, **kwargs):
         menu_remove = False
@@ -49,6 +50,14 @@ class Command(BaseCommand):
         if r == 'true':
             menu_remove = True
 
+        menu_force = False
+        f = kwargs['force']
+        if not f:
+            f = 'false'
+
+        if f == 'true':
+            menu_force = True
+
         if menu_remove:
             pass
             # remove not yet implemented
@@ -57,7 +66,7 @@ class Command(BaseCommand):
 
         defaults_file = '%s/fixtures/defaultmenu.json' % portal_path
         loaded_file = '%s/fixtures/defaultmenu.loaded' % portal_path
-        if not os.path.exists(loaded_file):
+        if (not os.path.exists(loaded_file)) or menu_force:
             if os.path.exists(defaults_file):
                 print('Loading Menu for: %s' % defaults_file)
                 call_command('loaddata', defaults_file, verbosity=0)
@@ -65,7 +74,7 @@ class Command(BaseCommand):
 
         defaults_file = '%s/fixtures/defaultmenudata.json' % portal_path
         loaded_file = '%s/fixtures/defaultmenudata.loaded' % portal_path
-        if not os.path.exists(loaded_file):
+        if (not os.path.exists(loaded_file)) or menu_force:
             if os.path.exists(defaults_file):
                 print('Loading Menu for: %s' % defaults_file)
                 call_command('loaddata', defaults_file, verbosity=0)
@@ -73,7 +82,7 @@ class Command(BaseCommand):
 
         defaults_file = '%s/fixtures/defaultmenuitemgroup.json' % portal_path
         loaded_file = '%s/fixtures/defaultmenuitemgroup.loaded' % portal_path
-        if not os.path.exists(loaded_file):
+        if (not os.path.exists(loaded_file)) or menu_force:
             if os.path.exists(defaults_file):
                 print('Loading Menu for: %s' % defaults_file)
                 call_command('loaddata', defaults_file, verbosity=0)
@@ -87,7 +96,7 @@ class Command(BaseCommand):
 
             defaults_file = '%s/fixtures/%s/defaultmenudata.json' % (acnf.path, acnf.name)
             loaded_file = '%s/fixtures/%s/defaultmenudata.loaded' % (acnf.path, acnf.name)
-            if os.path.exists(loaded_file):
+            if os.path.exists(loaded_file) and (not menu_force):
                 continue
             if os.path.exists(defaults_file):
                 print('Loading Menu for: %s' % defaults_file)
