@@ -30,6 +30,7 @@
 import os
 import base64
 import re
+from django.db.models import Case, Value, When
 from django.utils import timezone
 from django.conf import settings
 #import logging
@@ -322,7 +323,15 @@ def device_config(request, *args, **kwargs):
                 c_dict['contact_name_given'] = q.given_name
                 c_dict['contact_name_family'] = q.family_name
                 c_dict['numbers'] = []
-                ns = q.contacttel_set.all()
+                ns = q.contacttel_set.all().order_by(
+                        Case(
+                         When(tel_type='pref', then=Value(1)),
+                         When(tel_type='work', then=Value(2)),
+                         When(tel_type='cell', then=Value(3)),
+                         When(tel_type='home', then=Value(4)),
+                         default=Value(100)
+                        )
+                    )
                 for n in ns:
                     n_dict = {}
                     n_dict['phone_number'] = n.number
