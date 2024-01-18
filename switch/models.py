@@ -47,6 +47,7 @@ class SwitchVariableCategoryChoice(models.TextChoices):
     CSIPPROFILEEXTERNAL = 'SIP Profile: External', _('SIP Profile: External')  # noqa: E221
     CODECS              = 'Codecs',                _('Codecs')                 # noqa: E221
     CXMPP               = 'XMPP',                  _('XMPP')                   # noqa: E221
+    CDSN                = 'DSN',                   _('DSN')                    # noqa: E221
     CDEFAULTS           = 'Defaults',              _('Defaults')               # noqa: E221
     CSOUND              = 'Sound',                 _('Sound')                  # noqa: E221
     CIPADDRESS          = 'IP Address',            _('IP Address')             # noqa: E221

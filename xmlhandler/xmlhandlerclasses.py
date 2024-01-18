@@ -38,7 +38,7 @@ from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, ExtensionUser, Gateway
 from voicemail.models import Voicemail
 from switch.models import (
-    AccessControl, AccessControlNode, SipProfile
+    AccessControl, AccessControlNode, SipProfile, SwitchVariable
     )
 from phrases.models import PhraseDetails
 from musiconhold.models import MusicOnHold
@@ -647,6 +647,14 @@ class LanguagesHandler(XmlHandler):
 
 class ConfigHandler(XmlHandler):
 
+    def __init__(self):
+        self.debug = False
+        try:
+            cs_dsn_r = SwitchVariable.objects.get(enabled='true', category='DSN', name='dsn_callcentre')
+            self.cs_dsn = cs_dsn_r.value
+        except:
+            self.cs_dsn = None
+
     def GetACL(self):
         configuration_cache_key = 'configuration:acl.conf'
         xml = cache.get(configuration_cache_key)
@@ -923,7 +931,8 @@ class ConfigHandler(XmlHandler):
         x_conf_name = etree.SubElement(x_section, 'configuration', name='callcenter.conf', description='Call Centre')
         x_settings = etree.SubElement(x_conf_name, 'settings')
         # dsn or dsn_callcenter can go in here if defined and/or required
-        #etree.SubElement(x_settings, 'param', name='odbc-dsn', value='dsn:user:pass')
+        if self.cs_dsn:
+            etree.SubElement(x_settings, 'param', name='odbc-dsn', value=self.cs_dsn)
 
         x_queues = etree.SubElement(x_conf_name, 'queues')
         ccqs = CallCentreQueues.objects.filter(enabled='true')
@@ -985,8 +994,8 @@ class ConfigHandler(XmlHandler):
         x_conf_name = etree.SubElement(x_section, 'configuration', name='callcenter.conf', description='Call Centre')
         x_settings = etree.SubElement(x_conf_name, 'settings')
         # dsn or dsn_callcenter can go in here if defined and/or required
-        #etree.SubElement(x_settings, 'param', name='odbc-dsn', value='dsn:user:pass')
-
+        if self.cs_dsn:
+            etree.SubElement(x_settings, 'param', name='odbc-dsn', value=self.cs_dsn)
         x_queues = etree.SubElement(x_conf_name, 'queues')
         ccq = CallCentreQueues.objects.get(pk=queue_id)
         x_queue = etree.SubElement(x_queues, 'queue', name=str(ccq.id), label='%s@%s' % (ccq.name.replace(' ', '-'), ccq.domain_id.name))

@@ -197,6 +197,14 @@ DATABASES = {
 #      psycopg2.OperationalError: SSL SYSCALL error: EOF detected
 #      AttributeError: 'SessionStore' object has no attribute '_session_cache'
 #        'CONN_MAX_AGE': 300
+    },
+    'freeswitch': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'freeswitch',
+        'USER': 'freeswitch',
+        'PASSWORD': 'postgres-insecure-abcdef9876543210',
+        'HOST': '127.0.0.1',
+        'PORT': '5432'
     }
 }
 

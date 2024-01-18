@@ -208,7 +208,7 @@ def write_switch_vars_file(modeladmin, request, queryset):
 class SwitchVariableAdmin(ImportExportModelAdmin):
     resource_class = SwitchVariableResource
     save_as = True
-    readonly_fields = ['name', 'created', 'updated', 'synchronised', 'updated_by']
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['category', 'name', 'value', 'descrption']
     fieldsets = [
         (None,  {'fields': [

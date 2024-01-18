@@ -325,8 +325,8 @@ def device_config(request, *args, **kwargs):
                 ns = q.contacttel_set.all()
                 for n in ns:
                     n_dict = {}
-                    c_dict['phone_number'] = n.number
-                    c_dict['numbers'].append(c_dict)
+                    n_dict['phone_number'] = n.number
+                    c_dict['numbers'].append(n_dict)
                 contacts.append(c_dict)
         elif contact_type == 'extensions':
             qs = Extension.objects.filter(domain_id=device.domain_id, enabled='true')
