@@ -1,0 +1,16 @@
+<context name="{v_context}">
+<extension name="call-forward" number="*72,*73,*74" continue="false" app_uuid="983d20f9-6775-42d7-b56f-7d6318e8de3f" enabled="true" order="500">
+	<condition field="destination_number" expression="^\*74$" break="on-true">
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/callforward/toggle/}"/>
+	</condition>
+	<condition field="destination_number" expression="^\*72(\d{2,20})$" break="on-true">
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/callforward/true/$1/}"/>
+	</condition>
+	<condition field="destination_number" expression="^\*73$" break="on-true">
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/callforward/false/}"/>
+	</condition>
+	<condition field="destination_number" expression="^forward\+(\Q${caller_id_number}\E)(?:\/(\d+))?$" break="on-true">
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/callforward/toggle/$2/}"/>
+	</condition>
+</extension>
+</context>

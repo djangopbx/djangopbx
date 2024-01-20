@@ -50,4 +50,7 @@ urlpatterns = [
     path('agentstatus/', views.agentstatus, name='agentstatus'),
     path('speeddial/', views.speeddial, name='speeddial'),
     path('ccevent/', views.ccevent, name='ccevent'),
+    path('donotdisturb/<hraction>/', views.donotdisturb, name='donotdisturb'),
+    path('callforward/<hraction>/', views.callforward, name='callforward'),
+    path('callforward/<hraction>/<hrparam1>/', views.callforward, name='callforwardarg1'),
 ]

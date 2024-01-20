@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -52,4 +52,16 @@ class DeviceCfgEvent:
         event.append('user: %s' % user)
         event.append('host: %s' % realm)
         event.append('content-type: application/simple-message-summary')
+        return '\n'.join(event)
+
+    def buildfeatureevent(self, user, realm, profile, feature_event, **kwargs):
+        event = []
+        event.append('sendevent SWITCH_EVENT_PHONE_FEATURE')
+        event.append('profile: %s' % profile)
+        event.append('user: %s' % user)
+        event.append('host: %s' % realm)
+        #event.append('device: ')
+        event.append('Feature-Event: %s' % feature_event)
+        for key, value in kwargs.items():
+            event.append('%s: %s' % (key, value))
         return '\n'.join(event)

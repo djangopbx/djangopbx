@@ -57,6 +57,8 @@ from .agentstatushandler import AgentStatusHandler
 from .speeddialhandler import SpeedDialHandler
 from .indexhandler import IndexHandler
 from .cceventhandler import CcEventHandler
+from .dndhandler import DndHandler
+from .callfwdhandler import CallFwdHandler
 
 
 class HttApiSessionViewSet(viewsets.ModelViewSet):
@@ -161,4 +163,14 @@ def httapiindex(request):
 @csrf_exempt
 def ccevent(request):
     httapihf = CcEventHandler(request.POST, False)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def donotdisturb(request, hraction):
+    httapihf = DndHandler(request.POST, hraction=hraction)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def callforward(request, hraction, hrparam1=False):
+    httapihf = CallFwdHandler(request.POST, hraction=hraction, hrparam1=hrparam1)
     return processhttapi(request, httapihf)

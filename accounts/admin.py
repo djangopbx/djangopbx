@@ -47,6 +47,7 @@ from pbx.commonfunctions import DomainFilter, DomainUtils
 from musiconhold.musiconholdfunctions import MohSource
 from switch.switchfunctions import SipProfileChoice
 from .accountfunctions import AccountFunctions, GatewayFunctions, ExtRelatedFunctions
+from .extensionfunctions import ExtFeatureSyncFunctions
 
 
 class ExtensionAdminForm(ModelForm):
@@ -289,6 +290,17 @@ class ExtensionAdmin(ImportExportModelAdmin):
         cache.delete(directory_cache_key)
         if change:
             super().save_model(request, obj, form, change)
+            efsf = ExtFeatureSyncFunctions(obj)
+            efsf.sync_dnd()
+            # Uncomment as required below if you have any of the following
+            # feature on/off codes programmed in your phones.
+            # If you exclusively use TCP transport and have concern about exceeding your MTU
+            # You may also opt for using efsf.sync_all()
+            #
+            #efsf.sync_fwd_immediate()
+            #efsf.sync_fwd_busy()
+            #efsf.sync_fwd_no_answer()
+            #efsf.sync_all()
         else:
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.user_context = request.session['domain_name']

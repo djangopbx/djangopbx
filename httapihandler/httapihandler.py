@@ -50,7 +50,8 @@ class HttApiHandler():
     log_header = 'HttApi Handler: {}: {}'
     handler_name = 'base'
 
-    def __init__(self, qdict, getVar=True, getFile=False, fdict={}):
+    def __init__(self, qdict, getVar=True, getFile=False, fdict={}, **kwargs):
+        self.__dict__.update(kwargs)
         self.logger = logging.getLogger(__name__)
         self.debug = False
         self.qdict = qdict

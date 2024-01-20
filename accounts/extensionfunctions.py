@@ -26,11 +26,145 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import math
+from django.core.cache import cache
 from accounts.models import Extension, FollowMeDestination
 from switch.models import SwitchVariable
+from django.conf import settings
+from pbx.fseventsocket import EventSocket
+from tenants.pbxsettings import PbxSettings
+from pbx.devicecfgevent import DeviceCfgEvent
 
 
-class ExtFunctions():
+class ExtFeatureSyncFunctions():
+    vendor = 'none'
+    feature_sync = False
+
+    def __init__(self, obj=None, **kwargs):
+        self.__dict__.update(kwargs)
+        pbxs = PbxSettings()
+        if not self.get_extension_object(obj):
+            return
+        self.ext_user = self.ext.extensionuser.filter(default_user='true').first()
+        self.vendor_sync_status = pbxs.feature_sync_vendor_settings(self.ext_user, self.ext.domain_id)
+        if not self.vendor_sync_status.get('_any_set', False):
+            return
+        self.sip_user = '%s@%s' % (self.ext.extension, self.ext.user_context)
+        self.es = EventSocket()
+        if not self.es.connect(*settings.EVSKT):
+            return
+        if not self.get_sofia_contact():
+            return
+        sspu_detail = self.es.send('api sofia status profile %s user %s' % (self.sip_profile, self.sip_user))
+        if not self.parse_sofia_status_profile_user(sspu_detail):
+            return
+        agent = self.user_info.get('Agent', 'none').lower()
+        for v, s in self.vendor_sync_status.items():
+            if v in agent:
+                self.vendor = v
+        self.feature_sync = self.vendor_sync_status.get(self.vendor, False)
+
+
+    def get_sofia_contact(self):
+        self.contact = self.es.send('api sofia_contact */%s' % self.sip_user)
+        if self.contact.endswith('user_not_registered'):
+            return False
+        try:
+            self.sip_profile = self.contact.split('/')[1]
+        except:
+            self.sip_profile = 'none'
+            return False
+        return True
+
+    def clear_extension_cache(self):
+        directory_cache_key = 'directory:%s@%s' % (self.ext.extension, self.ext.user_context)
+        cache.delete(directory_cache_key)
+
+    def get_extension_object(self, obj):
+        if isinstance(obj, Extension):
+            self.ext = obj
+            return True
+        elif isinstance(obj, str):
+            try:
+                self.ext = Extension.objects.get(pk=obj)
+            except:
+                return False
+            return True
+        else:
+            return False
+
+    def parse_sofia_status_profile_user(self, sspu_detail):
+        lines = sspu_detail.splitlines()
+        i = 1
+        self.user_info = {}
+        for line in lines:
+            if i > 3 and i < 17:
+                if ':' in line:
+                    data = line.split(':', 1)
+                    self.user_info[data[0]] = data[1].strip()
+            i += 1
+        if i < 17:
+            return False
+        return True
+
+    def sync_dnd(self):
+        if not self.feature_sync:
+            return
+        dce = DeviceCfgEvent()
+        cmd = dce.buildfeatureevent(self.ext.extension, self.ext.user_context, self.sip_profile, 'DoNotDisturbEvent', DoNotDisturbOn=self.ext.do_not_disturb)
+        self.es.send(cmd)
+
+    def sync_fwd_immediate(self):
+        if not self.feature_sync:
+            return
+        dce = DeviceCfgEvent()
+        cmd = dce.buildfeatureevent(self.ext.extension, self.ext.user_context, self.sip_profile, 'ForwardingEvent',
+                forward_immediate_enabled=self.ext.forward_all_enabled,
+                forward_immediate=(self.ext.forward_all_destination if self.ext.forward_all_destination else '0')
+                )
+        self.es.send(cmd)
+
+    def sync_fwd_busy(self):
+        if not self.feature_sync:
+            return
+        dce = DeviceCfgEvent()
+        cmd = dce.buildfeatureevent(self.ext.extension, self.ext.user_context, self.sip_profile, 'ForwardingEvent',
+                forward_busy_enabled=self.ext.forward_busy_enabled,
+                forward_busy=(self.ext.forward_busy_destination if self.ext.forward_busy_destination else '0')
+                )
+        self.es.send(cmd)
+
+    def sync_fwd_no_answer(self):
+        if not self.feature_sync:
+            return
+        dce = DeviceCfgEvent()
+        cmd = dce.buildfeatureevent(self.ext.extension, self.ext.user_context, self.sip_profile, 'ForwardingEvent',
+                forward_no_answer_enabled=self.ext.forward_no_answer_enabled,
+                forward_no_answer=(self.ext.forward_no_answer_destination if self.ext.forward_no_answer_destination else '0'),
+                ringCount=math.ceil(self.ext.call_timeout / 6)
+                )
+        self.es.send(cmd)
+
+    def sync_all(self):
+        # Warning, if you predominantly use UDP, using this function will almost certainly exceed your MTU.
+        if not self.feature_sync:
+            return
+        dce = DeviceCfgEvent()
+        cmd = dce.buildfeatureevent(self.ext.extension, self.ext.user_context, self.sip_profile, 'init',
+                forward_immediate_enabled=self.ext.forward_all_enabled,
+                forward_immediate=(self.ext.forward_all_destination if self.ext.forward_all_destination else '0'),
+                forward_busy_enabled=self.ext.forward_busy_enabled,
+                forward_busy=(self.ext.forward_busy_destination if self.ext.forward_busy_destination else '0'),
+                forward_no_answer_enabled=self.ext.forward_no_answer_enabled,
+                forward_no_answer=(self.ext.forward_no_answer_destination if self.ext.forward_no_answer_destination else '0'),
+                ringCount=math.ceil(self.ext.call_timeout / 6),
+                DoNotDisturbOn=self.ext.do_not_disturb
+            )
+        print(cmd)
+        self.es.send(cmd)
+
+
+class ExtFollowMeFunctions():
 
     def __init__(self, domain_uuid, domain_name, call_direction='local', extension_uuid=None):
         self.domain_uuid = domain_uuid

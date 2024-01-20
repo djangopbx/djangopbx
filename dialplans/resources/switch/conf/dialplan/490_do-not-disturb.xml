@@ -1,0 +1,16 @@
+<context name="{v_context}">
+<extension name="do-not-disturb" number="*77,*78,*79" continue="false" app_uuid="46ae7802-725c-47fa-a384-77b985f2d59f" enabled="true" order="490">
+	<condition field="destination_number" expression="^\*77$" break="on-true">
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/donotdisturb/toggle/}"/>
+	</condition>
+	<condition field="destination_number" expression="^\*78$|\*363$" break="on-true">
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/donotdisturb/true/}"/>
+	</condition>
+	<condition field="destination_number" expression="^\*79$" break="on-true">
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/donotdisturb/false/}"/>
+	</condition>
+	<condition field="destination_number" expression="^dnd\+${caller_id_number}$" break="on-true">
+		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/donotdisturb/toggle/}"/>
+	</condition>
+</extension>
+</context>

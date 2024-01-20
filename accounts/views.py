@@ -49,6 +49,7 @@ from .models import (
 from .serializers import (
     ExtensionSerializer, FollowMeDestinationSerializer, GatewaySerializer, BridgeSerializer,
 )
+from .extensionfunctions import ExtFeatureSyncFunctions
 
 
 class ExtensionViewSet(viewsets.ModelViewSet):
@@ -209,6 +210,17 @@ class CallRoutingEdit(LoginRequiredMixin, UpdateView):
         followme_formset.instance = self.object
         followme_formset.instance.updated_by = self.request.user.username
         followme_formset.save()
+        efsf = ExtFeatureSyncFunctions(self.object)
+        efsf.sync_dnd()
+        # Uncomment as required below if you have any of the following
+        # feature on/off codes programmed in your phones.
+        # If you exclusively use TCP transport and have concern about exceeding your MTU
+        # You may also opt for using efsf.sync_all()
+        #
+        #efsf.sync_fwd_immediate()
+        #efsf.sync_fwd_busy()
+        #efsf.sync_fwd_no_answer()
+        #efsf.sync_all()
         return HttpResponseRedirect(self.get_success_url())
 
     def get_form(self, *args, **kwargs):

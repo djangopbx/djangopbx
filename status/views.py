@@ -48,8 +48,9 @@ def parseregdetail(regdetail):
     info = {}
     for line in lines:
         if i > 3 and i < 17:
-            data = line.split(':', 1)
-            info[data[0]] = data[1].strip()
+            if ':' in line:
+                data = line.split(':', 1)
+                info[data[0]] = data[1].strip()
         i += 1
     return info
 
