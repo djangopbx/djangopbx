@@ -57,7 +57,7 @@ class VoicemailViewSet(viewsets.ModelViewSet):
     queryset = Voicemail.objects.all().order_by('extension_id')
     serializer_class = VoicemailSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['domain_id', 'vm_id']
+    filterset_fields = ['extension_id']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
