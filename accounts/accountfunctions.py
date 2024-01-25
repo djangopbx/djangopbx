@@ -43,7 +43,9 @@ from tenants.pbxsettings import PbxSettings
 
 class AccountFunctions():
 
-    def list_gateways(self, domain_id=None):
+    def list_gateways(self, domain_id=None, gw_global=False):
+        if gw_global:
+            return Gateway.objects.filter(enabled='true', domain_id__isnull=True).values_list('id', 'gateway').order_by('gateway')
         if domain_id:
             return Gateway.objects.filter(
                 domain_id=uuid.UUID(domain_id),

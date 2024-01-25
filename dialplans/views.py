@@ -198,6 +198,10 @@ def newobroute(request):
     dp_uuid = False
     gws = []
     gw_list = [('', '')]
+    gw_list.extend(AccountFunctions().list_gateways(None, True))
+    if len(gw_list) > 0:
+        gws.append((_('Global Gateways'), gw_list))
+    gw_list = []
     gw_list.extend(AccountFunctions().list_gateways(request.session['domain_uuid']))
     if len(gw_list) > 0:
         gws.append((_('Gateways'), gw_list))
