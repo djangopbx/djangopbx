@@ -1140,6 +1140,23 @@
 },
 {
     "model": "switch.modules",
+    "pk": "e484e225-3411-4cc5-a9b5-66e5f464d577",
+    "fields": {
+        "label": "AMQP",
+        "name": "mod_amqp",
+        "category": "Event Handlers",
+        "sequence": "800",
+        "enabled": "false",
+        "default_enabled": "false",
+        "description": "AMQP broker interface.",
+        "created": "2024-01-27T18:26:37.753Z",
+        "updated": "2024-01-27T18:26:37.753Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.modules",
     "pk": "eba6eec5-d9ec-426f-a019-4639ae658e03",
     "fields": {
         "label": "Memcached",

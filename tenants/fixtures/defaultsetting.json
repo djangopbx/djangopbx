@@ -4339,6 +4339,96 @@
 },
 {
     "model": "tenants.defaultsetting",
+    "pk": "082da6cd-38e2-4a3a-96d4-926becaadd3b",
+    "fields": {
+        "app_uuid": null,
+        "category": "cluster",
+        "subcategory": "message_broker",
+        "value_type": "text",
+        "value": "127.0.0.1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "IP address or FQDN of the message broker",
+        "created": "2024-01-27T16:04:18.653Z",
+        "updated": "2024-01-27T16:04:46.146Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "649545de-c833-4b1f-b762-c291f0dde077",
+    "fields": {
+        "app_uuid": null,
+        "category": "cluster",
+        "subcategory": "message_broker_port",
+        "value_type": "numeric",
+        "value": "5672",
+        "sequence": "20",
+        "enabled": "true",
+        "description": "Message broker port",
+        "created": "2024-01-27T17:19:46.555Z",
+        "updated": "2024-01-27T17:19:46.555Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "8767bb33-0a45-4b4c-acbc-c90cbbbdbaf4",
+    "fields": {
+        "app_uuid": null,
+        "category": "cluster",
+        "subcategory": "message_broker_password",
+        "value_type": "text",
+        "value": "djangopbx-insecure",
+        "sequence": "30",
+        "enabled": "true",
+        "description": "Message broker password",
+        "created": "2024-01-27T17:08:25.019Z",
+        "updated": "2024-01-27T17:08:25.019Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "893888ba-58c9-40d0-8276-6c7c5422a7fe",
+    "fields": {
+        "app_uuid": null,
+        "category": "cluster",
+        "subcategory": "switch_name_1",
+        "value_type": "text",
+        "value": "djangopbx-dev1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Hostname of the first freeswitch server.  This will form part of the command queue on the message broker.",
+        "created": "2024-01-27T16:09:37.859Z",
+        "updated": "2024-01-27T16:35:10.741Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "c4e7424f-b8be-4922-bed4-cb2491067b73",
+    "fields": {
+        "app_uuid": null,
+        "category": "cluster",
+        "subcategory": "message_broker_user",
+        "value_type": "text",
+        "value": "djangopbx",
+        "sequence": "20",
+        "enabled": "true",
+        "description": "Message broker username",
+        "created": "2024-01-27T17:07:28.368Z",
+        "updated": "2024-01-27T17:07:28.368Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
     "pk": "e02b5ba1-1f57-4ea8-a608-3d17d3a174c4",
     "fields": {
         "app_uuid": null,
