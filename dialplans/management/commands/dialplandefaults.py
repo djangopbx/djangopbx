@@ -38,15 +38,12 @@ class Command(BaseCommand):
     help = 'Load default dialplans'
 
     def add_arguments(self, parser):
-        parser.add_argument('-d', '--domain', help=_('Domain name (--domain domain1.djangopbx.uk)'))
-        parser.add_argument('-r', '--remove', help=_('Remove existing dialplans (--remove true)'))
+        parser.add_argument('--domain', help=_('Domain name (--domain domain1.djangopbx.uk)'))
+        parser.add_argument('--remove', help=_('Remove existing dialplans (--remove true)'))
 
     def handle(self, *args, **kwargs):
         dp_remove = False
         d = kwargs['domain']
-        if not d:
-            d = ''
-
         r = kwargs['remove']
         if not r:
             r = 'false'
@@ -54,10 +51,10 @@ class Command(BaseCommand):
         if r == 'true':
             dp_remove = True
 
-        if len(d) == 0:
+        if d:
+            SwitchDp().import_xml(d, dp_remove)
+        else:
             domains_dict = PbxSettings().get_domains()
             for domain in domains_dict:
                 for key in domain:
                     SwitchDp().import_xml(key, dp_remove)
-        else:
-            SwitchDp().import_xml(d, dp_remove)

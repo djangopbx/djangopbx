@@ -2,7 +2,7 @@
 	<extension name="speed_dial" number="*0[ext]" continue="false" app_uuid="78c2efad-43ff-4fdb-81c3-895b34727c40" enabled="true" order="70">
 		<condition field="destination_number" expression="^\*0(.*)$">
 			<action application="set" data="speed_dial=$1"/>
-			<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/speeddial/}"/>
+			<action application="httapi" data="{httapi_profile=dpbx,url=${pbx_httapi_url}/httapihandler/speeddial/}"/>
 		</condition>
 	</extension>
 </context>

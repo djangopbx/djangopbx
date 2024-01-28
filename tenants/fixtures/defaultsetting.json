@@ -4303,6 +4303,42 @@
 },
 {
     "model": "tenants.defaultsetting",
+    "pk": "f20604cd-c95f-4980-89f2-c2ee85b1abde",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dnd_on_code",
+        "value_type": "text",
+        "value": "*78",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "DND on code",
+        "created": "2024-01-28T11:40:56.915Z",
+        "updated": "2024-01-28T11:40:56.915Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "89695aa2-7d4d-4054-bad5-c7987a62d86b",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_dnd_off_code",
+        "value_type": "text",
+        "value": "*79",
+        "sequence": "0",
+        "enabled": "true",
+        "description": "DND off code",
+        "created": "2024-01-28T11:41:20.866Z",
+        "updated": "2024-01-28T11:41:20.866Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
     "pk": "fc394d09-ce47-4d05-a019-7cbabd596dff",
     "fields": {
         "app_uuid": null,

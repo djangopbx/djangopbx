@@ -70,6 +70,15 @@ class XmlHandler():
   </section>
 </document>
 '''
+    def XmlHttapiUrl(self, httapi_url):
+        xml = '''<extension name="delivery-variables" continue="true" uuid="d88c359f-0f7a-4054-b98f-6b58fecdac63">
+  <condition field="" expression="">
+    <action application="export" data="pbx_httapi_url={}"/>
+  </condition>
+</extension>
+'''
+        return xml.format(httapi_url)
+
 
     def XrootDynamic(self):
         return etree.XML(

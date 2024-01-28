@@ -5,7 +5,7 @@
 		<action application="set" data="outbound_caller_id_name=${user_data ${destination_number}@${domain_name} var outbound_caller_id_name}" inline="true" enabled="false"/>
 		<action application="set" data="outbound_caller_id_number=${user_data ${destination_number}@${domain_name} var outbound_caller_id_number}" inline="true" enabled="false"/>
 		<action application="unset" data="call_timeout" inline="true"/>
-		<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/followme/}"/>
+		<action application="httapi" data="{httapi_profile=dpbx,url=${pbx_httapi_url}/httapihandler/followme/}"/>
 	</condition>
 </extension>
 </context>

@@ -2,7 +2,7 @@
 	<extension name="follow-me" number="*21" continue="false" app_uuid="ae783225-9d0d-42c4-8c4f-8fa4644c6410" enabled="true" order="510">
 		<condition field="destination_number" expression="^\*21$">
 			<action application="answer"/>
-			<action application="httapi" data="{httapi_profile=dpbx,url={v_httapi_url}/httapihandler/followmetoggle/}"/>
+			<action application="httapi" data="{httapi_profile=dpbx,url=${pbx_httapi_url}/httapihandler/followmetoggle/}"/>
 		</condition>
 	</extension>
 </context>
