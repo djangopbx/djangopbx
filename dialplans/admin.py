@@ -107,6 +107,7 @@ class DialplanDetailAdmin(ImportExportModelAdmin):
 class DialplanDetailsInLine(admin.TabularInline):
     model = DialplanDetail
     form = DialplanDetailsInlineAdminForm
+    classes = ['collapse']
 
     extra = 4
     fieldsets = [
@@ -155,7 +156,7 @@ class DialplanAdmin(ImportExportModelAdmin):
             'category', ('name', 'sequence'), ('number', 'destination'),
             ('hostname', 'domain_id'), ('context', 'enabled'), ('description', 'dp_continue')
             ]}),
-        ('XML', {'fields': ['xml', 'app_id',], 'classes': ['collapse']}),
+        ('XML', {'fields': ['xml', 'app_id',]}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     )
 
