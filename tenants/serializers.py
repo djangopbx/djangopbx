@@ -38,21 +38,21 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ['url', 'username', 'email', 'groups']
+        fields = ['id', 'url', 'username', 'email', 'groups']
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Group
-        fields = ['url', 'name']
+        fields = ['id', 'url', 'name']
 
 
 class DomainSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Domain
-        fields = ['url', 'name', 'enabled', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+        fields = ['id', 'url', 'name', 'enabled', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -60,7 +60,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Profile
         fields = [
-                    'url', 'domain_id', 'username', 'email', 'status', 'api_key',
+                    'id', 'url', 'domain_id', 'username', 'email', 'status', 'api_key',
                     'enabled', 'created', 'updated', 'synchronised', 'updated_by'
                 ]
 
@@ -70,7 +70,7 @@ class DefaultSettingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DefaultSetting
         fields = [
-                    'url', 'id', 'app_uuid', 'category', 'subcategory',
+                    'id', 'url', 'app_uuid', 'category', 'subcategory',
                     'value_type', 'value', 'sequence', 'enabled',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
@@ -81,7 +81,7 @@ class DomainSettingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DomainSetting
         fields = [
-                    'url', 'id', 'domain_id', 'app_uuid', 'category', 'subcategory',
+                    'id', 'url', 'domain_id', 'app_uuid', 'category', 'subcategory',
                     'value_type', 'value', 'sequence', 'enabled',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
@@ -92,7 +92,7 @@ class ProfileSettingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ProfileSetting
         fields = [
-                    'url', 'id', 'user_id', 'category', 'subcategory',
+                    'id', 'url', 'user_id', 'category', 'subcategory',
                     'value_type', 'value', 'sequence', 'enabled',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
