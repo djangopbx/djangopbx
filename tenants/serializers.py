@@ -34,28 +34,29 @@ from .models import (
 )
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = ['id', 'url', 'username', 'email', 'groups']
+        depth = 1
 
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
         fields = ['id', 'url', 'name']
 
 
-class DomainSerializer(serializers.HyperlinkedModelSerializer):
+class DomainSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Domain
         fields = ['id', 'url', 'name', 'enabled', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 
 
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
@@ -65,7 +66,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
                 ]
 
 
-class DefaultSettingSerializer(serializers.HyperlinkedModelSerializer):
+class DefaultSettingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DefaultSetting
@@ -76,7 +77,7 @@ class DefaultSettingSerializer(serializers.HyperlinkedModelSerializer):
                 ]
 
 
-class DomainSettingSerializer(serializers.HyperlinkedModelSerializer):
+class DomainSettingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DomainSetting
@@ -87,7 +88,7 @@ class DomainSettingSerializer(serializers.HyperlinkedModelSerializer):
                 ]
 
 
-class ProfileSettingSerializer(serializers.HyperlinkedModelSerializer):
+class ProfileSettingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProfileSetting
