@@ -33,9 +33,11 @@ from . import views
 urlpatterns = [
     path('fslogviewer/', views.fslogviewer, name='fslogviewer'),
     path('djangopbx/', views.djangopbx, name='djangopbx'),
+    path('djangopbx/<str:host>/', views.djangopbx, name='djangopbx'),
     path('modules/', views.modules, name='modules'),
-    path('modules/<uuid:moduuid>/<str:action>/', views.modules, name='modules'),
+    path('modules/<str:host>/', views.modules, name='modules'),
+    path('modules/<uuid:moduuid>/<str:host>/<str:action>/', views.modules, name='modules'),
     path('fsregistrations/', views.fsregistrations, name='fsregistrations'),
     path('fsregistrations/<str:realm>/', views.fsregistrations, name='fsregistrations'),
-    path('fsregdetail/<str:sip_profile>/<str:sip_user>/', views.fsregdetail, name='fsregdetail'),
+    path('fsregdetail/<str:sip_profile>/<str:sip_user>/<str:host>/', views.fsregdetail, name='fsregdetail'),
 ]

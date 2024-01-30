@@ -32,8 +32,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 from django.contrib import messages
 from pbx.commonfunctions import shcommand, get_version
-from pbx.fseventsocket import EventSocket
 from pbx.devicecfgevent import DeviceCfgEvent
+from pbx.fscmdabslayer import FsCmdAbsLayer
 from .forms import LogViewerForm
 from switch.models import Modules
 import re
@@ -60,12 +60,12 @@ def fslogviewer(request):
     form = LogViewerForm()
     form.fields['logtext'].initial = shcommand(['/usr/local/bin/fslogviewer.sh'])
     form.fields['logtext'].label = 'FreeSWITCH Log (/var/log/freeswitch/freeswitch.log)'
-
     return render(request, 'status/logviewer.html', {'refresher': 'fslogviewer', 'form': form})
 
 
 @staff_member_required
-def djangopbx(request):
+def djangopbx(request, host=None):
+    links = {}
     info = {}
     info['Version<br>&nbsp;'] = get_version('pbx')
     info['Git Branch'] = shcommand(
@@ -82,18 +82,29 @@ def djangopbx(request):
     info['Git Origin<br>&nbsp;'] = git_origin
     info['Project Path'] = settings.BASE_DIR
 
-    es = EventSocket()
-    if es.connect(*settings.EVSKT):
-        fs_ver = es.send('api version')
+    es = FsCmdAbsLayer()
+    for ln in es.freeswitches:
+        links[ln] = '/status/djangopbx/%s/' % ln
+    if not host:
+        host = es.freeswitches[0]
+    if es.connect():
+        es.clear_responses()
+        es.send('api version', host)
+        es.process_events(0.01)
+        es.get_responses()
+        fs_ver = next(iter(es.responses or []), 'false')
+        es.disconnect()
         z = re.match('FreeSWITCH Version (\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?).*\\(.*?(\\d+\\w+)\\s*\\)', fs_ver)
-        info['Switch Version'] = '%s (%s)' % (z.groups()[0], z.groups()[1])
+        if z:
+            info['Switch Version'] = '%s (%s)' % (z.groups()[0], z.groups()[1])
     info['Python Version'] = sys.version
-
-    return render(request, 'infotable.html', {'refresher': 'djangopbx', 'info': info, 'title': 'DjangoPBX'})
+    return render(request, 'infotable.html', {'refresher': '/status/djangopbx/%s/' % host, 'info': info,
+             'title': 'DjangoPBX - %s' % host, 'linkstitle': _('Switches List'), 'links': links})
 
 
 @staff_member_required
-def modules(request, moduuid=None, action=None):
+def modules(request, moduuid=None, action=None, host=None):
+    links = {}
     info = {}
     th = [_('Module Name'), _('Status'), _('Action'), _('Description')]
     running = _('Running')
@@ -105,11 +116,21 @@ def modules(request, moduuid=None, action=None):
     else:
         cmd = 'load'
 
-    es = EventSocket()
-    if es.connect(*settings.EVSKT):
+    es = FsCmdAbsLayer()
+    for ln in es.freeswitches:
+        links[ln] = '/status/modules/%s/' % ln
+    if not host:
+        host = es.freeswitches[0]
+
+    if es.connect():
         if moduuid:
             m = Modules.objects.get(pk=moduuid)
-            m_status = es.send('api %s %s' % (cmd, m.name))
+            es.clear_responses()
+            es.send('api %s %s' % (cmd, m.name), host)
+            es.process_events(0.01)
+            es.get_responses()
+            m_status = next(iter(es.responses or []), '-ERR')
+
             if '+OK' in m_status:
                 messages.add_message(request, messages.INFO, _('Module %s OK' % cmd))
             else:
@@ -117,19 +138,26 @@ def modules(request, moduuid=None, action=None):
 
         mods = Modules.objects.filter(enabled='true').order_by('category', 'label')
         for m in mods:
-            m_status = es.send('api module_exists %s' % m.name)
+            es.clear_responses()
+            es.send('api module_exists %s' % m.name, host)
+            es.process_events(0.01)
+            es.get_responses()
+            m_status = next(iter(es.responses or []), 'false')
+
             if m_status == 'true':
                 info[
                     '<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)
-                    ] = [running, '<a href=\"/status/modules/%s/stop/\">%s</a>' % (str(m.id), stop), m.description]
+                    ] = [running, '<a href=\"/status/modules/%s/%s/stop/\">%s</a>' % (str(m.id), host, stop), m.description]
             else:
                 info[
                     '<a href=\"/admin/switch/modules/%s/change/\">%s</a>' % (str(m.id), m.label)
-                    ] = [stopped, '<a href=\"/status/modules/%s/start/\">%s</a>' % (str(m.id), start), m.description]
+                    ] = [stopped, '<a href=\"/status/modules/%s/%s/start/\">%s</a>' % (str(m.id), host, start), m.description]
+        es.disconnect()
 
     return render(
         request, 'infotablemulti.html',
-        {'refresher': 'modules', 'info': info, 'th': th, 'title': 'Modules Status'}
+        {'refresher': '/status/modules/%s/' % host, 'info': info, 'th': th,
+                'title': 'Modules Status - %s' % host, 'linkstitle': _('Switches List'), 'links': links}
         )
 
 
@@ -137,28 +165,35 @@ def modules(request, moduuid=None, action=None):
 def fsregistrations(request, realm=None):
     if not realm:
         realm = request.session['domain_name']
-    es = EventSocket()
-    if not es.connect(*settings.EVSKT):
-        return render(request, 'error.html', {'back': '/portal/', 'info': {'Message': _('Unable to connect to the FreeSWITCH Event Socket')}, 'title': 'Event Socket Error'})
+    es = FsCmdAbsLayer()
+    if not es.connect():
+        return render(request, 'error.html', {'back': '/portal/',
+            'info': {'Message': _('Unable to connect to the FreeSWITCH')}, 'title': 'Broker/Socket Error'})
 
     if request.method == 'POST':
         actlist = request.POST.getlist('_selected_action')
+        es.clear_responses()
         if request.POST['action'] == 'unregister':
             for target in actlist:
                 data = target.split('|')
-                result = es.send('api sofia profile %s flush_inbound_reg %s@%s reboot' % (data[2], data[0], data[1]))
-
-            messages.add_message(request, messages.INFO, _(result))
+                es.send('api sofia profile %s flush_inbound_reg %s@%s reboot' % (data[2], data[0], data[1]), data[3])
+            es.process_events(0.01)
+            es.get_responses()
+            messages.add_message(request, messages.INFO, _('\n'.join(es.responses)))
         else:
             dce = DeviceCfgEvent()
             for target in actlist:
                 data = target.split('|')
-                regdetail =  es.send('api sofia status profile %s user %s@%s' % (data[2], data[0], data[1]))
+                es.send('api sofia status profile %s user %s@%s' % (data[2], data[0], data[1]), data[3])
+                es.process_events(0.01)
+                es.get_responses()
+                regdetail = next(iter(es.responses or []), None)
                 if regdetail:
                     info = parseregdetail(regdetail)
                     if 'Agent' in info:
                         cmd = dce.buildevent(data[0], data[1], data[2], request.POST['action'], info['Agent'].split()[0].lower())
-                        es.send(cmd)
+                        es.send(cmd, data[3])
+                        es.process_events(0.01)
             messages.add_message(request, messages.INFO, _('Request: %s Sent' % request.POST['action']))
 
     rows = []
@@ -167,37 +202,50 @@ def fsregistrations(request, realm=None):
     act = {'unregister': 'Un-Register', 'check_sync': 'Provision', 'reboot': 'Reboot'}
 
     unixts = int(datetime.datetime.now().timestamp())
-    registrations = json.loads(es.send('api show registrations as json'))
-    if registrations['row_count'] > 0:    
-        for i in registrations['rows']:
-            if realm == 'all' or realm == i['realm']:
-                sip_profile = i['url'].split('/')[1]
-                sip_user = '%s@%s' % (i['reg_user'], i['realm'])
-                rows.append('%s|%s|%s' % (i['reg_user'], i['realm'], sip_profile))
-                rows.append('<a href="/status/fsregdetail/%s/%s">%s</a>' % (sip_profile, sip_user, sip_user))
-                if 'token' in i and '@' in i['token']:
-                    rows.append(i['token'].split('@')[1])
-                else:
-                    rows.append('')                
-                rows.append(i['network_ip'])
-                rows.append(i['network_port'])
-                rows.append(i['network_proto'])
-                rows.append(i['hostname'])
-                rows.append(str(int(i['expires']) - unixts))
-                rows.append(sip_profile)
-                info.append(rows)
-                rows = []
-    return render(request, 'actiontable.html', {'refresher': 'fsregistrations', 'showall': 'fsregistrations', 'info': info, 'th': th, 'act': act, 'title': 'Registrations'})
-
+    es.clear_responses()
+    es.send('api show registrations as json')
+    es.process_events()
+    es.get_responses()
+    es.disconnect()
+    for resp in es.responses:
+        try:
+            registrations = json.loads(resp)
+        except:
+            registrations = {'row_count': 0}
+        if registrations['row_count'] > 0:
+            for i in registrations['rows']:
+                if realm == 'all' or realm == i['realm']:
+                    sip_profile = i['url'].split('/')[1]
+                    sip_user = '%s@%s' % (i['reg_user'], i['realm'])
+                    rows.append('%s|%s|%s|%s' % (i['reg_user'], i['realm'], sip_profile, i['hostname']))
+                    rows.append('<a href="/status/fsregdetail/%s/%s/%s">%s</a>' % (sip_profile, sip_user, i['hostname'], sip_user))
+                    if 'token' in i and '@' in i['token']:
+                        rows.append(i['token'].split('@')[1])
+                    else:
+                        rows.append('')
+                    rows.append(i['network_ip'])
+                    rows.append(i['network_port'])
+                    rows.append(i['network_proto'])
+                    rows.append(i['hostname'])
+                    rows.append(str(int(i['expires']) - unixts))
+                    rows.append(sip_profile)
+                    info.append(rows)
+                    rows = []
+    return render(request, 'actiontable.html', {'refresher': 'fsregistrations', 'showall': 'fsregistrations',
+                    'info': info, 'th': th, 'act': act, 'title': 'Registrations'})
 
 @staff_member_required
-def fsregdetail(request, sip_profile=None, sip_user=None):
+def fsregdetail(request, sip_profile='internal', sip_user='none@none', host=None):
     info = {}
-    es = EventSocket()
-    if es.connect(*settings.EVSKT):
-        regdetail = es.send('api sofia status profile %s user %s' % (sip_profile, sip_user))
-    if regdetail:
-        info = parseregdetail(regdetail)
+    es = FsCmdAbsLayer()
+    if es.connect():
+        es.send('api sofia status profile %s user %s' % (sip_profile, sip_user), host)
+        es.process_events(0.01)
+        es.get_responses()
+        es.disconnect()
+        regdetail = next(iter(es.responses or []), None)
+        if regdetail:
+            info = parseregdetail(regdetail)
 
     return render(request, 'infotable.html', {'back': 'fsregistrations', 'info': info, 'title': 'Registration Detail'})
 

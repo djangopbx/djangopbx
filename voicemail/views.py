@@ -127,5 +127,5 @@ def listvoicemails(request, vmuuid=None, vmext=None, action=None):
 
     return render(
             request, 'infotablemulti.html',
-            {'refresher': 'listvoicemails', 'th': th, 'info': info, 'title': 'Voicemails'}
+            {'refresher': '/voicemail/listvoicemails/', 'th': th, 'info': info, 'title': 'Voicemails'}
             )

@@ -47,7 +47,7 @@ class EventSocket:
         self.headers = {}
         self.auth_fail_str = ' '
 
-    def __del__(self):
+    def disconnect(self):
         if (self.sock):
             self.sock.shutdown(1)
             self.sock.close()

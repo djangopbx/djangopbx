@@ -1,4 +1,10 @@
-;;;;; Author: Adrian Fretwell <adrian@djangopbx.com>
+; Author: Adrian Fretwell <adrian@djangopbx.com>
+;
+; cp /home/django-pbx/pbx/resources/lib/systemd/system/pbx-event-receiver.service /lib/systemd/system/pbx-event-receiver.service
+; systemctl daemon-reload
+; systemctl enable pbx-event-receiver
+; systemctl start pbx-event-receiver
+
 
 [Unit]
 Description=PBX Event Receiver

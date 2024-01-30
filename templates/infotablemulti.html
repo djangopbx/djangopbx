@@ -12,12 +12,20 @@
             <a href="{% url back %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>
             {% endif %}
             {% if refresher %}
-            <a href="{% url refresher %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></a>
+            <a href="{{ refresher }}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></a>
             {% endif %}
             </div>
             </div>
         </div>
         <div class="card-body cardbody1">
+        {% if links %}
+          <p><a class="btn btn-info btn-sm" data-toggle="collapse" href="#collapseLinks" role="button" aria-expanded="false" aria-controls="collapseLinks">{{ linkstitle }}</a></p>
+        <div class="collapse" id="collapseLinks"><p>
+            {% for key, value in links.items %}
+            <a href="{{ value }}">{{ key }}</a> &nbsp;
+            {% endfor %}
+        </p></div>
+        {% endif %}
         <div class="table-container table-responsive">
         <table width="100%" class="pbxformtable">
             <tr>
