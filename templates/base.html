@@ -25,7 +25,7 @@
 <body class="{% block bodyclass %}{% endblock %}" data-utc-offset="{% now "Z" %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     {% block javascriptwarning %}
     <noscript>
-     For full functionality of this site it is necessary to enable JavaScript.
+     {% translate 'For full functionality of this site it is necessary to enable JavaScript.' %}
     </noscript>
     {% endblock %}
     {% block bodyscript %}
@@ -34,6 +34,8 @@
     <script src="{% static 'script/htmx/htmx.min.js' %}"></script>
     {% endblock %}
     {% block extrabodyscript %}
+    {% endblock %}
+    {% block menu-nav %}
     {% endblock %}
     {% block djangopbx-msg %}
     {% if messages %}
@@ -53,14 +55,13 @@
         {% endfor %}
     {% endif %}
     {% endblock %}
-    {% block menu-nav %}
-    {% endblock %}
     <!-- Container -->
-    <div id="main_content" style="margin-top: 70px;" class="{% block contentclass %}{% endblock %}">
+    <div id="main_content" style="margin-top: 80px;" class="{% block contentclass %}{% endblock %}">
     {% block content %}
     {% endblock %}
     <footer class="container">
-        <h5 style="text-align:center; margin-top: 10px; font-size: 12px">{{ request.session.brand_footer|safe }}</h5>
+        <h5 class="pbx-footer">{{ request.session.brand_footer|safe }}</h5>
+    <!--    <h5 style="text-align:center; margin-top: 10px; font-size: 12px">{{ request.session.brand_footer|safe }}</h5> -->
     </footer>
     </div>
     <!-- END Container -->
