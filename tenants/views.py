@@ -42,6 +42,7 @@ from .serializers import (
 from pbx.restpermissions import (
     AdminApiAccessPermission
 )
+from dialplans.dialplanfunctions import SwitchDp
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -84,6 +85,22 @@ class DomainViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        SwitchDp().import_xml(instance.name, False, instance.id)  # Create dialplans
+        DomainSetting.objects.create(
+            domain_id=instance,   # Create default menu setting
+            category='domain',
+            subcategory='menu',
+            value_type='text',
+            value='Default',
+            sequence=10,
+            updated_by=self.request.user.username
+            )
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
