@@ -34,7 +34,7 @@ from tenants.models import DefaultSetting
 
 
 class Command(BaseCommand):
-    help = 'Create a Domain'
+    help = 'Update a Default Setting'
 
     def add_arguments(self, parser):
         parser.add_argument('--category', help=_('Default Setting Category'))
@@ -53,7 +53,7 @@ class Command(BaseCommand):
             sys.exit(1)
 
         value = kwargs.get('value')
-        if not subcat:
+        if not value:
             print(_('No value specified'))
             sys.exit(1)
 

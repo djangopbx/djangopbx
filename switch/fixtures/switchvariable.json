@@ -1312,5 +1312,59 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "0ad70943-e1c1-40ec-9732-004be85602d3",
+    "fields": {
+        "category": "DSN",
+        "name": "dsn",
+        "value": "pgsql://hostaddr=127.0.0.1 dbname=freeswitch user=freeswitch password='postgres-insecure-abcdef9876543210'",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "10",
+        "description": "",
+        "created": "2024-01-17T11:06:42.276Z",
+        "updated": "2024-01-17T11:38:04.567Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "beef8e8c-f9d5-4883-ba26-393e808677fd",
+    "fields": {
+        "category": "DSN",
+        "name": "dsn_callcentre",
+        "value": "pgsql://hostaddr=127.0.0.1 dbname=freeswitch user=freeswitch password='postgres-insecure-abcdef9876543210'",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "20",
+        "description": "",
+        "created": "2024-01-17T11:30:25.347Z",
+        "updated": "2024-01-17T11:44:33.777Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "de4c5d9f-beae-495e-bb3b-7580d0c7568d",
+    "fields": {
+        "category": "DSN",
+        "name": "dsn_voicemail",
+        "value": "pgsql://hostaddr=127.0.0.1 dbname=freeswitch user=freeswitch password='postgres-insecure-abcdef9876543210'",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "30",
+        "description": "",
+        "created": "2024-01-17T11:30:53.014Z",
+        "updated": "2024-01-17T11:38:30.691Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]
