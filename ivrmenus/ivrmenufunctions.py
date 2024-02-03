@@ -36,29 +36,18 @@ from .models import IvrMenus, IvrMenuOptions
 
 class IvrFunctions():
 
-    def __init__(self, domain_uuid, domain_name, ivr_uuid=None, user_name='system'):
-        self.domain_uuid = domain_uuid
-        self.domain_name = domain_name
+    def __init__(self, ivr=None, user_name='system'):
+        self.ivr = ivr
         self.user_name = user_name
-        self.ivr_uuid = ivr_uuid
-        if ivr_uuid:
-            try:
-                self.ivr = IvrMenus.objects.get(pk=ivr_uuid)
-            except:
-                self.ivr = False
-        else:
-            self.ivr = False
 
     def add_dialplan(self):
-        d = Domain.objects.get(pk=self.domain_uuid)
-
         dp = Dialplan.objects.create(
-            domain_id=d,
+            domain_id=self.ivr.domain_id,
             app_id='6bf14c5d-c76c-4e6f-8782-c62bf7902ea3',
             name=self.ivr.name,
             number=self.ivr.extension,
             destination='false',
-            context=self.domain_name,
+            context=self.ivr.domain_id.name,
             category='IVR menu',
             dp_continue='false',
             sequence=101,
@@ -89,7 +78,7 @@ class IvrFunctions():
         etree.SubElement(x_condition, "action", application='sleep', data='1000')
         etree.SubElement(x_condition, "action", application='set', data='hangup_after_bridge=true')
         etree.SubElement(x_condition, "action", application='set', data='ring_back=%s' % self.ivr.ringback)
-        etree.SubElement(x_condition, "action", application='set', data='presence_id=%s@%s' % (self.ivr.extension, self.domain_name))
+        etree.SubElement(x_condition, "action", application='set', data='presence_id=%s@%s' % (self.ivr.extension, self.ivr.domain_id.name))
         lang = self.ivr.language.split('/')
         etree.SubElement(x_condition, "action", application='set', data='default_language=%s' % lang[0])
         etree.SubElement(x_condition, "action", application='set', data='default_dialect=%s' % lang[1])

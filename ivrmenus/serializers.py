@@ -37,6 +37,7 @@ class IvrMenusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IvrMenus
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'domain_id',
@@ -76,6 +77,7 @@ class IvrMenuOptionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IvrMenuOptions
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'ivr_menu_id',

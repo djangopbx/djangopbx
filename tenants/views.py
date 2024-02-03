@@ -90,7 +90,7 @@ class DomainViewSet(viewsets.ModelViewSet):
         serializer.save(updated_by=self.request.user.username)
 
     def perform_create(self, serializer):
-        instance = serializer.save()
+        instance = serializer.save(updated_by=self.request.user.username)
         SwitchDp().import_xml(instance.name, False, instance.id)  # Create dialplans
         DomainSetting.objects.create(
             domain_id=instance,   # Create default menu setting
@@ -116,6 +116,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        instance = serializer.save(updated_by=self.request.user.username)
+
 
 class DefaultSettingViewSet(viewsets.ModelViewSet):
     """
@@ -129,6 +135,12 @@ class DefaultSettingViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        instance = serializer.save(updated_by=self.request.user.username)
 
 
 class DomainSettingViewSet(viewsets.ModelViewSet):
@@ -144,6 +156,12 @@ class DomainSettingViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        instance = serializer.save(updated_by=self.request.user.username)
+
 
 class ProfileSettingViewSet(viewsets.ModelViewSet):
     """
@@ -157,3 +175,9 @@ class ProfileSettingViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        instance = serializer.save(updated_by=self.request.user.username)

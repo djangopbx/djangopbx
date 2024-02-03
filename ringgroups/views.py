@@ -30,6 +30,8 @@
 from django.views.generic.edit import UpdateView
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -47,6 +49,7 @@ from .models import (
 from .serializers import (
     RingGroupSerializer, RingGroupDestinationSerializer, RingGroupUserSerializer
 )
+from .ringgroupfunctions import RgFunctions
 
 
 class RingGroupViewSet(viewsets.ModelViewSet):
@@ -62,6 +65,24 @@ class RingGroupViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    @action(detail=True)
+    def generatexml(self, request, pk=None):
+        obj = self.get_object()
+        objf = RgFunctions(str(obj.domain_id.id), obj.domain_id.name, str(obj.id), request.user.username)
+        dp_id = objf.generate_xml()
+        if dp_id:
+            obj.dialplan_id = dp_id
+            obj.save()
+            return Response({'status': 'ok'})
+        else:
+            return Response({'status': 'err'})
+
 
 class RingGroupDestinationViewSet(viewsets.ModelViewSet):
     """
@@ -76,6 +97,12 @@ class RingGroupDestinationViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class RingGroupUserViewSet(viewsets.ModelViewSet):
     """
@@ -89,6 +116,12 @@ class RingGroupUserViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class RingGroupViewerList(Table):

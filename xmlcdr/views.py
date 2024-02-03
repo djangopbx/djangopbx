@@ -103,6 +103,12 @@ class XmlCdrViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class CdrViewerList(tables.Table):
     class Meta:

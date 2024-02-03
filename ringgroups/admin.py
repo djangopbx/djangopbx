@@ -38,6 +38,7 @@ from tenants.models import Profile
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
+from django.contrib import messages
 from django.forms import ModelForm, Select
 from switch.switchsounds import SwitchSounds
 from pbx.commonwidgets import ListTextWidget
@@ -210,9 +211,13 @@ class RingGroupAdmin(ImportExportModelAdmin):
     def response_change(self, request, obj):
         if "_generate-xml" in request.POST:
             rgf = RgFunctions(request.session['domain_uuid'], request.session['domain_name'], str(obj.id), request.user.username)
-            obj.dialplan_id = rgf.generate_xml()
-            obj.save()
-            self.message_user(request, "XML Generated")
+            dp_id = rgf.generate_xml()
+            if dp_id:
+                obj.dialplan_id = dp_id
+                obj.save()
+                self.message_user(request, "XML Generated")
+            else:
+                self.message_user(request, "XML Failed", level=messages.ERROR)
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
 

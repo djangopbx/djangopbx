@@ -37,6 +37,7 @@ class XmlCdrSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = XmlCdr
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'domain_id',

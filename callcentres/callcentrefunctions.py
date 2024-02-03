@@ -31,35 +31,22 @@ from django.utils.translation import gettext_lazy as _
 from lxml import etree
 #from tenants.pbxsettings import PbxSettings
 from dialplans.models import Dialplan
-from tenants.models import Domain
-from .models import CallCentreQueues
 
 
 class CcFunctions():
 
-    def __init__(self, domain_uuid, domain_name, cc_uuid=None, user_name='system'):
-        self.domain_uuid = domain_uuid
-        self.domain_name = domain_name
+    def __init__(self, cc=None, user_name='system'):
+        self.cc = cc
         self.user_name = user_name
-        self.cc_uuid = cc_uuid
-        if cc_uuid:
-            try:
-                self.cc = CallCentreQueues.objects.get(pk=cc_uuid)
-            except:
-                self.cc = False
-        else:
-            self.cc = False
 
     def add_dialplan(self):
-        d = Domain.objects.get(pk=self.domain_uuid)
-
         dp = Dialplan.objects.create(
-            domain_id=d,
+            domain_id=self.cc.domain_id,
             app_id='48b0bd79-021d-4151-b59e-06370fc686cd',
             name=self.cc.name,
             number=self.cc.extension,
             destination='false',
-            context=self.domain_name,
+            context=self.cc.domain_id.name,
             category='Call centre',
             dp_continue='false',
             sequence=230,

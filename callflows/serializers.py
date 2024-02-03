@@ -37,6 +37,7 @@ class CallFlowsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CallFlows
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id', 'name', 'extension', 'feature_code',
                     'status', 'pin_number',

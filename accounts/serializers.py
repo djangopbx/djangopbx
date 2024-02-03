@@ -99,6 +99,7 @@ class ExtensionSerializer(serializers.ModelSerializer):
 class FollowMeDestinationSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowMeDestination
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'extension_id', 'destination', 'delay', 'timeout', 'prompt', 'sequence',
                     'created', 'updated', 'synchronised', 'updated_by'
@@ -108,6 +109,7 @@ class FollowMeDestinationSerializer(serializers.ModelSerializer):
 class GatewaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gateway
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url',
                     'id',
@@ -147,6 +149,7 @@ class GatewaySerializer(serializers.ModelSerializer):
 class BridgeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bridge
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id', 'name', 'destination', 'enabled', 'description',
                     'created', 'updated', 'synchronised', 'updated_by'

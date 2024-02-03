@@ -77,6 +77,12 @@ class ContactViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class ContactTelViewSet(viewsets.ModelViewSet):
     """
@@ -90,6 +96,12 @@ class ContactTelViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ContactEmailViewSet(viewsets.ModelViewSet):
@@ -105,6 +117,12 @@ class ContactEmailViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class ContactGeoViewSet(viewsets.ModelViewSet):
     """
@@ -118,6 +136,12 @@ class ContactGeoViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ContactUrlViewSet(viewsets.ModelViewSet):
@@ -133,6 +157,12 @@ class ContactUrlViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class ContactOrgViewSet(viewsets.ModelViewSet):
     """
@@ -146,6 +176,12 @@ class ContactOrgViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ContactAddressViewSet(viewsets.ModelViewSet):
@@ -161,6 +197,12 @@ class ContactAddressViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class ContactDateViewSet(viewsets.ModelViewSet):
     """
@@ -174,6 +216,12 @@ class ContactDateViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ContactCategoryViewSet(viewsets.ModelViewSet):
@@ -189,6 +237,12 @@ class ContactCategoryViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class ContactGroupViewSet(viewsets.ModelViewSet):
     """
@@ -202,6 +256,12 @@ class ContactGroupViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ContactListFilter(filters.FilterSet):

@@ -240,6 +240,12 @@ class MenuViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class MenuItemViewSet(viewsets.ModelViewSet):
     """
@@ -254,6 +260,12 @@ class MenuItemViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class MenuItemGroupViewSet(viewsets.ModelViewSet):
     """
@@ -267,6 +279,12 @@ class MenuItemGroupViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ClickDial(LoginRequiredMixin, View):

@@ -37,6 +37,7 @@ class RecordingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recording
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id', 'filename', 'name', 'description', 'base64',
                     'created', 'updated', 'synchronised', 'updated_by'

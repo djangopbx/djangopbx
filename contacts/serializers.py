@@ -38,6 +38,7 @@ class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contact
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'domain_id', 'user_id', 'fn', 'family_name', 'given_name',
@@ -54,6 +55,7 @@ class ContactTelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactTel
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'tel_type', 'number',
@@ -68,6 +70,7 @@ class ContactEmailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactEmail
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'email_type', 'email',
@@ -82,6 +85,7 @@ class ContactGeoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactGeo
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'geo_uri',
@@ -96,6 +100,7 @@ class ContactUrlSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactUrl
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'url_uri',
@@ -110,6 +115,7 @@ class ContactOrgSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactOrg
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'organisation_name', 'organisation_unit',
@@ -124,6 +130,7 @@ class ContactAddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactAddress
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'post_office_box', 'extended_address', 'street_address',
@@ -139,6 +146,7 @@ class ContactDateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactDate
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'sig_date', 'label',
@@ -153,6 +161,7 @@ class ContactCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactCategory
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'category',
@@ -167,6 +176,7 @@ class ContactGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ContactGroup
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'contact_id', 'name', 'group_id',

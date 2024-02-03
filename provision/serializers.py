@@ -38,6 +38,7 @@ class DeviceVendorsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceVendors
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'name', 'description', 'enabled',
@@ -52,6 +53,7 @@ class DeviceVendorFunctionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceVendorFunctions
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'vendor_id', 'name', 'value', 'description', 'enabled',
@@ -66,6 +68,7 @@ class DeviceVendorFunctionGroupsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceVendorFunctionGroups
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'function_id', 'group_id',
@@ -80,6 +83,7 @@ class DeviceProfilesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceProfiles
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'name', 'vendor', 'domain_id', 'enabled', 'description',
@@ -94,6 +98,7 @@ class DeviceProfileSettingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceProfileSettings
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'profile_id', 'name', 'value', 'description', 'enabled',
@@ -108,6 +113,7 @@ class DeviceProfileKeysSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceProfileKeys
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'profile_id', 'category', 'key_id', 'key_type', 'line', 'value',
@@ -123,6 +129,7 @@ class DevicesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Devices
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'mac_address', 'label', 'model',
@@ -139,6 +146,7 @@ class DeviceLinesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceLines
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'device_id', 'line_number', 'server_address',
@@ -158,6 +166,7 @@ class DeviceKeysSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceKeys
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'device_id', 'category', 'key_id', 'key_type', 'line', 'value',
@@ -173,6 +182,7 @@ class DeviceSettingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeviceSettings
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'device_id', 'name', 'value', 'description', 'enabled',

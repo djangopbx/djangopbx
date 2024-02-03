@@ -37,6 +37,7 @@ class DialplanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dialplan
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id', 'app_id', 'hostname', 'context',
                     'category', 'name', 'number', 'destination', 'dp_continue',
@@ -49,6 +50,7 @@ class DialplanDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DialplanDetail
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'dialplan_id', 'tag', 'type', 'data',
                     'dp_break', 'inline', 'group', 'sequence',

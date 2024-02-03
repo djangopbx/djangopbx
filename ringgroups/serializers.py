@@ -37,6 +37,7 @@ class RingGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RingGroup
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'domain_id',
@@ -74,6 +75,7 @@ class RingGroupDestinationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RingGroupDestination
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'ring_group_id',
@@ -92,6 +94,7 @@ class RingGroupUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RingGroupUser
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'ring_group_id',

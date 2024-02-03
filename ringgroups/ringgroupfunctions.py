@@ -31,7 +31,6 @@ from django.utils.translation import gettext_lazy as _
 from lxml import etree
 from tenants.pbxsettings import PbxSettings
 from dialplans.models import Dialplan
-from tenants.models import Domain
 from accounts.models import Extension, FollowMeDestination
 from .models import RingGroup, RingGroupDestination
 from switch.models import SwitchVariable
@@ -58,10 +57,8 @@ class RgFunctions():
             self.rg = False
 
     def add_dialplan(self):
-        d = Domain.objects.get(pk=self.domain_uuid)
-
         dp = Dialplan.objects.create(
-            domain_id=d,
+            domain_id=self.rg.domain_id,
             app_id='77578687-8eb7-4bb7-a00a-ddf3e8b7169f',
             name=self.rg.name,
             number=self.rg.extension,

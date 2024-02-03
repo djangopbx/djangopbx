@@ -29,6 +29,8 @@
 
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
 from pbx.restpermissions import (
@@ -43,6 +45,7 @@ from .serializers import (
     ConferenceProfileParamsSerializer, ConferenceRoomUserSerializer, ConferenceRoomsSerializer,
     ConferenceCentresSerializer, ConferenceSessionsSerializer,
 )
+from .conferencefunctions import CnfFunctions
 
 
 class ConferenceControlsViewSet(viewsets.ModelViewSet):
@@ -58,6 +61,12 @@ class ConferenceControlsViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class ConferenceControlDetailsViewSet(viewsets.ModelViewSet):
     """
@@ -71,6 +80,12 @@ class ConferenceControlDetailsViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ConferenceProfilesViewSet(viewsets.ModelViewSet):
@@ -86,6 +101,12 @@ class ConferenceProfilesViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class ConferenceProfileParamsViewSet(viewsets.ModelViewSet):
     """
@@ -99,6 +120,12 @@ class ConferenceProfileParamsViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ConferenceCentresViewSet(viewsets.ModelViewSet):
@@ -114,6 +141,24 @@ class ConferenceCentresViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    @action(detail=True)
+    def generatexml(self, request, pk=None):
+        obj = self.get_object()
+        objf = CnfFunctions(obj, request.user.username)
+        dp_id = objf.generate_xml()
+        if dp_id:
+            obj.dialplan_id = dp_id
+            obj.save()
+            return Response({'status': 'ok'})
+        else:
+            return Response({'status': 'err'})
+
 
 class ConferenceRoomsViewSet(viewsets.ModelViewSet):
     """
@@ -127,6 +172,12 @@ class ConferenceRoomsViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class ConferenceRoomUserViewSet(viewsets.ModelViewSet):
@@ -142,6 +193,12 @@ class ConferenceRoomUserViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class ConferenceSessionsViewSet(viewsets.ModelViewSet):
     """
@@ -155,3 +212,9 @@ class ConferenceSessionsViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)

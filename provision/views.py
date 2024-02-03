@@ -76,6 +76,12 @@ class DeviceVendorsViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 
 class DeviceVendorFunctionsViewSet(viewsets.ModelViewSet):
@@ -91,6 +97,12 @@ class DeviceVendorFunctionsViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class DeviceVendorFunctionGroupsViewSet(viewsets.ModelViewSet):
     """
@@ -104,6 +116,12 @@ class DeviceVendorFunctionGroupsViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class DeviceProfilesViewSet(viewsets.ModelViewSet):
@@ -119,6 +137,12 @@ class DeviceProfilesViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class DeviceProfileSettingsViewSet(viewsets.ModelViewSet):
     """
@@ -132,6 +156,12 @@ class DeviceProfileSettingsViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class DeviceProfileKeysViewSet(viewsets.ModelViewSet):
@@ -147,6 +177,12 @@ class DeviceProfileKeysViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class DevicesViewSet(viewsets.ModelViewSet):
     """
@@ -160,6 +196,12 @@ class DevicesViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
 
 
 class DeviceLinesViewSet(viewsets.ModelViewSet):
@@ -175,6 +217,12 @@ class DeviceLinesViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class DeviceKeysViewSet(viewsets.ModelViewSet):
     """
@@ -189,6 +237,12 @@ class DeviceKeysViewSet(viewsets.ModelViewSet):
         AdminApiAccessPermission,
     ]
 
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 class DeviceSettingsViewSet(viewsets.ModelViewSet):
     """
@@ -202,6 +256,13 @@ class DeviceSettingsViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
 
 ipf = IpFunctions()
 

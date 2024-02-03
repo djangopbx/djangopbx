@@ -37,6 +37,7 @@ class CallBlockSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CallBlock
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id', 'name', 'number', 'block_count',
                     'app', 'data', 'enabled', 'description',

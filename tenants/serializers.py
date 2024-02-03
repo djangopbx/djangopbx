@@ -61,6 +61,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'id', 'url', 'domain_id', 'username', 'email', 'status', 'api_key',
                     'enabled', 'created', 'updated', 'synchronised', 'updated_by'
@@ -71,6 +72,7 @@ class DefaultSettingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DefaultSetting
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'id', 'url', 'app_uuid', 'category', 'subcategory',
                     'value_type', 'value', 'sequence', 'enabled',
@@ -82,6 +84,7 @@ class DomainSettingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DomainSetting
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'id', 'url', 'domain_id', 'app_uuid', 'category', 'subcategory',
                     'value_type', 'value', 'sequence', 'enabled',
@@ -93,6 +96,7 @@ class ProfileSettingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProfileSetting
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'id', 'url', 'user_id', 'category', 'subcategory',
                     'value_type', 'value', 'sequence', 'enabled',

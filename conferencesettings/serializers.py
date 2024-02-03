@@ -38,6 +38,7 @@ class ConferenceControlsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConferenceControls
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'name', 'enabled', 'description',
                     'created', 'updated', 'synchronised', 'updated_by'
@@ -48,6 +49,7 @@ class ConferenceControlDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConferenceControlDetails
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'conf_ctrl_id', 'digits', 'action', 'data', 'enabled',
                     'created', 'updated', 'synchronised', 'updated_by'
@@ -58,6 +60,7 @@ class ConferenceProfilesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConferenceProfiles
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'name', 'enabled', 'description',
                     'created', 'updated', 'synchronised', 'updated_by'
@@ -68,6 +71,7 @@ class ConferenceProfileParamsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConferenceProfileParams
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'conf_profile_id', 'name', 'value', 'enabled', 'description',
                     'created', 'updated', 'synchronised', 'updated_by'
@@ -78,6 +82,7 @@ class ConferenceCentresSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConferenceCentres
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id', 'name', 'extension', 'greeting',
                     'enabled', 'description', 'dialplan_id',
@@ -89,6 +94,7 @@ class ConferenceRoomsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConferenceRooms
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'c_centre_id', 'name', 'c_profile_id', 
                     'moderator_pin', 'participant_pin',
@@ -103,6 +109,7 @@ class ConferenceRoomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConferenceRoomUser
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'c_room_id', 'user_uuid',
                     'created', 'updated', 'synchronised', 'updated_by'
@@ -113,6 +120,7 @@ class ConferenceSessionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConferenceSessions
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'c_room_id', 'caller_id_name', 'caller_id_number',
                     'profile', 'live', 'recording', 'start', 'end',

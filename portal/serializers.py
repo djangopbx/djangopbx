@@ -37,6 +37,7 @@ class MenuSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Menu
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = ['url', 'id', 'name', 'description', 'created', 'updated', 'synchronised', 'updated_by']
 
 
@@ -51,6 +52,7 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MenuItem
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'parent_id', 'title', 'link', 'icon', 'category', 'protected',
                     'sequence', 'description', 'created', 'updated', 'synchronised', 'updated_by'
@@ -68,6 +70,7 @@ class MenuItemGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MenuItemGroup
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'menu_item_id', 'name', 'group_id',
                     'created', 'updated', 'synchronised', 'updated_by'

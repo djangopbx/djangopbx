@@ -31,35 +31,22 @@ from django.utils.translation import gettext_lazy as _
 from lxml import etree
 from tenants.pbxsettings import PbxSettings
 from dialplans.models import Dialplan
-from tenants.models import Domain
-from .models import CallFlows
 
 
 class CfFunctions():
 
-    def __init__(self, domain_uuid, domain_name, cf_uuid=None, user_name='system'):
-        self.domain_uuid = domain_uuid
-        self.domain_name = domain_name
+    def __init__(self, cf=None, user_name='system'):
+        self.cf = cf
         self.user_name = user_name
-        self.cf_uuid = cf_uuid
-        if cf_uuid:
-            try:
-                self.cf = CallFlows.objects.get(pk=cf_uuid)
-            except:
-                self.cf = False
-        else:
-            self.cf = False
 
     def add_dialplan(self):
-        d = Domain.objects.get(pk=self.domain_uuid)
-
         dp = Dialplan.objects.create(
-            domain_id=d,
+            domain_id=self.cf.domain_id,
             app_id='ccf122fd-b0e0-460e-aa48-c7025a18c3e9',
             name=self.cf.name,
             number=self.cf.extension,
             destination='false',
-            context=self.domain_name,
+            context=self.cf.domain_id.name,
             category='Call flow',
             dp_continue='false',
             sequence=101,

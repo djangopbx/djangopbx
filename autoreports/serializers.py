@@ -37,6 +37,7 @@ class AutoReportsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AutoReports
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id', 'name', 'title', 'message',
                     'footer', 'recipients',
@@ -49,6 +50,7 @@ class AutoReportSectionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AutoReportSections
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'auto_report_id', 'title', 'sequence',
                     'sql', 'message', 'enabled', 'description',

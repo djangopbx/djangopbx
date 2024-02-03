@@ -37,6 +37,7 @@ class PhrasesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Phrases
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'domain_id',
@@ -55,6 +56,7 @@ class PhraseDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PhraseDetails
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'phrase_id',

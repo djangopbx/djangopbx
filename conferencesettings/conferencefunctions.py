@@ -31,35 +31,22 @@ from django.utils.translation import gettext_lazy as _
 from lxml import etree
 from tenants.pbxsettings import PbxSettings
 from dialplans.models import Dialplan
-from tenants.models import Domain
-from .models import ConferenceCentres
 
 
 class CnfFunctions():
 
-    def __init__(self, domain_uuid, domain_name, cnf_uuid=None, user_name='system'):
-        self.domain_uuid = domain_uuid
-        self.domain_name = domain_name
+    def __init__(self,cnf=None, user_name='system'):
+        self.cnf = cnf
         self.user_name = user_name
-        self.cnf_uuid = cnf_uuid
-        if cnf_uuid:
-            try:
-                self.cnf = ConferenceCentres.objects.get(pk=cnf_uuid)
-            except:
-                self.cnf = False
-        else:
-            self.cnf = False
 
     def add_dialplan(self):
-        d = Domain.objects.get(pk=self.domain_uuid)
-
         dp = Dialplan.objects.create(
-            domain_id=d,
+            domain_id=self.cnf.domain_id,
             app_id='da23e762-de58-4c39-b6e5-f3b209a80a16',
             name=self.cnf.name,
             number=self.cnf.extension,
             destination='false',
-            context=self.domain_name,
+            context=self.cnf.domain_id.name,
             category='Conference centre',
             dp_continue='false',
             sequence=333,

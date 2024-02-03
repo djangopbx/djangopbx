@@ -37,6 +37,7 @@ class CallCentreQueuesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CallCentreQueues
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id',
                     'name',
@@ -71,6 +72,7 @@ class CallCentreAgentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CallCentreAgents
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id',
                     'name', 'user_uuid', 'agent_type', 'call_timeout', 'agent_id',
@@ -84,6 +86,7 @@ class CallCentreTiersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CallCentreTiers
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'queue_id', 'agent_id', 'tier_level', 'tier_position',
                     'created', 'updated', 'synchronised', 'updated_by'

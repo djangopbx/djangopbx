@@ -37,6 +37,7 @@ class NumberTranslationsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NumberTranslations
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'name',
@@ -53,6 +54,7 @@ class NumberTranslationDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NumberTranslationDetails
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                 'url', 'id',
                 'number_translation_id',

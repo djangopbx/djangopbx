@@ -37,6 +37,7 @@ class VoicemailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Voicemail
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'extension_id', 'password', 'greeting_id', 'alternate_greeting_id',
                     'mail_to', 'sms_to', 'cc', 'attach_file', 'local_after_email', 'enabled', 'description',
@@ -48,6 +49,7 @@ class VoicemailGreetingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VoicemailGreeting
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'voicemail_id', 'filename', 'name', 'description',
                     'created', 'updated', 'synchronised', 'updated_by'
