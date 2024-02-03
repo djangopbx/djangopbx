@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,8 @@
 
 from django.contrib import admin
 from django.conf import settings
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
 from django.db.models import Case, Value, When
 from django.forms.widgets import TextInput, NumberInput, Select
 from django.forms import ModelForm
@@ -39,9 +41,9 @@ from pbx.commonfunctions import DomainFilter, DomainUtils
 from .dialplanfunctions import SwitchDp, DpApps
 
 from .models import (
-    Dialplan, DialplanDetail
+    Dialplan, DialplanDetail, DialplanExcludes,
 )
-
+from tenants.models import Domain
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.http import HttpResponseRedirect
@@ -132,6 +134,20 @@ class DialplanResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
+@admin.action(permissions=['change'], description=_('Add Global Dialplan to Exclude List'))
+def add_to_global_excludes(modeladmin, request, queryset):
+    d = Domain.objects.get(pk=request.session['domain_uuid'])
+    rc = 0
+    for obj in queryset:
+        if obj.context == '${domain_name}':
+            obj, created = DialplanExcludes.objects.update_or_create(
+                domain_id=d, domain_name=d.name, app_id=obj.app_id,
+                name=obj.name, updated_by=request.user.username)
+            rc += 1
+    if rc > 0:
+        messages.add_message(request, messages.INFO, _('%s Dialplan Exclude(s) created.' % rc))
+
+
 class DialplanAdmin(ImportExportModelAdmin):
     resource_class = DialplanResource
 
@@ -161,6 +177,7 @@ class DialplanAdmin(ImportExportModelAdmin):
     )
 
     ordering = ['sequence', 'name']
+    actions = [add_to_global_excludes]
 
     inlines = [DialplanDetailsInLine]
 
@@ -197,7 +214,39 @@ class DialplanAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class DialplanExcludesResource(resources.ModelResource):
+    class Meta:
+        model = DialplanExcludes
+        import_id_fields = ('id', )
+
+
+class DialplanExcludesAdmin(ImportExportModelAdmin):
+    resource_class = DialplanExcludesResource
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    list_display = ('domain_name', 'app_id', 'name')
+    list_filter = (DomainFilter, 'name', 'app_id')
+    fieldsets = [
+        (None,  {'fields': ['domain_id', 'domain_name', 'name', 'app_id']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    ordering = [
+        'domain_name',
+        'name'
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        if change:
+            obj.domain_name = obj.domain_id.name
+        else:
+            obj.domain_id = DomainUtils().domain_from_session(request)
+            obj.context = request.session['domain_name']
+        super().save_model(request, obj, form, change)
+
+
 admin.site.register(Dialplan, DialplanAdmin)
+admin.site.register(DialplanExcludes, DialplanExcludesAdmin)
 
 if settings.PBX_ADMIN_SHOW_ALL:
     admin.site.register(DialplanDetail, DialplanDetailAdmin)

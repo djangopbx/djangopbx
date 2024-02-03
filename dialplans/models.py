@@ -122,3 +122,22 @@ class DialplanDetail(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+class DialplanExcludes(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Dialplan Excludes'))     # noqa: E501, E221
+    domain_id    = models.ForeignKey('tenants.Domain', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))  # noqa: E501, E221
+    domain_name  = models.CharField(max_length=128, db_index=True, verbose_name=_('Domain Name'))                                  # noqa: E501, E221
+    name         = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Dialplan Name'))                         # noqa: E501, E221
+    app_id       = models.UUIDField(verbose_name=_('AppUuid'))                                                                     # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                       # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                           # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                     # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                   # noqa: E501, E221
+
+    class Meta:
+        verbose_name_plural = 'Dialplan Excludes'
+        db_table = 'pbx_dialplan_excludes'
+
+    def __str__(self):
+        return f"{self.id}->{self.app_id}: {self.name}"

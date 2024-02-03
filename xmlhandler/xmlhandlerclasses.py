@@ -32,7 +32,7 @@ from lxml import etree
 from pbx.commonvalidators import valid_uuid4
 from django.db.models import Q
 from .xmlhandler import XmlHandler
-from dialplans.models import Dialplan
+from dialplans.models import Dialplan, DialplanExcludes
 from tenants.models import Domain
 from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, ExtensionUser, Gateway
@@ -518,12 +518,6 @@ class DialplanHandler(XmlHandler):
         if call_context == 'public' or call_context[:7] == 'public@' or call_context[-7:] == '.public':
             context_name = 'public'
 
-        cache_key = 'xmlhandler:httapi_url'
-        httapi_url = cache.get(cache_key)
-        if not httapi_url:
-            httapi_url = PbxSettings().default_settings('dialplan', 'httapi_url', 'text')[0]
-            cache.set(cache_key, httapi_url)
-
         cache_key = 'xmlhandler:context_type'
         context_type = cache.get(cache_key)
         if not context_type:
@@ -538,18 +532,23 @@ class DialplanHandler(XmlHandler):
         if xml:
             return xml
 
+        cache_key = 'xmlhandler:httapi_url'
+        httapi_url = cache.get(cache_key)
+        if not httapi_url:
+            httapi_url = PbxSettings().default_settings('dialplan', 'httapi_url', 'text')[0]
+            cache.set(cache_key, httapi_url)
+
         xml_list.append(self.XmlHeader('dialplan', call_context))
         xml_list.append(self.XmlHttapiUrl(httapi_url))
 
         if context_name == 'public' and context_type == 'single':
             xml_list.extend(Dialplan.objects.filter(
-                (Q(
-                    category='Inbound route',  xml__isnull=False,
+                (Q( category='Inbound route',  xml__isnull=False,
                     number=destination_number
                     ) | Q(context__contains='public', domain_id__isnull=True)),
                 (Q(hostname=hostname) | Q(hostname__isnull=True)), enabled='true'
                 ).values_list('xml', flat=True).order_by('sequence'))
-            if len(xml_list) == 1:
+            if len(xml_list) == 2:
                 xml_list = self.NotFoundPublic(xml_list)
         else:
             if context_name == "public" or ('@' in context_name):
@@ -558,10 +557,17 @@ class DialplanHandler(XmlHandler):
                     context=call_context, enabled='true'
                     ).values_list('xml', flat=True).order_by('sequence'))
             else:
-                xml_list.extend(Dialplan.objects.filter(
-                    (Q(context=call_context) | Q(context='${domain_name}')),
-                    (Q(hostname=hostname) | Q(hostname__isnull=True)),  xml__isnull=False, enabled='true'
-                    ).values_list('xml', flat=True).order_by('sequence'))
+                excludeList = DialplanExcludes.objects.values_list('app_id', flat=True).filter(domain_name=call_context)
+                if excludeList.count() == 0:
+                    xml_list.extend(Dialplan.objects.filter(
+                        (Q(context=call_context) | Q(context='${domain_name}')),
+                        (Q(hostname=hostname) | Q(hostname__isnull=True)),  xml__isnull=False, enabled='true'
+                        ).values_list('xml', flat=True).order_by('sequence'))
+                else:
+                    xml_list.extend(Dialplan.objects.filter(
+                        (Q(context=call_context) | Q(context='${domain_name}')),
+                        (Q(hostname=hostname) | Q(hostname__isnull=True)),  xml__isnull=False, enabled='true'
+                        ).exclude(app_id__in=excludeList).values_list('xml', flat=True).order_by('sequence'))
 
         if len(xml_list) == 0:
             return self.NotFoundXml()
