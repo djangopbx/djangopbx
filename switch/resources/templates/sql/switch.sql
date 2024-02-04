@@ -237,7 +237,7 @@ CREATE TABLE public.interfaces (
     filename text,
     syntax text,
     hostname text,
-    interace_uuid uuid PRIMARY KEY default gen_random_uuid()
+    interface_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE public.interfaces OWNER TO freeswitch;
 
@@ -363,7 +363,8 @@ CREATE TABLE public.sip_authentication (
     profile_name text,
     hostname text,
     last_nc integer,
-sip_authentication_uuid uuid PRIMARY KEY default gen_random_uuid()
+    algorithm integer DEFAULT 1 NOT NULL,
+    sip_authentication_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE public.sip_authentication OWNER TO freeswitch;
 
@@ -428,7 +429,7 @@ CREATE TABLE public.sip_shared_appearance_dialogs (
     call_id text,
     network_ip text,
     expires bigint,
-sip_shared_appearance_dialog_uuid uuid PRIMARY KEY default gen_random_uuid()
+    sip_shared_appearance_dialog_uuid uuid PRIMARY KEY default gen_random_uuid()
 );
 ALTER TABLE public.sip_shared_appearance_dialogs OWNER TO freeswitch;
 
