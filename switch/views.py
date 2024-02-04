@@ -27,10 +27,14 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.utils.http import urlsafe_base64_decode
 from rest_framework import viewsets
+from rest_framework import views
+from rest_framework.response import Response
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
-
+from pbx.fscmdabslayer import FsCmdAbsLayer
+import json
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -42,6 +46,7 @@ from .models import (
 from .serializers import (
     SipProfileDomainSerializer, SipProfileSettingSerializer, SipProfileSerializer, SwitchVariableSerializer,
     AccessControlSerializer, AccessControlNodeSerializer,  EmailTemplateSerializer, ModulesSerializer,
+    FsRegistrationsSerializer,
 )
 
 
@@ -203,3 +208,67 @@ class ModulesViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+
+
+class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Switch Registrations to be viewed.
+    """
+    serializer_class = FsRegistrationsSerializer
+
+    def parseregdetail(self, regdetail):
+        lines = regdetail.splitlines()
+        i = 1
+        info = {}
+        for line in lines:
+            if i > 3 and i < 17:
+                if ':' in line:
+                    data = line.split(':', 1)
+                    info[data[0]] = data[1].strip()
+            i += 1
+        return info
+
+    def get_queryset(self):
+        pass
+
+    def list(self, request):
+        reg_data = []
+        reg_count = 0
+        es = FsCmdAbsLayer()
+        if not es.connect():
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        es.clear_responses()
+        es.send('api show registrations as json')
+        es.process_events()
+        es.get_responses()
+        es.disconnect()
+        print(request.build_absolute_uri())
+        for resp in es.responses:
+            try:
+                registrations = json.loads(resp)
+            except:
+                registrations = {'row_count': 0}
+            if registrations['row_count'] > 0:
+                reg_count += registrations.get('row_count', 0)
+                for i in registrations['rows']:
+                    reg_data.append(i)
+        results = FsRegistrationsSerializer(reg_data, many=True, context={'request': request}).data
+        return Response({'count': reg_count, 'results': results})
+
+    def retrieve(self, request, pk=None):
+        if not pk:
+            return Response({'status': 'err', 'message': 'pk not found'})
+        sip_user, host, sip_profile = urlsafe_base64_decode(pk).decode().split('::')
+        es = FsCmdAbsLayer()
+        if not es.connect():
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        es.clear_responses()
+        es.send('api sofia status profile %s user %s' % (sip_profile, sip_user), host)
+        es.process_events(0.01)
+        es.get_responses()
+        es.disconnect()
+        regdetail = next(iter(es.responses or []), None)
+        if regdetail:
+            info = self.parseregdetail(regdetail)
+
+        return Response(info)
