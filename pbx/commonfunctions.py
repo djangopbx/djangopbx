@@ -94,7 +94,11 @@ def str2regex(dst, pre=''):
 class DomainUtils():
 
     def domain_from_session(self, request):
-        return Domain.objects.get(name=request.session['domain_name'])
+        try:
+            d = Domain.objects.get(name=request.session['domain_name'])
+        except Domain.DoesNotExist:
+            return None
+        return d
 
 
 class DomainFilter(admin.SimpleListFilter):

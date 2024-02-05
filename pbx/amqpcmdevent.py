@@ -31,6 +31,7 @@ import pika
 import socket
 import logging
 import uuid
+import time
 from tenants.models import DefaultSetting
 
 logger = logging.getLogger(__name__)
@@ -75,7 +76,8 @@ class AmqpCmdEvent:
                 )
         if self.freeswitches.count() < 1:
             self.freeswitches = [self.hostname]
-
+        self.switchcount = len(self.freeswitches)
+        self.singlehostrequest = False
 
     def on_response(self, ch, method, props, body):
         if self.debug:
@@ -127,6 +129,7 @@ class AmqpCmdEvent:
     def publish(self, payload, host=None):
         if self.connection.is_open and self.channel.is_open:
             if host:
+                self.singlehostrequest = True
                 freeswitch_route_key = '%s_command' % host
                 if self.debug:
                     print('Publishing to %s' % freeswitch_route_key)
@@ -140,6 +143,7 @@ class AmqpCmdEvent:
                     )
                 return
 
+            self.singlehostrequest = False
             for fs in self.freeswitches:
                 freeswitch_route_key = '%s_command' % fs
                 if self.debug:
@@ -153,9 +157,15 @@ class AmqpCmdEvent:
                     body=payload
                     )
 
-    def process_events(self):
+    def process_events(self, timeout=3):
         if self.connection.is_open and self.channel.is_open:
-            self.connection.process_data_events(time_limit=3)
+            t = time.time()
+            while len(self.responses) < self.switchcount:
+                self.connection.process_data_events(time_limit=timeout)
+                if self.singlehostrequest:
+                    break
+                if (time.time() - t) > timeout:
+                    break
 
     def consume(self):
         self.channel.basic_consume(

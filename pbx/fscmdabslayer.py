@@ -80,11 +80,10 @@ class FsCmdAbsLayer:
                 return
             self.broker.publish(payload.removeprefix('api '), host)
 
-    def process_events(self, wait=0.5):
+    def process_events(self, timeout=3):
         if self.loc_ev_skt:
             return
-        time.sleep(wait) # Allow time for all clustered freeswitches to respond
-        self.broker.process_events()
+        self.broker.process_events(timeout)
 
     def get_responses(self):
         if self.loc_ev_skt:

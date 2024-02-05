@@ -90,7 +90,7 @@ def djangopbx(request, host=None):
     if es.connect():
         es.clear_responses()
         es.send('api version', host)
-        es.process_events(0.01)
+        es.process_events()
         es.get_responses()
         fs_ver = next(iter(es.responses or []), 'false')
         es.disconnect()
@@ -127,7 +127,7 @@ def modules(request, moduuid=None, action=None, host=None):
             m = Modules.objects.get(pk=moduuid)
             es.clear_responses()
             es.send('api %s %s' % (cmd, m.name), host)
-            es.process_events(0.01)
+            es.process_events()
             es.get_responses()
             m_status = next(iter(es.responses or []), '-ERR')
 
@@ -140,7 +140,7 @@ def modules(request, moduuid=None, action=None, host=None):
         for m in mods:
             es.clear_responses()
             es.send('api module_exists %s' % m.name, host)
-            es.process_events(0.01)
+            es.process_events()
             es.get_responses()
             m_status = next(iter(es.responses or []), 'false')
 
@@ -177,7 +177,7 @@ def fsregistrations(request, realm=None):
             for target in actlist:
                 data = target.split('|')
                 es.send('api sofia profile %s flush_inbound_reg %s@%s reboot' % (data[2], data[0], data[1]), data[3])
-            es.process_events(0.01)
+            es.process_events()
             es.get_responses()
             messages.add_message(request, messages.INFO, _('\n'.join(es.responses)))
         else:
@@ -185,7 +185,7 @@ def fsregistrations(request, realm=None):
             for target in actlist:
                 data = target.split('|')
                 es.send('api sofia status profile %s user %s@%s' % (data[2], data[0], data[1]), data[3])
-                es.process_events(0.01)
+                es.process_events()
                 es.get_responses()
                 regdetail = next(iter(es.responses or []), None)
                 if regdetail:
@@ -193,7 +193,7 @@ def fsregistrations(request, realm=None):
                     if 'Agent' in info:
                         cmd = dce.buildevent(data[0], data[1], data[2], request.POST['action'], info['Agent'].split()[0].lower())
                         es.send(cmd, data[3])
-                        es.process_events(0.01)
+                        es.process_events()
             messages.add_message(request, messages.INFO, _('Request: %s Sent' % request.POST['action']))
 
     rows = []
@@ -240,7 +240,7 @@ def fsregdetail(request, sip_profile='internal', sip_user='none@none', host=None
     es = FsCmdAbsLayer()
     if es.connect():
         es.send('api sofia status profile %s user %s' % (sip_profile, sip_user), host)
-        es.process_events(0.01)
+        es.process_events()
         es.get_responses()
         es.disconnect()
         regdetail = next(iter(es.responses or []), None)

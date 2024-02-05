@@ -35,8 +35,9 @@ from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
-from pbx.fseventsocket import EventSocket
+#from django.conf import settings
+from pbx.fscmdabslayer import FsCmdAbsLayer
+#from pbx.fseventsocket import EventSocket
 from accounts.accountfunctions import AccountFunctions
 
 from pbx.restpermissions import (
@@ -97,46 +98,52 @@ def listvoicemails(request, vmuuid=None, vmext=None, action=None):
         extension_list = AccountFunctions().list_superuser_extensions(request.session['domain_uuid'])
     th = [_('Extension'), _('Date Time'), _('From'), _('Duration'), _('Message'), _('Action')]
     info = {}
-    es = EventSocket()
-    if es.connect(*settings.EVSKT):
-        if action == 'delete':
-            vmstr = es.send('api vm_delete %s@%s %s' % (vmext, request.session['domain_name'], vmuuid))
+    es = FsCmdAbsLayer()
+    if not es.connect():
+        return render(request, 'error.html', {'back': '/portal/',
+            'info': {'Message': _('Unable to connect to the FreeSWITCH')}, 'title': 'Broker/Socket Error'})
+    if action == 'delete':
+        es.clear_responses()
+        es.send('api vm_delete %s@%s %s' % (vmext, request.session['domain_name'], vmuuid))
+        es.process_events(0.25)
+        es.get_responses()
 
-        for e in extension_list:
-            vmstr = es.send('api vm_list %s@%s' % (e, request.session['domain_name']))
-            if '-ERR no reply' in vmstr:
-                info[e] = ['-', '-', '0', _('No Voicemail Messages'), '-']
-            else:
-                # '1670780459:0:201:test1.djangopbx.com:inbox:/var/lib/freeswitch/storage/voicemail/default/test1.djangopbx.com/201/msg_2740d2b1-de55-4425-b71e-4215647642ea.wav:68d2c984-78da-4d13-a48e-2e800fc7506f:Test1:202:7'  # noqa: E501
-                vmlist = vmstr.split('\n')
-                for vm in vmlist:
-                    if ':' not in vm:
-                        continue
-                    v = vm.split(':')
-                    filename = os.path.basename(v[5])
-                    file_ext = os.path.splitext(filename)[1]
-                    atype = 'audio/wav'
-                    if file_ext == 'mp3':
-                        atype = 'audio/mpeg'
+    for e in extension_list:
+        es.clear_responses()
+        es.send('api vm_list %s@%s' % (e, request.session['domain_name']))
+        es.process_events(2)
+        es.get_responses()
+        vmstr = next(iter(es.responses or []), None)
+        if not ('-ERR no reply' in vmstr or len(vmstr) < 1):
+            # '1670780459:0:201:test1.djangopbx.com:inbox:/var/lib/freeswitch/storage/voicemail/default/test1.djangopbx.com/201/msg_2740d2b1-de55-4425-b71e-4215647642ea.wav:68d2c984-78da-4d13-a48e-2e800fc7506f:Test1:202:7'  # noqa: E501
+            vmlist = vmstr.split('\n')
+            for vm in vmlist:
+                if ':' not in vm:
+                    continue
+                v = vm.split(':')
+                filename = os.path.basename(v[5])
+                file_ext = os.path.splitext(filename)[1]
+                atype = 'audio/wav'
+                if file_ext == 'mp3':
+                    atype = 'audio/mpeg'
+                try:
+                    i = int(v[0])
+                except ValueError:
+                    i = 0
+                date_time = datetime.fromtimestamp(i)
+                info['<!-- %s --> %s' % (v[6], v[2])] = [
+                        date_time.strftime("%d-%m-%Y, %H:%M:%S"),
+                        v[8],
+                        v[9],
+                        '<audio controls><source src="/fs/voicemail/default/%s/%s/%s" type="%s"> %s</audio>' % (
+                            request.session['domain_name'],
+                            e, filename, atype,
+                            _('Your browser does not support the audio tag.')
+                            ),
+                        '<a href=\"/voicemail/listvoicemails/%s/%s/delete/\">%s</a>' % (v[6], v[2], _('Delete'))
+                        ]
 
-                    try:
-                        i = int(v[0])
-                    except ValueError:
-                        i = 0
-
-                    date_time = datetime.fromtimestamp(i)
-                    info['<!-- %s --> %s' % (v[6], v[2])] = [
-                            date_time.strftime("%d-%m-%Y, %H:%M:%S"),
-                            v[8],
-                            v[9],
-                            '<audio controls><source src="/fs/voicemail/default/%s/%s/%s" type="%s"> %s</audio>' % (
-                                request.session['domain_name'],
-                                e, filename, atype,
-                                _('Your browser does not support the audio tag.')
-                                ),
-                            '<a href=\"/voicemail/listvoicemails/%s/%s/delete/\">%s</a>' % (v[6], v[2], _('Delete'))
-                            ]
-
+    es.disconnect()
     return render(
             request, 'infotablemulti.html',
             {'refresher': '/voicemail/listvoicemails/', 'th': th, 'info': info, 'title': 'Voicemails'}
