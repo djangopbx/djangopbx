@@ -80,11 +80,12 @@ class ConferenceProfileParamsSerializer(serializers.ModelSerializer):
 
 class ConferenceCentresSerializer(serializers.ModelSerializer):
 
+    gen_xml = serializers.HyperlinkedIdentityField(view_name='conferencecentres-generatexml')
     class Meta:
         model = ConferenceCentres
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
-                    'url', 'id', 'domain_id', 'name', 'extension', 'greeting',
+                    'url', 'gen_xml', 'id', 'domain_id', 'name', 'extension', 'greeting',
                     'enabled', 'description', 'dialplan_id',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]

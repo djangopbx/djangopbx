@@ -35,11 +35,13 @@ from .models import (
 
 class IvrMenusSerializer(serializers.ModelSerializer):
 
+    gen_xml = serializers.HyperlinkedIdentityField(view_name='ivrmenus-generatexml')
     class Meta:
         model = IvrMenus
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
-                'url', 'id',
+                'url', 'gen_xml',
+                'id',
                 'domain_id',
                 'dialplan_id',
                 'name',

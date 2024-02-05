@@ -35,11 +35,12 @@ from .models import (
 
 class CallFlowsSerializer(serializers.ModelSerializer):
 
+    gen_xml = serializers.HyperlinkedIdentityField(view_name='callflows-generatexml')
     class Meta:
         model = CallFlows
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
-                    'url', 'id', 'domain_id', 'name', 'extension', 'feature_code',
+                    'url', 'gen_xml', 'id', 'domain_id', 'name', 'extension', 'feature_code',
                     'status', 'pin_number',
                     'label', 'sound', 'app', 'data',
                     'alternate_label', 'alternate_sound', 'alternate_app', 'alternate_data',

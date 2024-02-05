@@ -35,11 +35,13 @@ from .models import (
 
 class RingGroupSerializer(serializers.ModelSerializer):
 
+    gen_xml = serializers.HyperlinkedIdentityField(view_name='ringgroup-generatexml')
     class Meta:
         model = RingGroup
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
-                'url', 'id',
+                'url', 'gen_xml',
+                'id',
                 'domain_id',
                 'name',
                 'extension',
