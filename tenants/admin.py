@@ -248,6 +248,12 @@ class DomainAdmin(ImportExportModelAdmin):
                 updated_by=request.user.username
                 )
 
+    def has_delete_permission(self, request, obj=None):
+        if obj:
+            if obj.name == request.session['domain_name']:
+                return False
+        return request.user.is_superuser
+
 
 #
 # Profile (user) Settings
