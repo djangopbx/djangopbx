@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-d', '--domain', help=_('Domain name (--domain domain1.djangopbx.uk)'))
-        parser.add_argument('-u', '--user', help=_('Assign domain to user (--user 1)'))
+        parser.add_argument('-u', '--user', help=_('Assign domain to user (--user 1001)'))
 
     def handle(self, *args, **kwargs):
         d = kwargs.get('domain', '')
@@ -77,7 +77,11 @@ class Command(BaseCommand):
             )
 
         if u:
-            p = Profile.objects.get(user_id=u)
+            try:
+                p = Profile.objects.get(user_id=u)
+            except Profile.DoesNotExist:
+                p = None
+
             if p:
                 p.domain_id = dom
                 p.save()
