@@ -42,7 +42,7 @@
     <load module="mod_hash"/>
 
     <!-- Codecs -->
-    <load module="mod_bv"/>
+    <!-- <load module="mod_bv"/> -->
     <load module="mod_amr"/>
     <load module="mod_h26x"/>
     <load module="mod_g729"/>
@@ -65,8 +65,8 @@
     <load module="mod_say_en"/>
 
     <!-- Speech Recognition / Text to Speech -->
-    <load module="mod_flite"/>
-    <load module="mod_tts_commandline"/>
+    <!-- <load module="mod_flite"/> -->
+    <!-- <load module="mod_tts_commandline"/> -->
 
     <!-- Streams / Files -->
     <load module="mod_shout"/>
