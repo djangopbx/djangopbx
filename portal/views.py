@@ -71,6 +71,7 @@ from pbx.fseventsocket import EventSocket
 
 @login_required
 def index(request):
+    no_menu_links = []
     local_message = None
     s = PbxSettings()
 
@@ -126,35 +127,44 @@ def index(request):
 
             currentmenu = s.settings(
                 pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True )[0]
-            m = Menu.objects.get(name=currentmenu)
+            try:
+                m = Menu.objects.get(name=currentmenu)
+            except Menu.DoesNotExist:
+                m = None
         else:
             request.session['user_uuid'] = 'ffffffff-aaaa-489c-aa00-1234567890ab'
             request.session['extension_list'] = 'None,None'
             request.session['extension_list_uuid'] = 'ffffffff-aaaa-489c-aa00-1234567890ab,'
-            m = Menu.objects.get(name='Default')
+            try:
+                m = Menu.objects.get(name='Default')
+            except Menu.DoesNotExist:
+                m = None
 
-        if request.user.is_superuser:
-            menuList = MenuItem.objects.filter(menu_id=m.id, parent_id__isnull=True).order_by('sequence')
-            submenuList = MenuItem.objects.filter(menu_id=m.id, parent_id__isnull=False).order_by('sequence')
+        if m:
+            if request.user.is_superuser:
+                menuList = MenuItem.objects.filter(menu_id=m.id, parent_id__isnull=True).order_by('sequence')
+                submenuList = MenuItem.objects.filter(menu_id=m.id, parent_id__isnull=False).order_by('sequence')
+            else:
+                groupList = list(request.user.groups.values_list('name', flat=True))
+                menuitemList = MenuItemGroup.objects.values_list(
+                    'menu_item_id', flat=True
+                    ).filter(name__in=groupList, menu_item_id__menu_id=m.id)
+                menuList = MenuItem.objects.filter(
+                    menu_id=m.id, parent_id__isnull=True, id__in=menuitemList
+                    ).order_by('sequence')
+                submenuList = MenuItem.objects.filter(
+                    menu_id=m.id, parent_id__isnull=False, id__in=menuitemList
+                    ).order_by('sequence')
+
+            mainmenu = MenuItemNavSerializer(menuList, many=True)
+            menudata = mainmenu.data
+            request.session['portalmenu'] = menudata
+
+            submenu = MenuItemNavSerializer(submenuList, many=True)
+            submenudata = submenu.data
+            request.session['portalsubmenu'] = submenudata
         else:
-            groupList = list(request.user.groups.values_list('name', flat=True))
-            menuitemList = MenuItemGroup.objects.values_list(
-                'menu_item_id', flat=True
-                ).filter(name__in=groupList, menu_item_id__menu_id=m.id)
-            menuList = MenuItem.objects.filter(
-                menu_id=m.id, parent_id__isnull=True, id__in=menuitemList
-                ).order_by('sequence')
-            submenuList = MenuItem.objects.filter(
-                menu_id=m.id, parent_id__isnull=False, id__in=menuitemList
-                ).order_by('sequence')
-
-        mainmenu = MenuItemNavSerializer(menuList, many=True)
-        menudata = mainmenu.data
-        request.session['portalmenu'] = menudata
-
-        submenu = MenuItemNavSerializer(submenuList, many=True)
-        submenudata = submenu.data
-        request.session['portalsubmenu'] = submenudata
+            no_menu_links = ['/admin/','/portal/pbxlogout/']
 
         redirect_to = request.POST.get(
             'next', request.GET.get('next', '')
@@ -167,7 +177,7 @@ def index(request):
             ):
                 return HttpResponseRedirect(redirect_to)
 
-    return render(request, 'portal/index.html', {})
+    return render(request, 'portal/index.html', {'nomenulinks': no_menu_links})
 
 
 @login_required

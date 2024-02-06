@@ -2,4 +2,6 @@
 
 {% load i18n static %}
 
-
+{% block nomenu %}
+{% for l in nomenulinks %}<a href="{{ l }}">{{ l }}</a><br>{% endfor %}
+{% endblock %}

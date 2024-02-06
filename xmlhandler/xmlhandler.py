@@ -96,7 +96,10 @@ class XmlHandler():
             allowed_addresses = aa.split(',')
         else:
             allowed_addresses = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
-            aa = ','.join(allowed_addresses)
+            if allowed_addresses:
+                aa = ','.join(allowed_addresses)
+            else:
+                aa = '127.0.0.1'
             cache.set(cache_key, aa)
         return allowed_addresses
 
