@@ -95,8 +95,10 @@ class CommonDestAction():
             if e_list:
                 cd_actions.append((self.decorate('Bridges', decorate), d_list))
 
-        # Placeholder: Call Centers
-        #if opt & 2 == 2:
+        if opt & 2 == 2:
+            d_list = self.get_dp_list('Call centre')
+            if d_list:
+                cd_actions.append((self.decorate('Call Centres', decorate), d_list))
 
         if opt & 4 == 4:
             d_list = self.get_dp_list('Call flows')
@@ -107,8 +109,10 @@ class CommonDestAction():
             if cg_list:
                 cd_actions.append((self.decorate('Call groups', decorate), cg_list))
 
-        #if opt & 16 == 16:
-        # Placeholder: Conferences
+        if opt & 16 == 16:
+            d_list = self.get_dp_list('Conference centre')
+            if d_list:
+                cd_actions.append((self.decorate('Conference Centres', decorate), d_list))
 
         if opt & 32 == 32:
             d_list = self.get_dp_list('N/A', True)
