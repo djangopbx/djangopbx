@@ -37,6 +37,10 @@ Telephony features include:
 - Find Me / Follow Me
 - Ability to directly edit XML in the Web UI
 
+## Documentation
+
+Documentation is available on the [DjangoPBX Site](https://www.djangopbx.com/static/documentation/) and can be contributed to via its own [respository](https://github.com/djangopbx/djangopbx-docs)
+
 ## Under development
 This code has entered a stage of Alpha Testing.
 Several test deployments have been made and testing is underway.
