@@ -243,7 +243,6 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
     sudo -u django-pbx bash -c 'source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py loaddata --app tenants defaultsetting.json'
     sudo -u django-pbx bash -c "source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py updatedefaultsetting --category cluster --subcategory switch_name_1 --value $HOSTNAME"
-    sudo -u django-pbx bash -c "source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py updatedefaultsetting --category cluster --subcategory message_broker_password --value $rabbitmq_password"
 fi
 
 pbx_prompt $skip_prompts "Load Default Provision Settings? "
