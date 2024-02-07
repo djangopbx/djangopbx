@@ -38,6 +38,10 @@ default_domain_name=admin.mydomain.com
 #  if set to "yes", default data sets will be loaded without prompting.
 skip_prompts="no"
 
+# Scaling and Clustering Options
+core_sequence_increment=10
+core_sequence_start=1001
+
 ########################### Configuration End ################################
 ##############################################################################
 
