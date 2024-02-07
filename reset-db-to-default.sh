@@ -273,6 +273,20 @@ then
     sudo -u django-pbx bash -c 'source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py menudefaults --force true'
 fi
 
+###############################################
+# API Key
+###############################################
+pbx_prompt $skip_prompts "Generate an initial API key? "
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    echo ""
+    echo "########################################################"
+    sudo -u django-pbx bash -c 'source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py createapikey initial-install'
+    echo "########################################################"
+
+fi
+
+
 
 cd $cwd
 echo " "
