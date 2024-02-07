@@ -32,11 +32,11 @@
 #                         Configuration Section                              #
 ##############################################################################
 
-default_domain_name=admin.mydomain.com
+default_domain_name=`/bin/hostname -f`
 
 # Loading Default Data
 #  if set to "yes", default data sets will be loaded without prompting.
-skip_prompts="no"
+skip_prompts="yes"
 
 # Scaling and Clustering Options
 core_sequence_increment=10
