@@ -477,7 +477,7 @@ class SwitchDp():
                 pin_length = 8
 
         httapi_url = pbxsettings.default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)[0]
-        path_of_xml = settings.BASE_DIR / 'dialplans/resources/switch/conf/dialplan'
+        path_of_xml = settings.BASE_DIR / 'dialplans/resources/switch/conf/dialplans-enabled'
         ext = ('.xml')
         for files in os.listdir(path_of_xml):
             if files.endswith(ext):
