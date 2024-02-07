@@ -32,11 +32,11 @@
 #                         Configuration Section                              #
 ##############################################################################
 
-default_domain_name=admin.mydomain.com
+default_domain_name=`/bin/hostname -f`
 
 # Loading Default Data
 #  if set to "yes", default data sets will be loaded without prompting.
-skip_prompts="no"
+skip_prompts="yes"
 
 # Scaling and Clustering Options
 core_sequence_increment=10
@@ -267,7 +267,7 @@ fi
 ###############################################
 # Menu Defaults
 ###############################################
-pbx_prompt n "Load Menu Defaults? "
+pbx_prompt $skip_prompts "Load Menu Defaults? "
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     sudo -u django-pbx bash -c 'source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py menudefaults --force true'
