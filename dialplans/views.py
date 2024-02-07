@@ -190,7 +190,9 @@ def newibroute(request):
 
             if ':' in action:
                 parts = action.split(':', 1)
-            etree.SubElement(x_condition, 'action', application=parts[0], data=parts[1])
+                etree.SubElement(x_condition, 'action', application=parts[0], data=parts[1])
+            else:
+                etree.SubElement(x_condition, 'action', application=action, data='')
 
             etree.indent(x_root)
             dp.xml = str(etree.tostring(x_root), "utf-8").replace('&lt;', '<')
