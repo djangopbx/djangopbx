@@ -281,7 +281,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo ""
     echo "########################################################"
-    sudo -u django-pbx bash -c 'source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py createapikey initial-install'
+    sudo -u django-pbx bash -c 'source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py createapikey --user initial-install'
     echo "########################################################"
 
 fi
