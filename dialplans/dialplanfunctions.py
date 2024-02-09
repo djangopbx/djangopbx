@@ -493,6 +493,23 @@ class SwitchDp():
             else:
                 continue
 
+    def update_xml(self, obj, change=None):
+        regex = re.compile('expression=\"(.*)\"', re.MULTILINE)
+        # FreeSWITCH doesn't seem to mind < and > in an XML attribute although technically wrong, but lxml does mind.
+        xml = regex.sub(lambda m: m.group().replace('<', "&lt;").replace('>', "&gt;"), obj.xml)
+        parser = etree.XMLParser(remove_comments=True)
+        tree = etree.parse(StringIO(xml), parser)
+        root = tree.getroot()
+        if len(root):  # check root has children
+            root.set('name', obj.name)
+            root.set('continue', obj.dp_continue)
+            if change:
+                root.set('uuid', str(obj.id))
+            else:
+                root.set('uuid', str(uuid.uuid4()))
+        etree.indent(root)
+        return str(etree.tostring(root), "utf-8").replace('&lt;', '<').replace('&gt;', '>')
+
     def create_dp_from_xml(self, xml, dp_remove=False, dp_details=True):
         parser = etree.XMLParser(remove_comments=True)
         tree = etree.parse(StringIO(xml), parser)

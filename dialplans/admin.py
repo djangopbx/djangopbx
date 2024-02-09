@@ -206,6 +206,8 @@ class DialplanAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         app_uuids = DpApps().get_dp_apps_uuids()
         obj.updated_by = request.user.username
+        if obj.xml:
+            obj.xml = SwitchDp().update_xml(obj, change)
         if obj.category not in ['Default', 'Default Modified']:
             obj.app_id = app_uuids[obj.category]
         if not change:
