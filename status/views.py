@@ -136,7 +136,7 @@ def modules(request, moduuid=None, action=None, host=None):
             else:
                 messages.add_message(request, messages.WARNING, _('Module %s Failed' % cmd))
 
-        mods = Modules.objects.filter(enabled='true').order_by('category', 'label')
+        mods = Modules.objects.filter(default_enabled='true').order_by('category', 'label')
         for m in mods:
             es.clear_responses()
             es.send('api module_exists %s' % m.name, host)

@@ -851,7 +851,7 @@
     "fields": {
         "category": "Codecs",
         "name": "outbound_codec_prefs",
-        "value": "G729,PCMA",
+        "value": "PCMU,PCMA",
         "command": "set",
         "hostname": null,
         "enabled": "true",
@@ -995,7 +995,7 @@
     "fields": {
         "category": "Codecs",
         "name": "global_codec_prefs",
-        "value": "G729,PCMA",
+        "value": "G7221@32000h,G7221@16000h,G722,PCMU,PCMA",
         "command": "set",
         "hostname": null,
         "enabled": "true",
