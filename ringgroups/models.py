@@ -99,16 +99,16 @@ class RingGroup(models.Model):
 
 
 class RingGroupDestination(models.Model):
-    id                 = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Ring Group Destination'))                                                 # noqa: E501, E221
-    ring_group_id      = models.ForeignKey('RingGroup', on_delete=models.CASCADE, verbose_name=_('Ring Group'))                                                                           # noqa: E501, E221
-    number             = models.CharField(max_length=128, blank=False, null=False, verbose_name=_('Number'))                                                                              # noqa: E501, E221
-    delay              = models.DecimalField(max_digits=3, decimal_places=0, default=0, verbose_name=_('Delay'))                                                                          # noqa: E501, E221
-    timeout            = models.DecimalField(max_digits=3, decimal_places=0, default=30, verbose_name=_('Timeout'))                                                                       # noqa: E501, E221
-    destination_prompt = models.DecimalField(max_digits=3, decimal_places=0, choices=RingGroupDestPromptChoice.choices, default=RingGroupDestPromptChoice.CNONE, verbose_name=_('Promp')) # noqa: E501, E221
-    created            = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                                        # noqa: E501, E221
-    updated            = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                            # noqa: E501, E221
-    synchronised       = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                                      # noqa: E501, E221
-    updated_by         = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                                    # noqa: E501, E221
+    id                 = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Ring Group Destination'))                                                  # noqa: E501, E221
+    ring_group_id      = models.ForeignKey('RingGroup', on_delete=models.CASCADE, verbose_name=_('Ring Group'))                                                                            # noqa: E501, E221
+    number             = models.CharField(max_length=128, blank=False, null=False, verbose_name=_('Number'))                                                                               # noqa: E501, E221
+    delay              = models.DecimalField(max_digits=3, decimal_places=0, default=0, verbose_name=_('Delay'))                                                                           # noqa: E501, E221
+    timeout            = models.DecimalField(max_digits=3, decimal_places=0, default=30, verbose_name=_('Timeout'))                                                                        # noqa: E501, E221
+    destination_prompt = models.DecimalField(max_digits=3, decimal_places=0, choices=RingGroupDestPromptChoice.choices, default=RingGroupDestPromptChoice.CNONE, verbose_name=_('Prompt')) # noqa: E501, E221
+    created            = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                                         # noqa: E501, E221
+    updated            = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                             # noqa: E501, E221
+    synchronised       = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                                       # noqa: E501, E221
+    updated_by         = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                                     # noqa: E501, E221
 
     class Meta:
         verbose_name_plural = 'Ring Group Destinations'

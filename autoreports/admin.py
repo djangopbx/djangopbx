@@ -104,6 +104,7 @@ class AutoReportsResource(resources.ModelResource):
 
 class AutoReportsAdmin(ImportExportModelAdmin):
     resource_class = AutoReportsResource
+    save_on_top = True
     save_as = True
 
     class Media:
