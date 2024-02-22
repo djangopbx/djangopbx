@@ -38,7 +38,7 @@ from .timeconditions import TimeConditions
 
 class NewIbRouteForm(forms.Form):
 
-    prefix             = forms.CharField(label=_('Prefix'), widget=forms.TextInput(attrs={'class': 'form-control form-control-sm'}), max_length=16, required=False, help_text=_('Adds and optional prefix to the destination.'))               # noqa: E501, E221
+    prefix             = forms.CharField(label=_('Prefix'), widget=forms.TextInput(attrs={'class': 'form-control form-control-sm'}), max_length=16, required=False, help_text=_('Adds an optional prefix to the destination.'))               # noqa: E501, E221
     destination        = forms.CharField(label=_('Destination'), widget=forms.TextInput(attrs={'class': 'form-control form-control-sm'}), max_length=128, required=True, help_text=_('Type a DID number, Regex, or use the N,X,Z notation.'))  # noqa: E501, E221
 #    calleridname       = forms.CharField(label=_('Caller ID Name'), widget=forms.TextInput(attrs={'class': 'form-control form-control-sm'}), max_length=128, required=False)              # noqa: E501, E221
 #    calleridnumber     = forms.CharField(label=_('Caller ID Prefix'), widget=forms.TextInput(attrs={'class': 'form-control form-control-sm'}), max_length=128, required=False, help_text=_('This is a short prefix that can be added to the inbound caller ID name.  It helps to identify the trunk if more than one is configured.'))  # noqa: E501, E221
