@@ -26,7 +26,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-import uuid
 from lxml import etree
 from pbx.commonfunctions import str2regex
 
