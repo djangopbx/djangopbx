@@ -29,8 +29,10 @@
 
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework import permissions
+#from rest_framework.views import APIView
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
@@ -54,16 +56,93 @@ from .models import (
     Dialplan, DialplanDetail,
 )
 from .serializers import (
-    DialplanSerializer, DialplanDetailSerializer,
+    DialplanSerializer, DialplanDetailSerializer, InboundRouteSerializer
 )
 
 from .forms import NewIbRouteForm, NewObRouteForm, TimeConditionForm
 from .dialplanfunctions import SwitchDp
-from pbx.commonfunctions import str2regex
+from pbx.commonfunctions import DomainUtils, str2regex
 from pbx.commondestination import CommonDestAction
 from accounts.accountfunctions import AccountFunctions
 from tenants.pbxsettings import PbxSettings
 from tenants.models import Domain
+from django.db.models import Value
+from .inboundroute import InboundRoute
+
+#from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+
+
+class DialplanInboundRoute(viewsets.ViewSet):
+    serializer_class = InboundRouteSerializer
+
+    def list(self, request):
+        queryset = Dialplan.objects.filter(category='Inbound route').annotate(
+            prefix=Value(''),
+            caller_id_name_prefix=Value(''),
+            application=Value('transfer'),
+            data=Value('201 XML djangopbx.com'),
+            record=Value('N/A'),
+            account_code=Value('')
+            ).order_by('sequence', 'name')
+        serializer = InboundRouteSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        query = Dialplan.objects.filter(pk=pk).annotate(
+            prefix=Value(''),
+            application=Value('transfer'),
+            data=Value('201 XML djangopbx.com'),
+            caller_id_name_prefix=Value(''),
+            record=Value('N/A'),
+            account_code=Value('')
+            ).first()
+        serializer = InboundRouteSerializer(instance=query, context={'request': request})
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = InboundRouteSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            ibr = serializer.save()
+            d = DomainUtils().domain_from_name(ibr.domain_id)
+            if d:
+                dp = Dialplan.objects.create(
+                    domain_id=d,
+                    app_id='c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4',
+                    name=ibr.number,
+                    number=ibr.number,
+                    destination='false',
+                    context=ibr.context,
+                    category='Inbound route',
+                    dp_continue='false',
+                    sequence=100,
+                    enabled=ibr.enabled,
+                    description=ibr.description,
+                    updated_by=request.user.username
+                )
+                dp.xml = ibr.generate_xml(dp)
+                dp.save()
+                data = serializer.data
+                data['id'] = str(dp.id)
+                data['url'] = request.build_absolute_uri('/api/dialplan_ib_route/%s/' % str(dp.id))
+                return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Commented out because we don't want an update form, an inbound route is a dialplan record
+#  so it can be updated there.  Thsi class just generates new inbound routes and
+#  allows existing ones to be deleted.
+#
+#    def update(self, request, pk=None):
+#        pass
+
+#    def partial_update(self, request, pk=None):
+#        pass
+
+    def destroy(self, request, pk=None):
+        try:
+            Dialplan.objects.get(pk=pk).delete()
+        except Dialplan.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class DialplanViewSet(viewsets.ModelViewSet):
@@ -73,7 +152,7 @@ class DialplanViewSet(viewsets.ModelViewSet):
     queryset = Dialplan.objects.all().order_by('sequence', 'name')
     serializer_class = DialplanSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['domain_id', 'name']
+    filterset_fields = ['domain_id', 'name', 'category']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -110,92 +189,33 @@ class DialplanDetailViewSet(viewsets.ModelViewSet):
 def newibroute(request):
     dp_uuid = False
     if request.method == 'POST':
-
         form = NewIbRouteForm(request.POST)
         form.fields['action'].choices = CommonDestAction(request.session['domain_name'], request.session['domain_uuid']).get_action_choices()
-
         if form.is_valid():
-
-            prefix             = form.cleaned_data['prefix']              # noqa: E221
-            destination        = form.cleaned_data['destination']         # noqa: E221
-            # calleridname     = form.cleaned_data['calleridname']        # noqa: E221
-            # calleridnumber   = form.cleaned_data['calleridnumber']      # noqa: E221
-            context            = form.cleaned_data['context']             # noqa: E221
-            action             = form.cleaned_data['action']              # noqa: E221
-            calleridnameprefix = form.cleaned_data['calleridnameprefix']  # noqa: E221
-            record             = form.cleaned_data['record']              # noqa: E221
-            accountcode        = form.cleaned_data['accountcode']         # noqa: E221
-            enabled            = form.cleaned_data['enabled']             # noqa: E221
-            description        = form.cleaned_data['description']         # noqa: E221
-
-            dp = SwitchDp().dp_add(
-                                    request.session['domain_uuid'], 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4',
-                                    destination, destination, 'false', context, 'Inbound route', 'false',
-                                    100, enabled, description, request.user.username
-                                    )
-
-            dp_uuid = str(dp.id)
-            x_root = etree.Element('extension', name=dp.name)
-            x_root.set('continue', dp.dp_continue)
-            x_root.set('uuid', dp_uuid)
-            x_condition = etree.SubElement(
-                x_root, 'condition', field='destination_number',
-                expression=str2regex(destination, prefix)
-                )
-            etree.SubElement(x_condition, 'action', application='export', data='call_direction=inbound', inline='true')
-            etree.SubElement(
-                x_condition, 'action', application='set',
-                data='domain_uuid=%s' % request.session['domain_uuid'], inline='true'
-                )
-            etree.SubElement(
-                x_condition, 'action', application='set',
-                data='domain_name=%s' % request.session['domain_name'], inline='true'
-                )
-            etree.SubElement(x_condition, 'action', application='set', data='hangup_after_bridge=true')
-            etree.SubElement(x_condition, 'action', application='set', data='continue_on_fail=true')
-            if calleridnameprefix:
-                etree.SubElement(
-                    x_condition, 'action', application='set',
-                    data='effective_caller_id_name=%s#${caller_id_name}' % calleridnameprefix
-                    )
-            if record == 'true':
-                etree.SubElement(
-                    x_condition, 'action', application='set',
-                    data='record_path=${recordings_dir}/${domain_name}/'
-                    'archive/${strftime(%Y)}/${strftime(%b)}/${strftime(%d)}',
-                    inline='true'
-                    )
-                etree.SubElement(
-                    x_condition, 'action', application='set',
-                    data='record_name=${uuid}.${record_ext}', inline='true'
-                    )
-                etree.SubElement(
-                    x_condition, 'action', application='set',
-                    data='record_append=true', inline='true'
-                    )
-                etree.SubElement(
-                    x_condition, 'action', application='set',
-                    data='record_in_progress=true', inline='true'
-                    )
-                etree.SubElement(
-                    x_condition, 'action', application='set',
-                    data='recording_follow_transfer=true', inline='true'
-                    )
-                etree.SubElement(
-                    x_condition, 'action', application='record_session',
-                    data='${record_path}/${record_name}'
-                    )
-            if accountcode:
-                etree.SubElement(x_condition, 'action', application='set', data='accountcode=%s' % accountcode)
-
+            ibr = InboundRoute()
+            ibr.prefix             = form.cleaned_data['prefix']              # noqa: E221
+            ibr.number             = form.cleaned_data['destination']         # noqa: E221
+            ibr.context            = form.cleaned_data['context']             # noqa: E221
+            action                 = form.cleaned_data['action']              # noqa: E221
+            ibr.calleridnameprefix = form.cleaned_data['calleridnameprefix']  # noqa: E221
+            ibr.record             = form.cleaned_data['record']              # noqa: E221
+            ibr.accountcode        = form.cleaned_data['accountcode']         # noqa: E221
+            ibr.enabled            = form.cleaned_data['enabled']             # noqa: E221
+            ibr.description        = form.cleaned_data['description']         # noqa: E221
             if ':' in action:
                 parts = action.split(':', 1)
-                etree.SubElement(x_condition, 'action', application=parts[0], data=parts[1])
+                ibr.application = parts[0]
+                ibr.data=parts[1]
             else:
-                etree.SubElement(x_condition, 'action', application=action, data='')
-
-            etree.indent(x_root)
-            dp.xml = str(etree.tostring(x_root), "utf-8").replace('&lt;', '<')
+                ibr.application=action
+                ibr.data=''
+            ibr.domain_id = request.session['domain_name']
+            dp = SwitchDp().dp_add(
+                                    request.session['domain_uuid'], 'c03b422e-13a8-bd1b-e42b-b6b9b4d27ce4',
+                                    ibr.number, ibr.number, 'false', ibr.context, 'Inbound route', 'false',
+                                    100, ibr.enabled, ibr.description, request.user.username
+                                    )
+            dp.xml = ibr.generate_xml(dp)
             dp.save()
             messages.add_message(request, messages.INFO, _('Inbound route added'))
         else:
@@ -203,7 +223,6 @@ def newibroute(request):
     else:
         form = NewIbRouteForm()
         form.fields['action'].choices = CommonDestAction(request.session['domain_name'], request.session['domain_uuid']).get_action_choices()
-
     return render(request, 'dialplans/newibroute.html', {'dp_uuid': dp_uuid, 'form': form, 'refresher': 'newibroute'})
 
 

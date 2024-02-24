@@ -31,6 +31,12 @@ from rest_framework import serializers
 from .models import (
     Dialplan, DialplanDetail,
 )
+from .inboundroute import InboundRoute
+
+STATUS = (
+    'true',
+    'false',
+)
 
 
 class DialplanSerializer(serializers.ModelSerializer):
@@ -56,3 +62,34 @@ class DialplanDetailSerializer(serializers.ModelSerializer):
                     'dp_break', 'inline', 'group', 'sequence',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
+
+
+class InboundRouteSerializer(serializers.Serializer):
+
+    url                   = serializers.SerializerMethodField()                                                   # noqa: E501, E221
+    id                    = serializers.UUIDField(read_only=True)                                                 # noqa: E501, E221
+    domain_id             = serializers.CharField(max_length=128, required=True, initial='djangopbx.com')         # noqa: E501, E221
+    current_xml           = serializers.CharField(source='xml', read_only=True)                                   # noqa: E501, E221
+    prefix                = serializers.CharField(max_length=16, required=False)                                  # noqa: E501, E221
+    number                = serializers.CharField(max_length=128, required=True)                                  # noqa: E501, E221
+    context               = serializers.CharField(max_length=128, initial='public', required=True)                # noqa: E501, E221
+    application           = serializers.CharField(max_length=64, initial='transfer', required=True)               # noqa: E501, E221
+    data                  = serializers.CharField(max_length=128, initial='201 XML djangopbx.com', required=True) # noqa: E501, E221
+    caller_id_name_prefix = serializers.CharField(max_length=32, required=False)                                  # noqa: E501, E221
+    record                = serializers.ChoiceField(choices=STATUS, initial='false', default='false')             # noqa: E501, E221
+    account_code          = serializers.CharField(max_length=32, required=False)                                  # noqa: E501, E221
+    enabled               = serializers.ChoiceField(choices=STATUS, default='true')                               # noqa: E501, E221
+    description           = serializers.CharField(max_length=254, required=False)                                 # noqa: E501, E221
+
+    def get_url(self, obj):
+        if hasattr(obj, 'id'):
+            if obj.id:
+                return self.context['request'].build_absolute_uri('/api/dialplan_ib_route/%s/' % obj.id)
+        return self.context['request'].build_absolute_uri('/api/dialplan_ib_route/')
+
+    def create(self, validated_data):
+        return InboundRoute(id=None, **validated_data)
+
+    def update(self, instance, validated_data):
+        return instance
+

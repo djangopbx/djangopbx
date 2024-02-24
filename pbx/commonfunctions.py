@@ -100,6 +100,13 @@ class DomainUtils():
             return None
         return d
 
+    def domain_from_name(self, name):
+        try:
+            d = Domain.objects.get(name=name)
+        except Domain.DoesNotExist:
+            return None
+        return d
+
 
 class DomainFilter(admin.SimpleListFilter):
     title = _('Domain')
