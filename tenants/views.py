@@ -143,6 +143,26 @@ class DefaultSettingViewSet(viewsets.ModelViewSet):
         instance = serializer.save(updated_by=self.request.user.username)
 
 
+class TimeConditionPresetsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Timecondition Presets Settings to be viewed or edited.
+    """
+    queryset = DefaultSetting.objects.filter(category='time_conditions').order_by('subcategory')
+    serializer_class = DefaultSettingSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['app_uuid', 'subcategory', 'value_type']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        instance = serializer.save(updated_by=self.request.user.username)
+
+
 class DomainSettingViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Domain Settings to be viewed or edited.
