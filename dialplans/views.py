@@ -543,7 +543,10 @@ def timecondition(request, dpuuid=None):
             xml_list.append(' '.join(cnd))
             cnd.clear()
             a = request.POST['settings_a_%s' % i].split(':')
-            xml_list.append('        <action application=\"%s\" data=\"%s\"/>' % (a[0], a[1]))
+            if len(a) > 1:
+                xml_list.append('        <action application=\"%s\" data=\"%s\"/>' % (a[0], a[1]))
+            else:
+                xml_list.append('        <action application=\"%s\" data=\"\"/>' % (a[0]))
             xml_list.append('    </condition>')
             if cond_add:
                 try:

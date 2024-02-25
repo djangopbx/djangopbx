@@ -38,7 +38,7 @@ router.register(r'profiles', views.ProfileViewSet)
 router.register(r'default_settings', views.DefaultSettingViewSet)
 router.register(r'domain_settings', views.DomainSettingViewSet)
 router.register(r'profile_settings', views.ProfileSettingViewSet)
-router.register(r'time_condition_presets', views.TimeConditionPresetsViewSet)
+router.register(r'time_condition_presets', views.TimeConditionPresetsViewSet, basename='time_condition_presets')
 
 urlpatterns = [
 ]
