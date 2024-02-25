@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +27,15 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+init_alt_dest = """<condition field="destination_number" expression="^6655$">
+    <action application="transfer" data="202 XML djangopbx.com"/>
+</condition>
+"""
 
-router = routers.DefaultRouter()
-router.register(r'dialplans', views.DialplanViewSet)
-router.register(r'dialplan_details', views.DialplanDetailViewSet)
-router.register(r'dialplan_ib_route', views.DialplanInboundRoute, basename='dialplan_ib_route')
-router.register(r'dialplan_ob_route', views.DialplanOutboundRoute, basename='dialplan_ob_route')
-router.register(r'dialplan_time_condition', views.DialplanTimeCondition, basename='dialplan_time_condition')
-
-urlpatterns = [
-    path('newibroute/', views.newibroute, name='newibroute'),
-    path('newobroute/', views.newobroute, name='newobroute'),
-    path('timeconditionviewer/', views.TimeConditionViewer.as_view(), name='timeconditionviewer'),
-    path('timecondition/', views.timecondition, name='timecondition'),
-    path('timecondition/<dpuuid>/', views.timecondition, name='timecondition'),
-    path('tcvrchoice', views.tcvrchoice, name='tcvrchoice'),
-
-]
+init_settings = """<settings>
+<condition field="destination_number" expression="^6655$"/>
+<condition wday="2-5" minute-of-day="510-1020" break="never">
+    <action application="transfer" data="201 XML djangopbx.com"/>
+</condition>
+</settings>
+"""

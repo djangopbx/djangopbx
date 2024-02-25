@@ -33,6 +33,9 @@ from .models import (
 )
 from .inboundroute import InboundRoute
 from .outboundroute import OutboundRoute
+from .timecondition import TimeCondition
+from .initials import init_settings, init_alt_dest
+
 
 STATUS = (
     'true',
@@ -127,3 +130,30 @@ class OutboundRouteSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         return instance
 
+
+class TimeConditionSerializer(serializers.Serializer):
+
+    url                   = serializers.SerializerMethodField()                                                                     # noqa: E501, E221
+    id                    = serializers.UUIDField(read_only=True)                                                                   # noqa: E501, E221
+    domain_id             = serializers.CharField(max_length=128, required=True, initial='djangopbx.com')                           # noqa: E501, E221
+    current_xml           = serializers.CharField(source='xml', read_only=True)                                                     # noqa: E501, E221
+    name                  = serializers.CharField(max_length=64, required=True, initial='New Time Condition')                       # noqa: E501, E221
+    number                = serializers.CharField(max_length=128, required=True, initial='6655')                                    # noqa: E501, E221
+    context               = serializers.CharField(max_length=128, required=True, initial='djangopbx.com')                           # noqa: E501, E221
+    settings              = serializers.CharField(read_only=False, initial=init_settings, style={'base_template': 'textarea.html'}) # noqa: E501, E221
+    alternate_destination = serializers.CharField(required=True, initial=init_alt_dest, style={'base_template': 'textarea.html'})   # noqa: E501, E221
+    sequence              = serializers.IntegerField(min_value=100, initial=301, default=301)                                       # noqa: E501, E221
+    enabled               = serializers.ChoiceField(choices=STATUS, default='true')                                                 # noqa: E501, E221
+    description           = serializers.CharField(max_length=254, required=False)                                                   # noqa: E501, E221
+
+    def get_url(self, obj):
+        if hasattr(obj, 'id'):
+            if obj.id:
+                return self.context['request'].build_absolute_uri('/api/dialplan_time_condition/%s/' % obj.id)
+        return self.context['request'].build_absolute_uri('/api/dialplan_time_condition/')
+
+    def create(self, validated_data):
+        return TimeCondition(id=None, **validated_data)
+
+    def update(self, instance, validated_data):
+        return instance

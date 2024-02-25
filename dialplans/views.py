@@ -38,6 +38,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseNotFound
 from lxml import etree
 import uuid
+import re
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.utils.html import format_html
@@ -56,7 +57,7 @@ from .models import (
 )
 from .serializers import (
     DialplanSerializer, DialplanDetailSerializer, InboundRouteSerializer,
-    OutboundRouteSerializer,
+    OutboundRouteSerializer, TimeConditionSerializer,
 )
 
 from .forms import NewIbRouteForm, NewObRouteForm, TimeConditionForm
@@ -69,6 +70,7 @@ from tenants.models import Domain
 from django.db.models import Value
 from .inboundroute import InboundRoute
 from .outboundroute import OutboundRoute
+from .timecondition import TimeCondition
 
 
 class DialplanInboundRoute(viewsets.ViewSet):
@@ -201,6 +203,94 @@ class DialplanOutboundRoute(viewsets.ViewSet):
                 data = serializer.data
                 data['id'] = str(dp.id)
                 data['url'] = request.build_absolute_uri('/api/dialplan_ob_route/%s/' % str(dp.id))
+                return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        try:
+            Dialplan.objects.get(pk=pk).delete()
+        except Dialplan.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class DialplanTimeCondition(viewsets.ViewSet):
+    serializer_class = TimeConditionSerializer
+
+    def list(self, request):
+        queryset = Dialplan.objects.filter(category='Time condition').annotate(
+            settings=Value(''),
+            alternate_destination=Value(''),
+            ).order_by('sequence', 'name')
+        serializer = TimeConditionSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        query = Dialplan.objects.filter(pk=pk).annotate(
+            settings=Value(''),
+            alternate_destination=Value(''),
+            ).first()
+        if query.xml:
+            settings = re.search('<extension[^>]*>\n?(.*)\n\n*</extension>.*', query.xml, re.DOTALL)
+            if settings:
+                slist = settings.group(1).replace('  ', ' ').replace('  ', ' ').split('\n')
+                query.settings = '<settings>\n%s\n</settings>' % ('\n'.join(slist[:-3]))
+                query.alternate_destination = '\n'.join(slist[-3:])
+        serializer = TimeConditionSerializer(instance=query, context={'request': request})
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = TimeConditionSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            tcnd = serializer.save()
+            d = DomainUtils().domain_from_name(tcnd.domain_id)
+            if d:
+                dp = Dialplan.objects.create(
+                    domain_id=d,
+                    app_id='4b821450-926b-175a-af93-a03c441818b1',
+                    name=tcnd.name,
+                    number=tcnd.number,
+                    destination='false',
+                    context=tcnd.context,
+                    category='Time condition',
+                    dp_continue='false',
+                    sequence=tcnd.sequence,
+                    enabled=tcnd.enabled,
+                    description=tcnd.description,
+                    updated_by=request.user.username
+                )
+                dp.xml = tcnd.generate_xml(dp)
+                dp.save()
+                data = serializer.data
+                data['id'] = str(dp.id)
+                data['url'] = request.build_absolute_uri('/api/dialplan_time_condition/%s/' % str(dp.id))
+                return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+        serializer = TimeConditionSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            tcnd = serializer.save()
+            d = DomainUtils().domain_from_name(tcnd.domain_id)
+            if d:
+                try:
+                    dp = Dialplan.objects.get(pk=pk)
+                except Dialplan.DoesNotExist:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
+
+                dp.domain_id=d
+                dp.name=tcnd.name
+                dp.number=tcnd.number
+                dp.context=tcnd.context
+                dp.sequence=tcnd.sequence
+                dp.enabled=tcnd.enabled
+                dp.description=tcnd.description
+                dp.updated_by=request.user.username
+                dp.xml = tcnd.generate_xml(dp)
+                dp.save()
+                data = serializer.data
+                data['id'] = str(dp.id)
+                data['url'] = request.build_absolute_uri('/api/dialplan_time_condition/%s/' % str(dp.id))
                 return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
