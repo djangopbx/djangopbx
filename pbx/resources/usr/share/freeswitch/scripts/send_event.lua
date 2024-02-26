@@ -28,20 +28,24 @@
 --
 
 -- prepare the API object
-    local api = freeswitch.API()
+    local api = freeswitch.API();
 
 -- create the event notify object
-    local event = freeswitch.Event('NOTIFY');
+    local event = freeswitch.Event(argv[1]);
+
+-- local variables
+    local t = { };
 
 -- add the headers
-    event:addHeader('profile', argv[1]);
-    event:addHeader('event-string', argv[2]);
-    event:addHeader('user', argv[3]);
-    event:addHeader('host', argv[4]);
-    event:addHeader('content-type', 'application/simple-message-summary');
+    for i, v in ipairs(argv) do
+        if v == "--h" then
+            event:addHeader(argv[i+1], argv[i+2]);
+            t[#t+1] = argv[i+1] .. "=" .. argv[i+2];
+        end
+    end
 
 -- send the event
     event:fire();
 
 --log the event
-    freeswitch.consoleLog("notice", "[event_notify] profile "..argv[1].." command "..argv[2].." "..argv[3].."@"..argv[4].."\n");
+    freeswitch.consoleLog("notice", "[event_" .. argv[1] .. "] " .. table.concat(t, ', ') .. "\n");

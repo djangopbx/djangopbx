@@ -37,8 +37,7 @@ from django.shortcuts import render
 from django.views import View
 from .forms import ClearCacheForm, ReloadXmlForm
 from dialplans.models import Dialplan
-from django.conf import settings
-from pbx.fseventsocket import EventSocket
+from pbx.fscmdabslayer import FsCmdAbsLayer
 
 phrases_available = True
 try:
@@ -125,25 +124,30 @@ class ReloadXmlView(View):
     template_name = "utilities/reloadxml.html"
 
     def get(self, request, *args, **kwargs):
+        es = FsCmdAbsLayer()
         form = self.form_class()
+        form.fields['host'].choices = [(h, h) for h in es.freeswitches]
         return render(request, self.template_name, {'form': form, 'refresher': 'reloadxml'})
 
     def post(self, request, *args, **kwargs):
+        es = FsCmdAbsLayer()
         form = self.form_class(request.POST)
+        form.fields['host'].choices = [(h, h) for h in es.freeswitches]
         if form.is_valid():
-            xml = form.cleaned_data['xml'] # noqa: E221
-            acl = form.cleaned_data['acl'] # noqa: E221
+            host = form.cleaned_data['host'] # noqa: E221
+            xml  = form.cleaned_data['xml']  # noqa: E221
+            acl  = form.cleaned_data['acl']  # noqa: E221
 
             if xml or acl:
-                es = EventSocket()
-                if not es.connect(*settings.EVSKT):
-                    return render(request, 'error.html', {'back': '/portal/', 'info': {'Message': _('Unable to connect to the FreeSWITCH Event Socket')}, 'title': 'Event Socket Error'})
-
+                if not es.connect():
+                    return render(request, 'error.html', {'back': '/portal/', 'info': {'Message': _('Unable to connect to the FreeSWITCH Event Socket')}, 'title': 'Broker/Socket Error'})
             if xml:
-                 es.send('api reloadxml')
-
+                 es.send('api reloadxml', host)
             if acl:
-                 es.send('api reloadacl')
+                 es.send('api reloadacl', host)
+            es.process_events()
+            es.get_responses()
+            es.disconnect()
 
             messages.add_message(request, messages.INFO, _('XML/ACL Reloaded'))
 

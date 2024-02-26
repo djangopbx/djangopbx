@@ -66,7 +66,7 @@ from .serializers import (
 
 from accounts.accountfunctions import AccountFunctions
 from switch.switchsounds import SwitchSounds
-from pbx.fseventsocket import EventSocket
+from pbx.fscmdabslayer import FsCmdAbsLayer
 
 
 @login_required
@@ -301,6 +301,7 @@ class ClickDial(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         c_vars = []
         dest = kwargs.get('dest', '')
+        host = kwargs.get('host')
         if dest:
             ss = SwitchSounds()
             eu = ExtensionUser.objects.filter(user_uuid=request.user.profile.user_uuid, default_user='true').first()
@@ -325,10 +326,15 @@ class ClickDial(LoginRequiredMixin, View):
             else:
                 cmd = 'api originate %suser/%s@%s %s XML %s' % (ch_vars, extn, context, dest, context)
 
-            es = EventSocket()
-            if es.connect(*settings.EVSKT):
-                print(cmd)
-                print(es.send(cmd))
+            es = FsCmdAbsLayer()
+            if es.connect():
+                if host:
+                    es.send(cmd, host)
+                else:
+                    es.send(cmd)
+                es.process_events()
+                es.get_responses()
+                es.disconnect()
 
         if request.META.get('HTTP_REFERER'):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

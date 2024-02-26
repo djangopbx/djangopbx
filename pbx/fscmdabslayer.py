@@ -75,8 +75,8 @@ class FsCmdAbsLayer:
         if self.loc_ev_skt:
             self.responses.append(self.broker.send(payload))
         else:
-            if payload.startswith('sendevent NOTIFY'):
-                self.broker.publish(self.parse_event(payload), host)
+            if payload.startswith('sendevent'):
+                self.broker.publish(self.build_event(payload), host)
                 return
             self.broker.publish(payload.removeprefix('api '), host)
 
@@ -100,11 +100,20 @@ class FsCmdAbsLayer:
     def disconnect(self):
         self.broker.disconnect()
 
+    def build_event(self, payload):
+        ev_name, hdrs = self.parse_event(payload)
+        return 'luarun send_event.lua %s --h %s' % (ev_name, ' --h '.join(['%s %s' % (k, v) for k, v in hdrs.items()]))
+
     def parse_event(self, payload):
         hdrs = {}
         ev = payload.split('\n')
+        ev_name = ev[0].split(' ')
+        if len(ev_name) > 0:
+            ev_name = ev_name[1]
+        else:
+            ev_name = 'NONE'
         for header in ev:
             if ':' in header:
                 h, v = header.split(': ')
                 hdrs[h] = v
-        return 'luarun send_notify.lua %s %s %s %s' % (hdrs['profile'], hdrs['event-string'], hdrs['user'], hdrs['host'])
+        return (ev_name, hdrs)
