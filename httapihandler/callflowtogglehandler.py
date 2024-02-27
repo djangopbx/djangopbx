@@ -51,6 +51,7 @@ class CallFlowToggleHandler(HttApiHandler):
             return self.return_data('Ok\n')
 
         self.get_domain_variables()
+        self.hostname = self.qdict.get('hostname')
         call_flow_uuid = self.qdict.get('callflow_uuid')
         try:
             q = CallFlows.objects.get(pk=call_flow_uuid)
@@ -88,7 +89,7 @@ class CallFlowToggleHandler(HttApiHandler):
                     directory_cache_key = 'dialplan:%s' % self.domain_name
                     cache.delete(directory_cache_key)
                     pe = PresenceIn()
-                    pe.send(str(q.id), q.status, q.feature_code, self.domain_name)
+                    pe.send(str(q.id), q.status, q.feature_code, self.domain_name, self.hostname)
                 else:
                     etree.SubElement(x_work, 'playback', file='phrase:voicemail_fail_auth:#')
                     etree.SubElement(x_work, 'hangup')

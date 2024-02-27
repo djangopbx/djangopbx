@@ -26,8 +26,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.conf import settings
-from .fseventsocket import EventSocket
+from pbx.fscmdabslayer import FsCmdAbsLayer
 from .scripts.resources.pbx.fsevent import FsEvent
 
 
@@ -35,15 +34,15 @@ class PresenceIn():
 
     def __init__(self):
         self.connected = False
-        self.es = EventSocket()
+        self.es = FsCmdAbsLayer()
         self.connect()
 
     def connect(self):
-        if self.es.connect(*settings.EVSKT):
+        if self.es.connect():
             self.connected = True
         return
 
-    def send(self, user_uuid, status, user_code, domain_name):
+    def send(self, user_uuid, status, user_code, domain_name, host=None):
         if not self.connected:
             return False
         user_id = '%s@%s' % (user_code, domain_name)
@@ -62,4 +61,8 @@ class PresenceIn():
             fse.addHeader('answer-state', 'confirmed');
             fse.addHeader('rpid', 'unknown');
             fse.addHeader('event_count', '1');
-        return self.es.send(fse.getEvent())
+        self.es.send(fse.getEvent(), host)
+        self.es.process_events()
+        self.es.get_responses()
+        self.es.disconnect()
+        return True

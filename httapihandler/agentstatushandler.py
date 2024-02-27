@@ -51,6 +51,7 @@ class AgentStatusHandler(HttApiHandler):
             return self.return_data('Ok\n')
 
         self.get_domain_variables()
+        self.hostname = self.qdict.get('hostname')
         self.uuid = self.qdict.get('uuid')
         agent_id = self.qdict.get('agent_id')
         agent_authorised = self.qdict.get('agent_authorized')
@@ -119,7 +120,7 @@ class AgentStatusHandler(HttApiHandler):
         etree.SubElement(self.x_work, 'pause', milliseconds='1000')
         if self.cca.user_uuid.status == 'Available':
             self.cca.user_uuid.status = 'Logged Out'
-            self.pe.send(str(self.cca.id), 'true', self.cca.name.replace(' ', '-'), self.domain_name)
+            self.pe.send(str(self.cca.id), 'true', self.cca.name.replace(' ', '-'), self.domain_name, self.hostname)
             action = 'logout'
             blf_status = 'true'
             etree.SubElement(self.x_work, 'playback',
@@ -127,14 +128,14 @@ class AgentStatusHandler(HttApiHandler):
 
         else:
             self.cca.user_uuid.status = 'Available'
-            self.pe.send(str(self.cca.id), 'false', self.cca.name.replace(' ', '-'), self.domain_name)
+            self.pe.send(str(self.cca.id), 'false', self.cca.name.replace(' ', '-'), self.domain_name, self.hostname)
             action = 'login'
             blf_status = 'false'
             etree.SubElement(self.x_work, 'playback',
                         file='ivr/ivr-you_are_now_logged_in.wav')
         self.cca.user_uuid.save()
         if not 'agent+' in self.cca.name:
-            self.pe.send(str(self.cca.id), blf_status, 'agent+%s' % self.cca.name.replace(' ', '-'), self.domain_name)
+            self.pe.send(str(self.cca.id), blf_status, 'agent+%s' % self.cca.name.replace(' ', '-'), self.domain_name, self.hostname)
 
         etree.SubElement(self.x_work, 'pause', milliseconds='2000')
         self.pe.es.send('api callcenter_config agent set status %s \'%s\'' % (str(self.cca.id), self.cca.user_uuid.status))

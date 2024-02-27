@@ -5,7 +5,7 @@
 |____// |\__,_|_| |_|\__, |\___/|_|   |____/_/\_\
     |__/             |___/
 
-Copyright 2006-2023 A2 Engineering Services
+Copyright 2006-2024 A2 Engineering Services
 
 Files in this directory and sub directories form a small ecosystem that do not
 invoke any of the Django application methods or processes.  They exist stand alone.
