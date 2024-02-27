@@ -113,8 +113,9 @@ def listvoicemails(request, vmuuid=None, vmext=None, action=None):
         es.send('api vm_list %s@%s' % (e, request.session['domain_name']))
         es.process_events(2)
         es.get_responses()
-        vmstr = next(iter(es.responses or []), None)
-        if not ('-ERR no reply' in vmstr or len(vmstr) < 1):
+        valid_resp_list = [x for x in es.responses if not '-ERR no reply' in x]
+        vmstr = '\n'.join(valid_resp_list)
+        if not len(vmstr) < 1:
             # '1670780459:0:201:test1.djangopbx.com:inbox:/var/lib/freeswitch/storage/voicemail/default/test1.djangopbx.com/201/msg_2740d2b1-de55-4425-b71e-4215647642ea.wav:68d2c984-78da-4d13-a48e-2e800fc7506f:Test1:202:7'  # noqa: E501
             vmlist = vmstr.split('\n')
             for vm in vmlist:

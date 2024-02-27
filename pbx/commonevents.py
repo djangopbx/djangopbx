@@ -61,6 +61,7 @@ class PresenceIn():
             fse.addHeader('answer-state', 'confirmed');
             fse.addHeader('rpid', 'unknown');
             fse.addHeader('event_count', '1');
+        self.es.clear_responses()
         self.es.send(fse.getEvent(), host)
         self.es.process_events()
         self.es.get_responses()

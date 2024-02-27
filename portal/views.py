@@ -328,6 +328,7 @@ class ClickDial(LoginRequiredMixin, View):
 
             es = FsCmdAbsLayer()
             if es.connect():
+                es.clear_responses()
                 if host:
                     es.send(cmd, host)
                 else:

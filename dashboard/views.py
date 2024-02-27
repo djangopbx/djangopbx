@@ -33,7 +33,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaulttags import register
-from django.conf import settings
 from django.utils import timezone
 
 import datetime
@@ -44,7 +43,7 @@ import multiprocessing
 import psutil
 from psutil._common import bytes2human
 import time
-from pbx.fseventsocket import EventSocket
+from pbx.fscmdabslayer import FsCmdAbsLayer
 from pbx.commonvalidators import clean_uuid4_list
 
 from tenants.models import Domain, Profile
@@ -268,29 +267,42 @@ class SwDashboard():
     sw_status_title = ''
 
     def __init__(self):
-        self.es = EventSocket()
-        if self.es.connect(*settings.EVSKT):
+        self.es = FsCmdAbsLayer()
+        if self.es.connect():
             self.esconnected = True
         self.get_config_counts()
         self.get_sw_status()
         self.get_live_counts()
+        self.es.disconnect()
+
+    def get_count_value(self):
+        self.es.process_events()
+        self.es.get_responses()
+        ctotal = 0
+        for resp in self.es.responses:
+            try:
+                ctmp = int(resp.replace(' total.', ''))
+            except ValueError:
+                ctmp = 0
+            ctotal += ctmp
+        return ctotal
 
     def get_live_counts(self):
         result = False
         if not self.esconnected:
             return
-        result = self.es.send('api show calls count')
+        self.es.clear_responses()
+        self.es.send('api show calls count')
         time.sleep(self.s)
-        if result:
-            self.sw_live['Calls'] = {'c': result.replace(' total.', '')}
-        result = self.es.send('api show channels count')
+        self.sw_live['Calls'] = {'c': self.get_count_value()}
+        self.es.clear_responses()
+        self.es.send('api show channels count')
         time.sleep(self.s)
-        if result:
-            self.sw_live['Channels'] = {'c': result.replace(' total.', '')}
-        result = self.es.send('api show registrations count')
+        self.sw_live['Channels'] = {'c': self.get_count_value()}
+        self.es.clear_responses()
+        self.es.send('api show registrations count')
         time.sleep(self.s)
-        if result:
-            self.sw_live['Registrations'] = {'c': result.replace(' total.', '')}
+        self.sw_live['Registrations'] = {'c': self.get_count_value()}
 
 
     def get_config_counts(self):
@@ -329,8 +341,12 @@ class SwDashboard():
         self.sw_status = []
         result = False
         if self.esconnected:
-            result = self.es.send('api show status')
+            self.es.clear_responses()
+            self.es.send('api show status', self.es.freeswitches[0]) # only show first switch if clustered
+            self.es.process_events()
+            self.es.get_responses()
             time.sleep(self.s)
+            result = next(iter(self.es.responses or []), None)
         if result:
             lines = result.splitlines()
             for line in lines:
@@ -376,12 +392,12 @@ class UsrDashboard():
 
     def __init__(self, request):
         self.request = request
-        self.es = EventSocket()
+        self.es = FsCmdAbsLayer()
         self.extnuuids = self.request.session.get('extension_list_uuid', '').split(',')
         clean_uuid4_list(self.extnuuids)
         self.extns = self.request.session.get('extension_list', '').split(',')
         self.time_24_hours_ago = timezone.now() - timezone.timedelta(1)
-        if self.es.connect(*settings.EVSKT):
+        if self.es.connect():
             self.esconnected = True
         self.groupList = list(request.user.groups.values_list('name', flat=True))
         self.get_recent_calls()
@@ -389,6 +405,7 @@ class UsrDashboard():
         self.get_voicemails()
         self.get_call_routing()
         self.get_ring_group()
+        self.es.disconnect()
 
     def get_recent_calls(self):
         qs = XmlCdr.objects.filter(domain_id=self.request.session['domain_uuid'],
@@ -425,8 +442,13 @@ class UsrDashboard():
         for e in self.extns:
             info[e] = {}
             info[e]['count'] = 0
+            self.es.clear_responses()
             vmstr = self.es.send('api vm_list %s@%s' % (e, self.request.session['domain_name']))
-            if '-ERR no reply' in vmstr:
+            self.es.process_events(2)
+            self.es.get_responses()
+            valid_resp_list = [x for x in self.es.responses if not '-ERR no reply' in x]
+            vmstr = '\n'.join(valid_resp_list)
+            if len(vmstr) < 1:
                 info[e]['msg'] = _('No Voicemail Messages')
             else:
                 vmlist = vmstr.split('\n')
