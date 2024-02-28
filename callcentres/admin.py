@@ -48,7 +48,7 @@ from switch.switchsounds import SwitchSounds
 from pbx.commonwidgets import ListTextWidget
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from pbx.commondestination import CommonDestAction
-from pbx.fseventsocket import EventSocket
+from pbx.fscmdabslayer import FsCmdAbsLayer
 from .callcentrefunctions import CcFunctions
 
 
@@ -96,38 +96,47 @@ class CallCentreTiersAdmin(ImportExportModelAdmin):
     def fire_fs_events(self, obj, change, delete=False):
         ret = True
         s = 0.0001
-        es = EventSocket()
-        if not es.connect(*settings.EVSKT):
+        es = FsCmdAbsLayer()
+        if not es.connect():
             return False
 
         if delete:
             # delete the tier
             cmd = 'api callcenter_config tier del %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id))
-            result = es.send(cmd)
-            if '-ERR' in result:
-                ret = False
+            es.clear_responses()
+            es.send(cmd)
+            es.process_events()
+            ret = es.get_responses()
+            es.disconnect()
             return ret
 
         if not change:
             # add the tier
             cmd = 'api callcenter_config tier add %s %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_level), str(obj.tier_position))
-            result = es.send(cmd)
-            if '-ERR' in result:
+            es.clear_responses()
+            es.send(cmd)
+            es.process_events()
+            if not es.get_responses():
                 ret = False
             sleep(s)
 
         # tier set level
         cmd = 'api callcenter_config tier set level %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_level))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
         sleep(s)
 
         # tier set position
         cmd = 'api callcenter_config tier set position %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_position))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
+        es.disconnect()
         sleep(s)
         return ret
 
@@ -217,74 +226,93 @@ class CallCentreAgentsAdmin(ImportExportModelAdmin):
     def fire_fs_events(self, obj, change, delete=False):
         ret = True
         s = 0.0001
-        es = EventSocket()
-        if not es.connect(*settings.EVSKT):
+        es = FsCmdAbsLayer()
+        if not es.connect():
             return False
 
         if delete:
             # delete the agent
             cmd = 'api callcenter_config agent del %s' % str(obj.id)
-            result = es.send(cmd)
-            if '-ERR' in result:
-                ret = False
+            es.clear_responses()
+            es.send(cmd)
+            es.process_events()
+            ret = es.get_responses()
+            es.disconnect()
             return ret
 
         if not change:
             # add the agent
             cmd = 'api callcenter_config agent add %s %s' % (str(obj.id), obj.agent_type)
-            result = es.send(cmd)
-            if '-ERR' in result:
+            es.clear_responses()
+            es.send(cmd)
+            es.process_events()
+            if not es.get_responses():
                 ret = False
             sleep(s)
 
         # agent set contact
         cmd = 'api callcenter_config agent set contact %s %s' % (str(obj.id), get_agent_contact(obj))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
         sleep(s)
 
         # agent set status
         if obj.status:
+            es.clear_responses()
             cmd = 'api callcenter_config agent set status %s %s' % (str(obj.id), obj.status)
-            result = es.send(cmd)
-            if '-ERR' in result:
+            es.send(cmd)
+            es.process_events()
+            if not es.get_responses():
                 ret = False
             sleep(s)
 
         # agent set reject delay time
         cmd = 'api callcenter_config agent set reject_delay_time %s %s' % (str(obj.id), str(obj.reject_delay_time))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
         sleep(s)
 
         # agent set busy delay time
         cmd = 'api callcenter_config agent set busy_delay_time %s %s' % (str(obj.id), str(obj.busy_delay_time))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
         sleep(s)
 
         # agent set no answer delay time
         cmd = 'api callcenter_config agent set no_answer_delay_time %s %s' % (str(obj.id), str(obj.no_answer_delay_time))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
         sleep(s)
 
         # agent set max no answer
         cmd = 'api callcenter_config agent set max_no_answer %s %s' % (str(obj.id), str(obj.max_no_answer))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
         sleep(s)
 
         # agent set wrap up time
         cmd = 'api callcenter_config agent set wrap_up_time %s %s' % (str(obj.id), str(obj.wrap_up_time))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
+        es.disconnect()
         sleep(s)
         return ret
 
@@ -310,16 +338,21 @@ class CallCentreQueuesAdminForm(ModelForm):
 
 @admin.action(permissions=['change'], description=_('Reload selected Call Centre Queues'))
 def cc_queue_reload(modeladmin, request, queryset):
-    es = EventSocket()
-    if not es.connect(*settings.EVSKT):
-        messages.add_message(request, messages.ERR, _('Event Socket Connect Problem'))
+    es = FsCmdAbsLayer()
+    if not es.connect():
+        messages.add_message(request, messages.ERR, _('Event Socket/Broker Connect Problem'))
         return
     rc = 0
     for obj in queryset:
         cmd = 'api callcenter_config queue reload %s' % str(obj.id)
-        result = es.send(cmd)
-        if '+OK' in result:
-            rc += 1
+        es.clear_responses()
+        send(cmd)
+        es.process_events()
+        es.get_responses()
+        es.disconnect()
+        for resp in es.responses:
+            if '+OK' in resp:
+                rc += 1
     if rc > 0:
         messages.add_message(request, messages.INFO, _('%s Queue(s) reloaded.' % rc))
 
@@ -433,67 +466,85 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
     def fire_fs_tier_events(self, obj, change, delete=False):
         ret = True
         s = 0.0001
-        es = EventSocket()
-        if not es.connect(*settings.EVSKT):
+        es = FsCmdAbsLayer()
+        if not es.connect():
             return False
 
         if delete:
             # delete the tier
             cmd = 'api callcenter_config tier del %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id))
-            result = es.send(cmd)
-            if '-ERR' in result:
-                ret = False
+            es.clear_responses()
+            es.send(cmd)
+            es.process_events()
+            ret = es.get_responses()
+            es.disconnect()
             return ret
 
         # add the tier
         cmd = 'api callcenter_config tier add %s %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_level), str(obj.tier_position))
-        result = es.send(cmd)
-        if not '-ERR Tier already exist' in result:
-            if '-ERR' in result:
-                ret = False
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        es.get_responses()
+        for resp in es.responses:
+            if not '-ERR Tier already exist' in resp:
+                if '-ERR' in result:
+                    ret = False
         sleep(s)
 
         # tier set level
         cmd = 'api callcenter_config tier set level %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_level))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
         sleep(s)
 
         # tier set position
         cmd = 'api callcenter_config tier set position %s %s %s' % (str(obj.queue_id.id), str(obj.agent_id.id), str(obj.tier_position))
-        result = es.send(cmd)
-        if '-ERR' in result:
+        es.clear_responses()
+        es.send(cmd)
+        es.process_events()
+        if not es.get_responses():
             ret = False
         sleep(s)
+        es.disconnect()
         return ret
 
     def fire_fs_queue_events(self, obj, change, delete=False):
         ret = True
-        es = EventSocket()
-        if not es.connect(*settings.EVSKT):
+        es = FsCmdAbsLayer()
+        if not es.connect():
             return False
 
         if delete:
             # unload the queue
             cmd = 'api callcenter_config queue unload %s' % str(obj.id)
+            es.clear_responses()
             result = es.send(cmd)
-            if '-ERR' in result:
-                ret = False
+            es.process_events()
+            ret = es.get_responses()
+            es.disconnect()
             return ret
 
         if not change:
             # load the queue
             cmd = 'api callcenter_config queue load %s' % str(obj.id)
+            es.clear_responses()
             result = es.send(cmd)
-            if '-ERR' in result:
+            es.process_events()
+            if not es.get_responses():
                 ret = False
 
         # reload the queue
         cmd = 'api callcenter_config queue reload %s' % str(obj.id)
+        es.clear_responses()
         result = es.send(cmd)
-        if '-ERR' in result:
+        es.process_events()
+        if not es.get_responses():
             ret = False
+        es.disconnect()
         return ret
 
 

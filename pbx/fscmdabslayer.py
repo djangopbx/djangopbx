@@ -43,6 +43,7 @@ class FsCmdAbsLayer:
 
     def __init__(self, debug=False):
         self.debug = debug
+        self.err_count = 0
         try:
             self.hostname = socket.gethostname()
         except:
@@ -63,7 +64,10 @@ class FsCmdAbsLayer:
 
     def connect(self):
         if self.loc_ev_skt:
-            return self.broker.connect(*settings.EVSKT)
+            resp = self.broker.connect(*settings.EVSKT)
+            if '-ERR' in resp:
+                self.err_count += 1
+            return resp
         else:
             result = self.broker.connect()
         if result:
@@ -87,15 +91,25 @@ class FsCmdAbsLayer:
 
     def get_responses(self):
         if self.loc_ev_skt:
-            return
-        for resp in self.broker.responses:
-            output = json.loads(resp)
-            self.responses.append(output['output'])
+            if self.err_count > 0:
+                return False
+            return True
+        for resp_raw in self.broker.responses:
+            output_json = json.loads(resp_raw)
+            resp = output_json['output']
+            if '-ERR' in resp:
+                self.err_count += 1
+            self.responses.append(resp)
+            # Return True if at least one freeswitch did not return an error
+            if self.err_count < len(self.freeswitches):
+                return True
+        return False
 
     def clear_responses(self):
         if not self.loc_ev_skt:
             self.broker.clear_responses()
         self.responses = []
+        self.err_count = 0
 
     def disconnect(self):
         self.broker.disconnect()
