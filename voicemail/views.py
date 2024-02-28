@@ -35,9 +35,7 @@ from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext_lazy as _
-#from django.conf import settings
 from pbx.fscmdabslayer import FsCmdAbsLayer
-#from pbx.fseventsocket import EventSocket
 from accounts.accountfunctions import AccountFunctions
 
 from pbx.restpermissions import (

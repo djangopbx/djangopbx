@@ -292,6 +292,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
             super().save_model(request, obj, form, change)
             efsf = ExtFeatureSyncFunctions(obj)
             efsf.sync_dnd()
+            efsf.es_disconnect()
             # Uncomment as required below if you have any of the following
             # feature on/off codes programmed in your phones.
             # If you exclusively use TCP transport and have concern about exceeding your MTU
@@ -339,12 +340,14 @@ def write_gateway_file(modeladmin, request, queryset):
 def rescan_sofia_profile(modeladmin, request, queryset):
     rc = 0
     current_profile = ''
+    gf = GatewayFunctions()
     for obj in queryset:
         if not current_profile == obj.profile:
             current_profile = obj.profile
-            r = GatewayFunctions().rescan_sofia_profile(obj.profile)
+            r = gf.rescan_sofia_profile(obj.profile)
             if r > 0:
                 rc += r
+    gf.es_disconnect()
     if rc > 0:
         messages.add_message(request, messages.INFO, _('%s gateway profil(s) rescanned.' % rc))
     if r == -1:
@@ -354,11 +357,13 @@ def rescan_sofia_profile(modeladmin, request, queryset):
 @admin.action(permissions=['change'], description=_('Stop gateway'))
 def sofia_stop_gateway(modeladmin, request, queryset):
     rc = 0
+    gf = GatewayFunctions()
     for obj in queryset:
-        r = GatewayFunctions().sofia_stop_gateway(obj.profile, str(obj.id))
+        r = gf.sofia_stop_gateway(obj.profile, str(obj.id))
         sleep(0.1)
         if r > 0:
             rc += r
+    gf.es_disconnect()
     if rc > 0:
         messages.add_message(request, messages.INFO, _('%s gateway(s) stopped.' % rc))
     if r == -1:
@@ -427,15 +432,18 @@ class GatewayAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
     def delete_model(self, request, obj):
-        GatewayFunctions().sofia_stop_gateway(obj.profile, str(obj.id))
+        gf = GatewayFunctions()
+        gf.sofia_stop_gateway(obj.profile, str(obj.id))
+        gf.es_disconnect()
         super().delete_model(request, obj)
 
     def delete_queryset(self, request, queryset):
+        gf = GatewayFunctions()
         for obj in queryset:
-            GatewayFunctions().sofia_stop_gateway(obj.profile, str(obj.id))
+            gf.sofia_stop_gateway(obj.profile, str(obj.id))
             sleep(0.1)
+        gf.es_disconnect()
         super().delete_queryset(request, queryset)
-
 
 
 class BridgeResource(resources.ModelResource):

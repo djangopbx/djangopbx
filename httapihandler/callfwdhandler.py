@@ -84,6 +84,7 @@ class CallFwdHandler(HttApiHandler):
         efsf.clear_extension_cache()
         efsf.sync_fwd_immediate()
         efsf.sync_dnd()
+        efsf.es_disconnect()
         etree.SubElement(x_work, 'pause', milliseconds='1000')
         etree.SubElement(x_work, 'hangup')
         etree.indent(x_root)

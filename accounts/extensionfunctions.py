@@ -31,7 +31,7 @@ from django.core.cache import cache
 from accounts.models import Extension, FollowMeDestination
 from switch.models import SwitchVariable
 from django.conf import settings
-from pbx.fseventsocket import EventSocket
+from pbx.fscmdabslayer import FsCmdAbsLayer
 from tenants.pbxsettings import PbxSettings
 from pbx.devicecfgevent import DeviceCfgEvent
 
@@ -50,13 +50,20 @@ class ExtFeatureSyncFunctions():
         if not self.vendor_sync_status.get('_any_set', False):
             return
         self.sip_user = '%s@%s' % (self.ext.extension, self.ext.user_context)
-        self.es = EventSocket()
-        if not self.es.connect(*settings.EVSKT):
+        self.es = FsCmdAbsLayer()
+        if not self.es.connect():
             return
         if not self.get_sofia_contact():
             return
+        self.es.clear_responses()
         sspu_detail = self.es.send('api sofia status profile %s user %s' % (self.sip_profile, self.sip_user))
-        if not self.parse_sofia_status_profile_user(sspu_detail):
+        self.es.process_events()
+        self.es.get_responses()
+        user_found = False
+        for resp in self.es.responses:
+            if self.parse_sofia_status_profile_user(resp):
+                user_found = True
+        if not user_found:
             return
         agent = self.user_info.get('Agent', 'none').lower()
         for v, s in self.vendor_sync_status.items():
@@ -64,17 +71,26 @@ class ExtFeatureSyncFunctions():
                 self.vendor = v
         self.feature_sync = self.vendor_sync_status.get(self.vendor, False)
 
+    def es_disconnect(self):
+        self.es.disconnect()
 
     def get_sofia_contact(self):
-        self.contact = self.es.send('api sofia_contact */%s' % self.sip_user)
-        if self.contact.endswith('user_not_registered'):
-            return False
-        try:
-            self.sip_profile = self.contact.split('/')[1]
-        except:
-            self.sip_profile = 'none'
-            return False
-        return True
+        ret = False
+        self.es.clear_responses()
+        self.es.send('api sofia_contact */%s' % self.sip_user)
+        self.es.process_events()
+        self.es.get_responses()
+        for resp in self.es.responses:
+            if resp.endswith('user_not_registered'):
+                continue
+            try:
+                self.sip_profile = resp.split('/')[1]
+            except:
+                self.sip_profile = 'none'
+                continue
+            self.contact = resp
+            ret = True
+        return ret
 
     def clear_extension_cache(self):
         directory_cache_key = 'directory:%s@%s' % (self.ext.extension, self.ext.user_context)
@@ -112,7 +128,10 @@ class ExtFeatureSyncFunctions():
             return
         dce = DeviceCfgEvent()
         cmd = dce.buildfeatureevent(self.ext.extension, self.ext.user_context, self.sip_profile, 'DoNotDisturbEvent', DoNotDisturbOn=self.ext.do_not_disturb)
+        self.es.clear_responses()
         self.es.send(cmd)
+        self.es.process_events()
+        self.es.get_responses()
 
     def sync_fwd_immediate(self):
         if not self.feature_sync:
@@ -122,7 +141,10 @@ class ExtFeatureSyncFunctions():
                 forward_immediate_enabled=self.ext.forward_all_enabled,
                 forward_immediate=(self.ext.forward_all_destination if self.ext.forward_all_destination else '0')
                 )
+        self.es.clear_responses()
         self.es.send(cmd)
+        self.es.process_events()
+        self.es.get_responses()
 
     def sync_fwd_busy(self):
         if not self.feature_sync:
@@ -132,7 +154,10 @@ class ExtFeatureSyncFunctions():
                 forward_busy_enabled=self.ext.forward_busy_enabled,
                 forward_busy=(self.ext.forward_busy_destination if self.ext.forward_busy_destination else '0')
                 )
+        self.es.clear_responses()
         self.es.send(cmd)
+        self.es.process_events()
+        self.es.get_responses()
 
     def sync_fwd_no_answer(self):
         if not self.feature_sync:
@@ -143,7 +168,10 @@ class ExtFeatureSyncFunctions():
                 forward_no_answer=(self.ext.forward_no_answer_destination if self.ext.forward_no_answer_destination else '0'),
                 ringCount=math.ceil(self.ext.call_timeout / 6)
                 )
+        self.es.clear_responses()
         self.es.send(cmd)
+        self.es.process_events()
+        self.es.get_responses()
 
     def sync_all(self):
         # Warning, if you predominantly use UDP, using this function will almost certainly exceed your MTU.
@@ -161,7 +189,10 @@ class ExtFeatureSyncFunctions():
                 DoNotDisturbOn=self.ext.do_not_disturb
             )
         print(cmd)
+        self.es.clear_responses()
         self.es.send(cmd)
+        self.es.process_events()
+        self.es.get_responses()
 
 
 class ExtFollowMeFunctions():

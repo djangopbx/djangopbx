@@ -33,11 +33,10 @@ from django.core.cache import cache
 from django.db.models import CharField, Value as V
 from django.db.models.functions import Concat
 from lxml import etree
-from pbx.fseventsocket import EventSocket
+from pbx.fscmdabslayer import FsCmdAbsLayer
 from .models import Gateway, Bridge, ExtensionUser
 from provision.models import Devices, DeviceLines
 from django.contrib.auth.models import User, Group
-from django.conf import settings
 from tenants.pbxsettings import PbxSettings
 
 
@@ -212,24 +211,41 @@ class GatewayFunctions():
     configuration_cache_key = 'configuration:sofia.conf'
 
     def __init__(self):
-        self.es = EventSocket()
-        if self.es.connect(*settings.EVSKT):
-            self.esconnected = True
+        self.esconnected = False
+        self.es = FsCmdAbsLayer()
+        self.es_connect()
 
     def rescan_sofia_profile(self, profile):
         cache.delete(self.configuration_cache_key)
         cmd = 'api sofia profile %s rescan' % profile
-        result = self.es.send(cmd)
-        if '-ERR' in result:
-            return -1
-        return 1
+        if self.esconnected:
+            self.es.clear_responses()
+            self.es.send(cmd)
+            self.es.process_events()
+            res = self.es.get_responses()
+            if res:
+                return 1
+        return -1
 
     def sofia_stop_gateway(self, profile, gateway_id):
         cmd = 'api sofia profile %s killgw %s' % (profile, gateway_id)
         result = self.es.send(cmd)
-        if '-ERR' in result:
-            return -1
-        return 1
+        if self.esconnected:
+            self.es.clear_responses()
+            self.es.send(cmd)
+            self.es.process_events()
+            res = self.es.get_responses()
+            if res:
+                return 1
+        return -1
+
+    def es_disconnect(self):
+        self.es.disconnect()
+        self.esconnected = False
+
+    def es_connect(self):
+        if self.es.connect():
+            self.esconnected = True
 
 
 class ExtRelatedFunctions():

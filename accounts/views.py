@@ -236,6 +236,7 @@ class CallRoutingEdit(LoginRequiredMixin, UpdateView):
         followme_formset.save()
         efsf = ExtFeatureSyncFunctions(self.object)
         efsf.sync_dnd()
+        efsf.es_disconnect()
         # Uncomment as required below if you have any of the following
         # feature on/off codes programmed in your phones.
         # If you exclusively use TCP transport and have concern about exceeding your MTU

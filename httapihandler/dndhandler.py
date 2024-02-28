@@ -79,6 +79,7 @@ class DndHandler(HttApiHandler):
         efsf = ExtFeatureSyncFunctions(extension_uuid, DoNotDisturbOn=e.do_not_disturb)
         efsf.clear_extension_cache()
         efsf.sync_dnd()
+        efsf.es_disconnect()
         etree.SubElement(x_work, 'pause', milliseconds='1000')
         etree.SubElement(x_work, 'hangup')
         etree.indent(x_root)
