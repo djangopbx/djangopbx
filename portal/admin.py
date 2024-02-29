@@ -32,7 +32,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from import_export.admin import ImportExportModelAdmin, ExportActionModelAdmin
 from import_export import resources
-
+from pbx.commonfunctions import shcommand
 
 from .models import (
     Menu, MenuItem, MenuItemGroup, Failed_logins,
