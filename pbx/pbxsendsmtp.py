@@ -26,7 +26,7 @@ class PbxTemplateMessage:
         if not self.ok:
             return (self.ok, ': '.join(self.info))
         try:
-            domain = cfg['smtp_from'].split('@')[1]
+            domain = self.cfg['smtp_from'].split('@')[1]
         except:
             domain = 'mydomain.com'
         try:
