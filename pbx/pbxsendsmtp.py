@@ -1,7 +1,7 @@
 import smtplib
 
 from email.message import EmailMessage
-from email.utils import formatdate
+import email.utils as utils
 from tenants.pbxsettings import PbxSettings
 from switch.emailtemplates import Templates as Tp
 
@@ -26,11 +26,16 @@ class PbxTemplateMessage:
         if not self.ok:
             return (self.ok, ': '.join(self.info))
         try:
+            domain = cfg['smtp_from'].split('@')[1]
+        except:
+            domain = 'mydomain.com'
+        try:
             m = EmailMessage()
             m['Subject'] = sub
             m['From'] = self.cfg['smtp_from']
             m['To'] = rps
-            m['Date'] = formatdate(localtime=True)
+            m['Date'] = utils.formatdate(localtime=True)
+            m['Message-ID'] = utils.make_msgid(domain=domain)
         except (TypeError, ValueError):
             self.info.append('Error with message parameters')
             return (False, ': '.join(self.info))
