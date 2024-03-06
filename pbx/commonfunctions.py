@@ -52,8 +52,8 @@ def get_version(package):
     return v
 
 
-def shcommand(cmd):
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+def shcommand(cmd, env=None):
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env)
     stdout, stderr = proc.communicate()
     if stderr:
         return stdout.decode() + stderr.decode()

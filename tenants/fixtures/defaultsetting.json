@@ -4498,5 +4498,131 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "09a78d38-076c-4710-b774-cc3e25671540",
+    "fields": {
+        "app_uuid": null,
+        "category": "housekeeping",
+        "subcategory": "days_keep_db_backups",
+        "value_type": "numeric",
+        "value": "5",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Days to keep database backups - Non domain specific",
+        "created": "2024-03-06T19:40:21.461Z",
+        "updated": "2024-03-06T19:40:21.461Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "57cb4797-281d-4e92-96e4-4b64a5f22be9",
+    "fields": {
+        "app_uuid": null,
+        "category": "housekeeping",
+        "subcategory": "days_keep_voicemail",
+        "value_type": "numeric",
+        "value": "30",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Days to keep voicemails",
+        "created": "2024-03-03T19:30:13.296Z",
+        "updated": "2024-03-03T19:30:13.296Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "58411c19-95ee-480a-b649-fdfebf6d373b",
+    "fields": {
+        "app_uuid": null,
+        "category": "housekeeping",
+        "subcategory": "days_keep_cdr_json",
+        "value_type": "numeric",
+        "value": "10",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Days to keep CDR JSON data - Non domain specific",
+        "created": "2024-03-03T20:43:55.683Z",
+        "updated": "2024-03-03T20:43:55.683Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "64b774c7-d158-4a8a-86aa-b28e068ea60b",
+    "fields": {
+        "app_uuid": null,
+        "category": "housekeeping",
+        "subcategory": "days_keep_cdrs",
+        "value_type": "numeric",
+        "value": "60",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Days to keep CDR records",
+        "created": "2024-03-03T15:19:39.923Z",
+        "updated": "2024-03-03T21:03:13.916Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "6ecd3d86-fc0f-4640-aec3-489708f6667f",
+    "fields": {
+        "app_uuid": null,
+        "category": "housekeeping",
+        "subcategory": "days_keep_file_backups",
+        "value_type": "numeric",
+        "value": "5",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Days to keep file backups - Non domain specific",
+        "created": "2024-03-06T20:49:39.851Z",
+        "updated": "2024-03-06T20:49:39.851Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "7248ce11-1674-48fc-a25f-847f8ab92501",
+    "fields": {
+        "app_uuid": null,
+        "category": "housekeeping",
+        "subcategory": "days_keep_call_recordings",
+        "value_type": "numeric",
+        "value": "30",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Days to keep call recordings",
+        "created": "2024-03-03T15:54:39.262Z",
+        "updated": "2024-03-03T15:54:39.262Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "f688b978-ee75-4545-a63a-3b1d3a7e95ea",
+    "fields": {
+        "app_uuid": null,
+        "category": "housekeeping",
+        "subcategory": "days_keep_admin_logs",
+        "value_type": "numeric",
+        "value": "60",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Days to keep Admin logs - Non domain specific",
+        "created": "2024-03-06T11:29:16.346Z",
+        "updated": "2024-03-06T11:29:16.346Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

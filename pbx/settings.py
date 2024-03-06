@@ -103,6 +103,7 @@ INSTALLED_APPS = [
     'callblock.apps.CallblockConfig',
     'callcentres.apps.CallcentresConfig',
     'autoreports.apps.AutoreportsConfig',
+    'housekeeping.apps.HousekeepingConfig',
 ]
 
 MIDDLEWARE = [

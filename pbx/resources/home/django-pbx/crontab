@@ -6,3 +6,7 @@
 45 6 * * * cd /home/django-pbx/pbx; python3 manage.py timedreport --frequency day > /dev/null 2>&1
 # Uncomment below if hourly reports are really needed.
 #0 9-17 * * * cd /home/django-pbx/pbx; python3 manage.py timedreport --frequency hour > /dev/null 2>&1
+5  1 * * * cd /home/django-pbx/pbx; python3 manage.py convertrecordingstomp3 > /dev/null 2>&1
+5  3 * * * cd /home/django-pbx/pbx; python3 manage.py basichousekeeping > /dev/null 2>&1
+35 3 * * * cd /home/django-pbx/pbx; python3 manage.py pbxdatabasebackup > /dev/null 2>&1
+55 3 * * * cd /home/django-pbx/pbx; python3 manage.py pbxfilesbackup > /dev/null 2>&1
