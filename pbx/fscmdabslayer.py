@@ -65,7 +65,7 @@ class FsCmdAbsLayer:
     def connect(self):
         if self.loc_ev_skt:
             resp = self.broker.connect(*settings.EVSKT)
-            if '-ERR' in resp:
+            if not resp:
                 self.err_count += 1
             return resp
         else:
