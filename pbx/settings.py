@@ -61,7 +61,7 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-# Some Applications may appear commented out, there are add-on
+# Some Applications may appear commented out, these are add-on
 # applications that can be installed from the djangopbx-applications repository.
 # Once you have installed the application (copied the files),
 # simply un-comment the application if it appears commented out below.

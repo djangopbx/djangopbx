@@ -56,7 +56,7 @@ admin.site.index_title = _('Welcome to the DjangoPBX Admin Portal')
 from rest_framework import routers
 
 # Routers provide an easy way of automatically determining the URL conf.
-# These are mostly user for the REST API
+# These are mostly used for the REST API
 # Some Routers may appear commented out, these are add-on applications
 # that provide API endpoints and can be installed from the djangopbx-applications repository.
 # Once you have installed the application (copied the files),
