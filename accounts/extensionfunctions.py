@@ -42,6 +42,7 @@ class ExtFeatureSyncFunctions():
 
     def __init__(self, obj=None, **kwargs):
         self.__dict__.update(kwargs)
+        self.es_connected = False
         pbxs = PbxSettings()
         if not self.get_extension_object(obj):
             return
@@ -53,6 +54,7 @@ class ExtFeatureSyncFunctions():
         self.es = FsCmdAbsLayer()
         if not self.es.connect():
             return
+        self.es_connected = True
         if not self.get_sofia_contact():
             return
         self.es.clear_responses()
@@ -70,11 +72,15 @@ class ExtFeatureSyncFunctions():
             if v in agent:
                 self.vendor = v
         self.feature_sync = self.vendor_sync_status.get(self.vendor, False)
+        self.init_ok = True
 
     def es_disconnect(self):
-        self.es.disconnect()
+        if self.es_connected:
+            self.es.disconnect()
 
     def get_sofia_contact(self):
+        if not self.es_connected:
+            return False
         ret = False
         self.es.clear_responses()
         self.es.send('api sofia_contact */%s' % self.sip_user)
@@ -124,6 +130,8 @@ class ExtFeatureSyncFunctions():
         return True
 
     def sync_dnd(self):
+        if not self.es_connected:
+            return
         if not self.feature_sync:
             return
         dce = DeviceCfgEvent()
@@ -134,6 +142,8 @@ class ExtFeatureSyncFunctions():
         self.es.get_responses()
 
     def sync_fwd_immediate(self):
+        if not self.es_connected:
+            return
         if not self.feature_sync:
             return
         dce = DeviceCfgEvent()
@@ -147,6 +157,8 @@ class ExtFeatureSyncFunctions():
         self.es.get_responses()
 
     def sync_fwd_busy(self):
+        if not self.es_connected:
+            return
         if not self.feature_sync:
             return
         dce = DeviceCfgEvent()
@@ -160,6 +172,8 @@ class ExtFeatureSyncFunctions():
         self.es.get_responses()
 
     def sync_fwd_no_answer(self):
+        if not self.es_connected:
+            return
         if not self.feature_sync:
             return
         dce = DeviceCfgEvent()
@@ -175,6 +189,8 @@ class ExtFeatureSyncFunctions():
 
     def sync_all(self):
         # Warning, if you predominantly use UDP, using this function will almost certainly exceed your MTU.
+        if not self.es_connected:
+            return
         if not self.feature_sync:
             return
         dce = DeviceCfgEvent()
