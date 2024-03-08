@@ -7,3 +7,5 @@ __pycache__/
 django-pbx.sock
 ahftest.py
 ahftest.msg
+/fsterminal
+/freeswitchdb

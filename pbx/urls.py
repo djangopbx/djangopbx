@@ -46,9 +46,24 @@ from django.contrib import admin
 from django.urls import include, path
 from django.utils.translation import gettext_lazy as _
 
+# This overrides names in site headers and titles
+# , not required if custom admin templates are being used
+# but no harm in setting them.
+admin.site.site_header = _('DjangoPBX Administration')
+admin.site.site_title = _('DjangoPBX Admin Portal')
+admin.site.index_title = _('Welcome to the DjangoPBX Admin Portal')
+
 from rest_framework import routers
 
 # Routers provide an easy way of automatically determining the URL conf.
+# These are mostly user for the REST API
+# Some Routers may appear commented out, these are add-on applications
+# that provide API endpoints and can be installed from the djangopbx-applications repository.
+# Once you have installed the application (copied the files),
+# simply un-comment the application if it appears commented out below.
+# You will also find a corresponding entry in the router.registry
+# section below, please also uncomment that entry.
+#
 from tenants.urls import router as tenantsrouter
 from portal.urls import router as portalrouter
 from switch.urls import router as switchrouter
@@ -70,15 +85,10 @@ from callflows.urls import router as callflowsrouter
 from callblock.urls import router as callblockrouter
 from callcentres.urls import router as callcentresrouter
 from autoreports.urls import router as autoreportsrouter
+#from freeswitchdb.urls import router as freeswitchdbrouter
 
 
-# This overrides names in site headers and titles
-# , not required if custom admin templates are being used
-# but no harm in setting them.
-admin.site.site_header = _('DjangoPBX Administration')
-admin.site.site_title = _('DjangoPBX Admin Portal')
-admin.site.index_title = _('Welcome to the DjangoPBX Admin Portal')
-
+# Router registry extends
 router = routers.DefaultRouter()
 router.registry.extend(tenantsrouter.registry)
 router.registry.extend(portalrouter.registry)
@@ -101,8 +111,14 @@ router.registry.extend(callflowsrouter.registry)
 router.registry.extend(callblockrouter.registry)
 router.registry.extend(callcentresrouter.registry)
 router.registry.extend(autoreportsrouter.registry)
+#router.registry.extend(freeswitchdbrouter.registry)
 
 
+# Some URL patterns may appear commented out, these are add-on applications
+# that provide additional URLs and can be installed from the djangopbx-applications repository.
+# Once you have installed the application (copied the files),
+# simply un-comment the application path setting if it appears commented out below.
+#
 urlpatterns = [
     path('', include('portal.urls')),
     path('xmlhandler/', include('xmlhandler.urls')),
@@ -123,6 +139,7 @@ urlpatterns = [
     path('contacts/', include('contacts.urls')),
     path('callcentres/', include('callcentres.urls')),
     path('autoreports/', include('autoreports.urls')),
+#    path('fsterminal/', include('fsterminal.urls')),
 
     # Wire up our API using automatic URL routing.
     # Additionally, we include login URLs for the browsable API.

@@ -61,7 +61,11 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
+# Some Applications may appear commented out, there are add-on
+# applications that can be installed from the djangopbx-applications repository.
+# Once you have installed the application (copied the files),
+# simply un-comment the application if it appears commented out below.
+#
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -104,6 +108,8 @@ INSTALLED_APPS = [
     'callcentres.apps.CallcentresConfig',
     'autoreports.apps.AutoreportsConfig',
     'housekeeping.apps.HousekeepingConfig',
+#    'freeswitchdb.apps.FreeswitchdbConfig',
+#    'fsterminal.apps.FsterminalConfig',
 ]
 
 MIDDLEWARE = [
