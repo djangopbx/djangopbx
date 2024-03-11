@@ -239,6 +239,7 @@ def fsregdetail(request, sip_profile='internal', sip_user='none@none', host=None
     info = {}
     es = FsCmdAbsLayer()
     if es.connect():
+        es.clear_responses()
         es.send('api sofia status profile %s user %s' % (sip_profile, sip_user), host)
         es.process_events()
         es.get_responses()
