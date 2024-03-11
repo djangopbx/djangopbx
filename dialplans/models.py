@@ -82,7 +82,7 @@ class Dialplan(models.Model):
     context      = models.CharField(max_length=128, db_index=True, blank=True, null=True, verbose_name=_('Context'))                                                           # noqa: E501, E221
     category     = models.CharField(max_length=32, db_index=True, blank=True, null=True, default=_('General'), verbose_name=_('Category'))                                     # noqa: E501, E221
     name         = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Name'))                                                                              # noqa: E501, E221
-    number       = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Number'))                                                                            # noqa: E501, E221
+    number       = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Number'))                                                                            # noqa: E501, E221
     destination  = models.CharField(max_length=8, db_index=True, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CFALSE, verbose_name=_('Destination')) # noqa: E501, E221
     dp_continue  = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CFALSE, verbose_name=_('Continue'))                   # noqa: E501, E221
     xml          = models.TextField(blank=True, null=True, verbose_name=_('Xml'))                                                                                              # noqa: E501, E221
