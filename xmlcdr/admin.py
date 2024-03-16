@@ -142,7 +142,7 @@ class XmlCdrAdmin(ImportExportModelAdmin):
     ]
     list_display = (
         'extension_id', 'caller_id_name', 'caller_id_number', 'caller_destination',
-        'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause'
+        'destination_number', 'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause'
         )
     list_filter = (DomainFilter, 'direction', 'hangup_cause', MosScoreListFilter)
 
