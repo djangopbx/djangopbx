@@ -44,3 +44,9 @@ class ReloadXmlForm(forms.Form):
     host = forms.ChoiceField(label=_('Host'), widget=forms.Select(attrs={'class': 'custom-select custom-select-sm'}), required=True, help_text=_('Select the Switch host on which to issue the command.')) # noqa: E501, E221
     xml  = forms.BooleanField(label=_('XML'), widget=forms.CheckboxInput(attrs={'class': 'form-check'}), required=False, help_text=_('Check to re-load Extensible Markup Language files.'))                # noqa: E501, E221
     acl  = forms.BooleanField(label=_('ACL'), widget=forms.CheckboxInput(attrs={'class': 'form-check'}), required=False, help_text=_('Check to re-load Access Control Lists.'))                            # noqa: E501, E221
+
+
+class TestEmailForm(forms.Form):
+    email_to      = forms.CharField(label=_('To'), widget=forms.TextInput(attrs={'class': 'form-control form-control-sm'}), max_length=128, initial='test@me.com', required=True)                               # noqa: E501, E221
+    email_subject = forms.CharField(label=_('Subject'), widget=forms.TextInput(attrs={'class': 'form-control form-control-sm'}), max_length=128, initial=_('Test Email'), required=True)                        # noqa: E501, E221
+    email_body    = forms.CharField(label=_('Body'), widget=forms.Textarea(attrs={'class': 'form-control form-control-sm'}), max_length=1000, initial=_('Hello,\nThisis a test, please ignore.'), required=True)# noqa: E501, E221

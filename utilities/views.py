@@ -35,9 +35,10 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 from django.shortcuts import render
 from django.views import View
-from .forms import ClearCacheForm, ReloadXmlForm
+from .forms import ClearCacheForm, ReloadXmlForm, TestEmailForm
 from dialplans.models import Dialplan
 from pbx.fscmdabslayer import FsCmdAbsLayer
+from pbx.pbxsendsmtp import PbxTemplateMessage
 
 phrases_available = True
 try:
@@ -152,3 +153,26 @@ class ReloadXmlView(View):
             messages.add_message(request, messages.INFO, _('XML/ACL Reloaded'))
 
         return render(request, self.template_name, {'form': form, 'refresher': 'reloadxml'})
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class TestEmailView(View):
+    form_class = TestEmailForm
+    template_name = "utilities/testemail.html"
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form, 'refresher': 'testemail'})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        out = None
+        if form.is_valid():
+            to      = form.cleaned_data['email_to']      # noqa: E221
+            subject = form.cleaned_data['email_subject'] # noqa: E221
+            body    = form.cleaned_data['email_body']    # noqa: E221
+
+            m = PbxTemplateMessage()
+            out = m.Send(to, subject, body, 'Text')
+        return render(request, self.template_name, {'form': form, 'refresher': 'testemail', 'result': out})
+

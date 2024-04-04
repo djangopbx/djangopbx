@@ -55,5 +55,24 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "b302f210-a78f-4b6d-966a-342a8fdc1685",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "b9ac0610-d2a8-4baf-b5be-d0fba24fbc6e",
+        "title": "Send test Email",
+        "link": "/utilities/testemail/",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "88030",
+        "description": "",
+        "created": "2024-04-04T14:31:33.499Z",
+        "updated": "2024-04-04T14:31:33.499Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

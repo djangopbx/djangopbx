@@ -28,11 +28,12 @@
 #
 
 from django.urls import path
-from .views import ClearCacheView, ReloadXmlView
+from .views import ClearCacheView, ReloadXmlView, TestEmailView
 
 
 urlpatterns = [
     path("clearcache/", ClearCacheView.as_view(), name='clearcache'),
     path("reloadxml/", ReloadXmlView.as_view(), name='reloadxml'),
+    path("testemail/", TestEmailView.as_view(), name='testemail'),
 
 ]
