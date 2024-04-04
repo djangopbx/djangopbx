@@ -166,6 +166,8 @@ class Command(BaseCommand):
         elif event_name == 'CUSTOM':
             if event.get('Event-Subclass', self.nonstr) == 'sofia::register':
                 self.handle_register(event)
+            if event.get('Event-Subclass', self.nonstr) == 'callcenter::info':
+                self.handle_callcentreinfo(event)
 
     def handle(self, *args, **kwargs):
         mb = {'message_broker': '127.0.0.1', 'message_broker_port': 5672, 'message_broker_password': 'djangopbx-insecure', 'message_broker_user': 'guest'}
@@ -216,6 +218,9 @@ class Command(BaseCommand):
         mq.connect()
         mq.setup_queues()
         mq.consume(self.on_message)
+
+    def handle_callcentreinfo(self, event):
+        pass
 
     def handle_register(self, event):
         if event.get('status', 'N/A').startswith('Registered'):
