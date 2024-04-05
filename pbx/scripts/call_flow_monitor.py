@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/home/django-pbx/envdpbx/bin/python
 #
 #    DjangoPBX
 #
