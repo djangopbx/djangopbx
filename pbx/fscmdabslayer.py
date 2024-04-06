@@ -30,6 +30,7 @@
 import time
 import json
 import socket
+from django.core.cache import cache
 from django.conf import settings
 from tenants.pbxsettings import PbxSettings
 from pbx.fseventsocket import EventSocket
@@ -38,6 +39,7 @@ from pbx.amqpcmdevent import AmqpCmdEvent
 
 class FsCmdAbsLayer:
 
+    cache_key = 'fscmdabslayer:locevskt'
     loc_ev_skt = False
     responses = []
 
@@ -48,7 +50,10 @@ class FsCmdAbsLayer:
             self.hostname = socket.gethostname()
         except:
             self.hostname = 'localhost'
-        s = PbxSettings().default_settings('cluster', 'use_local_event_socket', 'boolean', 'true', True)[0]
+        s = cache.get(self.cache_key)
+        if not s:
+            s = PbxSettings().default_settings('cluster', 'use_local_event_socket', 'boolean', 'true', True)[0]
+            cache.set(self.cache_key, s)
         if s == 'true':
             self.loc_ev_skt = True
         if self.loc_ev_skt:
