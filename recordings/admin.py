@@ -45,6 +45,7 @@ class RecordingsResource(resources.ModelResource):
 
 class RecordingAdmin(ImportExportModelAdmin):
     resource_class = RecordingsResource
+    change_form_template = 'admin_media_player_changeform.html'
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
