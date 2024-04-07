@@ -255,8 +255,14 @@ class ExtRelatedFunctions():
         username = '%s@%s' % (obj.extension, obj.domain_id.name)
         if not User.objects.filter(username=username).exists():
             user = User.objects.create_user(username, username, obj.password)
-            user.first_name = obj.effective_caller_id_name.replace (' ', '-')
-            user.last_name = obj.effective_caller_id_number
+            if obj.effective_caller_id_name:
+                user.first_name = obj.effective_caller_id_name.replace(' ', '-')
+            else:
+                user.first_name = obj.extension
+            if obj.effective_caller_id_number:
+                user.last_name = obj.effective_caller_id_number
+            else:
+                user.last_name = obj.domain_id.name.replace('.', '')
             user.save()
             ret = 1
             user_group = Group.objects.get(name='user')
