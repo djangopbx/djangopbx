@@ -86,7 +86,11 @@ class IvrFunctions():
         etree.SubElement(x_condition, "action", application='set', data='transfer_ring_back=%s' % self.ivr.ringback)
         etree.SubElement(x_condition, "action", application='set', data='ivr_menu_uuid=%s' % str(self.ivr.id))
         etree.SubElement(x_condition, "action", application='ivr', data=str(self.ivr.id))
-        etree.SubElement(x_condition, "action", application='hangup', data='')
+        exit_app_data = self.ivr.exit_data.split(':')
+        if exit_app_data[0] == 'hangup':
+            etree.SubElement(x_condition, "action", application=exit_app_data[0])
+        else:
+            etree.SubElement(x_condition, "action", application=exit_app_data[0], data=exit_app_data[1])
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8").replace('&lt;', '<').replace('&gt;', '>')
