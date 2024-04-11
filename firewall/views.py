@@ -188,6 +188,9 @@ def fwaddip(request):
         if setname == 'SGL':
             SGLform = form
             fwsuffix = '-sip-gateway-list.sh'
+        if setname == 'WBL':
+            SGLform = form
+            fwsuffix = '-web-block-list.sh'
 
         if form.is_valid():
             if len(form.cleaned_data['ipv4']) > 0:
@@ -212,23 +215,11 @@ def fwaddip(request):
         else:
             messages.add_message(request, messages.INFO, _('IP Address is invalid'))
 
-    if 'BLform' not in locals():
-        BLform = IpAddressForm()
-        BLform.fields['setname'].initial = 'BL'
-    if 'WLform' not in locals():
-        WLform = IpAddressForm()
-        WLform.fields['setname'].initial = 'WL'
-    if 'SCLform' not in locals():
-        SCLform = IpAddressForm()
-        SCLform.fields['setname'].initial = 'SCL'
-    if 'SGLform' not in locals():
-        SGLform = IpAddressForm()
-        SGLform.fields['setname'].initial = 'SGL'
-
+    form = IpAddressForm()
     return render(
-            request, 'firewall/fwaddip.html',
-            {'BLform': BLform, 'WLform': WLform, 'SCLform': SCLform, 'SGLform': SGLform}
-            )
+            request, 'firewall/fw_add_del_ip.html',
+            {'form': form, 'formurl': 'fwaddip',
+                'title': _('Add IP Address to Firewall'), 'buttontxt': _('Add IP(s)')})
 
 
 @staff_member_required
@@ -250,6 +241,9 @@ def fwdelip(request):
         if setname == 'SGL':
             SGLform = form
             fwsuffix = '-sip-gateway-list.sh'
+        if setname == 'WBL':
+            SGLform = form
+            fwsuffix = '-web-block-list.sh'
 
         if form.is_valid():
             if len(form.cleaned_data['ipv4']) > 0:
@@ -273,20 +267,8 @@ def fwdelip(request):
         else:
             messages.add_message(request, messages.INFO, _('IP Address is invalid'))
 
-    if 'BLform' not in locals():
-        BLform = IpAddressForm()
-        BLform.fields['setname'].initial = 'BL'
-    if 'WLform' not in locals():
-        WLform = IpAddressForm()
-        WLform.fields['setname'].initial = 'WL'
-    if 'SCLform' not in locals():
-        SCLform = IpAddressForm()
-        SCLform.fields['setname'].initial = 'SCL'
-    if 'SGLform' not in locals():
-        SGLform = IpAddressForm()
-        SGLform.fields['setname'].initial = 'SGL'
-
+    form = IpAddressForm()
     return render(
-            request, 'firewall/fwdelip.html',
-            {'BLform': BLform, 'WLform': WLform, 'SCLform': SCLform, 'SGLform': SGLform}
-            )
+            request, 'firewall/fw_add_del_ip.html',
+            {'form': form, 'formurl': 'fwdelip',
+                'title': _('Delete IP Address from Firewall'), 'buttontxt': _('Delete IP(s)')})

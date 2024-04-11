@@ -26,8 +26,17 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.utils.translation import gettext_lazy as _
 from django import forms
 from django_ace import AceWidget
+
+setname_choices = [
+            ('BL', _('Block list (Bans unconditionally)')),
+            ('WBL', _('Web block list (Bans Portal access)')),
+            ('WL', _('White list (Only Our Trusted Addresses)')),
+            ('SCL', _('SIP Customer list (Trusted Customer Addresses)')),
+            ('SGL', _('SIP Gateway list (Only Supplier Gateways)'))
+    ]
 
 
 class LogViewerForm(forms.Form):
@@ -38,8 +47,8 @@ class LogViewerForm(forms.Form):
 
 
 class IpAddressForm(forms.Form):
-    ipv4 = forms.GenericIPAddressField(label='IPv4 Address', protocol='IPv4', required=False)
-    ipv4len = forms.IntegerField(label='/', min_value=8, max_value=32, initial=32)
-    ipv6 = forms.GenericIPAddressField(label='IPv6 Address', protocol='IPv6', required=False)
-    ipv6len = forms.IntegerField(label='/', min_value=48, max_value=128, initial=128)
-    setname = forms.CharField(widget=forms.HiddenInput(), required=False)
+    setname = forms.ChoiceField(label=_('Firewall List Name'), choices=setname_choices)          # noqa: E501, E221
+    ipv4    = forms.GenericIPAddressField(label='IPv4 Address', protocol='IPv4', required=False) # noqa: E501, E221
+    ipv4len = forms.IntegerField(label='/', min_value=8, max_value=32, initial=32)               # noqa: E501, E221
+    ipv6    = forms.GenericIPAddressField(label='IPv6 Address', protocol='IPv6', required=False) # noqa: E501, E221
+    ipv6len = forms.IntegerField(label='/',min_value=48, max_value=128, initial=128)             # noqa: E501, E221

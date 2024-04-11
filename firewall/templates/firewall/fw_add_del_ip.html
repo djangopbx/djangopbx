@@ -1,0 +1,41 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <i class="fa fa-key"></i> {{ title }}
+        </div>
+        <div class="card-body cardbody1">
+            <div class="container p-3 my-3 border" style="background-color: #fcfcfc;">
+            <form action="{% url formurl %}" method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="fieldWrapper">
+                    <label for="{{ form.setname.id_for_label }}">{% translate 'Choose List' %}:</label>
+                    {{ form.setname }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.ipv4.errors }}
+                    {{ form.ipv4len.errors }}
+                    <label for="{{ form.ipv4.id_for_label }}">{% translate 'IPv4 Address' %}:</label>
+                    {{ form.ipv4 }}
+                    <label for="{{ form.ipv4len.id_for_label }}">/</label>
+                    {{ form.ipv4len }}
+                </div>
+                <div class="fieldWrapper">
+                    {{ form.ipv6.errors }}
+                    {{ form.ipv6len.errors }}
+                    <label for="{{ form.ipv6.id_for_label }}">{% translate 'IPv6 Address' %}:</label>
+                    {{ form.ipv6 }}
+                    <label for="{{ form.ipv6len.id_for_label }}">/</label>
+                    {{ form.ipv6len }}
+                </div>
+                <input style="margin-top: 10px;" type="submit" class="btn btn-info btn-sm" value="{{ buttontxt }}">
+            </form>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
