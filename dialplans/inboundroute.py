@@ -31,17 +31,17 @@ from pbx.commonfunctions import str2regex
 
 
 class InboundRoute():
-    prefix             = ''                      # noqa: E221
-    number             = '00000000'              # noqa: E221
-    context            = 'djangopbx.com'         # noqa: E221
-    application        = 'transfer'              # noqa: E221
-    data               = '201 XML djangopbx.com' # noqa: E221
-    calleridnameprefix = ''                      # noqa: E221
-    record             = 'false'                 # noqa: E221
-    accountcode        = None                    # noqa: E221
-    enabled            = 'true'                  # noqa: E221
-    description        = ''                      # noqa: E221
-    domain_id          = 'djangopbx.com'         # noqa: E221
+    prefix                = ''                      # noqa: E221
+    number                = '00000000'              # noqa: E221
+    context               = 'djangopbx.com'         # noqa: E221
+    application           = 'transfer'              # noqa: E221
+    data                  = '201 XML djangopbx.com' # noqa: E221
+    caller_id_name_prefix = ''                      # noqa: E221
+    record                = 'false'                 # noqa: E221
+    accountcode           = None                    # noqa: E221
+    enabled               = 'true'                  # noqa: E221
+    description           = ''                      # noqa: E221
+    domain_id             = 'djangopbx.com'         # noqa: E221
 
     def __init__(self, *args, **kwargs):
         for k, v in kwargs.items():
@@ -66,10 +66,10 @@ class InboundRoute():
             )
         etree.SubElement(x_condition, 'action', application='set', data='hangup_after_bridge=true')
         etree.SubElement(x_condition, 'action', application='set', data='continue_on_fail=true')
-        if self.calleridnameprefix:
+        if self.caller_id_name_prefix:
             etree.SubElement(
                 x_condition, 'action', application='set',
-                data='effective_caller_id_name=%s#${caller_id_name}' % self.calleridnameprefix
+                data='effective_caller_id_name=%s#${caller_id_name}' % self.caller_id_name_prefix
                 )
         if self.record == 'true':
             etree.SubElement(
