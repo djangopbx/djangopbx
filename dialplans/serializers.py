@@ -74,16 +74,16 @@ class InboundRouteSerializer(serializers.Serializer):
     id                    = serializers.UUIDField(read_only=True)                                                 # noqa: E501, E221
     domain_id             = serializers.CharField(max_length=128, required=True, initial='djangopbx.com')         # noqa: E501, E221
     current_xml           = serializers.CharField(source='xml', read_only=True)                                   # noqa: E501, E221
-    prefix                = serializers.CharField(max_length=16, required=False)                                  # noqa: E501, E221
+    prefix                = serializers.CharField(max_length=16, required=False, allow_blank=True)                # noqa: E501, E221
     number                = serializers.CharField(max_length=128, required=True)                                  # noqa: E501, E221
     context               = serializers.CharField(max_length=128, initial='public', required=True)                # noqa: E501, E221
     application           = serializers.CharField(max_length=64, initial='transfer', required=True)               # noqa: E501, E221
     data                  = serializers.CharField(max_length=128, initial='201 XML djangopbx.com', required=True) # noqa: E501, E221
-    caller_id_name_prefix = serializers.CharField(max_length=32, required=False)                                  # noqa: E501, E221
+    caller_id_name_prefix = serializers.CharField(max_length=32, required=False, allow_blank=True)                # noqa: E501, E221
     record                = serializers.ChoiceField(choices=STATUS, initial='false', default='false')             # noqa: E501, E221
-    account_code          = serializers.CharField(max_length=32, required=False)                                  # noqa: E501, E221
+    account_code          = serializers.CharField(max_length=32, required=False, allow_blank=True)                # noqa: E501, E221
     enabled               = serializers.ChoiceField(choices=STATUS, default='true')                               # noqa: E501, E221
-    description           = serializers.CharField(max_length=254, required=False)                                 # noqa: E501, E221
+    description           = serializers.CharField(max_length=254, required=False, allow_blank=True)               # noqa: E501, E221
 
     def get_url(self, obj):
         if hasattr(obj, 'id'):
@@ -106,17 +106,17 @@ class OutboundRouteSerializer(serializers.Serializer):
     current_xml           = serializers.CharField(source='xml', read_only=True)                            # noqa: E501, E221
     name                  = serializers.CharField(max_length=64, required=True)                            # noqa: E501, E221
     gateway_1             = serializers.CharField(max_length=128, required=True)                           # noqa: E501, E221
-    gateway_2             = serializers.CharField(max_length=128, required=False)                          # noqa: E501, E221
-    gateway_3             = serializers.CharField(max_length=128, required=False)                          # noqa: E501, E221
+    gateway_2             = serializers.CharField(max_length=128, required=False, allow_blank=True)        # noqa: E501, E221
+    gateway_3             = serializers.CharField(max_length=128, required=False, allow_blank=True)        # noqa: E501, E221
     number                = serializers.CharField(max_length=128, required=True)                           # noqa: E501, E221
-    prefix                = serializers.CharField(max_length=16, required=False)                           # noqa: E501, E221
+    prefix                = serializers.CharField(max_length=16, required=False, allow_blank=True)         # noqa: E501, E221
     limit                 = serializers.IntegerField(min_value=0, default=0, initial=0)                    # noqa: E501, E221
-    account_code          = serializers.CharField(max_length=32, required=False)                           # noqa: E501, E221
-    toll_allow            = serializers.CharField(max_length=128, required=False)                          # noqa: E501, E221
+    account_code          = serializers.CharField(max_length=32, required=False, allow_blank=True)         # noqa: E501, E221
+    toll_allow            = serializers.CharField(max_length=128, required=False, allow_blank=True)        # noqa: E501, E221
     pin_numbers           = serializers.ChoiceField(choices=STATUS, initial='false', default='false')      # noqa: E501, E221
     sequence              = serializers.IntegerField(min_value=100, initial=101, default=101)              # noqa: E501, E221
     enabled               = serializers.ChoiceField(choices=STATUS, default='true')                        # noqa: E501, E221
-    description           = serializers.CharField(max_length=254, required=False)                          # noqa: E501, E221
+    description           = serializers.CharField(max_length=254, required=False, allow_blank=True)        # noqa: E501, E221
 
     def get_url(self, obj):
         if hasattr(obj, 'id'):
@@ -144,7 +144,7 @@ class TimeConditionSerializer(serializers.Serializer):
     alternate_destination = serializers.CharField(required=True, initial=init_alt_dest, style={'base_template': 'textarea.html'})   # noqa: E501, E221
     sequence              = serializers.IntegerField(min_value=100, initial=301, default=301)                                       # noqa: E501, E221
     enabled               = serializers.ChoiceField(choices=STATUS, default='true')                                                 # noqa: E501, E221
-    description           = serializers.CharField(max_length=254, required=False)                                                   # noqa: E501, E221
+    description           = serializers.CharField(max_length=254, required=False, allow_blank=True)                                 # noqa: E501, E221
 
     def get_url(self, obj):
         if hasattr(obj, 'id'):
