@@ -59,6 +59,7 @@ from .indexhandler import IndexHandler
 from .cceventhandler import CcEventHandler
 from .dndhandler import DndHandler
 from .callfwdhandler import CallFwdHandler
+from .disahandler import DISAHandler
 
 
 class HttApiSessionViewSet(viewsets.ModelViewSet):
@@ -173,4 +174,9 @@ def donotdisturb(request, hraction):
 @csrf_exempt
 def callforward(request, hraction, hrparam1=False):
     httapihf = CallFwdHandler(request.POST, hraction=hraction, hrparam1=hrparam1)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def disa(request):
+    httapihf = DISAHandler(request.POST)
     return processhttapi(request, httapihf)

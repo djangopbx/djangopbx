@@ -1,0 +1,10 @@
+<context name="{v_context}">
+        <extension name="disa" number="*3472" continue="false" app_uuid="90e1a328-7d6f-40ff-8165-68292d930479" enabled="false" order="420">
+            <condition field="destination_number" expression="^\*(3472)$">
+                        <action application="answer"/>
+                        <action application="set" data="pin_number={v_pin_number}"/>
+                        <action application="set" data="dialplan_context=${context}"/>
+                        <action application="httapi" data="{httapi_profile=dpbx,url=${pbx_httapi_url}/httapihandler/disa/}"/>
+            </condition>
+        </extension>
+</context>
