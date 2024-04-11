@@ -33,7 +33,7 @@ from import_export import resources
 from pbx.commonfunctions import DomainFilter, DomainUtils
 
 from .models import (
-    Recording,
+    Recording, CallRecording
 )
 
 
@@ -72,4 +72,40 @@ class RecordingAdmin(ImportExportModelAdmin):
         super().delete_model(request, obj)
 
 
+class CallRecordingsResource(resources.ModelResource):
+    class Meta:
+        model = CallRecording
+        import_id_fields = ('id', )
+
+
+class CallRecordingAdmin(ImportExportModelAdmin):
+    resource_class = RecordingsResource
+    change_form_template = 'admin_media_player_changeform.html'
+
+    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    fieldsets = [
+        (None,               {'fields': ['domain_id', 'name', 'filename', 'year', 'month', 'day', 'description']}),
+        ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
+    ]
+    list_display = ('name', 'year', 'month', 'day', 'filename', 'description')
+    list_filter = (DomainFilter, 'year', 'month', 'day')
+
+    actions = None
+    ordering = [
+        'domain_id',
+        'name'
+    ]
+
+    def save_model(self, request, obj, form, change):
+        obj.updated_by = request.user.username
+        if not change:
+            obj.domain_id = DomainUtils().domain_from_session(request)
+        super().save_model(request, obj, form, change)
+
+    def delete_model(self, request, obj):
+        obj.filename.delete(save=False)
+        super().delete_model(request, obj)
+
+
 admin.site.register(Recording, RecordingAdmin)
+admin.site.register(CallRecording, CallRecordingAdmin)

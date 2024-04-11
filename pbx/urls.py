@@ -138,6 +138,7 @@ urlpatterns = [
     path('ringgroups/', include('ringgroups.urls')),
     path('contacts/', include('contacts.urls')),
     path('callcentres/', include('callcentres.urls')),
+    path('recordings/', include('recordings.urls')),
     path('autoreports/', include('autoreports.urls')),
 #    path('fsterminal/', include('fsterminal.urls')),
 

@@ -30,17 +30,22 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.http import HttpResponse, HttpResponseNotFound
+from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
+from tenants.pbxsettings import PbxSettings
+from pbx.commonfunctions import DomainUtils
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from .models import (
-    Recording,
+    Recording, CallRecording
 )
 from .serializers import (
-    RecordingSerializer,
+    RecordingSerializer, CallRecordingSerializer
 )
+from tenants.models import Domain
 
 
 class RecordingViewSet(viewsets.ModelViewSet):
@@ -61,3 +66,90 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+
+    def perform_destroy(self, instance):
+        instance.filename.delete(save=False)
+        instance.delete()
+
+
+class CallRecordingViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Call Recordings to be viewed or edited.
+    """
+    queryset = CallRecording.objects.all().order_by('domain_id', 'name')
+    serializer_class = CallRecordingSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['domain_id', 'year', 'month', 'day']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_destroy(self, instance):
+        instance.filename.delete(save=False)
+        instance.delete()
+
+
+def rec_check_address(addr):
+    aa_cache_key = 'recordings:allowed_addresses'
+    aa = cache.get(aa_cache_key)
+    if aa:
+        allowed_addresses = aa.split(',')
+    else:
+        allowed_addresses = PbxSettings().default_settings('recordings', 'allowed_address', 'array')
+        aa = ','.join(allowed_addresses)
+        cache.set(aa_cache_key, aa)
+
+    if addr not in allowed_addresses:
+        return False
+    return True
+
+
+@csrf_exempt
+def rec_import(request, domain, recfile):
+    if not rec_check_address(request.META['REMOTE_ADDR']):
+        return HttpResponseNotFound()
+    try:
+        d = Domain.objects.get(name=domain)
+    except Domain.DoesNotExist:
+        return HttpResponseNotFound()
+
+    if request.method == 'PUT' or request.method == 'POST':
+        rec = Recording.objects.create(name=recfile,
+                domain_id=d, updated_by='Recording Import %s' % request.method)
+
+    if request.method == "PUT": # FreeSWITCH mod_http_cache PUT request
+        rec.filename.save(recfile, request)
+    elif request.method == "POST": # Multipart form data with file field POST request
+        if request.content_type.startswith('multipart'):
+            post, files = request.parse_file_upload(request.META, request)
+            rec.filename.save(recfile, files['file'])
+    return HttpResponse('')
+
+@csrf_exempt
+def call_rec_import(request, domain, year, month, day, recfile):
+    if not rec_check_address(request.META['REMOTE_ADDR']):
+        return HttpResponseNotFound()
+    try:
+        d = Domain.objects.get(name=domain)
+    except Domain.DoesNotExist:
+        return HttpResponseNotFound()
+
+    if request.method == 'PUT' or request.method == 'POST':
+        rec = CallRecording.objects.create(name=recfile,
+                domain_id=d, year=year, month=month, day=day,
+                updated_by='Call Record Import %s' % request.method)
+
+    if request.method == "PUT": # FreeSWITCH mod_http_cache PUT request
+        rec.filename.save(recfile, request)
+    elif request.method == "POST": # Multipart form data with file field POST request
+        if request.content_type.startswith('multipart'):
+            post, files = request.parse_file_upload(request.META, request)
+            rec.filename.save(recfile, files['file'])
+    return HttpResponse('')

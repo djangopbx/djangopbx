@@ -1324,5 +1324,22 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "switch.modules",
+    "pk": "1f4875b0-9bb1-4225-879b-65ce32d7f0a5",
+    "fields": {
+        "label": "Voicemail",
+        "name": "mod_http_cache",
+        "category": "Applications",
+        "sequence": "790",
+        "enabled": "true",
+        "default_enabled": "true",
+        "description": "Allows HTTP GET request to cache a document",
+        "created": "2024-04-09T18:23:31.185Z",
+        "updated": "2024-04-09T18:23:31.185Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

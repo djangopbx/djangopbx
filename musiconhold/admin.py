@@ -123,6 +123,7 @@ class MusicOnHoldAdmin(ImportExportModelAdmin):
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
         for obj in formset.deleted_objects:
+            obj.filename.delete(save=False)
             obj.delete()
         for instance in instances:
             instance.updated_by = request.user.username

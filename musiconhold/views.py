@@ -80,3 +80,7 @@ class MohFileViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+
+    def perform_destroy(self, instance):
+        instance.filename.delete(save=False)
+        instance.delete()

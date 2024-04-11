@@ -1366,5 +1366,41 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "e97e5841-5ae7-4269-a0d3-d375adf515aa",
+    "fields": {
+        "category": "Other",
+        "name": "cache_dir",
+        "value": "/home/django-pbx/cache",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "20",
+        "description": "http_cache cache directory",
+        "created": "2024-04-09T18:19:18.723Z",
+        "updated": "2024-04-09T18:19:18.723Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "switch.switchvariable",
+    "pk": "a4a15c7f-4e90-4e9d-a5bc-d6898b7beccc",
+    "fields": {
+        "category": "Other",
+        "name": "certs_dir",
+        "value": "/etc/ssl/certs",
+        "command": "set",
+        "hostname": null,
+        "enabled": "true",
+        "sequence": "10",
+        "description": "SSL CA Certificates directory",
+        "created": "2022-05-10T11:39:25.366Z",
+        "updated": "2024-04-09T17:50:12.597Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

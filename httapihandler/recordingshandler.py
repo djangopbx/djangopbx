@@ -134,7 +134,7 @@ class RecordingsHandler(HttApiHandler):
         # this strips it on the known part of the name 'recording'
         received_file_name = 'recording%s' % self.fdict['rd_input'].name.rsplit('recording', 1)[1]
         try:
-            rec = Recording.objects.get(name=received_file_name)
+            rec = Recording.objects.get(domain_id=self.domain_uuid, name=received_file_name)
         except Recording.DoesNotExist:
             rec_file_exists = False
             d = Domain.objects.get(pk=self.domain_uuid)

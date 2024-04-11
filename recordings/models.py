@@ -38,6 +38,11 @@ def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/fs/recordings/<domain name>/<filename>
     return 'fs/recordings/{0}/{1}'.format(instance.domain_id.name, filename)
 
+def call_recording_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/fs/recordings/<domain name>/<filename>
+    return 'fs/recordings/{0}/archive/{1}/{2}/{3}/{4}'.format(instance.domain_id.name,
+                    instance.year, instance.month, instance.day, filename)
+
 
 class Recording(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))                                      # noqa: E501, E221
@@ -52,11 +57,39 @@ class Recording(models.Model):
     updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                            # noqa: E501, E221
 
     class Meta:
+        verbose_name_plural = 'Recordings'
         db_table = 'pbx_recordings'
         permissions = (
             ("can_download_recording", "can_download_recording"),
             ("can_upload_recording", "can_upload_recording"),
             ("can_play_recording", "can_play_recording")
+            )
+
+    def __str__(self):
+        return self.name
+
+
+class CallRecording(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Call Recording'))                                 # noqa: E501, E221
+    domain_id    = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))  # noqa: E501, E221
+    filename     = PbxFileField(upload_to=call_recording_directory_path, verbose_name=_('File Name'))                                                       # noqa: E501, E221
+    name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                  # noqa: E501, E221
+    year         = models.CharField(max_length=8, verbose_name=_('Year'))                                                                                   # noqa: E501, E221
+    month        = models.CharField(max_length=8, verbose_name=_('Month'))                                                                                  # noqa: E501, E221
+    day          = models.CharField(max_length=8, verbose_name=_('Day'))                                                                                    # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                              # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                            # noqa: E501, E221
+
+    class Meta:
+        verbose_name_plural = 'Call Recordings'
+        db_table = 'pbx_call_recordings'
+        permissions = (
+            ("can_download_call_recording", "can_download_call_recording"),
+            ("can_upload_call_recording", "can_upload_call_recording"),
+            ("can_play_call_recording", "can_play_call_recording")
             )
 
     def __str__(self):

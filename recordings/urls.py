@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,11 +27,17 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.urls import path
 from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
 router.register(r'recordings', views.RecordingViewSet)
+router.register(r'callrecordings', views.CallRecordingViewSet)
 
 urlpatterns = [
+    path('recimport/<str:domain>/<str:recfile>',
+            views.rec_import, name='recimport'),
+    path('callrecimport/<str:domain>/archive/<str:year>/<str:month>/<str:day>/<str:recfile>',
+            views.call_rec_import, name='callrecimport'),
 ]

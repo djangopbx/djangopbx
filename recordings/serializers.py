@@ -29,7 +29,7 @@
 
 from rest_framework import serializers
 from .models import (
-    Recording,
+    Recording, CallRecording
 )
 
 
@@ -40,5 +40,16 @@ class RecordingSerializer(serializers.ModelSerializer):
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'domain_id', 'filename', 'name', 'description', 'base64',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
+
+class CallRecordingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CallRecording
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'url', 'id', 'domain_id', 'filename', 'name', 'year', 'month', 'day', 'description',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]

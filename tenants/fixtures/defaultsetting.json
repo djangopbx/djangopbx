@@ -487,6 +487,24 @@
 },
 {
     "model": "tenants.defaultsetting",
+    "pk": "3ad82e7f-2126-417f-a1be-535ab11ac96d",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "user_name",
+        "value_type": "text",
+        "value": "user",
+        "sequence": "10",
+        "enabled": "false",
+        "description": "User level username for phone embeded web server.",
+        "created": "2024-04-10T09:39:23.333Z",
+        "updated": "2024-04-10T09:39:23.333Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
     "pk": "2672dbbc-2834-4e95-9ea9-e9ff6dc07838",
     "fields": {
         "app_uuid": null,
@@ -4621,6 +4639,42 @@
         "description": "Days to keep Admin logs - Non domain specific",
         "created": "2024-03-06T11:29:16.346Z",
         "updated": "2024-03-06T11:29:16.346Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "03b82047-ba14-44e1-bd56-c036fe1cf482",
+    "fields": {
+        "app_uuid": null,
+        "category": "recordings",
+        "subcategory": "allowed_address",
+        "value_type": "array",
+        "value": "127.0.0.1",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-04-09T18:33:47.073Z",
+        "updated": "2024-04-09T18:33:47.073Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "553b703f-b67f-436f-8dee-40addd7c559c",
+    "fields": {
+        "app_uuid": null,
+        "category": "recordings",
+        "subcategory": "allowed_address",
+        "value_type": "array",
+        "value": "::1",
+        "sequence": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-04-09T18:35:14.006Z",
+        "updated": "2024-04-09T18:35:14.006Z",
         "synchronised": null,
         "updated_by": "system"
     }
