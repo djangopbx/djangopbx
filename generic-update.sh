@@ -167,6 +167,15 @@ then
     rm -f /home/django-pbx/pbx/portal/fixtures/defaultmenuitemgroup.loaded
     sudo -u django-pbx bash -c 'source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py menudefaults'
 fi
+
+###############################################
+# Dialplan Defaults
+###############################################
+pbx_prompt n "Load Dialplan Defaults? "
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo -u django-pbx bash -c 'source ~/envdpbx/bin/activate && cd /home/django-pbx/pbx && python3 manage.py dialplandefaults'
+fi
 cd $cwd
 
 ###############################################
