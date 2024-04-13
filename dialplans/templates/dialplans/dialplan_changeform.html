@@ -5,6 +5,7 @@
     <div class="submit-row">
     {% if request.path|slice:"-8:" == '/change/' %}
             <input type="submit" value="{% translate 'Generate XML' %}" name="_generate-xml">
+            <input type="submit" value="{% translate 'Flush Dialplan Cache' %}" name="_clear-cache">
             <input type="submit" value="{% translate 'Generate Details from XML' %}" name="_generate-dd-xml">
             <p>{% translate 'Generate XML will overwrite the contents shown in the XML editor.  Be sure your Dialplan Details make sense.' %}</p>
     {% endif %}

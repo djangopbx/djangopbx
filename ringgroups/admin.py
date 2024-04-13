@@ -41,8 +41,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.forms import ModelForm, Select
 from switch.switchsounds import SwitchSounds
+from utilities.clearcache import ClearCache
 from pbx.commonwidgets import ListTextWidget
-
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from pbx.commondestination import CommonDestAction
 from .ringgroupfunctions import RgFunctions
@@ -209,16 +209,21 @@ class RingGroupAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
 
     def response_change(self, request, obj):
-        if "_generate-xml" in request.POST:
+        if '_generate-xml' in request.POST:
             rgf = RgFunctions(request.session['domain_uuid'], request.session['domain_name'], str(obj.id), request.user.username)
             dp_id = rgf.generate_xml()
             if dp_id:
                 obj.dialplan_id = dp_id
                 obj.save()
-                self.message_user(request, "XML Generated")
+                self.message_user(request, 'XML Generated')
             else:
-                self.message_user(request, "XML Failed", level=messages.ERROR)
+                self.message_user(request, 'XML Failed', level=messages.ERROR)
             return HttpResponseRedirect(".")
+        if '_clear-cache' in request.POST:
+            cc = ClearCache()
+            cc.dialplan(request.session['domain_name'], request.session['domain_uuid'])
+            self.message_user(request, 'Cache flushed')
+            return HttpResponseRedirect('.')
         return super().response_change(request, obj)
 
     def delete_model(self, request, obj):

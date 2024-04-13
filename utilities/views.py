@@ -29,7 +29,6 @@
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
-from django.core.cache import cache
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -39,19 +38,7 @@ from .forms import ClearCacheForm, ReloadXmlForm, TestEmailForm
 from dialplans.models import Dialplan
 from pbx.fscmdabslayer import FsCmdAbsLayer
 from pbx.pbxsendsmtp import PbxTemplateMessage
-
-phrases_available = True
-try:
-    from phrases.models import Phrases
-except ImportError:
-    phrases_available = False
-
-ivrmenus_available = True
-try:
-    from ivrmenus.models import IvrMenus
-except ImportError:
-    ivrmenus_available = False
-
+from .clearcache import ClearCache
 
 
 @method_decorator(staff_member_required, name="dispatch")
@@ -74,45 +61,22 @@ class ClearCacheView(View):
 
             domain_name = request.session['domain_name']
             domain_uuid = request.session['domain_uuid']
+            cc = ClearCache()
 
             if directory:
-                cache.delete('directory:groups:%s' % domain_name)
+                cc.directory(domain_name)
 
             if dialplan:
-                cache.delete('xmlhandler:context_type')
-                cache.delete('dialplan:%s' % domain_name)
-                dps = Dialplan.objects.filter(enabled='true', domain_id=domain_uuid, category='Inbound route')
-                for dp in dps:
-                    cache.delete('dialplan:%s:%s' % (dp.context, dp.number))
+                cc.dialplan(domain_name, domain_uuid)
 
             if languages:
-                del_list = [
-                    'xmlhandler:lang:default_language',
-                    'xmlhandler:lang:default_dialect',
-                    'xmlhandler:lang:default_voice',
-                    'xmlhandler:lang:sounds_dir'
-                ]
-                cache.delete_many(del_list)
-                if phrases_available:
-                    ps = Phrases.objects.filter(enabled='true', domain_id=domain_uuid)
-                    for p in ps:
-                        cache.delete('languages:%s:%s' % (p.language, str(p.id)))
+                cc.languages(domain_uuid)
 
             if configuration:
-                cache.delete('xmlhandler:allowed_addresses')
-                cache.delete('configuration:acl.conf')
-                cache.delete('configuration:sofia.conf')
-                cache.delete('configuration:local_stream.conf')
-                cache.delete('configuration:translate.conf')
-                cache.delete('configuration:callcentre.conf')
-
-                if ivrmenus_available:
-                    ivrs = IvrMenus.objects.filter(enabled='true', domain_id=domain_uuid)
-                    for ivr in ivrs:
-                        cache.delete('configuration:ivr.conf:%s' % str(ivr.id))
+                cc.configuration(domain_uuid)
 
             if clearall:
-                cache.clear()
+                cc.clearall()
 
             messages.add_message(request, messages.INFO, _('Cache Cleared'))
 

@@ -37,6 +37,7 @@ from django.forms import ModelForm
 from django_ace import AceWidget
 from pbx.commonwidgets import ListTextWidget
 from pbx.commonfunctions import DomainFilter, DomainUtils
+from utilities.clearcache import ClearCache
 
 from .dialplanfunctions import SwitchDp, DpApps
 
@@ -191,16 +192,21 @@ class DialplanAdmin(ImportExportModelAdmin):
         formset.save_m2m()
 
     def response_change(self, request, obj):
-        if "_generate-xml" in request.POST:
+        if '_generate-xml' in request.POST:
             obj.xml = SwitchDp().generate_xml(obj.id, request.session['domain_uuid'], request.session['domain_name'])
             obj.save()
-            self.message_user(request, "XML Generated")
-            return HttpResponseRedirect(".")
-        if "_generate-dd-xml" in request.POST:
+            self.message_user(request, 'XML Generated')
+            return HttpResponseRedirect('.')
+        if '_generate-dd-xml' in request.POST:
             SwitchDp().create_dpd_from_xml(obj.id, request.user.username)
             obj.save()
-            self.message_user(request, "Dialplan Details Generated")
-            return HttpResponseRedirect(".")
+            self.message_user(request, 'Dialplan Details Generated')
+            return HttpResponseRedirect('.')
+        if '_clear-cache' in request.POST:
+            cc = ClearCache()
+            cc.dialplan(request.session['domain_name'], request.session['domain_uuid'])
+            self.message_user(request, 'Cache flushed')
+            return HttpResponseRedirect('.')
         return super().response_change(request, obj)
 
     def save_model(self, request, obj, form, change):

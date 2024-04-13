@@ -1,9 +1,10 @@
 {% extends 'admin/change_form.html' %}
-
+{% load i18n static %}
 {% block submit_buttons_bottom %}
     <div class="submit-row">
     {% if request.path|slice:"-8:" == '/change/' %}
-            <input type="submit" value="Generate Dialplan XML" name="_generate-xml">
+            <input type="submit" value="{% translate 'Generate Dialplan XML' %}" name="_generate-xml">
+            <input type="submit" value="{% translate 'Flush Dialplan Cache' %}" name="_clear-cache">
     {% endif %}
     </div>
     {{ block.super }}
