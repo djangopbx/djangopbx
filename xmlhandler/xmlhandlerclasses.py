@@ -550,17 +550,21 @@ class DialplanHandler(XmlHandler):
                     context=call_context, enabled='true'
                     ).values_list('xml', flat=True).order_by('sequence'))
             else:
-                excludeList = DialplanExcludes.objects.values_list('app_id', flat=True).filter(domain_name=call_context)
-                if excludeList.count() == 0:
-                    xml_list.extend(Dialplan.objects.filter(
-                        (Q(context=call_context) | Q(context='${domain_name}')),
-                        (Q(hostname=hostname) | Q(hostname__isnull=True)),  xml__isnull=False, enabled='true'
-                        ).values_list('xml', flat=True).order_by('sequence'))
-                else:
+                dialplan_excludes_cache_key = 'dialplanexclude:%s' % call_context
+                excludeList = cache.get(dialplan_excludes_cache_key)
+                if excludeList is None:
+                    excludeList = list(DialplanExcludes.objects.values_list('app_id', flat=True).filter(domain_name=call_context))
+                    cache.set(dialplan_excludes_cache_key, excludeList)
+                if excludeList:
                     xml_list.extend(Dialplan.objects.filter(
                         (Q(context=call_context) | Q(context='${domain_name}')),
                         (Q(hostname=hostname) | Q(hostname__isnull=True)),  xml__isnull=False, enabled='true'
                         ).exclude(app_id__in=excludeList).values_list('xml', flat=True).order_by('sequence'))
+                else:
+                    xml_list.extend(Dialplan.objects.filter(
+                        (Q(context=call_context) | Q(context='${domain_name}')),
+                        (Q(hostname=hostname) | Q(hostname__isnull=True)),  xml__isnull=False, enabled='true'
+                        ).values_list('xml', flat=True).order_by('sequence'))
 
         if len(xml_list) == 0:
             return self.NotFoundXml()
