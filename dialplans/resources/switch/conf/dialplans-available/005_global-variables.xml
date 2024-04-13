@@ -5,6 +5,7 @@
             <action application="export" data="pbx_httapi_url=http://127.0.0.1:8008"/>
             <action application="export" data="pbx_call_recording_url=http://127.0.0.1:8008"/>
             <action application="export" data="pbx_recording_url=http://127.0.0.1:8008"/>
+            <action application="export" data="pbx_play_recording_url=http://127.0.0.1:80"/>
         </condition>
     </extension>
 </context>
