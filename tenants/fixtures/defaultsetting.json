@@ -4213,24 +4213,6 @@
 },
 {
     "model": "tenants.defaultsetting",
-    "pk": "f64b00c5-345f-4cb2-b72f-1cfcf446ac9d",
-    "fields": {
-        "app_uuid": null,
-        "category": "dialplan",
-        "subcategory": "httapi_url",
-        "value_type": "text",
-        "value": "http://127.0.0.1:8008",
-        "sequence": "10",
-        "enabled": "true",
-        "description": null,
-        "created": "2023-01-08T06:53:30.050Z",
-        "updated": "2023-01-08T06:53:30.050Z",
-        "synchronised": null,
-        "updated_by": "system"
-    }
-},
-{
-    "model": "tenants.defaultsetting",
     "pk": "f714e8a0-9753-48e0-9674-0f4efc7e4ff1",
     "fields": {
         "app_uuid": null,

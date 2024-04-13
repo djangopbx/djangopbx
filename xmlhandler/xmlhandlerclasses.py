@@ -532,14 +532,7 @@ class DialplanHandler(XmlHandler):
         if xml:
             return xml
 
-        cache_key = 'xmlhandler:httapi_url'
-        httapi_url = cache.get(cache_key)
-        if not httapi_url:
-            httapi_url = PbxSettings().default_settings('dialplan', 'httapi_url', 'text')[0]
-            cache.set(cache_key, httapi_url)
-
         xml_list.append(self.XmlHeader('dialplan', call_context))
-        xml_list.append(self.XmlHttapiUrl(httapi_url))
 
         if context_name == 'public' and context_type == 'single':
             xml_list.extend(Dialplan.objects.filter(
