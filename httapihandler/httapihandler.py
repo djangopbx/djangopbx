@@ -32,6 +32,7 @@ from django.core.cache import cache
 from lxml import etree
 from .models import HttApiSession
 from tenants.pbxsettings import PbxSettings
+from pbx.pbxipaddresscheck import loopback_default
 
 
 class HttApiHandler():
@@ -160,22 +161,14 @@ class HttApiHandler():
         cache_key = 'httapihandler:allowed_addresses'
         aa = cache.get(cache_key)
         if aa:
-            allowed_addresses = aa.split(',')
+            return aa
+        aa = PbxSettings().default_settings('httapihandler', 'allowed_address', 'array')
+        if aa:
+            aa = list(aa)
         else:
-            allowed_addresses = PbxSettings().default_settings('httapihandler', 'allowed_address', 'array')
-            if allowed_addresses:
-                aa = ','.join(allowed_addresses)
-            else:
-                aa = '127.0.0.1'
-            cache.set(cache_key, aa)
-        return allowed_addresses
-
-    def address_allowed(self, ip_address):
-        allowed_addresses = self.get_allowed_addresses()
-        if ip_address in allowed_addresses:
-            return True
-        else:
-            return False
+            aa = loopback_default
+        cache.set(cache_key, aa)
+        return aa
 
     def get_first_call(self):
         if self.exiting:

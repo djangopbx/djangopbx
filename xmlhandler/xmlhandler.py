@@ -31,7 +31,7 @@ from django.core.cache import cache
 from lxml import etree
 from tenants.pbxsettings import PbxSettings
 from switch.models import SwitchVariable
-
+from pbx.pbxipaddresscheck import loopback_default
 
 class XmlHandler():
 
@@ -84,15 +84,15 @@ class XmlHandler():
         cache_key = 'xmlhandler:allowed_addresses'
         aa = cache.get(cache_key)
         if aa:
-            allowed_addresses = aa.split(',')
-        else:
-            allowed_addresses = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
-            if allowed_addresses:
-                aa = ','.join(allowed_addresses)
-            else:
-                aa = '127.0.0.1'
+            return aa
+        aa = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
+        if aa:
+            aa = list(aa)
             cache.set(cache_key, aa)
-        return allowed_addresses
+            return aa
+        aa = loopback_default
+        cache.set(cache_key, aa)
+        return aa
 
     def get_default_language(self):
         cache_key = 'xmlhandler:lang:default_language'

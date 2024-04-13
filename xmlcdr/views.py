@@ -53,6 +53,7 @@ from pbx.commonvalidators import clean_uuid4_list
 from pbx.restpermissions import (
     AdminApiAccessPermission
 )
+from pbx.pbxipaddresscheck import pbx_ip_address_check, loopback_default
 from .models import (
     XmlCdr,
 )
@@ -70,14 +71,15 @@ def xml_cdr_import(request):
     debug = False
     aa_cache_key = 'xmlcdr:allowed_addresses'
     aa = cache.get(aa_cache_key)
-    if aa:
-        allowed_addresses = aa.split(',')
-    else:
-        allowed_addresses = PbxSettings().default_settings('cdr', 'allowed_address', 'array')
-        aa = ','.join(allowed_addresses)
+    if not aa:
+        aa = PbxSettings().default_settings('cdr', 'allowed_address', 'array')
+        if aa:
+            aa = list(aa)
+        else:
+            aa = loopback_default
         cache.set(aa_cache_key, aa)
 
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+    if not pbx_ip_address_check(request, aa):
         return HttpResponseNotFound()
 
     if request.method == 'POST':

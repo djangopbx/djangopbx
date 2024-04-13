@@ -35,6 +35,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
 from tenants.pbxsettings import PbxSettings
 from pbx.commonfunctions import DomainUtils
+from pbx.pbxipaddresscheck import pbx_ip_address_check, loopback_default
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -96,24 +97,24 @@ class CallRecordingViewSet(viewsets.ModelViewSet):
         instance.delete()
 
 
-def rec_check_address(addr):
+def rec_check_address(request):
     aa_cache_key = 'recordings:allowed_addresses'
     aa = cache.get(aa_cache_key)
-    if aa:
-        allowed_addresses = aa.split(',')
-    else:
-        allowed_addresses = PbxSettings().default_settings('recordings', 'allowed_address', 'array')
-        aa = ','.join(allowed_addresses)
+    if not aa:
+        aa = PbxSettings().default_settings('recordings', 'allowed_address', 'array')
+        if aa:
+            aa = list(aa)
+        else:
+            aa = loopback_default
         cache.set(aa_cache_key, aa)
-
-    if addr not in allowed_addresses:
+    if not pbx_ip_address_check(request, aa):
         return False
     return True
 
 
 @csrf_exempt
 def rec_import(request, domain, recfile):
-    if not rec_check_address(request.META['REMOTE_ADDR']):
+    if not rec_check_address(request):
         return HttpResponseNotFound()
     try:
         d = Domain.objects.get(name=domain)
@@ -134,7 +135,7 @@ def rec_import(request, domain, recfile):
 
 @csrf_exempt
 def call_rec_import(request, domain, year, month, day, recfile):
-    if not rec_check_address(request.META['REMOTE_ADDR']):
+    if not rec_check_address(request):
         return HttpResponseNotFound()
     try:
         d = Domain.objects.get(name=domain)

@@ -32,6 +32,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from django.views.decorators.csrf import csrf_exempt
+from pbx.pbxipaddresscheck import pbx_ip_address_check
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -79,7 +80,8 @@ class HttApiSessionViewSet(viewsets.ModelViewSet):
 def processhttapi(request, httapihf):
     if not request.method == 'POST':
         return HttpResponseNotFound()
-    if not httapihf.address_allowed(request.META['REMOTE_ADDR']):
+    allowed_addresses = httapihf.get_allowed_addresses()
+    if not pbx_ip_address_check(request, allowed_addresses):
         return HttpResponseNotFound()
     return HttpResponse(httapihf.htt_get_data(), content_type='text/xml')
 

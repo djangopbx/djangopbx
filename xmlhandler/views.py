@@ -30,21 +30,24 @@
 import logging
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
+from pbx.pbxipaddresscheck import pbx_ip_address_check
 from .xmlhandlerclasses import DirectoryHandler, DialplanHandler, LanguagesHandler, ConfigHandler
 
 logger = logging.getLogger(__name__)
 
+def check_ok_to_process(request, allowed_addresses, method='POST'):
+    if not pbx_ip_address_check(request, allowed_addresses):
+        return False
+    if not request.method == method:
+        return False
+    return True
 
 @csrf_exempt
 def dialplan(request):
     debug = False
     xmlhf = DialplanHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
-
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
-        return HttpResponseNotFound()
-
-    if not request.method == 'POST':
+    if not check_ok_to_process(request, allowed_addresses):
         return HttpResponseNotFound()
 
     if debug:
@@ -72,15 +75,11 @@ def dialplan(request):
 def staticdialplan(request):
     xmlhf = DialplanHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
-
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+    if not check_ok_to_process(request, allowed_addresses, 'GET'):
         return HttpResponseNotFound()
 
-    if request.method == 'GET':
-        hostname = request.GET.get('hostname', 'None')
-        xml = xmlhf.GetDialplanStatic(hostname)
-    else:
-        return HttpResponseNotFound()
+    hostname = request.GET.get('hostname', 'None')
+    xml = xmlhf.GetDialplanStatic(hostname)
 
     return HttpResponse(xml, content_type='application/xml')
 
@@ -90,11 +89,7 @@ def directory(request):
     debug = False
     xmlhf = DirectoryHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
-
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
-        return HttpResponseNotFound()
-
-    if not request.method == 'POST':
+    if not check_ok_to_process(request, allowed_addresses):
         return HttpResponseNotFound()
 
     if debug:
@@ -134,13 +129,9 @@ def staticdirectory(request):
     xmlhf = DirectoryHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
+    if not check_ok_to_process(request, allowed_addresses, 'GET'):
         return HttpResponseNotFound()
-
-    if request.method == 'GET':
-        xml = xmlhf.GetDirectoryStatic()
-    else:
-        return HttpResponseNotFound()
+    xml = xmlhf.GetDirectoryStatic()
 
     return HttpResponse(xml, content_type='application/xml')
 
@@ -150,10 +141,7 @@ def languages(request):
     xmlhf = LanguagesHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
 
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
-        return HttpResponseNotFound()
-
-    if not request.method == 'POST':
+    if not check_ok_to_process(request, allowed_addresses):
         return HttpResponseNotFound()
 
     if debug:
@@ -172,9 +160,7 @@ def configuration(request):
 
     xmlhf = ConfigHandler()
     allowed_addresses = xmlhf.get_allowed_addresses()
-    if request.META['REMOTE_ADDR'] not in allowed_addresses:
-        return HttpResponseNotFound()
-    if not request.method == 'POST':
+    if not check_ok_to_process(request, allowed_addresses):
         return HttpResponseNotFound()
     if debug:
         logger.info('XML Handler request: {}'.format(request.POST))
