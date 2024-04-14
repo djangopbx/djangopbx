@@ -39,6 +39,7 @@ from dialplans.models import Dialplan
 from pbx.fscmdabslayer import FsCmdAbsLayer
 from pbx.pbxsendsmtp import PbxTemplateMessage
 from .clearcache import ClearCache
+from .reloadxml import ReloadXml
 
 
 @method_decorator(staff_member_required, name="dispatch")
@@ -90,33 +91,28 @@ class ReloadXmlView(View):
     template_name = "utilities/reloadxml.html"
 
     def get(self, request, *args, **kwargs):
-        es = FsCmdAbsLayer()
+        rload = ReloadXml()
         form = self.form_class()
-        form.fields['host'].choices = [(h, h) for h in es.freeswitches]
+        form.fields['host'].choices = [(h, h) for h in rload.freeswitches]
         return render(request, self.template_name, {'form': form, 'refresher': 'reloadxml'})
 
     def post(self, request, *args, **kwargs):
-        es = FsCmdAbsLayer()
+        rload = ReloadXml()
         form = self.form_class(request.POST)
-        form.fields['host'].choices = [(h, h) for h in es.freeswitches]
+        form.fields['host'].choices = [(h, h) for h in rload.freeswitches]
         if form.is_valid():
             host = form.cleaned_data['host'] # noqa: E221
             xml  = form.cleaned_data['xml']  # noqa: E221
             acl  = form.cleaned_data['acl']  # noqa: E221
 
             if xml or acl:
-                if not es.connect():
+                if not rload.connect():
                     return render(request, 'error.html', {'back': '/portal/', 'info': {'Message': _('Unable to connect to the FreeSWITCH Event Socket')}, 'title': 'Broker/Socket Error'})
             if xml:
-                 es.send('api reloadxml', host)
+                 rload.xml(host)
             if acl:
-                 es.send('api reloadacl', host)
-            es.process_events()
-            es.get_responses()
-            es.disconnect()
-
+                 rload.acl(host)
             messages.add_message(request, messages.INFO, _('XML/ACL Reloaded'))
-
         return render(request, self.template_name, {'form': form, 'refresher': 'reloadxml'})
 
 

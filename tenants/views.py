@@ -29,20 +29,23 @@
 
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import permissions
 from .models import (
     Domain, Profile, DefaultSetting, DomainSetting, ProfileSetting
 )
 from .serializers import (
     UserSerializer, GroupSerializer, DomainSerializer, ProfileSerializer, DefaultSettingSerializer,
-    DomainSettingSerializer, ProfileSettingSerializer
+    FreeswitchesSerializer, DomainSettingSerializer, ProfileSettingSerializer
 )
 from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from dialplans.dialplanfunctions import SwitchDp
+from utilities.reloadxml import ReloadXml
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -141,6 +144,54 @@ class DefaultSettingViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         instance = serializer.save(updated_by=self.request.user.username)
+
+
+class FreeswitchesViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Default Settings to be viewed or edited.
+    """
+    queryset = DefaultSetting.objects.filter(category='cluster', subcategory__startswith='switch_name').order_by('value')
+    serializer_class = FreeswitchesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['value']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    @action(detail=True)
+    def reload_xml_single(self, request, pk=None):
+        obj = self.get_object()
+        rload = ReloadXml()
+        if not rload.connect():
+            return Response({'status': 'broker/socket error'})
+        rload.xml(obj.value)
+        return Response({'status': 'reloadxml ok'})
+
+    @action(detail=True)
+    def reload_acl_single(self, request, pk=None):
+        obj = self.get_object()
+        rload = ReloadXml()
+        if not rload.connect():
+            return Response({'status': 'broker/socket error'})
+        rload.acl(obj.value)
+        return Response({'status': 'reloadacl ok'})
+
+    @action(detail=False)
+    def reload_xml_global(self, request):
+        rload = ReloadXml()
+        if not rload.connect():
+            return Response({'status': 'broker/socket error'})
+        rload.xml()
+        return Response({'status': 'reloadxml ok'})
+
+    @action(detail=False)
+    def reload_acl_global(self, request):
+        rload = ReloadXml()
+        if not rload.connect():
+            return Response({'status': 'broker/socket error'})
+        rload.acl()
+        return Response({'status': 'reloadacl ok'})
 
 
 class TimeConditionPresetsViewSet(viewsets.ModelViewSet):

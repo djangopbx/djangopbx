@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,19 +27,32 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from rest_framework import routers
-from . import views
+from pbx.fscmdabslayer import FsCmdAbsLayer
 
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
-router.register(r'domains', views.DomainViewSet)
-router.register(r'profiles', views.ProfileViewSet)
-router.register(r'default_settings', views.DefaultSettingViewSet)
-router.register(r'domain_settings', views.DomainSettingViewSet)
-router.register(r'profile_settings', views.ProfileSettingViewSet)
-router.register(r'time_condition_presets', views.TimeConditionPresetsViewSet, basename='time_condition_presets')
-router.register(r'freeswitches', views.FreeswitchesViewSet, basename='freeswitches')
 
-urlpatterns = [
-]
+class ReloadXml():
+
+    def __init__(self):
+        self.es = FsCmdAbsLayer()
+        self.freeswitches = self.es.freeswitches
+
+    def connect(self):
+        if self.es.connect():
+            return True
+        return False
+
+    def xml(self, host=None):
+        self.es.send('api reloadxml', host)
+        self.process()
+        return
+
+    def acl(self, host=None):
+        self.es.send('api reloadacl', host)
+        self.process()
+        return
+
+    def process(self):
+        self.es.process_events()
+        self.es.get_responses()
+        self.es.disconnect()
+        return

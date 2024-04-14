@@ -80,6 +80,22 @@ class DefaultSettingSerializer(serializers.ModelSerializer):
                 ]
 
 
+class Freeswitches(DefaultSetting):
+    pass
+
+
+class FreeswitchesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Freeswitches
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'id', 'url', 'app_uuid', 'category', 'subcategory',
+                    'value_type', 'value', 'sequence', 'enabled',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
+
 class DomainSettingSerializer(serializers.ModelSerializer):
 
     class Meta:
