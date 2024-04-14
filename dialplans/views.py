@@ -75,6 +75,10 @@ from .timecondition import TimeCondition
 
 class DialplanInboundRoute(viewsets.ViewSet):
     serializer_class = InboundRouteSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
 
     def list(self, request):
         queryset = Dialplan.objects.filter(category='Inbound route').annotate(
@@ -148,6 +152,10 @@ class DialplanInboundRoute(viewsets.ViewSet):
 
 class DialplanOutboundRoute(viewsets.ViewSet):
     serializer_class = OutboundRouteSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
 
     def list(self, request):
         queryset = Dialplan.objects.filter(category='Outbound route').annotate(
@@ -216,6 +224,10 @@ class DialplanOutboundRoute(viewsets.ViewSet):
 
 class DialplanTimeCondition(viewsets.ViewSet):
     serializer_class = TimeConditionSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
 
     def list(self, request):
         queryset = Dialplan.objects.filter(category='Time condition').annotate(

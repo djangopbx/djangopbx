@@ -48,15 +48,22 @@ class ClearCache():
     def directory(self, domain_name):
         cache.delete('directory:groups:%s' % domain_name)
 
-    def dialplan(self, domain_name, domain_uuid):
+    def dialplan(self, domain_name=None):
         cache.delete('xmlhandler:context_type')
-        cache.delete('dialplan:%s' % domain_name)
-        dps = Dialplan.objects.filter(enabled='true', domain_id=domain_uuid, category='Inbound route')
+        if domain_name:
+            cache.delete('dialplan:%s' % domain_name)
+            dps = Dialplan.objects.filter(enabled='true', domain_id__name=domain_name, category='Inbound route')
+            for dp in dps:
+                cache.delete('dialplan:%s:%s' % (dp.context, dp.number))
+            return
+        dps = Dialplan.objects.filter(enabled='true')
         for dp in dps:
+            cache.delete('dialplan:%s' % dp.domain_id.name)
             cache.delete('dialplan:%s:%s' % (dp.context, dp.number))
         return
 
-    def languages(self, domain_uuid):
+
+    def languages(self):
         del_list = [
             'xmlhandler:lang:default_language',
             'xmlhandler:lang:default_dialect',
@@ -64,13 +71,16 @@ class ClearCache():
             'xmlhandler:lang:sounds_dir'
         ]
         cache.delete_many(del_list)
+        return
+
+    def phrases(self, domain_name):
         if phrases_available:
-            ps = Phrases.objects.filter(enabled='true', domain_id=domain_uuid)
+            ps = Phrases.objects.filter(enabled='true', domain_id__name=domain_name)
             for p in ps:
                 cache.delete('languages:%s:%s' % (p.language, str(p.id)))
         return
 
-    def configuration(self, domain_uuid):
+    def configuration(self):
         del_list = [
             'xmlhandler:allowed_addresses',
             'configuration:acl.conf',
@@ -81,9 +91,11 @@ class ClearCache():
             'configuration:conference.conf'
         ]
         cache.delete_many(del_list)
+        return
 
+    def ivrmenus(self, domain_name):
         if ivrmenus_available:
-            ivrs = IvrMenus.objects.filter(enabled='true', domain_id=domain_uuid)
+            ivrs = IvrMenus.objects.filter(enabled='true', domain_id__name=domain_name)
             for ivr in ivrs:
                 cache.delete('configuration:ivr.conf:%s' % str(ivr.id))
         return

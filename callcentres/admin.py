@@ -449,8 +449,8 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
             return HttpResponseRedirect('.')
         if '_clear-cache' in request.POST:
             cc = ClearCache()
-            cc.dialplan(request.session['domain_name'], request.session['domain_uuid'])
-            cc.configuration(request.session['domain_uuid'])
+            cc.dialplan(request.session['domain_name'])
+            cc.configuration()
             self.message_user(request, 'Cache flushed')
             return HttpResponseRedirect('.')
         return super().response_change(request, obj)

@@ -221,7 +221,7 @@ class RingGroupAdmin(ImportExportModelAdmin):
             return HttpResponseRedirect(".")
         if '_clear-cache' in request.POST:
             cc = ClearCache()
-            cc.dialplan(request.session['domain_name'], request.session['domain_uuid'])
+            cc.dialplan(request.session['domain_name'])
             self.message_user(request, 'Cache flushed')
             return HttpResponseRedirect('.')
         return super().response_change(request, obj)

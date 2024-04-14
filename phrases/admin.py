@@ -36,9 +36,10 @@ from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
 from django.forms import ModelForm
+from django.http import HttpResponseRedirect
 from switch.switchsounds import SwitchSounds
+from utilities.clearcache import ClearCache
 from pbx.commonwidgets import ListTextWidget
-
 from pbx.commonfunctions import DomainFilter, DomainUtils
 
 
@@ -118,6 +119,7 @@ class PhrasesAdmin(ImportExportModelAdmin):
             'all': ('css/custom_admin_tabularinline.css', )     # Include extra css to remove title from tabular inline
         }
 
+    change_form_template = 'phrases/phrases_changeform.html'
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['name', 'description']
     fieldsets = [
@@ -152,6 +154,14 @@ class PhrasesAdmin(ImportExportModelAdmin):
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']
         super().save_model(request, obj, form, change)
+
+    def response_change(self, request, obj):
+        if '_clear-cache' in request.POST:
+            cc = ClearCache()
+            cc.phrases(request.session['domain_name'])
+            self.message_user(request, 'Cache flushed')
+            return HttpResponseRedirect('.')
+        return super().response_change(request, obj)
 
 
 admin.site.register(Phrases, PhrasesAdmin)

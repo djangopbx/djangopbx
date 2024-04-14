@@ -60,20 +60,21 @@ class ClearCacheView(View):
             clearall      = form.cleaned_data['clearall']      # noqa: E221
 
             domain_name = request.session['domain_name']
-            domain_uuid = request.session['domain_uuid']
             cc = ClearCache()
 
             if directory:
                 cc.directory(domain_name)
 
             if dialplan:
-                cc.dialplan(domain_name, domain_uuid)
+                cc.dialplan(domain_name)
 
             if languages:
-                cc.languages(domain_uuid)
+                cc.languages()
+                cc.phrases(domain_name)
 
             if configuration:
-                cc.configuration(domain_uuid)
+                cc.configuration()
+                cc.ivrmenus(domain_name)
 
             if clearall:
                 cc.clearall()
