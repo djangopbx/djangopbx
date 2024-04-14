@@ -38,7 +38,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django_tables2 import Table, SingleTableView, LazyPaginator
 from django.utils.html import format_html
-
+from utilities.clearcache import ClearCache
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -72,7 +72,7 @@ class RingGroupViewSet(viewsets.ModelViewSet):
         serializer.save(updated_by=self.request.user.username)
 
     @action(detail=True)
-    def generatexml(self, request, pk=None):
+    def generate_xml(self, request, pk=None):
         obj = self.get_object()
         objf = RgFunctions(str(obj.domain_id.id), obj.domain_id.name, str(obj.id), request.user.username)
         dp_id = objf.generate_xml()
@@ -82,6 +82,12 @@ class RingGroupViewSet(viewsets.ModelViewSet):
             return Response({'status': 'ok'})
         else:
             return Response({'status': 'err'})
+
+    @action(detail=True)
+    def flush_cache_dialplan(self, request, pk=None):
+        obj = self.get_object()
+        ClearCache().dialplan(obj.domain_id.name)
+        return Response({'status': 'dialplan cache flushed'})
 
 
 class RingGroupDestinationViewSet(viewsets.ModelViewSet):

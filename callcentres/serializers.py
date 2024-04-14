@@ -35,7 +35,7 @@ from .models import (
 
 class CallCentreQueuesSerializer(serializers.ModelSerializer):
 
-    gen_xml = serializers.HyperlinkedIdentityField(view_name='callcentrequeues-generatexml')
+    gen_xml = serializers.HyperlinkedIdentityField(view_name='callcentrequeues-generate-xml')
     class Meta:
         model = CallCentreQueues
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']

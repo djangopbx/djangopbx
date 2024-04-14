@@ -32,6 +32,7 @@ from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from utilities.clearcache import ClearCache
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -65,7 +66,7 @@ class IvrMenusViewSet(viewsets.ModelViewSet):
         serializer.save(updated_by=self.request.user.username)
 
     @action(detail=True)
-    def generatexml(self, request, pk=None):
+    def generate_xml(self, request, pk=None):
         obj = self.get_object()
         objf = IvrFunctions(obj, request.user.username)
         dp_id = objf.generate_xml()
@@ -75,6 +76,13 @@ class IvrMenusViewSet(viewsets.ModelViewSet):
             return Response({'status': 'ok'})
         else:
             return Response({'status': 'err'})
+
+    @action(detail=True)
+    def flush_cache_ivrmenu(self, request, pk=None):
+        obj = self.get_object()
+        ClearCache().dialplan(obj.domain_id.name)
+        ClearCache().ivrmenus(obj.domain_id.name)
+        return Response({'status': 'ivrmenu cache flushed'})
 
 
 class IvrMenuOptionsViewSet(viewsets.ModelViewSet):

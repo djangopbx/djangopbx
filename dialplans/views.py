@@ -27,26 +27,28 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import uuid
+import re
+import json
+from lxml import etree
+from io import StringIO
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework import permissions
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseNotFound
-from lxml import etree
-import uuid
-import re
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.utils.html import format_html
 import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
-from io import StringIO
-import json
+from utilities.clearcache import ClearCache
 from .timeconditions import TimeConditions
 
 from pbx.restpermissions import (
@@ -332,6 +334,20 @@ class DialplanViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+
+    @action(detail=False)
+    def flush_cache_all_dialplans(self, request):
+        ClearCache().dialplan()
+        return Response({'status': 'dialplan cache flushed'})
+
+    @action(detail=True)
+    def flush_cache_dialplan(self, request, pk=None):
+        obj = self.get_object()
+        if obj.domain_id:
+            ClearCache().dialplan(obj.domain_id.name)
+        else:
+            ClearCache().dialplan(obj.context)
+        return Response({'status': 'dialplan cache flushed'})
 
 
 class DialplanDetailViewSet(viewsets.ModelViewSet):

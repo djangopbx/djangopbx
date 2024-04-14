@@ -32,7 +32,7 @@ from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-
+from utilities.clearcache import ClearCache
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -76,3 +76,9 @@ class CallFlowsViewSet(viewsets.ModelViewSet):
             return Response({'status': 'ok'})
         else:
             return Response({'status': 'err'})
+
+    @action(detail=True)
+    def flush_cache_dialplan(self, request, pk=None):
+        obj = self.get_object()
+        ClearCache().dialplan(obj.domain_id.name)
+        return Response({'status': 'dialplan cache flushed'})

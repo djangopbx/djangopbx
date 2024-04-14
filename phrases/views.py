@@ -29,8 +29,10 @@
 
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.response import Response
+from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
-
+from utilities.clearcache import ClearCache
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -61,6 +63,12 @@ class PhrasesViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+
+    @action(detail=True)
+    def flush_cache_phrase(self, request, pk=None):
+        obj = self.get_object()
+        ClearCache().phrases(obj.domain_id.name)
+        return Response({'status': 'language phrase cache flushed'})
 
 
 class PhraseDetailsViewSet(viewsets.ModelViewSet):

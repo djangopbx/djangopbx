@@ -47,8 +47,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext_lazy as _
+from utilities.clearcache import ClearCache
 from .callcentrefunctions import CcFunctions
-
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -81,7 +81,7 @@ class CallCentreQueuesViewSet(viewsets.ModelViewSet):
         serializer.save(updated_by=self.request.user.username)
 
     @action(detail=True)
-    def generatexml(self, request, pk=None):
+    def generate_xml(self, request, pk=None):
         obj = self.get_object()
         objf = CcFunctions(obj, request.user.username)
 
@@ -92,6 +92,13 @@ class CallCentreQueuesViewSet(viewsets.ModelViewSet):
             return Response({'status': 'ok'})
         else:
             return Response({'status': 'err'})
+
+    @action(detail=True)
+    def flush_cache_call_centre(self, request, pk=None):
+        obj = self.get_object()
+        ClearCache().dialplan(obj.domain_id.name)
+        ClearCache().configuration()
+        return Response({'status': 'configuration and dialplan cache flushed'})
 
 
 class CallCentreAgentsViewSet(viewsets.ModelViewSet):

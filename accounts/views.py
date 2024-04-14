@@ -31,6 +31,8 @@ from django.views.generic.edit import UpdateView
 from django.forms.models import inlineformset_factory
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.response import Response
+from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -40,9 +42,11 @@ from django.utils.html import format_html
 from django.http import HttpResponseRedirect
 
 from pbx.commonvalidators import clean_uuid4_list
+from utilities.clearcache import ClearCache
 from pbx.restpermissions import (
     AdminApiAccessPermission
 )
+from tenants.models import Domain
 from .models import (
     Extension, FollowMeDestination, Gateway, Bridge,
 )
@@ -70,6 +74,21 @@ class ExtensionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+
+    @action(detail=False)
+    def flush_cache_all_directories(self, request):
+        i = 0
+        qs = Domain.objects.filter(enabled='true')
+        for d in qs:
+            ClearCache().directory(d.name)
+            i += 1
+        return Response({'status': 'directory cache flushed', 'count': i})
+
+    @action(detail=True)
+    def flush_cache_directory(self, request, pk=None):
+        obj = self.get_object()
+        ClearCache().directory(obj.domain_id.name)
+        return Response({'status': 'directory cache flushed'})
 
 
 class FollowMeDestinationViewSet(viewsets.ModelViewSet):

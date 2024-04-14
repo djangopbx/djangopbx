@@ -58,7 +58,8 @@ class ClearCache():
             return
         dps = Dialplan.objects.filter(enabled='true')
         for dp in dps:
-            cache.delete('dialplan:%s' % dp.domain_id.name)
+            if dp.domain_id:
+                cache.delete('dialplan:%s' % dp.domain_id.name)
             cache.delete('dialplan:%s:%s' % (dp.context, dp.number))
         return
 
