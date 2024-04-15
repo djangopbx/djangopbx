@@ -88,7 +88,7 @@ class DialplanDetailAdmin(ImportExportModelAdmin):
     list_display = ('tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence')
     list_filter = ('dialplan_id__domain_id', 'dialplan_id__name', 'group')
     fieldsets = [
-        (None,  {'fields': ['tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence']}),
+        (None,  {'fields': ['tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence', 'enabled']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     ordering = [
@@ -114,7 +114,7 @@ class DialplanDetailsInLine(admin.TabularInline):
 
     extra = 4
     fieldsets = [
-        (None,          {'fields': ['tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence']}),
+        (None,          {'fields': ['tag', 'type', 'data', 'dp_break', 'inline', 'group', 'sequence', 'enabled']}),
     ]
     ordering = [
         'group',

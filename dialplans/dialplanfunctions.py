@@ -311,7 +311,7 @@ class SwitchDp():
         root.set('uuid', str(dp.id))
 
         if not ddList:
-            ddList = dialplans.models.DialplanDetail.objects.filter(dialplan_id=dp.id).order_by(
+            ddList = dialplans.models.DialplanDetail.objects.filter(dialplan_id=dp.id, enabled='true').order_by(
                     'group',
                     Case(
                      When(tag='condition', then=Value(1)),
@@ -694,6 +694,7 @@ class SwitchDp():
             inline=ddinline,
             group=ddgroup,
             sequence=ddorder,
+            enabled='true',
             updated_by=username
         )
         return dpd

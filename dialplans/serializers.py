@@ -63,7 +63,7 @@ class DialplanDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'url', 'id', 'dialplan_id', 'tag', 'type', 'data',
-                    'dp_break', 'inline', 'group', 'sequence',
+                    'dp_break', 'inline', 'group', 'sequence', 'enabled',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
 

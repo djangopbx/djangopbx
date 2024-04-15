@@ -111,6 +111,7 @@ class DialplanDetail(models.Model):
     dp_break     = models.CharField(max_length=8, blank=True, null=True, choices=DialplanBreakChoice.choices, default=DialplanBreakChoice.CNONE, verbose_name=_('Break'))     # noqa: E501, E221
     inline       = models.CharField(max_length=8, blank=True, null=True, choices=DialplanInlineChoice.choices, default=DialplanInlineChoice.CNONE, verbose_name=_('Inline'))  # noqa: E501, E221
     group        = models.DecimalField(max_digits=11, decimal_places=0, default=0, verbose_name=_('Group'))                                                                   # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, blank=True, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))        # noqa: E501, E221
     sequence     = models.DecimalField(max_digits=11, decimal_places=0, default=10, verbose_name=_('Order'))                                                                  # noqa: E501, E221
     created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                                  # noqa: E501, E221
     updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                      # noqa: E501, E221
