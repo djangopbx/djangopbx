@@ -43,6 +43,7 @@ from switch.models import IpRegister
 from tenants.models import DefaultSetting, Domain
 from xmlcdr.models import XmlCdr
 from accounts.models import Extension
+from pbx.commonfunctions import shcommand
 
 
 logger = logging.getLogger(__name__)
@@ -226,6 +227,11 @@ class Command(BaseCommand):
         if event.get('status', 'N/A').startswith('Registered'):
             ip_address = event.get('network-ip', '192.168.42.1')
             ip, created = IpRegister.objects.update_or_create(address=ip_address, defaults={"status": 1})
+            if created:
+                if ':' in ip.address:
+                    shcommand(["/usr/local/bin/fw-add-ipv6-sip-customer-list.sh", ip.address])
+                else:
+                    shcommand(["/usr/local/bin/fw-add-ipv4-sip-customer-list.sh", ip.address])
 
     def handle_cdr(self, event):
         t_uuid = event.get('Channel-Call-UUID', self.nonstr)

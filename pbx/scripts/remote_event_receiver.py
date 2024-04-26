@@ -31,19 +31,26 @@
 import argparse
 import json
 from resources.pbx.amqpconnection import AmqpConnection
+from resources.pbx.shellcommand import shcommand
 
+nonstr = 'none'
+
+def handle_firewall(event):
+    action = event.get('Action', 'add')
+    if action in ['add', 'delete']:
+        iptype = event.get('IP-Type', 'ipv4')
+        fwlist = event.get('Fw-List', 'sip-customer')
+        ip_address = event.get('IP-Address', '192.168.42.1')
+        shcommand(['/usr/local/bin/fw-%s-%s-%s-list.sh' % (action, iptype, fwlist), ip_address])
+    if action == 'save':
+        shcommand(['/usr/local/bin/fw-save-ruleset.sh'])
 
 def on_message(channel, method, properties, body):
     msg = body.decode('utf8')
     event = json.loads(msg)
-    event_name = event.get('Event-Name', 'none')
-    event_subclass = event.get('Event-Subclass')
-    if event_subclass:
-        print('%s, %s\n' % (event_name, event_subclass))
-    else:
-        print('%s\n' % event_name)
-    print(msg)
-    print('\n')
+    event_name = event.get('Event-Name', nonstr)
+    if event_name == 'FIREWALL':
+        handle_firewall(event)
 
 def main():
     broker = '127.0.0.1'
@@ -58,16 +65,17 @@ def main():
         broker_user = args.user
     if args.password:
         broker_password = args.password
-    routing = {'TAP.Events': ['*.*.CUSTOM.*.*', '*.*.CHANNEL_HANGUP_COMPLETE.*.*']}
+    routing = {'TAP.Firewall': ['*.*.*.*.*']}
     mq = AmqpConnection(broker, broker_port, broker_user, broker_password,
-                            routing, True, '%s_cli_event_queue' % broker)
+                            routing, False, '%s_remote_event_queue' % broker)
     mq.connect()
+    mq.setup_exchange('TAP.Firewall')
     mq.setup_queues()
     mq.consume(on_message)
 
 if __name__ == '__main__':
     nonstr = 'none'
-    parser=argparse.ArgumentParser(description='CLI AMQP FreeSWITCH Event Listener')
+    parser=argparse.ArgumentParser(description='AMQP Remote Event Listener')
     parser.add_argument('--host')
     parser.add_argument('--port', type=int)
     parser.add_argument('--user')

@@ -3,4 +3,7 @@ django-pbx ALL=(root) NOPASSWD: /usr/sbin/nft
 django-pbx ALL=(root) NOPASSWD: /usr/bin/ngrep
 django-pbx ALL=(root) NOPASSWD: /usr/bin/sngrep
 django-pbx ALL=(root) NOPASSWD: /usr/bin/tcpdump
+django-pbx ALL=(root) NOPASSWD: /usr/bin/mv /etc/nftables.conf /etc/nftables.conf_*
+django-pbx ALL=(root) NOPASSWD: /usr/bin/mv /home/django-pbx/tmp/nftables.conf /etc/nftables.conf
+django-pbx ALL=(root) NOPASSWD: /usr/bin/chown root\:root /etc/nftables.conf
 
