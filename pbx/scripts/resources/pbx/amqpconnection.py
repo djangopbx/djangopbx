@@ -84,6 +84,8 @@ class AmqpConnection:
                 logger.info('Event Receiver: Connection refused from %s' % self.rabbithostname)
             os._exit(1)
         self.channel = self.connection.channel()
+        # To Enable delivery confirmations. This is REQUIRED.
+        # self.channel.confirm_delivery()
         if logger is not None:
             logger.info('Event Receiver: Connected Successfully to %s' % self.rabbithostname)
         print('Connected Successfully to %s' % self.rabbithostname)

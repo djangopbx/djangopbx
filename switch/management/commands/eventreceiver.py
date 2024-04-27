@@ -31,11 +31,12 @@ import os
 import datetime
 #import time
 #import random
-#import logging
+import logging
 #import pika
 #import socket
 #import functools
 import json
+from pika import BasicProperties as PikaBasicProperties
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.management.base import BaseCommand
@@ -47,7 +48,7 @@ from pbx.commonfunctions import shcommand
 from pbx.scripts.resources.pbx.amqpconnection import AmqpConnection
 
 
-#logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 #logging.getLogger("pika").setLevel(logging.WARNING)
 
 
@@ -83,12 +84,13 @@ class Command(BaseCommand):
             self.handle_cdr(event)
         elif event_name == 'CUSTOM':
             if event.get('Event-Subclass', self.nonstr) == 'sofia::register':
-                self.handle_register(event)
+                self.handle_register(channel, event)
             if event.get('Event-Subclass', self.nonstr) == 'callcenter::info':
                 self.handle_callcentreinfo(event)
 
     def handle(self, *args, **kwargs):
-        mb = {'message_broker': '127.0.0.1', 'message_broker_port': 5672, 'message_broker_password': 'djangopbx-insecure', 'message_broker_user': 'guest'}
+        mb = {'message_broker': '127.0.0.1', 'message_broker_port': 5672,
+            'message_broker_password': 'djangopbx-insecure', 'message_broker_user': 'guest'}
         mbl = DefaultSetting.objects.filter(
                 category='cluster',
                 subcategory__istartswith='message_broker',
@@ -132,23 +134,34 @@ class Command(BaseCommand):
             self.switch_recordings_path = srp[0].value
         del srp
 
-        mq = AmqpConnection(mb['message_broker'], mb['message_broker_port'], mb['message_broker_user'], mb['message_broker_password'])
-        mq.connect()
-        mq.setup_queues()
-        mq.consume(self.on_message)
+        self.firewall_event_template = '{\"Event-Name\":\"FIREWALL\", \"Action\":\"add\", \"IP-Type\":\"%s\",\"Fw-List\":\"sip-customer\", \"IP-Address\":\"%s\"}' # noqa: E501
+        self.mq = AmqpConnection(mb['message_broker'], mb['message_broker_port'],
+                                    mb['message_broker_user'], mb['message_broker_password'])
+        self.mq.connect()
+        self.mq.setup_queues()
+        self.mq.consume(self.on_message)
+
 
     def handle_callcentreinfo(self, event):
         pass
 
-    def handle_register(self, event):
+    def handle_register(self, channel, event):
         if event.get('status', 'N/A').startswith('Registered'):
             ip_address = event.get('network-ip', '192.168.42.1')
             ip, created = IpRegister.objects.update_or_create(address=ip_address, defaults={"status": 1})
             if created:
+                ip_type = 'ipv4'
                 if ':' in ip.address:
-                    shcommand(["/usr/local/bin/fw-add-ipv6-sip-customer-list.sh", ip.address])
-                else:
-                    shcommand(["/usr/local/bin/fw-add-ipv4-sip-customer-list.sh", ip.address])
+                    ip_type = 'ipv6'
+                shcommand(['/usr/local/bin/fw-add-%s-sip-customer-list.sh' % ip_type, ip.address])
+                firewall_routing = 'DjangoPBX.%s.FIREWALL.add.%s' % (self.mq.hostname, ip_type)
+                payload = self.firewall_event_template % (ip_type, ip.address)
+                try:
+                    channel.basic_publish('TAP.Firewall', firewall_routing, payload.encode(),
+                        properties=PikaBasicProperties(delivery_mode=2), # Delivery Mode 2 for persistent
+                        )
+                except:
+                    logger.warn('EVENT Register {}: Unable send TAP.Firewall message {}.'.format(ip.address, firewall_routing))
 
     def handle_cdr(self, event):
         t_uuid = event.get('Channel-Call-UUID', self.nonstr)
