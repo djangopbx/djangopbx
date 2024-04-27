@@ -29,12 +29,12 @@
 
 import os
 import datetime
-import time
-import random
-import logging
-import pika
-import socket
-import functools
+#import time
+#import random
+#import logging
+#import pika
+#import socket
+#import functools
 import json
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -44,94 +44,11 @@ from tenants.models import DefaultSetting, Domain
 from xmlcdr.models import XmlCdr
 from accounts.models import Extension
 from pbx.commonfunctions import shcommand
+from pbx.scripts.resources.pbx.amqpconnection import AmqpConnection
 
 
-logger = logging.getLogger(__name__)
-logging.getLogger("pika").setLevel(logging.WARNING)
-
-
-class AmqpConnection:
-
-    def __init__(self, hostname='localhost', port=5672, username='guest', password='djangopbx-insecure'):
-        self.rabbithostname = hostname
-        self.port = port
-        self.username = username
-        self.password = password
-        self.connection = None
-        self.channel = None
-        try:
-            self.hostname = socket.gethostname()
-        except:
-            self.hostname = 'localhost'
-
-    def connect(self):
-        if logger is not None:
-            logger.info('Event Receiver: Attempting to connect to %s' % self.rabbithostname)
-        print('Attempting to connect to %s' % self.rabbithostname)
-        params = pika.ConnectionParameters(
-            host=self.rabbithostname,
-            port=self.port,
-            credentials=pika.PlainCredentials(self.username, self.password),
-            client_properties={'connection_name': '%s-EventReceiver' % self.hostname})
-        try:
-            self.connection = pika.BlockingConnection(parameters=params)
-        except pika.exceptions.ProbableAuthenticationError:
-            print('ConnectionClosedByBroker: (403) ACCESS_REFUSED')
-            if logger is not None:
-                logger.info('Event Receiver: Connection refused from %s' % self.rabbithostname)
-            os._exit(1)
-        self.channel = self.connection.channel()
-        if logger is not None:
-            logger.info('Event Receiver: Connected Successfully to %s' % self.rabbithostname)
-        print('Connected Successfully to %s' % self.rabbithostname)
-
-    def setup_queues(self):
-        self.queue = '%s_event_queue' % self.hostname
-        self.channel.queue_declare(self.queue, auto_delete=False, durable=True)
-        self.channel.queue_bind(self.queue, exchange='TAP.Events', routing_key='*.*.CUSTOM.*.*')
-        self.channel.queue_bind(self.queue, exchange='TAP.Events', routing_key='*.*.CHANNEL_HANGUP_COMPLETE.*.*')
-        #self.channel.queue_bind(self.queue, exchange='TAP.Events', routing_key='*.*.*.*.*')
-        #self.channel.queue_bind(self.queue, exchange='TAP.Events', routing_key='FreeSWITCH.#')
-
-    def _consume(self, on_message):
-        if self.connection.is_closed or self.channel.is_closed:
-            self.connect()
-            self.setup_queues()
-        try:
-            self.channel.basic_consume(queue=self.queue, auto_ack=True, on_message_callback=on_message)
-            self.channel.start_consuming()
-        except KeyboardInterrupt:
-            print('Keyboard interrupt received')
-            self.channel.stop_consuming()
-            self.connection.close()
-            os._exit(1)
-        except pika.exceptions.ChannelClosedByBroker:
-            print('Channel Closed By Broker Exception')
-
-    def consume(self, on_message):
-        tries = -1
-        backoff = 2
-        jitter = 0 # Can be a (min, max) tuple
-        delay = 1
-        max_delay=None
-
-        while tries:
-            try:
-                return self._consume(on_message)
-            except Exception as e:
-                tries -= 1
-                if not tries:
-                    raise
-                if logger is not None:
-                    logger.warning('Event Receiver: %s, retrying in %s seconds...' % (e, delay))
-                time.sleep(delay)
-                delay *= backoff
-                if isinstance(jitter, tuple):
-                    delay += random.uniform(*jitter)
-                else:
-                    delay += jitter
-                if max_delay is not None:
-                    delay = min(_delay, max_delay)
+#logger = logging.getLogger(__name__)
+#logging.getLogger("pika").setLevel(logging.WARNING)
 
 
 class Command(BaseCommand):
