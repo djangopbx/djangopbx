@@ -56,6 +56,11 @@ class Command(BaseCommand):
     help = 'PBX Event Receiver'
     nonstr = 'none'
     debug = False
+    mb_key_host = 'message_broker'
+    mb_key_port = 'message_broker_port'
+    mb_key_user = 'message_broker_user'
+    mb_key_pass = 'message_broker_password'
+    mb_key_adhoc = 'message_broker_adhoc_publish'
 
     def str2int(self, tmpstr):
         try:
@@ -89,8 +94,9 @@ class Command(BaseCommand):
                 self.handle_callcentreinfo(event)
 
     def handle(self, *args, **kwargs):
-        mb = {'message_broker': '127.0.0.1', 'message_broker_port': 5672,
-            'message_broker_password': 'djangopbx-insecure', 'message_broker_user': 'guest'}
+        mb = {self.mb_key_host: '127.0.0.1', self.mb_key_port: 5672,
+            self.mb_key_pass: 'djangopbx-insecure',
+            self.mb_key_user: 'guest', self.mb_key_adhoc: False}
         mbl = DefaultSetting.objects.filter(
                 category='cluster',
                 subcategory__istartswith='message_broker',
@@ -104,7 +110,10 @@ class Command(BaseCommand):
                     mb[mbr.subcategory] = int(mbr.value)
                 except ValueError:
                     pass
+            if mbr.value_type == 'boolean':
+                mb[mbr.subcategory] = (True if mbr.value == 'true' else False)
         del mbl
+        self.message_broker_adhoc_publish = mb[self.mb_key_adhoc]
         bleg = DefaultSetting.objects.filter(
                 category='cdr',
                 subcategory='b_leg',
@@ -135,8 +144,8 @@ class Command(BaseCommand):
         del srp
 
         self.firewall_event_template = '{\"Event-Name\":\"FIREWALL\", \"Action\":\"add\", \"IP-Type\":\"%s\",\"Fw-List\":\"sip-customer\", \"IP-Address\":\"%s\"}' # noqa: E501
-        self.mq = AmqpConnection(mb['message_broker'], mb['message_broker_port'],
-                                    mb['message_broker_user'], mb['message_broker_password'])
+        self.mq = AmqpConnection(mb[self.mb_key_host], mb[self.mb_key_port],
+                                    mb[self.mb_key_user], mb[self.mb_key_pass])
         self.mq.connect()
         self.mq.setup_queues()
         self.mq.consume(self.on_message)
@@ -154,14 +163,15 @@ class Command(BaseCommand):
                 if ':' in ip.address:
                     ip_type = 'ipv6'
                 shcommand(['/usr/local/bin/fw-add-%s-sip-customer-list.sh' % ip_type, ip.address])
-                firewall_routing = 'DjangoPBX.%s.FIREWALL.add.%s' % (self.mq.hostname, ip_type)
-                payload = self.firewall_event_template % (ip_type, ip.address)
-                try:
-                    channel.basic_publish('TAP.Firewall', firewall_routing, payload.encode(),
-                        properties=PikaBasicProperties(delivery_mode=2), # Delivery Mode 2 for persistent
-                        )
-                except:
-                    logger.warn('EVENT Register {}: Unable send TAP.Firewall message {}.'.format(ip.address, firewall_routing))
+                if self.message_broker_adhoc_publish:
+                    firewall_routing = 'DjangoPBX.%s.FIREWALL.add.%s' % (self.mq.hostname, ip_type)
+                    payload = self.firewall_event_template % (ip_type, ip.address)
+                    try:
+                        channel.basic_publish('TAP.Firewall', firewall_routing, payload.encode(),
+                            properties=PikaBasicProperties(delivery_mode=2), # Delivery Mode 2 for persistent
+                            )
+                    except:
+                        logger.warn('EVENT Register {}: Unable send TAP.Firewall message {}.'.format(ip.address, firewall_routing))
 
     def handle_cdr(self, event):
         t_uuid = event.get('Channel-Call-UUID', self.nonstr)

@@ -4393,6 +4393,24 @@
 },
 {
     "model": "tenants.defaultsetting",
+    "pk": "e89e14a9-8ebb-4920-a80f-e5028acc2e75",
+    "fields": {
+        "app_uuid": null,
+        "category": "cluster",
+        "subcategory": "message_broker_adhoc_publish",
+        "value_type": "boolean",
+        "value": "false",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "Allow adhoc message publishing like Firewall Add/Remove messages",
+        "created": "2024-04-30T14:10:46.830Z",
+        "updated": "2024-04-30T14:10:46.830Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
     "pk": "649545de-c833-4b1f-b762-c291f0dde077",
     "fields": {
         "app_uuid": null,

@@ -136,3 +136,7 @@ class FsCmdAbsLayer:
                 h, v = header.split(': ')
                 hdrs[h] = v
         return (ev_name, hdrs)
+
+    def adhoc_publish(self, payload, routing, exchange):
+        if not self.loc_ev_skt:
+            self.broker.adhoc_publish(payload, routing, exchange)

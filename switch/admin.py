@@ -41,6 +41,7 @@ from import_export import resources
 from switch.switchfunctions import SwitchFunctions
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from pbx.commonfunctions import shcommand
+from pbx.amqpcmdevent import AmqpCmdEvent
 from .ipregisterfunctions import IpRegisterFunctions
 
 
@@ -427,6 +428,7 @@ class IpRegisterAdmin(ImportExportModelAdmin):
     ]
 
     actions = [reinstate_sip_customer_list]
+    firewall_event_template = '{\"Event-Name\":\"FIREWALL\", \"Action\":\"%s\", \"IP-Type\":\"%s\",\"Fw-List\":\"sip-customer\", \"IP-Address\":\"%s\"}' # noqa: E501
 
     # This is a workaround to allow the admin action to be run without selecting any objects.
     # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
@@ -437,30 +439,42 @@ class IpRegisterAdmin(ImportExportModelAdmin):
             request._set_post(post)
         return super(IpRegisterAdmin, self).changelist_view(request, extra_context)
 
+    def connect_broker(self):
+        broker = AmqpCmdEvent()
+        broker.connect()
+        return broker
+
+    def fw_update(self, broker, action, ip_address):
+        ip_type = 'ipv4'
+        if ':' in ip_address:
+            ip_type = 'ipv6'
+        shcommand(['/usr/local/bin/fw-%s-%s-sip-customer-list.sh' % (action, ip_type), ip_address])
+        routing = 'DjangoPBX.%s.FIREWALL.%s.%s' % (broker.hostname, action, ip_type)
+        payload = self.firewall_event_template % (action, ip_type, ip_address)
+        broker.adhoc_publish(payload, routing, 'TAP.Firewall')
+        return
+
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         if change:
             messages.add_message(request, messages.WARNING, _('A changed IP will not be added to Firewall automatically'))
         else:
-            if ':' in obj.address:
-                shcommand(["/usr/local/bin/fw-add-ipv6-sip-customer-list.sh", obj.address])
-            else:
-                shcommand(["/usr/local/bin/fw-add-ipv4-sip-customer-list.sh", obj.address])
+            broker = self.connect_broker()
+            self.fw_update(broker, 'add', obj.address)
+            broker.disconnect()
         super().save_model(request, obj, form, change)
 
     def delete_model(self, request, obj):
-        if ':' in obj.address:
-            shcommand(["/usr/local/bin/fw-delete-ipv6-sip-customer-list.sh", obj.address])
-        else:
-            shcommand(["/usr/local/bin/fw-delete-ipv4-sip-customer-list.sh", obj.address])
+        broker = self.connect_broker()
+        self.fw_update(broker, 'delete', obj.address)
+        broker.disconnect()
         super().delete_model(request, obj)
 
     def delete_queryset(self, request, queryset):
+        broker = self.connect_broker()
         for obj in queryset:
-            if ':' in obj.address:
-                shcommand(["/usr/local/bin/fw-delete-ipv6-sip-customer-list.sh", obj.address])
-            else:
-                shcommand(["/usr/local/bin/fw-delete-ipv4-sip-customer-list.sh", obj.address])
+            self.fw_update(broker, 'delete', obj.address)
+        broker.disconnect()
         super().delete_queryset(request, queryset)
 
 

@@ -44,12 +44,14 @@ class AmqpCmdEvent:
     mb_key_port = 'message_broker_port'
     mb_key_user = 'message_broker_user'
     mb_key_pass = 'message_broker_password'
+    mb_key_adhoc = 'message_broker_adhoc_publish'
     fs_cmd_exchange = 'TAP.Commands'
     responses = []
 
     def __init__(self, debug=False):
         self.debug = debug
-        self.mb = {self.mb_key_host: '127.0.0.1', self.mb_key_port: 5672, self.mb_key_pass: 'djangopbx-insecure', self.mb_key_user: 'guest'}
+        self.mb = {self.mb_key_host: '127.0.0.1', self.mb_key_port: 5672,
+                    self.mb_key_pass: 'djangopbx-insecure', self.mb_key_user: 'guest', self.mb_key_adhoc: False }
         try:
             self.hostname = socket.gethostname()
         except:
@@ -68,6 +70,8 @@ class AmqpCmdEvent:
                     self.mb[mbcf.subcategory] = int(mbcf.value)
                 except ValueError:
                     pass
+            if mbcf.value_type == 'boolean':
+                self.mb[mbcf.subcategory] = (True if mbcf.value == 'true' else False)
         self.channel = None
         self.freeswitches = DefaultSetting.objects.values_list('value', flat=True).filter(
                 category='cluster',
@@ -156,6 +160,15 @@ class AmqpCmdEvent:
                     ),
                     body=payload
                     )
+
+    def adhoc_publish(self, payload, routing='1.2.3.4.5', exchange='TAP.Firewall'):
+        if self.connection.is_open and self.channel.is_open and self.mb[self.mb_key_adhoc]:
+            try:
+                self.channel.basic_publish('TAP.Firewall', routing, payload.encode(),
+                    properties=pika.BasicProperties(delivery_mode=2), # Delivery Mode 2 for persistent
+                    )
+            except:
+                logger.warn('AMQP addhoc publish {}: Unable send message {}.'.format(exchange, routing))
 
     def process_events(self, timeout=3):
         if self.connection.is_open and self.channel.is_open:
