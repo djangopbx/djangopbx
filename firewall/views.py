@@ -26,17 +26,16 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import json
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.template.defaulttags import register
 from django.contrib import messages
-
-import json
-
 from .forms import LogViewerForm, IpAddressForm
 from pbx.commonfunctions import shcommand
+from pbx.amqpcmdevent import AmqpCmdEvent
 
 
 @register.filter
@@ -171,47 +170,59 @@ def fwwebblocklist(request):
 
 @staff_member_required
 def fwaddip(request):
+    firewall_event_template = '{\"Event-Name\":\"FIREWALL\", \"Action\":\"add\", \"IP-Type\":\"%s\",\"Fw-List\":\"%s\", \"IP-Address\":\"%s\"}' # noqa: E501
     if request.method == 'POST':
 
         form = IpAddressForm(request.POST)
         setname = request.POST['setname']
-        fwsuffix = 'None'
+        fwlist = 'None'
         if setname == 'BL':
             BLform = form
-            fwsuffix = '-block-list.sh'
+            fwlist = 'block'
         if setname == 'WL':
             WLform = form
-            fwsuffix = '-white-list.sh'
+            fwlist = 'white'
         if setname == 'SCL':
             SCLform = form
-            fwsuffix = '-sip-customer-list.sh'
+            fwlist = 'sip-customer'
         if setname == 'SGL':
             SGLform = form
-            fwsuffix = '-sip-gateway-list.sh'
+            fwlist = 'sip-gateway'
         if setname == 'WBL':
             SGLform = form
-            fwsuffix = '-web-block-list.sh'
+            fwlist = 'web-block'
 
         if form.is_valid():
+            broker = AmqpCmdEvent()
+            broker.connect()
             if len(form.cleaned_data['ipv4']) > 0:
                 ipaddr = form.cleaned_data['ipv4']
                 if form.cleaned_data['ipv4len'] < 32:
                     ipaddr += '/' + str(form.cleaned_data['ipv4len'])
-                nftdata = shcommand(["/usr/local/bin/fw-add-ipv4" + fwsuffix, ipaddr])
+                nftdata = shcommand(['/usr/local/bin/fw-add-ipv4-%s-list.sh' % fwlist, ipaddr])
                 if len(nftdata) > 0:
                     messages.add_message(request, messages.INFO, _('Error: %s' % nftdata))
                 else:
                     messages.add_message(request, messages.INFO, _('IP Added'))
+                routing = 'DjangoPBX.%s.FIREWALL.add.ipv4' % broker.hostname
+                payload = firewall_event_template % ('ipv4', fwlist, ipaddr)
 
             if len(form.cleaned_data['ipv6']) > 0:
                 ipaddr = form.cleaned_data['ipv6']
                 if form.cleaned_data['ipv6len'] < 32:
                     ipaddr += '/' + str(form.cleaned_data['ipv6len'])
-                nftdata = shcommand(["/usr/local/bin/fw-add-ipv6" + fwsuffix, ipaddr])
+                nftdata = shcommand(['/usr/local/bin/fw-add-ipv6-%s-list.sh' % fwlist, ipaddr])
                 if len(nftdata) > 0:
                     messages.add_message(request, messages.INFO, _('Error: %s' % nftdata))
                 else:
                     messages.add_message(request, messages.INFO, _('IP Added'))
+                routing = 'DjangoPBX.%s.FIREWALL.add.ipv6' % broker.hostname
+                payload = firewall_event_template % ('ipv6', fwlist, ipaddr)
+            try:
+                broker.adhoc_publish(payload, routing, 'TAP.Firewall')
+            except:
+                pass
+            broker.disconnect()
         else:
             messages.add_message(request, messages.INFO, _('IP Address is invalid'))
 
@@ -224,46 +235,59 @@ def fwaddip(request):
 
 @staff_member_required
 def fwdelip(request):
+    firewall_event_template = '{\"Event-Name\":\"FIREWALL\", \"Action\":\"delete\", \"IP-Type\":\"%s\",\"Fw-List\":\"%s\", \"IP-Address\":\"%s\"}' # noqa: E501
     if request.method == 'POST':
 
         form = IpAddressForm(request.POST)
         setname = request.POST['setname']
-        fwsuffix = 'None'
+        fwlist = 'None'
         if setname == 'BL':
             BLform = form
-            fwsuffix = '-block-list.sh'
+            fwlist = 'block'
         if setname == 'WL':
             WLform = form
-            fwsuffix = '-white-list.sh'
+            fwlist = 'white'
         if setname == 'SCL':
             SCLform = form
-            fwsuffix = '-sip-customer-list.sh'
+            fwlist = 'sip-customer'
         if setname == 'SGL':
             SGLform = form
-            fwsuffix = '-sip-gateway-list.sh'
+            fwlist = 'sip-gateway'
         if setname == 'WBL':
             SGLform = form
-            fwsuffix = '-web-block-list.sh'
+            fwlist = 'web-block'
 
         if form.is_valid():
+            broker = AmqpCmdEvent()
+            broker.connect()
             if len(form.cleaned_data['ipv4']) > 0:
                 ipaddr = form.cleaned_data['ipv4']
                 if form.cleaned_data['ipv4len'] < 32:
                     ipaddr += '/' + str(form.cleaned_data['ipv4len'])
-                nftdata = shcommand(["/usr/local/bin/fw-delete-ipv4" + fwsuffix, ipaddr])
+                nftdata = shcommand(['/usr/local/bin/fw-delete-ipv4-%s-list.sh' % fwlist, ipaddr])
                 if len(nftdata) > 0:
                     messages.add_message(request, messages.INFO, _('Error: %s' % nftdata))
                 else:
                     messages.add_message(request, messages.INFO, _('IP Deleted'))
+                routing = 'DjangoPBX.%s.FIREWALL.delete.ipv4' % broker.hostname
+                payload = firewall_event_template % ('ipv4', fwlist, ipaddr)
+
             if len(form.cleaned_data['ipv6']) > 0:
                 ipaddr = form.cleaned_data['ipv6']
                 if form.cleaned_data['ipv6len'] < 32:
                     ipaddr += '/' + str(form.cleaned_data['ipv6len'])
-                nftdata = shcommand(["/usr/local/bin/fw-delete-ipv6" + fwsuffix, ipaddr])
+                nftdata = shcommand(['/usr/local/bin/fw-delete-ipv6-%s-list.sh' % fwlist, ipaddr])
                 if len(nftdata) > 0:
                     messages.add_message(request, messages.INFO, _('Error: %s' % nftdata))
                 else:
                     messages.add_message(request, messages.INFO, _('IP Deleted'))
+                routing = 'DjangoPBX.%s.FIREWALL.delete.ipv6' % broker.hostname
+                payload = firewall_event_template % ('ipv6', fwlist, ipaddr)
+            try:
+                broker.adhoc_publish(payload, routing, 'TAP.Firewall')
+            except:
+                pass
+            broker.disconnect()
         else:
             messages.add_message(request, messages.INFO, _('IP Address is invalid'))
 
