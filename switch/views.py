@@ -215,6 +215,10 @@ class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
     API endpoint that allows Switch Registrations to be viewed.
     """
     serializer_class = FsRegistrationsSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
 
     def parseregdetail(self, regdetail):
         lines = regdetail.splitlines()
@@ -264,11 +268,10 @@ class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
             return Response({'status': 'err', 'message': 'Broker/Socket Error'})
         es.clear_responses()
         es.send('api sofia status profile %s user %s' % (sip_profile, sip_user), host)
-        es.process_events(0.01)
+        es.process_events()
         es.get_responses()
         es.disconnect()
         regdetail = next(iter(es.responses or []), None)
         if regdetail:
             info = self.parseregdetail(regdetail)
-
         return Response(info)

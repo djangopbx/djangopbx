@@ -2,7 +2,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,22 @@
 #
 
 from django.urls import path
-
 from . import views
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'firewall_counters', views.FwCountersView, basename='fwcounters')
+router.register(r'firewall_white_ipv4_list', views.FwWhiteIpv4View, basename='fwwhiteipv4')
+router.register(r'firewall_white_ipv6_list', views.FwWhiteIpv6View, basename='fwwhiteipv6')
+router.register(r'firewall_sip_gateway_ipv4_list', views.FwSipGatewayIpv4View, basename='fwsipgatewayipv4')
+router.register(r'firewall_sip_gateway_ipv6_list', views.FwSipGatewayIpv6View, basename='fwsipgatewayipv6')
+router.register(r'firewall_sip_customer_ipv4_list', views.FwSipCustomerIpv4View, basename='fwsipcustomeripv4')
+router.register(r'firewall_sip_customer_ipv6_list', views.FwSipCustomerIpv6View, basename='fwsipcustomeripv6')
+router.register(r'firewall_web_block_ipv4_list', views.FwWebBlockIpv4View, basename='fwwebblockipv4')
+router.register(r'firewall_web_block_ipv6_list', views.FwWebBlockIpv6View, basename='fwwebblockipv6')
+router.register(r'firewall_block_ipv4_list', views.FwBlockIpv4View, basename='fwblockipv4')
+router.register(r'firewall_block_ipv6_list', views.FwBlockIpv6View, basename='fwblockipv6')
+
 
 urlpatterns = [
     path('fwlistcounters/', views.fwlistcounters, name='fwlistcounters'),

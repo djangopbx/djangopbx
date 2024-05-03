@@ -2,7 +2,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,14 @@ from django.contrib import messages
 from .forms import LogViewerForm, IpAddressForm
 from pbx.commonfunctions import shcommand
 from pbx.amqpcmdevent import AmqpCmdEvent
+from django.utils.http import urlsafe_base64_decode
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework import permissions
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+from .serializers import FwGenericSerializer, FwCountersSerializer
 
 
 @register.filter
@@ -209,7 +217,7 @@ def fwaddip(request):
 
             if len(form.cleaned_data['ipv6']) > 0:
                 ipaddr = form.cleaned_data['ipv6']
-                if form.cleaned_data['ipv6len'] < 32:
+                if form.cleaned_data['ipv6len'] < 128:
                     ipaddr += '/' + str(form.cleaned_data['ipv6len'])
                 nftdata = shcommand(['/usr/local/bin/fw-add-ipv6-%s-list.sh' % fwlist, ipaddr])
                 if len(nftdata) > 0:
@@ -274,7 +282,7 @@ def fwdelip(request):
 
             if len(form.cleaned_data['ipv6']) > 0:
                 ipaddr = form.cleaned_data['ipv6']
-                if form.cleaned_data['ipv6len'] < 32:
+                if form.cleaned_data['ipv6len'] < 128:
                     ipaddr += '/' + str(form.cleaned_data['ipv6len'])
                 nftdata = shcommand(['/usr/local/bin/fw-delete-ipv6-%s-list.sh' % fwlist, ipaddr])
                 if len(nftdata) > 0:
@@ -296,3 +304,213 @@ def fwdelip(request):
             request, 'firewall/fw_add_del_ip.html',
             {'form': form, 'formurl': 'fwdelip',
                 'title': _('Delete IP Address from Firewall'), 'buttontxt': _('Delete IP(s)')})
+
+
+class FwCountersView(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Firewall counters to be viewed.
+    """
+    serializer_class = FwCountersSerializer
+    shell_command = '/usr/local/bin/fw-list-counters.sh'
+
+    def get_queryset(self):
+        pass
+
+    def list(self, request):
+        nftjdata = shcommand([self.shell_command])
+        data = json.loads(nftjdata)
+        data = _find_objects(data['nftables'], 'counter')
+        c_count = 0
+        c_data = []
+        for counter in data:
+            cd = {'counter': counter['name'], 'packets': counter['packets'], 'bytes': counter['bytes']}
+            c_data.append(cd)
+            c_count += 1
+        results = self.serializer_class(c_data, many=True, context={'request': request}).data
+        return Response({'count': c_count, 'results': results})
+
+    def retrieve(self, request, pk=None):
+        if not pk:
+            return Response({'status': 'err', 'message': 'pk not found'})
+        counter, packets, bytes = urlsafe_base64_decode(pk).decode().split('&')
+        return Response({'counter': counter, 'packets': packets, 'bytes': bytes})
+
+
+class FirewallViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Firewall lists to be viewed and updated.
+    """
+    serializer_class = FwGenericSerializer
+    shell_command = '/usr/local/bin/fw-%s-%s-%s-list.sh'
+    firewall_event_template = '{\"Event-Name\":\"FIREWALL\", \"Action\":\"%s\", \"IP-Type\":\"%s\",\"Fw-List\":\"%s\", \"IP-Address\":\"%s\"}' # noqa: E501
+    fw_list_lookup = {
+        'ipv4_white_list': 'white',
+        'ipv6_white_list': 'white',
+        'ipv4_sip_gateway_list': 'sip-gateway',
+        'ipv6_sip_gateway_list': 'sip-gateway',
+        'ipv4_sip_customer_list': 'sip-customer',
+        'ipv6_sip_customer_list': 'sip-customer',
+        'ipv4_web_block_list': 'web-block',
+        'ipv6_web_block_list': 'web-block',
+        'ipv4_block_list': 'block',
+        'ipv6_block_list': 'block'
+    }
+    ip_type_lookup = {
+        'ipv4_addr': 'ipv4',
+        'ipv6_addr': 'ipv6'
+    }
+
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def get_queryset(self):
+        pass
+
+    def build_list_shell_command(self):
+        raise NotImplementedError
+
+    def build_generic_shell_command(self, action='add', ip_type='ipv4_addr', fw_list='ipv4_sip_customer_list'):
+        return self.shell_command % (action, self.ip_type_lookup[ip_type], self.fw_list_lookup[fw_list])
+
+    def send_fw_event(self, action, ip_type, fw_list, ip_address):
+        broker = AmqpCmdEvent()
+        broker.connect()
+        routing = 'DjangoPBX.%s.FIREWALL.%s.%s' % (broker.hostname, action, ip_type)
+        payload = self.firewall_event_template % (action, ip_type, fw_list, ip_address)
+        try:
+            broker.adhoc_publish(payload, routing, 'TAP.Firewall')
+        except:
+            pass
+        broker.disconnect()
+
+    def list(self, request):
+        nftjdata = shcommand([self.build_list_shell_command()])
+        data = json.loads(nftjdata)
+        ip_count = 0
+        ip_data = []
+        ip_type = ''
+        fw_list = ''
+        if 'type' in data['nftables'][1]['set']:
+            ip_type = data['nftables'][1]['set']['type']
+        if 'name' in data['nftables'][1]['set']:
+            fw_list = data['nftables'][1]['set']['name']
+        if 'elem' in data['nftables'][1]['set']:
+            for ip in  data['nftables'][1]['set']['elem']:
+                ipd = {'ip_type': ip_type, 'fw_list': fw_list, 'ip_address': ip}
+                ip_data.append(ipd)
+                ip_count += 1
+        results = self.serializer_class(ip_data, many=True, context={'request': request}).data
+        return Response({'count': ip_count, 'results': results})
+
+    def retrieve(self, request, pk=None):
+        if not pk:
+            return Response({'status': 'err', 'message': 'pk not found'})
+        ip_type, fw_list, ip = urlsafe_base64_decode(pk).decode().split('&')
+        return Response({'fw_list': fw_list, 'ip_type': ip_type, 'ip_address': ip})
+
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            fwdata = serializer.save()
+            if 'suffix' in fwdata:
+                ip_address = '%s/%s' % (fwdata['ip_address'], fwdata['suffix'])
+            else:
+                ip_address = fwdata['ip_address']
+            nftdata = shcommand([self.build_generic_shell_command('add', fwdata['ip_type'], fwdata['fw_list']), ip_address])
+            self.send_fw_event('add', fwdata['ip_type'], fwdata['fw_list'], ip_address)
+            if len(nftdata) > 0:
+                return Response({'Error': _(nftdata)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'added': 'OK', 'ip_address': fwdata['ip_address']}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        if not pk:
+            return Response({'status': 'err', 'message': 'pk not found'})
+        ip_type, fw_list, ip_address = urlsafe_base64_decode(pk).decode().split('&')
+        nftdata = shcommand([self.build_generic_shell_command('delete', ip_type, fw_list), ip_address])
+        self.send_fw_event('delete', ip_type, fw_list, ip_address)
+        if len(nftdata) > 0:
+            return Response({'Error': _(nftdata)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class FwWhiteIpv4View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall White IPv4 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv4', 'white')
+
+
+class FwWhiteIpv6View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall White IPv6 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv6', 'white')
+
+
+class FwSipGatewayIpv4View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall SIP Gateway IPv4 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv4', 'sip-gateway')
+
+
+class FwSipGatewayIpv6View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall SIP Gateway IPv6 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv6', 'sip-gateway')
+
+
+class FwSipCustomerIpv4View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall SIP Customer IPv4 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv4', 'sip-customer')
+
+
+class FwSipCustomerIpv6View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall SIP Customer IPv6 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv6', 'sip-customer')
+
+
+class FwWebBlockIpv4View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall Web Block IPv4 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv4', 'web-block')
+
+
+class FwWebBlockIpv6View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall Web Block IPv6 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv6', 'web-block')
+
+
+class FwBlockIpv4View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall Block IPv4 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv4', 'block')
+
+
+class FwBlockIpv6View(FirewallViewSet):
+    """
+    API endpoint that allows Firewall Block IPv6 lists to be viewed and updated.
+    """
+    def build_list_shell_command(self):
+        return self.shell_command % ('show', 'ipv6', 'block')

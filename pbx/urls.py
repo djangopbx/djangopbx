@@ -85,6 +85,7 @@ from callflows.urls import router as callflowsrouter
 from callblock.urls import router as callblockrouter
 from callcentres.urls import router as callcentresrouter
 from autoreports.urls import router as autoreportsrouter
+from firewall.urls import router as firewallrouter
 #from freeswitchdb.urls import router as freeswitchdbrouter
 
 
@@ -111,6 +112,7 @@ router.registry.extend(callflowsrouter.registry)
 router.registry.extend(callblockrouter.registry)
 router.registry.extend(callcentresrouter.registry)
 router.registry.extend(autoreportsrouter.registry)
+router.registry.extend(firewallrouter.registry)
 #router.registry.extend(freeswitchdbrouter.registry)
 
 
