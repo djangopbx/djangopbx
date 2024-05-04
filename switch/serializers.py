@@ -124,29 +124,3 @@ class ModulesSerializer(serializers.ModelSerializer):
                     'sequence', 'enabled', 'default_enabled', 'description',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
-
-
-class FsRegistrationsSerializer(serializers.Serializer):
-
-    url               = serializers.SerializerMethodField()               # noqa: E501, E221
-    id                = serializers.UUIDField(source='registration_uuid') # noqa: E501, E221
-    reg_user          = serializers.CharField()                           # noqa: E501, E221
-    realm             = serializers.CharField()                           # noqa: E501, E221
-    token             = serializers.CharField()                           # noqa: E501, E221
-    reg_url           = serializers.CharField(source='url')               # noqa: E501, E221
-    expires           = serializers.DateTimeField()                       # noqa: E501, E221
-    network_ip        = serializers.IPAddressField(protocol='both')       # noqa: E501, E221
-    network_port      = serializers.IntegerField()                        # noqa: E501, E221
-    network_proto     = serializers.CharField()                           # noqa: E501, E221
-    hostname          = serializers.CharField()                           # noqa: E501, E221
-    metadata          = serializers.CharField()                           # noqa: E501, E221
-    registration_uuid = serializers.UUIDField()                           # noqa: E501, E221
-
-    def get_url(self, obj):
-        try:
-            sip_profile = obj.get('url').split('/')[1]
-        except:
-            sip_profile = 'internal'
-
-        r = '%s@%s::%s::%s' % (obj.get('reg_user'), obj.get('realm'), obj.get('hostname'), sip_profile)
-        return self.context['request'].build_absolute_uri('%s/' % urlsafe_base64_encode(r.encode()))

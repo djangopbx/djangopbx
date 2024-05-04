@@ -295,7 +295,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
             efsf.es_disconnect()
             # Uncomment as required below if you have any of the following
             # feature on/off codes programmed in your phones.
-            # If you exclusively use TCP transport and have concern about exceeding your MTU
+            # If you exclusively use TCP transport and have no concern about exceeding your MTU
             # You may also opt for using efsf.sync_all()
             #
             #efsf.sync_fwd_immediate()

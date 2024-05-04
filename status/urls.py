@@ -2,7 +2,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,12 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from rest_framework import routers
 from django.urls import path
-
 from . import views
+
+router = routers.DefaultRouter()
+router.register(r'switch_registrations', views.FsRegistrationsView, basename='FsRegistrations')
 
 urlpatterns = [
     path('fslogviewer/', views.fslogviewer, name='fslogviewer'),

@@ -2,7 +2,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,15 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import re
+import sys
+import json
+import datetime
+from django.utils.http import urlsafe_base64_decode
+from rest_framework import viewsets
+from rest_framework import views
+from rest_framework.response import Response
+from rest_framework import permissions
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
@@ -34,12 +43,12 @@ from django.contrib import messages
 from pbx.commonfunctions import shcommand, get_version
 from pbx.devicecfgevent import DeviceCfgEvent
 from pbx.fscmdabslayer import FsCmdAbsLayer
-from .forms import LogViewerForm
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
 from switch.models import Modules
-import re
-import sys
-import json
-import datetime
+from .forms import LogViewerForm
+from .serializers import FsRegistrationsSerializer
 
 
 def parseregdetail(regdetail):
@@ -250,3 +259,69 @@ def fsregdetail(request, sip_profile='internal', sip_user='none@none', host=None
 
     return render(request, 'infotable.html', {'back': 'fsregistrations', 'info': info, 'title': 'Registration Detail'})
 
+
+class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Switch Registrations to be viewed.
+    """
+    serializer_class = FsRegistrationsSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def parseregdetail(self, regdetail):
+        lines = regdetail.splitlines()
+        i = 1
+        info = {}
+        for line in lines:
+            if i > 3 and i < 17:
+                if ':' in line:
+                    data = line.split(':', 1)
+                    info[data[0]] = data[1].strip()
+            i += 1
+        return info
+
+    def get_queryset(self):
+        pass
+
+    def list(self, request):
+        reg_data = []
+        reg_count = 0
+        es = FsCmdAbsLayer()
+        if not es.connect():
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        es.clear_responses()
+        es.send('api show registrations as json')
+        es.process_events()
+        es.get_responses()
+        es.disconnect()
+        print(request.build_absolute_uri())
+        for resp in es.responses:
+            try:
+                registrations = json.loads(resp)
+            except:
+                registrations = {'row_count': 0}
+            if registrations['row_count'] > 0:
+                reg_count += registrations.get('row_count', 0)
+                for i in registrations['rows']:
+                    reg_data.append(i)
+        results = FsRegistrationsSerializer(reg_data, many=True, context={'request': request}).data
+        return Response({'count': reg_count, 'results': results})
+
+    def retrieve(self, request, pk=None):
+        if not pk:
+            return Response({'status': 'err', 'message': 'pk not found'})
+        sip_user, host, sip_profile = urlsafe_base64_decode(pk).decode().split('::')
+        es = FsCmdAbsLayer()
+        if not es.connect():
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        es.clear_responses()
+        es.send('api sofia status profile %s user %s' % (sip_profile, sip_user), host)
+        es.process_events()
+        es.get_responses()
+        es.disconnect()
+        regdetail = next(iter(es.responses or []), None)
+        if regdetail:
+            info = self.parseregdetail(regdetail)
+        return Response(info)
