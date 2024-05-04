@@ -35,6 +35,7 @@ from rest_framework import viewsets
 from rest_framework import views
 from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework.decorators import action
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.views.decorators import staff_member_required
@@ -63,6 +64,42 @@ def parseregdetail(regdetail):
         i += 1
     return info
 
+def regaction(request, es, action=None, actlist=None):
+    if action:
+        postaction = action
+        if actlist:
+            postactlist = [actlist]
+        else:
+            postactlist = []
+    else:
+        postaction = request.POST['action']
+        postactlist = request.POST.getlist('_selected_action')
+    es.clear_responses()
+    if postaction == 'unregister':
+        for target in postactlist:
+            data = target.split('|')
+            es.send('api sofia profile %s flush_inbound_reg %s@%s reboot' % (data[2], data[0], data[1]), data[3])
+        es.process_events()
+        es.get_responses()
+        if not action:
+            messages.add_message(request, messages.INFO, _('\n'.join(es.responses)))
+    else:
+        dce = DeviceCfgEvent()
+        for target in postactlist:
+            data = target.split('|')
+            es.send('api sofia status profile %s user %s@%s' % (data[2], data[0], data[1]), data[3])
+            es.process_events()
+            es.get_responses()
+            regdetail = next(iter(es.responses or []), None)
+            if regdetail:
+                info = parseregdetail(regdetail)
+                if 'Agent' in info:
+                    cmd = dce.buildevent(data[0], data[1], data[2], postaction, info['Agent'].split()[0].lower())
+                    es.send(cmd, data[3])
+                    es.process_events()
+        if not action:
+            messages.add_message(request, messages.INFO, _('Request: %s Sent' % request.POST['action']))
+    return
 
 @staff_member_required
 def fslogviewer(request):
@@ -179,36 +216,17 @@ def fsregistrations(request, realm=None):
         return render(request, 'error.html', {'back': '/portal/',
             'info': {'Message': _('Unable to connect to the FreeSWITCH')}, 'title': 'Broker/Socket Error'})
 
-    if request.method == 'POST':
-        actlist = request.POST.getlist('_selected_action')
-        es.clear_responses()
-        if request.POST['action'] == 'unregister':
-            for target in actlist:
-                data = target.split('|')
-                es.send('api sofia profile %s flush_inbound_reg %s@%s reboot' % (data[2], data[0], data[1]), data[3])
-            es.process_events()
-            es.get_responses()
-            messages.add_message(request, messages.INFO, _('\n'.join(es.responses)))
-        else:
-            dce = DeviceCfgEvent()
-            for target in actlist:
-                data = target.split('|')
-                es.send('api sofia status profile %s user %s@%s' % (data[2], data[0], data[1]), data[3])
-                es.process_events()
-                es.get_responses()
-                regdetail = next(iter(es.responses or []), None)
-                if regdetail:
-                    info = parseregdetail(regdetail)
-                    if 'Agent' in info:
-                        cmd = dce.buildevent(data[0], data[1], data[2], request.POST['action'], info['Agent'].split()[0].lower())
-                        es.send(cmd, data[3])
-                        es.process_events()
-            messages.add_message(request, messages.INFO, _('Request: %s Sent' % request.POST['action']))
-
     rows = []
     info = []
     th = ['User', 'LAN IP', 'Network IP', 'Network Port', 'Network Protocol', 'Hostname', 'Expires (Seconds)', 'profile']
     act = {'unregister': 'Un-Register', 'check_sync': 'Provision', 'reboot': 'Reboot'}
+    if request.method == 'POST':
+        regaction(request, es)
+        es.disconnect()
+        act = {}
+        #  Show empty list to give time for registrations to settle on all freswitches after an action.
+        return render(request, 'actiontable.html', {'refresher': 'fsregistrations', 'showall': 'fsregistrations',
+                    'info': info, 'th': th, 'act': act, 'title': 'Registrations'})
 
     unixts = int(datetime.datetime.now().timestamp())
     es.clear_responses()
@@ -264,23 +282,12 @@ class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows Switch Registrations to be viewed.
     """
+    action_lookup = {'unregister': 'unregister', 'provision': 'check_sync' , 'reboot': 'reboot'}
     serializer_class = FsRegistrationsSerializer
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
-
-    def parseregdetail(self, regdetail):
-        lines = regdetail.splitlines()
-        i = 1
-        info = {}
-        for line in lines:
-            if i > 3 and i < 17:
-                if ':' in line:
-                    data = line.split(':', 1)
-                    info[data[0]] = data[1].strip()
-            i += 1
-        return info
 
     def get_queryset(self):
         pass
@@ -312,7 +319,8 @@ class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
     def retrieve(self, request, pk=None):
         if not pk:
             return Response({'status': 'err', 'message': 'pk not found'})
-        sip_user, host, sip_profile = urlsafe_base64_decode(pk).decode().split('::')
+        user, realm, sip_profile, host = urlsafe_base64_decode(pk).decode().split('|')
+        sip_user = '%s@%s' % (user, realm)
         es = FsCmdAbsLayer()
         if not es.connect():
             return Response({'status': 'err', 'message': 'Broker/Socket Error'})
@@ -323,5 +331,29 @@ class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
         es.disconnect()
         regdetail = next(iter(es.responses or []), None)
         if regdetail:
-            info = self.parseregdetail(regdetail)
+            info = parseregdetail(regdetail)
         return Response(info)
+
+    def processregaction(self, request, pk, action=None):
+        if not pk:
+            return Response({'status': 'err', 'message': 'pk not found'})
+        user, realm, sip_profile, host = urlsafe_base64_decode(pk).decode().split('|')
+        sip_user = '%s@%s' % (user, realm)
+        es = FsCmdAbsLayer()
+        if not es.connect():
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        regaction(request, es, self.action_lookup[action], urlsafe_base64_decode(pk).decode())
+        es.disconnect()
+        return Response({'status': '%s %s' % (sip_user, _('%sed' % action.title()))})
+
+    @action(detail=True)
+    def reboot(self, request, pk=None):
+        return self.processregaction(request, pk, 'reboot')
+
+    @action(detail=True)
+    def unregister(self, request, pk=None):
+        return self.processregaction(request, pk, 'unregister')
+
+    @action(detail=True)
+    def provision(self, request, pk=None):
+        return self.processregaction(request, pk, 'provision')

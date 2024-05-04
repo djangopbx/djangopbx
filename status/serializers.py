@@ -53,5 +53,5 @@ class FsRegistrationsSerializer(serializers.Serializer):
         except:
             sip_profile = 'internal'
 
-        r = '%s@%s::%s::%s' % (obj.get('reg_user'), obj.get('realm'), obj.get('hostname'), sip_profile)
+        r = '%s|%s|%s|%s' % (obj.get('reg_user'), obj.get('realm'), sip_profile, obj.get('hostname'))
         return self.context['request'].build_absolute_uri('%s/' % urlsafe_base64_encode(r.encode()))
