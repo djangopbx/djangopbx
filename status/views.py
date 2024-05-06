@@ -209,6 +209,7 @@ def modules(request, moduuid=None, action=None, host=None):
 
 @staff_member_required
 def fsregistrations(request, realm=None):
+    print(request.path)
     if not realm:
         realm = request.session['domain_name']
     es = FsCmdAbsLayer()

@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,18 @@ from ringgroups.models import RingGroup
 from voicemail.models import Voicemail
 from xmlcdr.models import XmlCdr
 
+from django.utils.http import urlsafe_base64_decode
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework import permissions
+from pbx.restpermissions import (
+    AdminApiAccessPermission
+)
+from .serializers import (
+    CfgStatsSerializer, SwitchStatusSerializer, SwitchLiveTrafficSerializer,
+    GenericItemValueSerializer, DiskInfoSerializer, NetworkTrafficByInterfaceSerializer
+)
+
 
 @register.filter
 def get_item(dictionary, key):
@@ -90,16 +102,28 @@ class OsDashboard():
 
 #    hostname = ''
 
-    def __init__(self):
-        self.get_cpus()
-        self.get_cpu_usage()
-        self.uptime = self.get_uptime()
-        self.cpus = self.get_cpus()
-        self.get_platform()
-        self.get_mem()
-        self.get_traffic()
-        self.get_disks()
-        self.get_diskio()
+    def __init__(self, processall=True, usebytes2human=True):
+        self.usebytes2human = usebytes2human
+        if processall:
+            self.get_cpus()
+            self.get_cpu_usage()
+            self.uptime = self.get_uptime()
+            self.cpus = self.get_cpus()
+            self.get_platform()
+            self.get_mem()
+            self.get_traffic()
+            self.get_disks()
+            self.get_diskio()
+
+    def bytes2human(self, n):
+        if self.usebytes2human:
+            return bytes2human(n)
+        return n
+
+    def intcomma(self, n):
+        if self.usebytes2human:
+            return intcomma(n)
+        return n
 
     def get_cpus(self):
         try:
@@ -177,7 +201,7 @@ class OsDashboard():
             for name in nt._fields:
                 value = getattr(nt, name)
                 if name != 'percent':
-                    value = bytes2human(value)
+                    value = self.bytes2human(value)
                 self.mem[name.capitalize()] = value
 
             data = self.mem
@@ -194,24 +218,25 @@ class OsDashboard():
             tot_all = psutil.net_io_counters()
             pnic_after = psutil.net_io_counters(pernic=True)
 
-            self.nettotalbytessent = bytes2human(tot_all.bytes_sent)
-            self.nettotalbytesrecv = bytes2human(tot_all.bytes_recv)
-            self.nettotalpacketssent = intcomma(tot_all.packets_sent)
-            self.nettotalpacketsrecv = intcomma(tot_all.packets_recv)
+            self.nettotalbytessent = self.bytes2human(tot_all.bytes_sent)
+            self.nettotalbytesrecv = self.bytes2human(tot_all.bytes_recv)
+            self.nettotalpacketssent = self.intcomma(tot_all.packets_sent)
+            self.nettotalpacketsrecv = self.intcomma(tot_all.packets_recv)
             nic_names = list(pnic_after.keys())
             nic_names.sort(key=lambda x: sum(pnic_after[x]), reverse=True)
             for name in nic_names:
                 stats_before = pnic_before[name]
                 stats_after = pnic_after[name]
+
                 self.nic[name] = {
-                                'bytessent': bytes2human(stats_after.bytes_sent),
-                                'bytesrecv': bytes2human(stats_after.bytes_recv),
-                                'bytesendrate': bytes2human(stats_after.bytes_sent - stats_before.bytes_sent),
-                                'byterecvrate': bytes2human(stats_after.bytes_recv - stats_before.bytes_recv),
-                                'packetssent': bytes2human(stats_after.packets_sent),
-                                'packetsrecv': bytes2human(stats_after.packets_recv),
-                                'packetsendrate': bytes2human(stats_after.packets_sent - stats_before.packets_sent),
-                                'packetrecvrate': bytes2human(stats_after.packets_recv - stats_before.packets_recv),
+                                'bytessent': self.bytes2human(stats_after.bytes_sent),
+                                'bytesrecv': self.bytes2human(stats_after.bytes_recv),
+                                'bytesendrate': self.bytes2human(stats_after.bytes_sent - stats_before.bytes_sent),
+                                'byterecvrate': self.bytes2human(stats_after.bytes_recv - stats_before.bytes_recv),
+                                'packetssent': self.bytes2human(stats_after.packets_sent),
+                                'packetsrecv': self.bytes2human(stats_after.packets_recv),
+                                'packetsendrate': self.bytes2human(stats_after.packets_sent - stats_before.packets_sent),
+                                'packetrecvrate': self.bytes2human(stats_after.packets_recv - stats_before.packets_recv),
                                 }
 
             data = self.nic
@@ -225,9 +250,9 @@ class OsDashboard():
                 usage = psutil.disk_usage(part.mountpoint)
 
                 self.disks[part.device] = {
-                            'total': bytes2human(usage.total),
-                            'used': bytes2human(usage.used),
-                            'free': bytes2human(usage.free),
+                            'total': self.bytes2human(usage.total),
+                            'used': self.bytes2human(usage.used),
+                            'free': self.bytes2human(usage.free),
                             'use': usage.percent,
                             'type': part.fstype,
                             'mount': part.mountpoint
@@ -242,15 +267,15 @@ class OsDashboard():
         try:
             disk_io = psutil.disk_io_counters()
             self.diskio = {
-                            'Read Count': intcomma(disk_io.read_count),
-                            'Write Count': intcomma(disk_io.write_count),
-                            'Read Bytes': bytes2human(disk_io.read_bytes),
-                            'Write Bytes': bytes2human(disk_io.write_bytes),
-                            'Read Time': intcomma(disk_io.read_time),
-                            'Write Time': intcomma(disk_io.write_time),
-                            'Read Merged Count': intcomma(disk_io.read_merged_count),
-                            'Write Merged Count': intcomma(disk_io.write_merged_count),
-                            'Busy Time': intcomma(disk_io.busy_time)
+                            'Read Count': self.intcomma(disk_io.read_count),
+                            'Write Count': self.intcomma(disk_io.write_count),
+                            'Read Bytes': self.bytes2human(disk_io.read_bytes),
+                            'Write Bytes': self.bytes2human(disk_io.write_bytes),
+                            'Read Time': self.intcomma(disk_io.read_time),
+                            'Write Time': self.intcomma(disk_io.write_time),
+                            'Read Merged Count': self.intcomma(disk_io.read_merged_count),
+                            'Write Merged Count': self.intcomma(disk_io.write_merged_count),
+                            'Busy Time': self.intcomma(disk_io.busy_time)
                         }
 
             data = self.diskio
@@ -268,12 +293,20 @@ class SwDashboard():
 
     def __init__(self):
         self.es = FsCmdAbsLayer()
+
+    def connect(self):
         if self.es.connect():
             self.esconnected = True
+
+    def disconnect(self):
+        self.es.disconnect()
+
+    def process_all(self):
+        self.connect()
         self.get_config_counts()
         self.get_sw_status()
         self.get_live_counts()
-        self.es.disconnect()
+        self.disconnect()
 
     def get_count_value(self):
         self.es.process_events()
@@ -287,20 +320,23 @@ class SwDashboard():
             ctotal += ctmp
         return ctotal
 
-    def get_live_counts(self):
+    def get_live_counts(self, switchnumber=None):
+        switch = None
+        if switchnumber:
+            switch = self.es.freeswitches[switchnumber]
         result = False
         if not self.esconnected:
             return
         self.es.clear_responses()
-        self.es.send('api show calls count')
+        self.es.send('api show calls count', switch)
         time.sleep(self.s)
         self.sw_live['Calls'] = {'c': self.get_count_value()}
         self.es.clear_responses()
-        self.es.send('api show channels count')
+        self.es.send('api show channels count', switch)
         time.sleep(self.s)
         self.sw_live['Channels'] = {'c': self.get_count_value()}
         self.es.clear_responses()
-        self.es.send('api show registrations count')
+        self.es.send('api show registrations count', switch)
         time.sleep(self.s)
         self.sw_live['Registrations'] = {'c': self.get_count_value()}
 
@@ -337,12 +373,12 @@ class SwDashboard():
         self.sw_counts['Voicemails']['t'] = Voicemail.objects.all().count()
         self.sw_counts['Voicemails']['e'] = Voicemail.objects.filter(enabled='true').count()
 
-    def get_sw_status(self):
+    def get_sw_status(self, switchnumber=0):  # by default, only show first switch if clustered
         self.sw_status = []
         result = False
         if self.esconnected:
             self.es.clear_responses()
-            self.es.send('api show status', self.es.freeswitches[0]) # only show first switch if clustered
+            self.es.send('api show status', self.es.freeswitches[switchnumber])
             self.es.process_events()
             self.es.get_responses()
             time.sleep(self.s)
@@ -507,6 +543,7 @@ def osdashboard(request):
 @staff_member_required
 def swdashboard(request):
     dash = SwDashboard()
+    dash.process_all()
     if dash.esconnected:
         return render(request, 'dashboard/swdashboard.html', {'d': dash})
     else:
@@ -520,3 +557,240 @@ def usrdashboard(request):
         return render(request, 'dashboard/usrdashboard.html', {'d': dash})
     else:
         return render(request, 'error.html', {'back': '/portal/', 'info': {'Message': _('Unable to connect to the Event Socket')}, 'title': 'Event Socket Error'})
+
+
+class CfgStatsViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Configuration Statistics to be viewed.
+    """
+    serializer_class = CfgStatsSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def get_queryset(self):
+        pass
+
+    def list(self, request):
+        dash = SwDashboard()
+        dash.get_config_counts()
+
+        count_data = []
+        for k, v in dash.sw_counts.items():
+            item_data = {'item': k, 'enabled': v['e'], 'total': v['t']}
+            count_data.append(item_data)
+
+        results = self.serializer_class(count_data, many=True, context={'request': request}).data
+        return Response({'count': len(count_data), 'results': results})
+
+
+class SwitchStatusViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Switch Stati to be viewed.
+    """
+    serializer_class = SwitchStatusSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def get_queryset(self):
+        pass
+
+    def list(self, request):
+        dash = SwDashboard()
+        dash.connect()
+        if not dash.esconnected:
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        status_data = []
+        line_number = 0
+        switch_number = 0
+        for switch in dash.es.freeswitches:
+            dash.get_sw_status(switch_number)
+            switch_number += 1
+            for item in dash.sw_status:
+                line_number += 1
+                item_data = {'line': line_number, 'switch': switch, 'measure': item}
+                status_data.append(item_data)
+        dash.disconnect()
+
+        results = self.serializer_class(status_data, many=True, context={'request': request}).data
+        return Response({'count': len(status_data), 'results': results})
+
+
+class SwitchLiveTrafficViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Switch Live Traffic to be viewed.
+    """
+    serializer_class = SwitchLiveTrafficSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def get_queryset(self):
+        pass
+
+    def list(self, request):
+        dash = SwDashboard()
+        dash.connect()
+        if not dash.esconnected:
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        traffic_data = []
+        line_number = 0
+        switch_number = 0
+        for switch in dash.es.freeswitches:
+            dash.get_live_counts(switch_number)
+            switch_number += 1
+            for k, v in dash.sw_live.items():
+                line_number += 1
+                item_data = {'line': line_number, 'switch': switch, 'item': k, 'value': v['c']}
+                traffic_data.append(item_data)
+        dash.disconnect()
+
+        results = self.serializer_class(traffic_data, many=True, context={'request': request}).data
+        return Response({'count': len(traffic_data), 'results': results})
+
+
+class GenericItemValueViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Item/Value data to be viewed.
+    """
+    serializer_class = GenericItemValueSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def get_queryset(self):
+        pass
+
+    def append_data(self, key, value):
+        return {'item': key, 'value': value}
+
+    def list(self, request):
+        raise NotImplementedError
+
+
+class GeneralSystemInformationViewSet(GenericItemValueViewSet):
+    """
+    API endpoint that allows General System Information to be viewed.
+    """
+    def list(self, request):
+        dash = OsDashboard(False, False)
+        dash.get_cpu_usage()
+        uptime = dash.get_uptime()
+        dash.get_platform()
+
+        data = []
+        data.append(self.append_data('hostanme', dash.hostname))
+        data.append(self.append_data('os', dash.osname))
+        data.append(self.append_data('kernel', dash.kernel))
+        data.append(self.append_data('uptime', uptime))
+        data.append(self.append_data('load_avarage', '1 min %s, 5 min %s, 15 min %s' % (dash.load1, dash.load5, dash.load15)))
+
+        results = self.serializer_class(data, many=True, context={'request': request}).data
+        return Response({'count': len(data), 'results': results})
+
+
+class CpuUsageViewSet(GenericItemValueViewSet):
+    """
+    API endpoint that allows Cpu Usage to be viewed.
+    """
+    def list(self, request):
+        dash = OsDashboard(False, False)
+        dash.get_cpu_usage()
+        cpus = dash.get_cpus()
+
+        data = []
+        cpu_data = []
+        data.append(self.append_data('count', dash.cpucount))
+        data.append(self.append_data('type', dash.cputype))
+        data.append(self.append_data('usage', dash.cpuusage))
+        i = 0
+        for cpu in dash.cpuall:
+            cpu_data.append('%s: %s' % (i, cpu))
+            i += 1
+        data.append(self.append_data('usage_per_cpu', ', '.join(cpu_data)))
+
+        results = self.serializer_class(data, many=True, context={'request': request}).data
+        return Response({'count': len(data), 'results': results})
+
+
+class DiskInputOutputViewSet(GenericItemValueViewSet):
+    """
+    API endpoint that allows Disk I/O to be viewed.
+    """
+    def list(self, request):
+        dash = OsDashboard(False, False)
+        dash.get_diskio()
+        data = []
+        for k,v in dash.diskio.items():
+            data.append(self.append_data(k, v))
+        results = self.serializer_class(data, many=True, context={'request': request}).data
+        return Response({'count': len(data), 'results': results})
+
+
+class MemoryUsageViewSet(GenericItemValueViewSet):
+    """
+    API endpoint that allows Memory Usage to be viewed.
+    """
+    def list(self, request):
+        dash = OsDashboard(False, False)
+        dash.get_mem()
+        data = []
+        for k,v in dash.mem.items():
+            data.append(self.append_data(k, v))
+        results = self.serializer_class(data, many=True, context={'request': request}).data
+        return Response({'count': len(data), 'results': results})
+
+
+class DiskInfoViewSet(GenericItemValueViewSet):
+    """
+    API endpoint that allows Disk Info to be viewed.
+    """
+    serializer_class = DiskInfoSerializer
+
+    def list(self, request):
+        dash = OsDashboard(False, False)
+        dash.get_disks()
+        data = []
+        for k,v in dash.disks.items():
+            disk_data = {'device': k, 'total': v['total'], 'used': v['used'], 'free': v['free'], 'pc_used': v['use'], 'fs_type': v['type'], 'mount': v['mount']}
+            data.append(disk_data)
+        results = self.serializer_class(data, many=True, context={'request': request}).data
+        return Response({'count': len(data), 'results': results})
+
+
+class NetworkTrafficViewSet(GenericItemValueViewSet):
+    """
+    API endpoint that allows Network Traffic statistics to be viewed.
+    """
+    def list(self, request):
+        dash = OsDashboard(False, False)
+        dash.get_traffic()
+        data = []
+        data.append(self.append_data('bytes_sent', dash.nettotalbytessent))
+        data.append(self.append_data('packets_sent', dash.nettotalpacketssent))
+        data.append(self.append_data('bytes_received', dash.nettotalbytesrecv))
+        data.append(self.append_data('packets_received', dash.nettotalpacketsrecv))
+        results = self.serializer_class(data, many=True, context={'request': request}).data
+        return Response({'count': len(data), 'results': results})
+
+
+class NetworkTrafficByInterfaceViewSet(GenericItemValueViewSet):
+    """
+    API endpoint that allows Network Traffic statistics by Interface to be viewed.
+    """
+    serializer_class = NetworkTrafficByInterfaceSerializer
+
+    def list(self, request):
+        dash = OsDashboard(False, False)
+        dash.get_traffic()
+        data = []
+        for k,v in dash.nic.items():
+            v['interface'] = k
+            data.append(v)
+        results = self.serializer_class(data, many=True, context={'request': request}).data
+        return Response({'count': len(data), 'results': results})

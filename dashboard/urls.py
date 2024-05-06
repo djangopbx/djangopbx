@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,21 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from rest_framework import routers
 from django.urls import path
 from . import views
+
+router = routers.DefaultRouter()
+router.register(r'config_stats', views.CfgStatsViewSet, basename='cfgstats')
+router.register(r'switch_status', views.SwitchStatusViewSet, basename='switchstatus')
+router.register(r'switch_live_traffic', views.SwitchLiveTrafficViewSet, basename='switchlivetraffic')
+router.register(r'general_system_information', views.GeneralSystemInformationViewSet, basename='generalsysteminformation')
+router.register(r'cpu_usage', views.CpuUsageViewSet, basename='cpuusage')
+router.register(r'disk_i_o', views.DiskInputOutputViewSet, basename='diskio')
+router.register(r'memory_usage', views.MemoryUsageViewSet, basename='memoryusage')
+router.register(r'disk_info', views.DiskInfoViewSet, basename='diskinfo')
+router.register(r'network_traffic', views.NetworkTrafficViewSet, basename='networktraffic')
+router.register(r'network_traffic_by_interface', views.NetworkTrafficByInterfaceViewSet, basename='networktrafficbyinterface')
 
 urlpatterns = [
     path('osdashboard/', views.osdashboard, name='osdashboard'),
