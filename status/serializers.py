@@ -55,3 +55,21 @@ class FsRegistrationsSerializer(serializers.Serializer):
 
         r = '%s|%s|%s|%s' % (obj.get('reg_user'), obj.get('realm'), sip_profile, obj.get('hostname'))
         return self.context['request'].build_absolute_uri('%s/' % urlsafe_base64_encode(r.encode()))
+
+
+class FsActiveCallsSerializer(serializers.Serializer):
+
+    url              = serializers.SerializerMethodField()       # noqa: E501, E221
+    id               = serializers.UUIDField(source='call_uuid') # noqa: E501, E221
+    profile          = serializers.CharField()                   # noqa: E501, E221
+    created          = serializers.CharField()                   # noqa: E501, E221
+    number           = serializers.CharField()                   # noqa: E501, E221
+    cid_name         = serializers.CharField()                   # noqa: E501, E221
+    cid_number       = serializers.CharField()                   # noqa: E501, E221
+    dest             = serializers.CharField()                   # noqa: E501, E221
+    application      = serializers.CharField()                   # noqa: E501, E221
+    read_write_codec = serializers.CharField()                   # noqa: E501, E221
+    secure           = serializers.CharField()                   # noqa: E501, E221
+
+    def get_url(self, obj):
+        return self.context['request'].build_absolute_uri('%s/' % obj.get('call_uuid'))

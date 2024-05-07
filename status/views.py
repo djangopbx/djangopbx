@@ -49,7 +49,10 @@ from pbx.restpermissions import (
 )
 from switch.models import Modules
 from .forms import LogViewerForm
-from .serializers import FsRegistrationsSerializer
+from .serializers import (
+    FsRegistrationsSerializer, FsActiveCallsSerializer
+)
+from accounts.models import Gateway
 
 
 def parseregdetail(regdetail):
@@ -99,6 +102,29 @@ def regaction(request, es, action=None, actlist=None):
                     es.process_events()
         if not action:
             messages.add_message(request, messages.INFO, _('Request: %s Sent' % request.POST['action']))
+    return
+
+def acaction(request, es, action=None, actlist=None):
+    if action:
+        postaction = action
+        if actlist:
+            postactlist = [actlist]
+        else:
+            postactlist = []
+    else:
+        postaction = request.POST['action']
+        postactlist = request.POST.getlist('_selected_action')
+    if not action and len(postactlist) == 0:
+        messages.add_message(request, messages.WARNING, _('No records selected.'))
+        return
+    es.clear_responses()
+    if postaction == 'hangup':
+        for target in postactlist:
+            es.send('api uuid_kill %s' % target)
+        es.process_events()
+        es.get_responses()
+        if not action:
+            messages.add_message(request, messages.INFO, _('Hangup %s request sent.' % target))
     return
 
 @staff_member_required
@@ -209,7 +235,6 @@ def modules(request, moduuid=None, action=None, host=None):
 
 @staff_member_required
 def fsregistrations(request, realm=None):
-    print(request.path)
     if not realm:
         realm = request.session['domain_name']
     es = FsCmdAbsLayer()
@@ -278,8 +303,108 @@ def fsregdetail(request, sip_profile='internal', sip_user='none@none', host=None
 
     return render(request, 'infotable.html', {'back': 'fsregistrations', 'info': info, 'title': 'Registration Detail'})
 
+def process_active_calls_responses(api, realm, responses):
+    nonestr = 'none'
+    emptystr = ''
+    row = {}
+    rows = []
+    info = []
+    for resp in responses:
+        try:
+            channels = json.loads(resp)
+        except:
+            channels = {'row_count': 0}
+        if channels['row_count'] > 0:
+            for i in channels['rows']:
+                context = i.get('context', nonestr)
+                presence_id = i.get('presence_id', emptystr)
+                if len(context) > 0 and not context == 'public':
+                    if '@' in context:
+                        context_list = context.split('@')
+                        i['domain_name'] = context_list[1]
+                    else:
+                        i['domain_name'] = context
+                elif '@' in presence_id:
+                    presence_id_list = presence_id.split('@')
+                    i['domain_name'] = presence_id_list[1]
+                if realm == 'all' or realm == i.get('domain_name', nonestr):
 
-class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
+                    application_data = i.get('application_data', emptystr)
+                    if 'gateway' in application_data:
+                        application_data_list = application_data.split('/')
+                        adll = len(application_data_list)
+                        if adll > 1:
+                            gateway_uuid = application_data_list[adll - 2]
+                            try:
+                                gw = Gateway.objects.get(pk=gateway_uuid)
+                                gateway_name = gw.gateway
+                            except Gateway.DoesNotExist:
+                                gateway_name = gateway_uuid
+
+                        application_data = application_data.replace(gateway_uuid, gateway_name)
+                    name_list = i.get('name', emptystr).split('/')
+                    sip_profile = name_list[1]
+                    tmp_number = name_list[2].split('@')[0].replace('sip:', emptystr)
+                    cid_num = i.get('cid_num', '').replace('+', emptystr)
+                    rows.append(i.get('uuid', emptystr))
+                    rows.append(sip_profile)
+                    rows.append(i.get('created', emptystr))
+                    rows.append(tmp_number)
+                    rows.append(i.get('cid_name', emptystr))
+                    rows.append(cid_num)
+                    rows.append(i.get('dest', emptystr))
+                    rows.append('%s:%s' % (i.get('application', emptystr), application_data[:512]))
+                    rows.append('%s:%s / %s:%s' % (i.get('read_codec', emptystr), i.get('read_rate',
+                                    emptystr), i.get('write_codec', emptystr), i.get('write_rate', emptystr)))
+                    rows.append(i.get('secure', emptystr))
+                    if api:
+                        row['call_uuid'] = rows[0]
+                        row['profile'] = rows[1]
+                        row['created'] = rows[2]
+                        row['number'] = rows[3]
+                        row['cid_name'] = rows[4]
+                        row['cid_number'] = rows[5]
+                        row['dest'] = rows[6]
+                        row['application'] = rows[7]
+                        row['read_write_codec'] = rows[8]
+                        row['secure'] = rows[9]
+                        info.append(row)
+                        row = {}
+                    else:
+                        info.append(rows)
+                    rows = []
+    return info
+
+@staff_member_required
+def fsactivecalls(request, realm=None):
+    if not realm:
+        realm = request.session['domain_name']
+    es = FsCmdAbsLayer()
+    if not es.connect():
+        return render(request, 'error.html', {'back': '/portal/',
+            'info': {'Message': _('Unable to connect to the FreeSWITCH')}, 'title': 'Broker/Socket Error'})
+
+    th = ['Profile', 'Created', 'Number', 'CID Name', 'CID Number', 'Dest', 'Application', 'Read / Write Codec', 'Secure']
+    act = {'hangup': 'Hangup'}
+    if request.method == 'POST':
+        acaction(request, es)
+        es.disconnect()
+        act = {}
+        #  Show empty list to give time for data to settle on all freswitches after an action.
+        return render(request, 'actiontable.html', {'refresher': 'fsactivecalls', 'showall': 'fsactivecalls',
+                    'info': [], 'th': th, 'act': act, 'title': 'Active Calls'})
+
+    es.clear_responses()
+    es.send('api show channels as json')
+    es.process_events()
+    es.get_responses()
+    es.disconnect()
+    info = process_active_calls_responses(False, realm, es.responses)
+    return render(request, 'actiontable.html', {'refresher': 'fsactivecalls', 'showall': 'fsactivecalls',
+                    'info': info, 'th': th, 'act': act, 'title': 'Active Calls'})
+
+
+class FsRegistrationsViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows Switch Registrations to be viewed.
     """
@@ -304,7 +429,6 @@ class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
         es.process_events()
         es.get_responses()
         es.disconnect()
-        print(request.build_absolute_uri())
         for resp in es.responses:
             try:
                 registrations = json.loads(resp)
@@ -314,7 +438,7 @@ class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
                 reg_count += registrations.get('row_count', 0)
                 for i in registrations['rows']:
                     reg_data.append(i)
-        results = FsRegistrationsSerializer(reg_data, many=True, context={'request': request}).data
+        results = self.serializer_class(reg_data, many=True, context={'request': request}).data
         return Response({'count': reg_count, 'results': results})
 
     def retrieve(self, request, pk=None):
@@ -358,3 +482,45 @@ class FsRegistrationsView(viewsets.ReadOnlyModelViewSet):
     @action(detail=True)
     def provision(self, request, pk=None):
         return self.processregaction(request, pk, 'provision')
+
+
+class FsActiveCallsViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Switch Active Calls to be viewed.
+    """
+    serializer_class = FsActiveCallsSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def get_queryset(self):
+        pass
+
+    def list(self, request):
+        es = FsCmdAbsLayer()
+        if not es.connect():
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        es.clear_responses()
+        es.send('api show channels as json')
+        es.process_events()
+        es.get_responses()
+        channel_data = process_active_calls_responses(True, 'all', es.responses)
+        es.disconnect()
+
+        results = self.serializer_class(channel_data, many=True, context={'request': request}).data
+        return Response({'count': len(channel_data), 'results': results})
+
+    def retrieve(self, request, pk=None):
+        if not pk:
+            return Response({'status': 'err', 'message': 'pk not found'})
+        return Response({'id': pk, 'call_id': pk})
+
+    @action(detail=True)
+    def hangup(self, request, pk=None):
+        es = FsCmdAbsLayer()
+        if not es.connect():
+            return Response({'status': 'err', 'message': 'Broker/Socket Error'})
+        acaction(request, es, 'hangup', pk)
+        es.disconnect()
+        return Response({'status': _('Hangup request sent for call uuid %s' % pk)})

@@ -93,5 +93,24 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "portal.menuitem",
+    "pk": "846b62ca-6388-4122-b33d-cf53721df306",
+    "fields": {
+        "menu_id": "5dc0b38c-7522-4c25-a2b9-d6f34d9828e3",
+        "parent_id": "6c53a5e4-2b23-4ba0-af63-8f1393b8e45b",
+        "title": "Active Calls",
+        "link": "/status/fsactivecalls",
+        "icon": null,
+        "category": "internal",
+        "protected": "true",
+        "sequence": "89030",
+        "description": "",
+        "created": "2024-05-06T16:15:01.359Z",
+        "updated": "2024-05-06T16:15:01.359Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

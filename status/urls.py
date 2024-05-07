@@ -31,7 +31,8 @@ from django.urls import path
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'switch_registrations', views.FsRegistrationsView, basename='FsRegistrations')
+router.register(r'switch_registrations', views.FsRegistrationsViewSet, basename='FsRegistrations')
+router.register(r'switch_active_calls', views.FsActiveCallsViewSet, basename='FsActiveCalls')
 
 urlpatterns = [
     path('fslogviewer/', views.fslogviewer, name='fslogviewer'),
@@ -43,4 +44,6 @@ urlpatterns = [
     path('fsregistrations/', views.fsregistrations, name='fsregistrations'),
     path('fsregistrations/<str:realm>/', views.fsregistrations, name='fsregistrations'),
     path('fsregdetail/<str:sip_profile>/<str:sip_user>/<str:host>/', views.fsregdetail, name='fsregdetail'),
+    path('fsactivecalls/', views.fsactivecalls, name='fsactivecalls'),
+    path('fsactivecalls/<str:realm>/', views.fsactivecalls, name='fsactivecalls'),
 ]
