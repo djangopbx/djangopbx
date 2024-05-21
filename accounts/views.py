@@ -54,6 +54,7 @@ from .serializers import (
     ExtensionSerializer, FollowMeDestinationSerializer, GatewaySerializer, BridgeSerializer,
 )
 from .extensionfunctions import ExtFeatureSyncFunctions
+from voicemail.voicemailfunctions import VoicemailFunctions
 
 
 class ExtensionViewSet(viewsets.ModelViewSet):
@@ -73,7 +74,8 @@ class ExtensionViewSet(viewsets.ModelViewSet):
         serializer.save(updated_by=self.request.user.username)
 
     def perform_create(self, serializer):
-        serializer.save(updated_by=self.request.user.username)
+        obj = serializer.save(updated_by=self.request.user.username)
+        VoicemailFunctions().create_vm_record(obj, self.request.user.username)
 
     @action(detail=False)
     def flush_cache_all_directories(self, request):

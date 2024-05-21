@@ -38,7 +38,6 @@ from .models import (
     Extension, FollowMeDestination, ExtensionUser, Gateway, Bridge,
 )
 from tenants.models import Profile
-from voicemail.models import Voicemail
 from django.forms.widgets import Select
 from django.forms import ModelForm
 from import_export.admin import ImportExportModelAdmin
@@ -48,6 +47,7 @@ from musiconhold.musiconholdfunctions import MohSource
 from switch.switchfunctions import SipProfileChoice
 from .accountfunctions import AccountFunctions, GatewayFunctions, ExtRelatedFunctions
 from .extensionfunctions import ExtFeatureSyncFunctions
+from voicemail.voicemailfunctions import VoicemailFunctions
 
 
 class ExtensionAdminForm(ModelForm):
@@ -306,11 +306,7 @@ class ExtensionAdmin(ImportExportModelAdmin):
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.user_context = request.session['domain_name']
             super().save_model(request, obj, form, change)
-            Voicemail.objects.create(
-                extension_id=obj,
-                enabled='false',
-                updated_by=request.user.username
-            )
+            VoicemailFunctions().create_vm_record(obj, request.user.username)
 
 
 class GatewayResource(resources.ModelResource):

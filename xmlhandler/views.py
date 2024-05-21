@@ -109,7 +109,7 @@ def directory(request):
     elif action == 'group_call':
         xml = xmlhf.GetGroupCall(domain)
     elif action == 'reverse-auth-lookup':
-        xml = xmlhf.GetReverseAuthLookup()
+        xml = xmlhf.GetReverseAuthLookup(domain, user)
     elif event_calling_function == 'switch_xml_locate_domain':
         xml = xmlhf.GetDomain()
     elif event_calling_function == 'switch_load_network_lists':
