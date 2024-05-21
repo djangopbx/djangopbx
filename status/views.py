@@ -26,6 +26,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import uuid
 import re
 import sys
 import json
@@ -437,6 +438,8 @@ class FsRegistrationsViewSet(viewsets.ReadOnlyModelViewSet):
             if registrations['row_count'] > 0:
                 reg_count += registrations.get('row_count', 0)
                 for i in registrations['rows']:
+                    if 'registration_uuid' not in i:
+                        i['registration_uuid'] = str(uuid.uuid4())
                     reg_data.append(i)
         results = self.serializer_class(reg_data, many=True, context={'request': request}).data
         return Response({'count': reg_count, 'results': results})
