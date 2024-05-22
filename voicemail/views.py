@@ -134,7 +134,7 @@ def listvoicemails(request, vmuuid=None, vmext=None, action=None):
                         date_time.strftime("%d-%m-%Y, %H:%M:%S"),
                         v[8],
                         v[9],
-                        '<audio controls><source src="/fs/voicemail/default/%s/%s/%s" type="%s"> %s</audio>' % (
+                        '<audio controls preload=\'none\'><source src="/fs/voicemail/default/%s/%s/%s" type="%s"> %s</audio>' % (
                             request.session['domain_name'],
                             e, filename, atype,
                             _('Your browser does not support the audio tag.')
