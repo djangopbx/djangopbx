@@ -37,51 +37,44 @@ import paramiko
 from paramiko.util import ClosingContextManager
 
 
-class SFTPConnection(ClosingContextManager):
+class SSHConnection(ClosingContextManager):
+
+    client = None
 
     def __init__(self, base_path='', known_host_file=None, interactive=False):
         self.ssh_dict = {}
-        self.sftp_dict = {}
         self.interactive = interactive
         self.known_host_file = known_host_file
         self.base_path = base_path
 
-    def set_base_path(self, base_path):
-        self.base_path = base_path
-
-    def is_seekable(self, file_object):
-        return not hasattr(file_object, 'seekable') or file_object.seekable()
-
     def close(self):
-        for k, v in self.sftp_dict.items():
-            v.close()
         for k, v in self.ssh_dict.items():
             v['client'].close()
 
     def connect(self, host, username='django-pbx', port=22, timeout=3.0, password=None):
         if host in self.ssh_dict:
             ssh_host = self.ssh_dict[host]
-            client = ssh_host['client']
+            self.client = ssh_host['client']
         else:
             ssh_host = self.ssh_dict[host] = {}
             ssh_host['username'] = username
             ssh_host['password'] = password
             ssh_host['port'] = port
             ssh_host['timeout'] = timeout
-            client = ssh_host['client'] = paramiko.SSHClient()
+            self.client = ssh_host['client'] = paramiko.SSHClient()
 
         known_host_file = self.known_host_file or os.path.expanduser(
             os.path.join("~", ".ssh", "known_hosts")
         )
 
         if os.path.exists(known_host_file):
-            client.load_host_keys(known_host_file)
+            self.client.load_host_keys(known_host_file)
 
         # Automatically add new host keys for hosts we haven't seen before.
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         try:
-            client.connect(hostname=host, port=ssh_host['port'], username=ssh_host['username'], password=ssh_host['password'], timeout=ssh_host['timeout'])
+            self.client.connect(hostname=host, port=ssh_host['port'], username=ssh_host['username'], password=ssh_host['password'], timeout=ssh_host['timeout'])
         except paramiko.ssh_exception.AuthenticationException as e:
             if self.interactive and not ssh_host['password']:
                 # If authentication has failed, and we haven't already tried
@@ -93,8 +86,38 @@ class SFTPConnection(ClosingContextManager):
                 self.connect(host, ssh_host['username'], ssh_host['port'], ssh_host['timeout'], ssh_host['password'])
             else:
                 raise paramiko.ssh_exception.AuthenticationException(e)
-        if client.get_transport():
-            self.sftp_dict[host] = client.open_sftp()
+
+    def ssh(self, host):
+        # Lazy SSH connection...
+        if not self.ssh_dict.get(host) or not self.ssh_dict[host]['client'].get_transport().is_active():
+            self.connect(host)
+        return self.ssh_dict.get(host)['client']
+
+    def command(self, host, cmd):
+        return self.ssh(host).exec_command(cmd)
+
+
+class SFTPConnection(SSHConnection):
+
+    def __init__(self, base_path='', known_host_file=None, interactive=False):
+        super().__init__(base_path, known_host_file, interactive)
+        self.sftp_dict = {}
+
+    def set_base_path(self, base_path):
+        self.base_path = base_path
+
+    def is_seekable(self, file_object):
+        return not hasattr(file_object, 'seekable') or file_object.seekable()
+
+    def close(self):
+        for k, v in self.sftp_dict.items():
+            v.close()
+        super().close()
+
+    def connect(self, host, username='django-pbx', port=22, timeout=3.0, password=None):
+        super().connect(host, username, port, timeout, password)
+        if self.client.get_transport():
+            self.sftp_dict[host] = self.client.open_sftp()
 
     def sftp(self, host):
         # Lazy SFTP connection...

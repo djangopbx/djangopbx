@@ -31,7 +31,7 @@ import os
 import socket
 from django.core.cache import cache
 from tenants.pbxsettings import PbxSettings
-from pbx.sftpconnect import SFTPConnection
+from pbx.sshconnect import SFTPConnection
 
 
 class FileAbsLayer:

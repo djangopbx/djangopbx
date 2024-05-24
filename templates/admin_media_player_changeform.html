@@ -7,7 +7,7 @@
         {% for line in fieldset %}
         {% for field in line %}
             {% if field.field.name == 'filename' %}
-                <audio controls><source src="/{{ field.field.value }}"></audio>
+                <audio controls preload='none'><source src="/{{ field.field.value }}"></audio>
             {% endif %}
         {% endfor %}
         {% endfor %}
