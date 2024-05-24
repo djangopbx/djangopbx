@@ -48,9 +48,21 @@ urlpatterns = [
         RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
     ),
     re_path(
-        r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>.*)/(?P<fdom>.*)/(?P<fpath>.*))$',
-        views.servefsmedia, name='servefsmedia'
+        r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>[A-Za-z0-9._-]+)/(?P<fpro>[A-Za-z0-9_-]+)/(?P<fdom>[A-Za-z0-9._-]+)/(?P<fext>[A-Za-z0-9._-]+)/(?P<fpath>[A-Za-z0-9._-]+))$', # noqa: E501, E221
+        views.servefsmediavoicemail, name='servefsmediavoicemail'
         ),
+    re_path(
+        r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>[A-Za-z0-9._-]+)/(?P<fdom>[A-Za-z0-9._-]+)/(?P<fpath>[A-Za-z0-9._-]+))$', # noqa: E501, E221
+        views.servefsmediarecordings, name='servefsmediarecordings'
+        ),
+    re_path(
+        r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>[A-Za-z0-9._-]+)/(?P<fdom>[A-Za-z0-9._-]+)/archive/(?P<fyear>[0-9]{4})/(?P<fmon>[JFMASOND][a-z]{2})/(?P<fday>[0123][0-9])/(?P<fpath>[A-Za-z0-9._-]+))$', # noqa: E501, E221
+        views.servefsmediarecordingsarchive, name='servefsmediarecordingsarchive'
+        ),
+#    re_path(
+#        r'^(?P<fullpath>(?P<fs>fs)/(?P<fdir>.*)/(?P<fdom>.*)/(?P<fpath>.*))$',
+#        views.servefsmedia, name='servefsmedia'
+#        ),
     re_path(r'clickdial/(?P<dest>[A-Za-z0-9\.@]+)/', views.ClickDial.as_view(), name='clickdial'),
     re_path(r'clickdial/(?P<dest>[A-Za-z0-9\.@]+)/<host>/', views.ClickDial.as_view(), name='clickdial'),
     path('pbxlogout/', views.pbxlogout, name='pbxlogout'),

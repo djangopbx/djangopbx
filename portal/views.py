@@ -67,7 +67,7 @@ from .serializers import (
 from accounts.accountfunctions import AccountFunctions
 from switch.switchsounds import SwitchSounds
 from pbx.fscmdabslayer import FsCmdAbsLayer
-
+from pbx.fileabslayer import FileAbsLayer
 
 @login_required
 def index(request):
@@ -192,25 +192,31 @@ def selectdomain(request, domainuuid):
         return HttpResponseRedirect('/admin/')
     return HttpResponseRedirect('/')
 
-
-@login_required
-def servefsmedia(request, fs, fdir, fdom, fpath, fullpath):
+def servefsmedia(request, fs, fdir, fdom, fullpath):
     if not fs == 'fs':
         return HttpResponseNotFound()
     if not request.user.is_superuser:
-        if fdir == 'recordings':
-            if not fdom == request.session['domain_name']:
-                return HttpResponseNotFound()
-        if fdir == 'voicemail':
-            if not fpath == request.session['domain_name']:
-                return HttpResponseNotFound()
-
+        if not fdom == request.session['domain_name']:
+            return HttpResponseNotFound()
+    fal = FileAbsLayer()
     file_location = '%s/%s' % (settings.MEDIA_ROOT, fullpath)
-    if not os.path.exists(file_location):
+    try:
+        f = fal.open(file_location, 'rb', fdom)
+    except FileNotFoundError:
         return HttpResponseNotFound()
+    return FileResponse(f)
 
-    return FileResponse(open(file_location, 'rb'))
+@login_required
+def servefsmediavoicemail(request, fs, fdir, fpro, fdom, fext, fpath, fullpath):
+    return servefsmedia(request, fs, fdir, fdom, fullpath)
 
+@login_required
+def servefsmediarecordings(request, fs, fdir, fdom, fpath, fullpath):
+    return servefsmedia(request, fs, fdir, fdom, fullpath)
+
+@login_required
+def servefsmediarecordingsarchive(request, fs, fdir, fdom, fyear, fmon, fday, fpath, fullpath):
+    return servefsmedia(request, fs, fdir, fdom, fullpath)
 
 class DomainSelectorList(tables.Table):
     class Meta:

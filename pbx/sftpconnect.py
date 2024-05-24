@@ -46,6 +46,9 @@ class SFTPConnection(ClosingContextManager):
         self.known_host_file = known_host_file
         self.base_path = base_path
 
+    def set_base_path(self, base_path):
+        self.base_path = base_path
+
     def is_seekable(self, file_object):
         return not hasattr(file_object, 'seekable') or file_object.seekable()
 
@@ -79,7 +82,7 @@ class SFTPConnection(ClosingContextManager):
 
         try:
             client.connect(hostname=host, port=ssh_host['port'], username=ssh_host['username'], password=ssh_host['password'], timeout=ssh_host['timeout'])
-        except paramiko.AuthenticationException as e:
+        except paramiko.ssh_exception.AuthenticationException as e:
             if self.interactive and not ssh_host['password']:
                 # If authentication has failed, and we haven't already tried
                 # username/password, and configuration allows it, then try
@@ -89,7 +92,7 @@ class SFTPConnection(ClosingContextManager):
                 ssh_host["password"] = getpass.getpass()
                 self.connect(host, ssh_host['username'], ssh_host['port'], ssh_host['timeout'], ssh_host['password'])
             else:
-                raise paramiko.AuthenticationException(e)
+                raise paramiko.ssh_exception.AuthenticationException(e)
         if client.get_transport():
             self.sftp_dict[host] = client.open_sftp()
 
@@ -139,7 +142,11 @@ class SFTPConnection(ClosingContextManager):
 
     def get(self, host, remotefile, localfile):
         sftp_path = self.sftp_path(remotefile)
-        return self.sftp(host).get(sftp_path, localfile)
+        try:
+            self.sftp(host).get(sftp_path, localfile)
+            return True
+        except FileNotFoundError:
+            return False
 
     def put(self, host, localfile, remotefile):
         sftp_path = self.sftp_path(remotefile)

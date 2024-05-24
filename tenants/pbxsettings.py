@@ -140,6 +140,19 @@ class PbxSettings():
                     fsvs[vendor_key] = False
         return fsvs
 
+    def default_settings_wild(self, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
+        settingList = DefaultSetting.objects.values_list('value', flat=True).filter(
+                category=cat,
+                subcategory__istartswith=subcat,
+                value_type=settingtype,
+                enabled=self.true_str).order_by(self.sequence_str)
+        if settingList.count() == 0:
+            if usedefault:
+                return [defaultsetting]
+            else:
+                return False
+        return settingList
+
     def default_settings(self, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
         settingList = DefaultSetting.objects.values_list('value', flat=True).filter(
                 category=cat,

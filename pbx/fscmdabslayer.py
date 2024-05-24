@@ -62,7 +62,7 @@ class FsCmdAbsLayer:
                 print('Event Socket')
             self.freeswitches = [self.hostname]
         else:
-            self.broker = AmqpCmdEvent()
+            self.broker = AmqpCmdEvent(self.debug)
             if self.debug:
                 print('Event Broker')
             self.freeswitches = self.broker.freeswitches
