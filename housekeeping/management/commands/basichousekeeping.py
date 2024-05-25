@@ -34,6 +34,7 @@ from tenants.pbxsettings import PbxSettings
 from django.contrib.admin.models import LogEntry
 from tenants.models import Domain
 from xmlcdr.models import XmlCdr
+from pbx.sshconnect import SSHConnection
 
 
 class Command(BaseCommand):
@@ -44,6 +45,13 @@ class Command(BaseCommand):
         self.day_sec = 86400
         self.pbxs = PbxSettings()
         self.fs_media = '/home/django-pbx/media/fs/'
+        self.use_local_file_storage = self.pbxs.default_settings('cluster', 'use_local_file_storage', 'boolean', 'true', True)[0]
+        if not self.use_local_file_storage:
+            self.ssh = SSHConnection()
+            self.filestores = self.pbxs.default_settings_wild('cluster', 'file_store_', 'text')
+
+        if not self.filestores:
+            self.filestores = []
         days_keep_call_recordings = self.get_hk_default_setting('days_keep_call_recordings', '30')
         days_keep_voicemail = self.get_hk_default_setting('days_keep_voicemail', '30')
         days_keep_cdrs = self.get_hk_default_setting('days_keep_cdrs', '10')
@@ -72,11 +80,15 @@ class Command(BaseCommand):
             query_time = timezone.now() - timezone.timedelta(domain_days_keep_cdrs)
             XmlCdr.objects.filter(domain_id=q, start_stamp__lt=query_time).delete()
 
-            self.hk_delete_files('recordings/%s/archive/*/*/*/*.wav' % q.name, domain_days_keep_call_recordings)
-            self.hk_delete_files('recordings/%s/archive/*/*/*/*.mp3' % q.name, domain_days_keep_call_recordings)
-            self.hk_delete_files('voicemail/*/%s/*/msg_*.wav' % q.name, domain_days_keep_voicemail)
-            self.hk_delete_files('voicemail/*/%s/*/msg_*.mp3' % q.name, domain_days_keep_voicemail)
-
+            if self.use_local_file_storage:
+                self.hk_delete_files('recordings/%s/archive/*/*/*/*.wav' % q.name, domain_days_keep_call_recordings)
+                self.hk_delete_files('recordings/%s/archive/*/*/*/*.mp3' % q.name, domain_days_keep_call_recordings)
+                self.hk_delete_files('voicemail/*/%s/*/msg_*.wav' % q.name, domain_days_keep_voicemail)
+                self.hk_delete_files('voicemail/*/%s/*/msg_*.mp3' % q.name, domain_days_keep_voicemail)
+            else:
+                stdin, stdout, stderr = ssh.command(q.name, '/usr/bin/nohup /usr/local/bin/fs-rec-mtce %s voicemailmsg default %s %s &' % (self.fs_media, q.name, domain_days_keep_voicemail))
+                for fstr in self.filestores:
+                    stdin, stdout, stderr = ssh.command(fstr, '/usr/bin/nohup /usr/local/bin/fs-rec-mtce %s callrecording none %s %s &' % (self.fs_media, q.name, domain_days_keep_call_recordings))
 
     def hk_delete_files(self, pattern, days):
             files = glob.iglob('%s%s' % (self.fs_media, pattern))
