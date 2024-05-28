@@ -33,6 +33,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'xmlcdrs', views.XmlCdrViewSet)
+router.register(r'calltimeline', views.CallTimelineViewSet)
 
 urlpatterns = [
     re_path(r'^xml_cdr_import/.*$', views.xml_cdr_import, name='xmlcdrimport'),

@@ -58,7 +58,8 @@ def main():
         broker_user = args.user
     if args.password:
         broker_password = args.password
-    routing = {'TAP.Events': ['*.*.CUSTOM.*.*', '*.*.CHANNEL_HANGUP_COMPLETE.*.*']}
+    #routing = {'TAP.Events': ['*.*.CUSTOM.*.*', '*.*.CHANNEL_HANGUP_COMPLETE.*.*', '*.*.CHANNEL_CALLSTATE.*.*']}
+    routing = {'TAP.Events': ['*.*.*.*.*']}
     mq = AmqpConnection(broker, broker_port, broker_user, broker_password,
                             routing, True, '%s_cli_event_queue' % broker)
     mq.connect()

@@ -61,7 +61,17 @@ class AmqpConnection:
         if routing:
             self.routing = routing
         else:
-            self.routing = {'TAP.Events': ['*.*.CUSTOM.*.*', '*.*.CHANNEL_HANGUP_COMPLETE.*.*']}
+            self.routing = {'TAP.Events': [
+                '*.*.CUSTOM.*.*',
+                '*.*.CHANNEL_HANGUP_COMPLETE.*.*',
+                '*.*.CHANNEL_CALLSTATE.*.*',
+                '*.*.PLAYBACK_START.*.*',
+                '*.*.PLAYBACK_STOP.*.*',
+                '*.*.RECORD_STOP.*.*',
+                '*.*.CHANNEL_HOLD.*.*',
+                '*.*.CHANNEL_UNHOLD.*.*',
+                '*.*.DTMF.*.*'
+                ]}
         if event_queue_name:
             self.event_queue_name = event_queue_name
         else:

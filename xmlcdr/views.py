@@ -55,10 +55,10 @@ from pbx.restpermissions import (
 )
 from pbx.pbxipaddresscheck import pbx_ip_address_check, loopback_default
 from .models import (
-    XmlCdr,
+    XmlCdr, CallTimeline,
 )
 from .serializers import (
-    XmlCdrSerializer,
+    XmlCdrSerializer, CallTimelineSerializer,
 )
 
 from .xmlcdrfunctions import XmlCdrFunctions
@@ -100,6 +100,26 @@ class XmlCdrViewSet(viewsets.ModelViewSet):
     serializer_class = XmlCdrSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['domain_id', 'direction', 'hangup_cause']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+
+class CallTimelineViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Call Timelines to be viewed or edited.
+    """
+    queryset = CallTimeline.objects.all().order_by('event_epoch', 'event_sequence', 'domain_id')
+    serializer_class = CallTimelineSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['domain_id', 'event_name', 'event_subclass']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

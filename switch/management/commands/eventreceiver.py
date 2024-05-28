@@ -29,12 +29,7 @@
 
 import os
 import datetime
-#import time
-#import random
 import logging
-#import pika
-#import socket
-#import functools
 import json
 from pika import BasicProperties as PikaBasicProperties
 from django.utils.translation import gettext_lazy as _
@@ -42,14 +37,13 @@ from django.utils import timezone
 from django.core.management.base import BaseCommand
 from switch.models import IpRegister
 from tenants.models import DefaultSetting, Domain
-from xmlcdr.models import XmlCdr
+from xmlcdr.models import XmlCdr, CallTimeline
 from accounts.models import Extension
 from pbx.commonfunctions import shcommand
 from pbx.scripts.resources.pbx.amqpconnection import AmqpConnection
 
 
 logger = logging.getLogger(__name__)
-#logging.getLogger("pika").setLevel(logging.WARNING)
 
 
 class Command(BaseCommand):
@@ -61,8 +55,11 @@ class Command(BaseCommand):
     mb_key_user = 'message_broker_user'
     mb_key_pass = 'message_broker_password'
     mb_key_adhoc = 'message_broker_adhoc_publish'
+    domains = {}
 
     def str2int(self, tmpstr):
+        if not tmpstr:
+            return 0
         try:
             number = int(tmpstr)
         except (TypeError, ValueError):
@@ -70,11 +67,37 @@ class Command(BaseCommand):
         return number
 
     def str2float(self, tmpstr):
+        if not tmpstr:
+            return 0.0
         try:
             number = round(float(tmpstr), 2)
         except (TypeError, ValueError):
             number = 0.0
         return number
+
+    def get_domain_name(self, t_uuid, event):
+        domain_name = event.get('variable_domain_name')
+        if not domain_name:
+            domain_name = event.get('variable_sip_req_host')
+        if not domain_name:
+            logger.warn('EVENT CDR request {}: No domain name provided.'.format(t_uuid))
+            return False
+        return domain_name
+
+    def get_domain(self, u_uuid, domain_name):
+        d = self.domains.get(domain_name)
+        if d:
+            return d
+        try:
+            d = Domain.objects.get(name=domain_name)
+        except Domain.ObjectDoesNotExist:
+            logger.warn('EVENT CDR request {}: Unable to find domain {}.'.format(t_uuid, domain_name))
+            return False
+        except Domain.MultipleObjectsReturned:
+            logger.warn('EVENT CDR request {}: Multiple domain record found for {}.'.format(t_uuid, domain_name))
+            return False
+        self.domains[domain_name] = d
+        return d
 
     def on_message(self, channel, method, properties, body):
         msg = body.decode('utf8')
@@ -87,11 +110,25 @@ class Command(BaseCommand):
         event_subclass = event.get('Event-Subclass', self.nonstr)
         if event_name == 'CHANNEL_HANGUP_COMPLETE':
             self.handle_cdr(event)
+        elif event_name == 'CHANNEL_CALLSTATE':
+            self.handle_call_state(event)
+        elif event_name == 'DTMF':
+            self.handle_dtmf(event)
+        elif event_name == 'CHANNEL_HOLD':
+            self.handle_channel_hold(event)
+        elif event_name == 'CHANNEL_UNHOLD':
+            self.handle_channel_hold(event)
+        elif event_name == 'PLAYBACK_START':
+            self.handle_playback_start(event)
+        elif event_name == 'PLAYBACK_STOP':
+            self.handle_playback_stop(event)
         elif event_name == 'CUSTOM':
             if event.get('Event-Subclass', self.nonstr) == 'sofia::register':
                 self.handle_register(channel, event)
             if event.get('Event-Subclass', self.nonstr) == 'callcenter::info':
                 self.handle_callcentreinfo(event)
+            if event.get('Event-Subclass', self.nonstr) == 'conference::maintenance':
+                self.handle_conferencemaintenance(event)
 
     def handle(self, *args, **kwargs):
         mb = {self.mb_key_host: '127.0.0.1', self.mb_key_port: 5672,
@@ -150,13 +187,11 @@ class Command(BaseCommand):
         self.mq.setup_queues()
         self.mq.consume(self.on_message)
 
-
-    def handle_callcentreinfo(self, event):
-        pass
-
     def handle_register(self, channel, event):
         if event.get('status', 'N/A').startswith('Registered'):
-            ip_address = event.get('network-ip', '192.168.42.1')
+            ip_address = event.get('network-ip')
+            if not ip_address:
+                return
             ip, created = IpRegister.objects.update_or_create(address=ip_address, defaults={"status": 1})
             if created:
                 ip_type = 'ipv4'
@@ -174,6 +209,7 @@ class Command(BaseCommand):
                         logger.warn('EVENT Register {}: Unable send TAP.Firewall message {}.'.format(ip.address, firewall_routing))
 
     def handle_cdr(self, event):
+        core_uuid = event.get('Core-UUID')
         t_uuid = event.get('Channel-Call-UUID', self.nonstr)
         call_direction = event.get('variable_call_direction', self.nonstr)
         q850 = event.get('variable_hangup_cause_q850', self.nonstr)
@@ -185,12 +221,6 @@ class Command(BaseCommand):
             if call_direction == self.nonstr:
                 return False
 
-        domain_name = event.get('variable_domain_name')
-        if not domain_name:
-            domain_name = event.get('variable_sip_req_host')
-        if not domain_name:
-            logger.warn('EVENT CDR request {}: No domain name provided.'.format(t_uuid))
-            return False
         if event.get('Channel-HIT-Dialplan', 'false') == 'true':
             leg = 'a'
         else:
@@ -198,14 +228,9 @@ class Command(BaseCommand):
             if not call_direction in self.b_leg:
                 return False
 
-        try:
-            d = Domain.objects.get(name=domain_name)
-        except Domain.ObjectDoesNotExist:
-            logger.warn('EVENT CDR request {}: Unable to find domain {}.'.format(t_uuid, domain_name))
-            return False
-        except Domain.MultipleObjectsReturned:
-            logger.warn('EVENT CDR request {}: Multiple domain record found for {}.'.format(t_uuid, domain_name))
-            return False
+        domain_name = self.get_domain_name(t_uuid, event)
+        d = self.get_domain(t_uuid, domain_name)
+
 
         extension_found = False
         extension_uuid = event.get('variable_extension_uuid')
@@ -381,7 +406,7 @@ class Command(BaseCommand):
                 record_name = os.path.basename(path)
                 record_length = self.str2int(event.get('variable_duration'))
 
-        xcdr = XmlCdr(domain_id=d)
+        xcdr = XmlCdr(domain_id=d, core_uuid=core_uuid)
         if extension_found:
             xcdr.extension_id=e
         xcdr.domain_name = domain_name
@@ -480,7 +505,198 @@ class Command(BaseCommand):
 
         xcdr.updated_by = 'system'
         xcdr.save()
+        CallTimeline.objects.filter(core_uuid=core_uuid).update(domain_id=d)
+        return
 
-        return True
+    def create_call_timeline(self, event):
+        try:
+            ctl = CallTimeline(
+                core_uuid = event.get('Core-UUID'),
+                hostname = event.get('FreeSWITCH-Hostname'),
+                switchame = event.get('FreeSWITCH-Switchname'),
+                switch_ipv4 = event.get('FreeSWITCH-IPv4'),
+                switch_ipv6 = event.get('FreeSWITCH-IPv6'),
+                call_uuid = event.get('Channel-Call-UUID'),
+                event_name = event.get('Event-Name'),
+                event_subclass = event.get('Event-Subclass'),
+                event_date_local = event.get('Event-Date-Local'),
+                event_epoch = self.str2int(event.get('Event-Date-Timestamp')),
+                event_sequence = self.str2int(event.get('Event-Sequence')),
+                event_calling_file = event.get('Event-Calling-File'),
+                event_calling_function = event.get('Event-Calling-Function')
+            )
+        except:
+            return False
+        return ctl
 
+    def add_ctl_application_data(self, fields, ctl, event):
+        ctl.application = event.get(fields[0])
+        ctl.application_uuid = event.get(fields[1])
+        ctl.application_data = event.get(fields[2])
+        ctl.application_status = event.get(fields[3])
+        ctl.application_file_path = event.get(fields[4])
+        ctl.application_seconds = self.str2int(event.get(fields[5]))
+        return
 
+    def add_ctl_caller_channel_data(self, ctl, event):
+        ctl.direction = event.get('Call-Direction')
+        ctl.other_leg_direction = event.get('Other-Leg-Direction')
+        ctl.context = event.get('Caller-Context')
+        ctl.other_leg_context = event.get('Other-Leg-Context')
+        ctl.hit_dialplan = event.get('Channel-HIT-Dialplan', 'false')
+        ctl.caller_user_name = event.get('Caller-Username')
+        ctl.caller_ani = event.get('Caller-ANI')
+        ctl.other_leg_user_name = event.get('Other-Leg-Username')
+        ctl.caller_uuid = event.get('Caller-Unique-ID')
+        ctl.other_leg_caller_uuid = event.get('Other-Leg-Caller-Unique-ID')
+        ctl.channel_name = event.get('Caller-Channel-Name')
+        ctl.channel_state = event.get('Channel-State')
+        ctl.channel_call_state = event.get('Channel-Call-State')
+        ctl.answer_state = event.get('Answer-State')
+        ctl.caller_id_name = event.get('Caller-Caller-ID-Name')
+        ctl.other_leg_caller_id_name = event.get('Other-Leg-Caller-ID-Name')
+        ctl.caller_id_number = event.get('Caller-Caller-ID-Number')
+        ctl.other_leg_caller_id_number = event.get('Other-Leg-Callee-ID-Number')
+        ctl.caller_destination = event.get('Caller-Destination-Number')
+        ctl.other_leg_caller_destination = event.get('Other-Leg-Destination-Number')
+        ctl.network_addr = event.get('Caller-Network-Addr')
+        ctl.other_leg_network_addr = event.get('Other-Leg-Network-Addr')
+        ctl.created_time = self.str2int(event.get('Caller-Channel-Created-Time'))
+        ctl.other_leg_created_time = self.str2int(event.get('Other-Leg-Channel-Created-Time'))
+        ctl.answered_time = self.str2int(event.get('Caller-Channel-Answered-Time'))
+        ctl.other_leg_answered_time = self.str2int(event.get('Other-Leg-Channel-Answered-Time'))
+        ctl.progress_time = self.str2int(event.get('Caller-Channel-Progress-Time'))
+        ctl.other_leg_progress_time = self.str2int(event.get('Other-Leg-Channel-Progress-Time'))
+        ctl.progress_media_time = self.str2int(event.get('Caller-Channel-Progress-Media-Time'))
+        ctl.other_leg_progress_media_time = self.str2int(event.get('Other-Leg-Channel-Progress-Media-Time'))
+        ctl.hangup_time = self.str2int(event.get('Caller-Channel-Hangup-Time'))
+        ctl.other_leg_hangup_time = self.str2int(event.get('Other-Leg-Channel-Hangup-Time'))
+        ctl.transfer_time = self.str2int(event.get('Caller-Channel-Transfer-Time'))
+        ctl.other_leg_transfer_time = self.str2int(event.get('Other-Leg-Channel-Transfer-Time'))
+        ctl.resurrect_time = self.str2int(event.get('Caller-Channel-Resurrect-Time'))
+        ctl.other_leg_resurrect_time = self.str2int(event.get('Other-Leg-Channel-Resurrect-Time'))
+        ctl.bridged_time = self.str2int(event.get('Caller-Channel-Bridged-Time'))
+        ctl.other_leg_bridged_time = self.str2int(event.get('Other-Leg-Channel-Bridged-Time'))
+        ctl.last_hold_time = self.str2int(event.get('Caller-Channel-Last-Hold'))
+        ctl.other_leg_last_hold_time = self.str2int(event.get('Other-Leg-Channel-Last-Hold'))
+        ctl.hold_accu_time = self.str2int(event.get('Caller-Channel-Hold-Accum'))
+        ctl.other_leg_hold_accu_time = self.str2int(event.get('Other-Leg-Channel-Hold-Accum'))
+        ctl.transfer_source = event.get('Caller-Transfer-Source')
+        return
+
+    def handle_call_state(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        self.add_ctl_caller_channel_data(ctl, event)
+        ctl.save()
+        return
+
+    def handle_dtmf(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        self.add_ctl_caller_channel_data(ctl, event)
+        ctl.dtmf_digit = event.get('DTMF-Digit')
+        ctl.dtmf_duration = self.str2int(event.get('DTMF-Duration'))
+        ctl.dtmf_source = event.get('DTMF-Source')
+        ctl.save()
+        return
+
+    def handle_channel_hold(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        self.add_ctl_caller_channel_data(ctl, event)
+        ctl.bridge_channel = event.get('variable_bridge_channel')
+        ctl.save()
+        return
+
+    def handle_playback_start(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        self.add_ctl_caller_channel_data(ctl, event)
+        self.add_ctl_application_data([
+            'variable_current_application',      # Application
+            None,                                # Application UUID
+            'variable_current_application_data', # Application Data
+            None,                                # Application Status
+            'Playback-File-Path',                # Application File Path
+            None                                 # Application Seconds
+            ], ctl, event)
+        ctl.save()
+        return
+
+    def handle_playback_stop(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        self.add_ctl_caller_channel_data(ctl, event)
+        self.add_ctl_application_data([
+            'variable_current_application',
+            None,
+            'variable_current_application_data',
+            'Playback-Status',
+            'Playback-File-Path',
+            'variable_playback_seconds'
+            ], ctl, event)
+        ctl.save()
+        return
+
+    def handle_callcentreinfo(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        self.add_ctl_caller_channel_data(ctl, event)
+        self.add_ctl_application_data([
+            'variable_current_application',
+            None,
+            'variable_current_application_data',
+            None,
+            None,
+            None
+            ], ctl, event)
+        ctl.cc_side = event.get('variable_cc_side')
+        ctl.cc_queue = event.get('CC-Queue')
+        ctl.cc_action = event.get('CC-Action')
+        ctl.cc_count = self.str2int(event.get('CC-Count'))
+        jt = event.get('CC-Member-Joined-Time')
+        if jt:
+            ctl.cc_member_joining_time = self.str2int(jt)
+        else:
+            ctl.cc_member_joining_time = self.str2int(event.get('variable_cc_queue_joined_epoch'))
+        ctl.cc_member_leaving_time = self.str2int(event.get('CC-Member-Leaving-Time'))
+        ctl.cc_cause = event.get('CC-Cause')
+        ctl.cc_hangup_cause = event.get('CC-Hangup-Cause')
+        ctl.cc_cancel_reason = event.get('CC-Cancel-Reason')
+        ctl.cc_member_uuid = event.get('CC-Member-UUID')
+        ctl.cc_member_session_uuid = event.get('CC-Member-Session-UUID')
+        ctl.cc_member_caller_id_name = event.get('CC-Member-CID-Name')
+        ctl.cc_member_caller_id_number = event.get('CC-Member-CID-Number')
+        ctl.cc_agent = event.get('CC-Agent')
+        ctl.cc_agent_uuid = event.get('CC-Agent-UUID')
+        ctl.cc_agent_system = event.get('CC-Agent-System')
+        ctl.cc_agent_type = event.get('CC-Agent-Type')
+        ctl.cc_agent_state = event.get('CC-Agent-State')
+        ctl.cc_agent_called_time = self.str2int(event.get('CC-Agent-Called-Time'))
+        ctl.cc_agent_answered_time = self.str2int(event.get('CC-Agent-Answered-Time'))
+        ctl.save()
+        return
+
+    def handle_conferencemaintenance(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        self.add_ctl_caller_channel_data(ctl, event)
+        ctl.cf_name = event.get('Conference-Name')
+        ctl.cf_action = event.get('Action')
+        ctl.cf_uuid = event.get('Conference-Unique-ID')
+        ctl.cf_domain = event.get('Conference-Domain')
+        ctl.cf_size = event.get('Conference-Size')
+        ctl.cf_ghosts = event.get('Conference-Ghosts')
+        ctl.cf_profile_name = event.get('Conference-Profile-Name')
+        ctl.cf_member_type = event.get('Member-Type')
+        ctl.cf_member_id = event.get('Member-ID')
+        ctl.save()
+        return

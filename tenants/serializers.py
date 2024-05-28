@@ -80,14 +80,19 @@ class DefaultSettingSerializer(serializers.ModelSerializer):
                 ]
 
 
-class Freeswitches(DefaultSetting):
-    pass
-
-
 class FreeswitchesSerializer(serializers.ModelSerializer):
 
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, obj):
+        rq = self.context['request']
+        if rq.path.endswith('freeswitches/'):
+            return rq.build_absolute_uri('%s/' % obj.id)
+        else:
+            return '%s://%s:%s%s' % (rq.scheme, rq.META['SERVER_NAME'], rq.META['SERVER_PORT'], rq.path)
+
     class Meta:
-        model = Freeswitches
+        model = DefaultSetting
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
                     'id', 'url', 'app_uuid', 'category', 'subcategory',
