@@ -127,12 +127,16 @@ class AmqpConnection:
             self.channel.basic_consume(queue=self.queue, auto_ack=True, on_message_callback=on_message)
             self.channel.start_consuming()
         except KeyboardInterrupt:
+            if logger is not None:
+                logger.info('Event Receiver: Received interrupt, shtting down... %s' % self.rabbithostname)
             print('Keyboard interrupt received')
             self.channel.stop_consuming()
             self.connection.close()
             os._exit(1)
         except pika.exceptions.ChannelClosedByBroker:
             print('Channel Closed By Broker Exception')
+            if logger is not None:
+                logger.info('Event Receiver: Channel closed by broker exception. %s' % self.rabbithostname)
 
     def consume(self, on_message):
         tries = -1
