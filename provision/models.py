@@ -193,6 +193,7 @@ class Devices(models.Model):
     user_id            = models.ForeignKey('tenants.Profile', on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('User'))                                        # noqa: E501, E221
     username           = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Username'))                                                                    # noqa: E501, E221
     password           = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Password'))                                                                    # noqa: E501, E221
+    alternate_id       = models.UUIDField(blank=True, null=True, verbose_name=_('Alternate Device'))                                                                           # noqa: E501, E221
     provisioned_date   = models.DateTimeField(blank=True, null=True, verbose_name=_('Provisioned Date'))                                                                       # noqa: E501, E221
     provisioned_method = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Prov. Method'))                                                                # noqa: E501, E221
     enabled            = models.CharField(max_length=8, blank=True, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))   # noqa: E501, E221

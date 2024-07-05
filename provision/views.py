@@ -360,6 +360,13 @@ def device_config(request, *args, **kwargs):
 
     if not device:
         return HttpResponseNotFound()
+    if device.alternate_id:
+        try:
+            device = Devices.objects.get(pk=device.alternate_id)
+        except Devices.DoesNotExist:
+            device = None
+    if not device:
+        return HttpResponseNotFound()
 
     prov_template = os.path.join('provision/',device.template, cfgfile)
     if not os.path.isfile(os.path.join(settings.BASE_DIR, 'provision/templates', prov_template)):

@@ -345,7 +345,7 @@ class DevicesAdmin(ImportExportModelAdmin):
     fieldsets = [
         (None,  {'fields': [ 'mac_address', 'label', 'model',
                     'template', 'profile_id', 'user_id', ('username', 'password'),
-                    'vendor', 'domain_id', 'enabled', 'description']}),
+                    'alternate_id', 'vendor', 'domain_id', 'enabled', 'description']}),
         ('provision Info',  {'fields': ['firmware_version', 'provisioned_date', 'provisioned_method', 'provisioned_ip'], 'classes': ['collapse']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]

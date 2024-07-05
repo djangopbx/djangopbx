@@ -134,7 +134,7 @@ class DevicesSerializer(serializers.ModelSerializer):
                 'url', 'id',
                 'mac_address', 'label', 'model',
                 'template', 'profile_id', 'user_id', 'username', 'password',
-                'vendor', 'domain_id', 'enabled', 'description',
+                'alternate_id', 'vendor', 'domain_id', 'enabled', 'description',
                 'created',
                 'updated',
                 'synchronised',
