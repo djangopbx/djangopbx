@@ -38,6 +38,7 @@ from django.core.management.base import BaseCommand
 from switch.models import IpRegister
 from tenants.models import DefaultSetting, Domain
 from xmlcdr.models import XmlCdr, CallTimeline
+from recordings.models import CallRecording
 from accounts.models import Extension
 from pbx.commonfunctions import shcommand
 from pbx.scripts.resources.pbx.amqpconnection import AmqpConnection
@@ -55,6 +56,9 @@ class Command(BaseCommand):
     mb_key_user = 'message_broker_user'
     mb_key_pass = 'message_broker_password'
     mb_key_adhoc = 'message_broker_adhoc_publish'
+    switch_recordings_path = '/var/lib/freeswitch/recordings'
+    pop_call_recordings = False
+    call_recordings_path = '/fs/recordings'
     domains = {}
 
     def str2int(self, tmpstr):
@@ -170,6 +174,24 @@ class Command(BaseCommand):
         if fmt:
             self.cdrformat = fmt[0].value
         del fmt
+        pcr = DefaultSetting.objects.filter(
+                category='cdr',
+                subcategory='populate_call_recordings',
+                value_type='boolean',
+                enabled='true',
+                )
+        if pcr:
+            self.pop_call_recordings = (True if pcr[0].value == 'true' else False)
+        del pcr
+        crp = DefaultSetting.objects.filter(
+                category='cdr',
+                subcategory='recordings',
+                value_type='text',
+                enabled='true',
+                )
+        if crp:
+            self.call_recordings_path = crp[0].value
+        del crp
         srp = DefaultSetting.objects.filter(
                 category='switch',
                 subcategory='recordings',
@@ -229,8 +251,12 @@ class Command(BaseCommand):
                 return False
 
         domain_name = self.get_domain_name(t_uuid, event)
-        d = self.get_domain(t_uuid, domain_name)
+        if not domain_name:
+            return False
 
+        d = self.get_domain(t_uuid, domain_name)
+        if not d:
+            return False
 
         extension_found = False
         extension_uuid = event.get('variable_extension_uuid')
@@ -452,10 +478,24 @@ class Command(BaseCommand):
         xcdr.remote_media_ip = event.get('variable_remote_media_ip')
         xcdr.network_addr = network_addr
         if record_path and record_name:
-            if os.path.exists('%s/%s' % (record_path, record_name)) and record_length > 0:
+            if record_length > 0:
                 xcdr.record_path = record_path
                 xcdr.record_name = record_name
                 # record_description = event.get('variable_record_description', self.nonstr)
+                if self.pop_call_recordings:
+                    path_parts = record_path.split('/')[-5:]
+                    if len(path_parts) == 5:
+                        local_path = '%s/%s' % (self.switch_recordings_path, '/'.join(path_parts))
+                        if os.path.exists('%s/%s' % (local_path, record_name)):
+                            call_rec_path = '%s/%s' % (self.call_recordings_path[1:], '/'.join(path_parts))
+                            try:
+                                CallRecording.objects.create(name=record_name,
+                                        domain_id=d, year=path_parts[2],
+                                        month=path_parts[3], day=path_parts[4],
+                                        filename='%s/%s' % (call_rec_path, record_name),
+                                        updated_by='CDR Event Import')
+                            except:
+                                pass
 
         xcdr.leg = leg
         xcdr.pdd_ms = self.str2int(event.get(

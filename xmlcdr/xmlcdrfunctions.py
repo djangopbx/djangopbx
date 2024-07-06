@@ -33,11 +33,13 @@ import logging
 import xmltodict
 from xml.parsers.expat import ExpatError
 from urllib.parse import unquote
+from django.core.cache import cache
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .models import XmlCdr
+from recordings.models import CallRecording
 from tenants.models import Domain
 from accounts.models import Extension
 from tenants.pbxsettings import PbxSettings
@@ -48,7 +50,12 @@ logger = logging.getLogger(__name__)
 class XmlCdrFunctions():
 
     def accept_b_leg(self, direction):
-        b_leg = PbxSettings().default_settings('cdr', 'b_leg', 'array')
+        cache_key = 'xmlcdr:b_leg'
+        b_leg = cache.get(cache_key)
+        if not b_leg:
+            b_leg = PbxSettings().default_settings('cdr', 'b_leg', 'array')
+            cache.set(cache_key, b_leg)
+
         if direction in b_leg:
             return True
         return False
@@ -283,7 +290,12 @@ class XmlCdrFunctions():
                         record_name = os.path.basename(recording)
                         record_length = self.str2int(cdr_variables.get('duration'))
 
-        switch_recordings_path = PbxSettings().default_settings('switch', 'recordings', 'dir')[0]
+        cache_key = 'xmlcdr:switch_recordings'
+        switch_recordings_path = cache.get(cache_key)
+        if not switch_recordings_path:
+            switch_recordings_path = PbxSettings().default_settings('switch', 'recordings', 'dir')[0]
+            cache.set(cache_key, switch_recordings_path)
+
         uuid = cdr_variables.get('uuid', nonestr)
 
         if not record_name:
@@ -321,6 +333,8 @@ class XmlCdrFunctions():
                 record_length = self.str2int(cdr_variables.get('duration'))
 
         xcdr = XmlCdr(domain_id=d)
+#        crec = CallRecording()
+
         if extension_found:
             xcdr.extension_id=e
         xcdr.domain_name = domain_name
@@ -364,11 +378,37 @@ class XmlCdrFunctions():
         xcdr.remote_media_ip = self.uq(cdr_variables.get('remote_media_ip'))
         xcdr.network_addr = network_addr
         if record_path and record_name:
-            if os.path.exists('%s/%s' % (record_path, record_name)) and record_length > 0:
+            if record_length > 0:
                 xcdr.record_path = record_path
                 xcdr.record_name = record_name
                 # record_description = cdr_variables.get('record_description', nonestr)
+                cache_key = 'xmlcdr:populate_call_recordings'
+                populate_call_recordings = cache.get(cache_key)
+                if not populate_call_recordings:
+                    populate_call_recordings = PbxSettings().default_settings(
+                        'cdr', 'populate_call_recordings', 'boolean', 'true', True)[0]
+                    cache.set(cache_key, populate_call_recordings)
+                if populate_call_recordings == 'true':
+                    cache_key = 'xmlcdr:recordings'
+                    call_recordings_path = cache.get(cache_key)
+                    if not call_recordings_path:
+                        call_recordings_path = PbxSettings().default_settings(
+                            'cdr', 'recordings', 'text', '/fs/recordings', True)[0]
+                        cache.set(cache_key, call_recordings_path)
 
+                    path_parts = record_path.split('/')[-5:]
+                    if len(path_parts) == 5:
+                        local_path = '%s/%s' % (switch_recordings_path, '/'.join(path_parts))
+                        if os.path.exists('%s/%s' % (local_path, record_name)):
+                            call_rec_path = '%s/%s' % (call_recordings_path[1:], '/'.join(path_parts))
+                            try:
+                                CallRecording.objects.create(name=record_name,
+                                        domain_id=d, year=path_parts[2],
+                                        month=path_parts[3], day=path_parts[4],
+                                        filename='%s/%s' % (call_rec_path, record_name),
+                                        updated_by='XML CDR Import')
+                            except:
+                                pass
         xcdr.leg = leg
         xcdr.pdd_ms = self.str2int(cdr_variables.get(
             'progress_mediamsec'
@@ -412,7 +452,12 @@ class XmlCdrFunctions():
         xcdr.hangup_cause_q850 = self.str2int(cdr_variables.get('hangup_cause_q850'))
         xcdr.sip_hangup_disposition = cdr_variables.get('sip_hangup_disposition')
 
-        format = PbxSettings().default_settings('cdr', 'format', 'text', 'json', True)[0]
+        cache_key = 'xmlcdr:format'
+        format = cache.get(cache_key)
+        if not format:
+            format = PbxSettings().default_settings('cdr', 'format', 'text', 'json', True)[0]
+            cache.set(cache_key, format)
+
         if format == 'xml':
             xcdr.xml = xml
         if format == 'json':

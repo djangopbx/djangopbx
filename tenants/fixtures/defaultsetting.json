@@ -4678,5 +4678,23 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "3b2431d3-f1d4-4f10-bd22-a480f45ac8b8",
+    "fields": {
+        "app_uuid": null,
+        "category": "cdr",
+        "subcategory": "populate_call_recordings",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-07-06T14:19:07.007Z",
+        "updated": "2024-07-06T14:19:07.007Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

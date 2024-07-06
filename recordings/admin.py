@@ -92,7 +92,7 @@ class CallRecordingAdmin(ImportExportModelAdmin):
 
     actions = None
     ordering = [
-        'domain_id',
+        '-created',
         'name'
     ]
 
