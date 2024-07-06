@@ -248,7 +248,7 @@ def selectcdr(request, cdruuid=None):
                 record_path_tmp = '%s/%s' % (cdr_record_path, 'none')
         else:
             record_path_tmp = cdr.record_path.replace(switch_record_path, cdr_record_path)
-        info[_('Recording')] = '<audio controls><source src="%s/%s" type="%s"> %s</audio>' % (
+        info[_('Recording')] = '<audio controls preload=\'none\'><source src="%s/%s" type="%s"> %s</audio>' % (
                 record_path_tmp, cdr.record_name, atype, _('Your browser does not support the audio tag.')
                 )
 

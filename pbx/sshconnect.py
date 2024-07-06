@@ -33,9 +33,11 @@ import os
 import posixpath
 import stat
 import getpass
+import logging
 import paramiko
 from paramiko.util import ClosingContextManager
 
+logging.getLogger("paramiko").setLevel(logging.WARNING)
 
 class SSHConnection(ClosingContextManager):
 
