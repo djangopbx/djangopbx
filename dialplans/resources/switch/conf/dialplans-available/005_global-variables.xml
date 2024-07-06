@@ -2,10 +2,10 @@
     <extension name="global-variables" number="" continue="true" app_uuid="5fd51ef8-04c7-4ec4-9c25-6bd6a2c9bd50" order="5">
         <condition>
             <action application="set" data="RFC2822_DATE=${strftime(%a, %d %b %Y %T %z)}"/>
-            <action application="export" data="pbx_httapi_url=http://127.0.0.1:8008"/>
-            <action application="export" data="pbx_call_recording_url=http://127.0.0.1:8008"/>
-            <action application="export" data="pbx_recording_url=http://127.0.0.1:8008"/>
-            <action application="export" data="pbx_play_recording_url=http://127.0.0.1:80"/>
+            <action application="export" data="pbx_httapi_url=http://127.0.0.1:8008" inline="true"/>
+            <action application="export" data="pbx_call_recording_url=http://127.0.0.1:8008" inline="true"/>
+            <action application="export" data="pbx_recording_url=http://127.0.0.1:8008" inline="true"/>
+            <action application="export" data="pbx_play_recording_url=http://127.0.0.1:80" inline="true"/>
         </condition>
     </extension>
 </context>
