@@ -101,7 +101,7 @@ class CommonDestAction():
                 cd_actions.append((self.decorate('Call Centres', decorate), d_list))
 
         if opt & 4 == 4:
-            d_list = self.get_dp_list('Call flows')
+            d_list = self.get_dp_list('Call flow')
             if d_list:
                 cd_actions.append((self.decorate('Call flows', decorate), d_list))
 
