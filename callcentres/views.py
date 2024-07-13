@@ -48,6 +48,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext_lazy as _
 from utilities.clearcache import ClearCache
+from tenants.pbxsettings import PbxSettings
 from .callcentrefunctions import CcFunctions
 
 from pbx.restpermissions import (
@@ -76,6 +77,14 @@ class CallCentreQueuesViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+        obj = self.get_object()
+        pbxsettings = PbxSettings()
+        if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+            objf = CcFunctions(obj, self.request.user.username)
+            objf.generate_xml()
+        if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+            cc = ClearCache()
+            cc.dialplan(obj.domain_id.name)
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)

@@ -40,6 +40,7 @@ from .models import (
 )
 from dialplans.models import Dialplan
 from tenants.models import Profile
+from tenants.pbxsettings import PbxSettings
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from django.conf import settings
@@ -431,7 +432,15 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        if not change:
+        if change:
+            pbxsettings = PbxSettings()
+            if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+                ccf = CcFunctions(obj, request.user.username)
+                ccf.generate_xml()
+            if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+                cc = ClearCache()
+                cc.dialplan(request.session['domain_name'])
+        else:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
         self.fire_fs_queue_events(obj, change, False)
