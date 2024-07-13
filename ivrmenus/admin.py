@@ -28,24 +28,23 @@
 #
 
 from django.contrib import admin
+from django.contrib import messages
 from django.http import HttpResponseRedirect
-from pbx.commonfunctions import DomainFilter, DomainUtils
-from switch.switchsounds import SwitchSounds
+from django.conf import settings
+from django.forms import ModelForm, Select
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
 from utilities.clearcache import ClearCache
+from dialplans.models import Dialplan
+from switch.switchsounds import SwitchSounds
+from tenants.pbxsettings import PbxSettings
+from pbx.commonfunctions import DomainFilter, DomainUtils
 from pbx.commonwidgets import ListTextWidget
 from pbx.commondestination import CommonDestAction
-from django.forms import ModelForm, Select
 from .ivrmenufunctions import IvrFunctions
-
 from .models import (
     IvrMenus, IvrMenuOptions
 )
-from dialplans.models import Dialplan
-from import_export.admin import ImportExportModelAdmin
-from import_export import resources
-from django.conf import settings
-from django.contrib import messages
-from django.forms import ModelForm
 
 
 class IvrMenuOptionsResource(resources.ModelResource):
@@ -212,7 +211,16 @@ class IvrMenusAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        if not change:
+        if change:
+            pbxsettings = PbxSettings()
+            if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+                ivrf = IvrFunctions(obj, request.user.username)
+                ivrf.generate_xml()
+            if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+                cc = ClearCache()
+                cc.dialplan(request.session['domain_name'])
+                cc.ivrmenus(request.session['domain_name'])
+        else:
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']
         super().save_model(request, obj, form, change)

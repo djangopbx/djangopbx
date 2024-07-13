@@ -33,6 +33,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from utilities.clearcache import ClearCache
+from tenants.pbxsettings import PbxSettings
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -61,6 +62,15 @@ class IvrMenusViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+        obj = self.get_object()
+        pbxsettings = PbxSettings()
+        if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+            objf = IvrFunctions(obj, self.request.user.username)
+            objf.generate_xml()
+        if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+            cc = ClearCache()
+            cc.dialplan(obj.domain_id.name)
+            cc.ivrmenus(obj.domain_id.name)
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
@@ -80,8 +90,9 @@ class IvrMenusViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def flush_cache_ivrmenu(self, request, pk=None):
         obj = self.get_object()
-        ClearCache().dialplan(obj.domain_id.name)
-        ClearCache().ivrmenus(obj.domain_id.name)
+        cc = ClearCache()
+        cc.dialplan(obj.domain_id.name)
+        cc.ivrmenus(obj.domain_id.name)
         return Response({'status': 'ivrmenu cache flushed'})
 
 
