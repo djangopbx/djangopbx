@@ -28,24 +28,24 @@
 #
 
 from django.contrib import admin
+from django.contrib import messages
 from django.http import HttpResponseRedirect
-
-from .models import (
-    RingGroup, RingGroupDestination, RingGroupUser
-)
-from dialplans.models import Dialplan
-from tenants.models import Profile
+from django.conf import settings
+from django.forms import ModelForm, Select
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-from django.conf import settings
-from django.contrib import messages
-from django.forms import ModelForm, Select
-from switch.switchsounds import SwitchSounds
 from utilities.clearcache import ClearCache
+from dialplans.models import Dialplan
+from switch.switchsounds import SwitchSounds
+from tenants.models import Profile
+from tenants.pbxsettings import PbxSettings
 from pbx.commonwidgets import ListTextWidget
 from pbx.commonfunctions import DomainFilter, DomainUtils
 from pbx.commondestination import CommonDestAction
 from .ringgroupfunctions import RgFunctions
+from .models import (
+    RingGroup, RingGroupDestination, RingGroupUser
+)
 
 
 class RingGroupUserResource(resources.ModelResource):
@@ -203,14 +203,22 @@ class RingGroupAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        if not change:
+        if change:
+            pbxsettings = PbxSettings()
+            if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+                rgf = RgFunctions(request.session['domain_uuid'], request.session['domain_name'], obj, request.user.username)
+                rgf.generate_xml()
+            if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+                cc = ClearCache()
+                cc.dialplan(request.session['domain_name'])
+        else:
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']
         super().save_model(request, obj, form, change)
 
     def response_change(self, request, obj):
         if '_generate-xml' in request.POST:
-            rgf = RgFunctions(request.session['domain_uuid'], request.session['domain_name'], str(obj.id), request.user.username)
+            rgf = RgFunctions(request.session['domain_uuid'], request.session['domain_name'], obj, request.user.username)
             dp_id = rgf.generate_xml()
             if dp_id:
                 obj.dialplan_id = dp_id

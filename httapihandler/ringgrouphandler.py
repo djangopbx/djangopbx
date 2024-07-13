@@ -29,7 +29,7 @@
 
 from lxml import etree
 from .httapihandler import HttApiHandler
-from ringgroups.ringgroupfunctions import RgFunctions
+from ringgroups.ringgroupfunctions import RgFunctions, get_ringgroup
 
 
 class RingGroupHandler(HttApiHandler):
@@ -46,10 +46,13 @@ class RingGroupHandler(HttApiHandler):
 
         self.get_domain_variables()
         ringgroup_uuid = self.qdict.get('ring_group_uuid')
-        try:
-            rgf = RgFunctions(self.domain_uuid, self.domain_name, ringgroup_uuid)
-        except:
+        rg = get_ringgroup(ringgroup_uuid)
+        if not rg:
             return self.return_data(self.error_hangup('R1001'))
+        try:
+            rgf = RgFunctions(self.domain_uuid, self.domain_name, rg)
+        except:
+            return self.return_data(self.error_hangup('R1002'))
 
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')

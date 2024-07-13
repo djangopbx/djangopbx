@@ -32,29 +32,28 @@ from lxml import etree
 from tenants.pbxsettings import PbxSettings
 from dialplans.models import Dialplan
 from accounts.models import Extension, FollowMeDestination
-from .models import RingGroup, RingGroupDestination
 from switch.models import SwitchVariable
+from .models import RingGroup, RingGroupDestination
+
+def get_ringgroup(uuid):
+    try:
+        obj = RingGroup.objects.get(pk=uuid)
+    except RingGroup.DoesNotExist:
+        obj = None
+    return obj
 
 
 class RgFunctions():
 
-    def __init__(self, domain_uuid, domain_name, ringgroup_uuid=None, user_name='system'):
+    def __init__(self, domain_uuid, domain_name, ringgroup=None, user_name='system'):
         self.domain_uuid = domain_uuid
         self.domain_name = domain_name
         self.user_name = user_name
-        self.ringgroup_uuid = ringgroup_uuid
+        self.rg = ringgroup
         self.ext_dict = {}
         exts = Extension.objects.filter(domain_id=self.domain_uuid, enabled='true')
         for ext in exts:
             self.ext_dict[ext.extension] = (str(ext.id), ext.follow_me_enabled)
-
-        if ringgroup_uuid:
-            try:
-                self.rg = RingGroup.objects.get(pk=ringgroup_uuid)
-            except:
-                self.rg = False
-        else:
-            self.rg = False
 
     def add_dialplan(self):
         dp = Dialplan.objects.create(

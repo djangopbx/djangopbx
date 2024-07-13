@@ -39,6 +39,7 @@ from django.utils.decorators import method_decorator
 from django_tables2 import Table, SingleTableView, LazyPaginator
 from django.utils.html import format_html
 from utilities.clearcache import ClearCache
+from tenants.pbxsettings import PbxSettings
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -67,6 +68,13 @@ class RingGroupViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+        obj = self.get_object()
+        pbxsettings = PbxSettings()
+        if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+            objf = RgFunctions(str(obj.domain_id.id), obj.domain_id.name, obj, self.request.user.username)
+            objf.generate_xml()
+        if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+            ClearCache().dialplan(obj.domain_id.name)
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
@@ -74,7 +82,7 @@ class RingGroupViewSet(viewsets.ModelViewSet):
     @action(detail=True)
     def generate_xml(self, request, pk=None):
         obj = self.get_object()
-        objf = RgFunctions(str(obj.domain_id.id), obj.domain_id.name, str(obj.id), request.user.username)
+        objf = RgFunctions(str(obj.domain_id.id), obj.domain_id.name, obj, request.user.username)
         dp_id = objf.generate_xml()
         if dp_id:
             obj.dialplan_id = dp_id
