@@ -28,21 +28,22 @@
 #
 
 from django.contrib import admin
+from django.contrib import messages
 from django.http import HttpResponseRedirect
-from pbx.commonfunctions import DomainFilter, DomainUtils
-from switch.switchsounds import SwitchSounds
+from django.conf import settings
 from django.forms import ModelForm
-from pbx.commonwidgets import ListTextWidget
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
+from utilities.clearcache import ClearCache
 from .models import (
     ConferenceControls, ConferenceControlDetails, ConferenceProfiles, ConferenceProfileParams,
     ConferenceRoomUser, ConferenceRooms, ConferenceCentres, ConferenceSessions,
 )
 from dialplans.models import Dialplan
-from import_export.admin import ImportExportModelAdmin
-from import_export import resources
-from django.conf import settings
-from django.contrib import messages
-from utilities.clearcache import ClearCache
+from switch.switchsounds import SwitchSounds
+from tenants.pbxsettings import PbxSettings
+from pbx.commonwidgets import ListTextWidget
+from pbx.commonfunctions import DomainFilter, DomainUtils
 from .conferencefunctions import CnfFunctions
 
 
@@ -325,7 +326,16 @@ class ConferenceCentresAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
-        if not change:
+        if change:
+            pbxsettings = PbxSettings()
+            if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+                cnf = CnfFunctions(obj, request.user.username)
+                cnf.generate_xml()
+            if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+                cc = ClearCache()
+                cc.dialplan(request.session['domain_name'])
+                cc.configuration()
+        else:
             obj.domain_id = DomainUtils().domain_from_session(request)
         super().save_model(request, obj, form, change)
 

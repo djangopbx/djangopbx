@@ -33,6 +33,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from utilities.clearcache import ClearCache
+from tenants.pbxsettings import PbxSettings
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -144,6 +145,15 @@ class ConferenceCentresViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+        obj = self.get_object()
+        pbxsettings = PbxSettings()
+        if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+            objf = CnfFunctions(obj, self.request.user.username)
+            objf.generate_xml()
+        if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+            cc = ClearCache()
+            cc.dialplan(obj.domain_id.name)
+            cc.configuration()
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
