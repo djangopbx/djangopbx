@@ -81,7 +81,7 @@ class CallFlowToggleHandler(HttApiHandler):
                             )
                         q.status = 'true'
                     q.save()
-                    cff = CfFunctions(self.domain_uuid, self.domain_name, str(q.id))
+                    cff = CfFunctions(q, self.handler_name)
                     cff.generate_xml()
                     etree.SubElement(x_work, 'pause', milliseconds='1000')
                     etree.SubElement(x_work, 'playback', file='voicemail/vm-goodbye.wav')

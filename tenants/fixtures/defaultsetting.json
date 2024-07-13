@@ -4696,5 +4696,41 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "42b7a16e-b018-4394-a858-f07c64b9214c",
+    "fields": {
+        "app_uuid": null,
+        "category": "dialplan",
+        "subcategory": "auto_generate_xml",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-07-13T10:27:56.132Z",
+        "updated": "2024-07-13T10:27:56.132Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "9854f9d7-db3b-4442-b41b-eaae167e52ac",
+    "fields": {
+        "app_uuid": null,
+        "category": "dialplan",
+        "subcategory": "auto_flush_cache",
+        "value_type": "boolean",
+        "value": "true",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-07-13T11:09:38.729Z",
+        "updated": "2024-07-13T11:09:38.730Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

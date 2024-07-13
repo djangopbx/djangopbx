@@ -33,6 +33,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from utilities.clearcache import ClearCache
+from tenants.pbxsettings import PbxSettings
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -44,6 +45,7 @@ from .serializers import (
     CallFlowsSerializer,
 )
 from .callflowfunctions import CfFunctions
+from pbx.commonevents import PresenceIn
 
 
 class CallFlowsViewSet(viewsets.ModelViewSet):
@@ -61,6 +63,16 @@ class CallFlowsViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user.username)
+        obj = self.get_object()
+        pe = PresenceIn()
+        pe.send(str(obj.id), obj.status, obj.feature_code, obj.domain_id.name)
+        pbxsettings = PbxSettings()
+        if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+            cff = CfFunctions(obj, self.request.user.username)
+            cff.generate_xml()
+        if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+            cc = ClearCache()
+            cc.dialplan(obj.domain_id.name)
 
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)

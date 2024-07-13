@@ -39,6 +39,7 @@ from import_export import resources
 from django.conf import settings
 from django.contrib import messages
 from django.forms import ModelForm, Select
+from tenants.pbxsettings import PbxSettings
 from switch.switchsounds import SwitchSounds
 from utilities.clearcache import ClearCache
 from pbx.commonwidgets import ListTextWidget
@@ -110,7 +111,15 @@ class CallFlowsAdmin(ImportExportModelAdmin):
         obj.updated_by = request.user.username
         pe = PresenceIn()
         pe.send(str(obj.id), obj.status, obj.feature_code, request.session['domain_name'])
-        if not change:
+        if change:
+            pbxsettings = PbxSettings()
+            if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+                cff = CfFunctions(obj, request.user.username)
+                cff.generate_xml()
+            if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+                cc = ClearCache()
+                cc.dialplan(request.session['domain_name'])
+        else:
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']
         super().save_model(request, obj, form, change)
