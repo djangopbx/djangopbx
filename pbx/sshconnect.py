@@ -34,7 +34,13 @@ import posixpath
 import stat
 import getpass
 import logging
-import paramiko
+# Workaround for the CryptographyDeprecationWarning: TripleDES has been moved warnings
+# this workaround can be removed once the Paramiko devs have worked out a fix
+import warnings
+from cryptography.utils import CryptographyDeprecationWarning
+with warnings.catch_warnings(action="ignore", category=CryptographyDeprecationWarning):
+    import paramiko
+### End workaround
 from paramiko.util import ClosingContextManager
 
 logging.getLogger("paramiko").setLevel(logging.WARNING)
