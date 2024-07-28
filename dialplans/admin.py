@@ -27,6 +27,8 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import re
+import uuid
 from django.contrib import admin
 from django.conf import settings
 from django.contrib import messages
@@ -219,6 +221,9 @@ class DialplanAdmin(ImportExportModelAdmin):
         if not change:
             obj.domain_id = DomainUtils().domain_from_session(request)
             obj.context = request.session['domain_name']
+            # if it is a new record or a "save as new", make sure the extension uuid matches the dialplan record uuid.
+            obj.id = uuid.uuid4()
+            obj.xml = re.sub(r'^(<extension name=.*uuid=")([0-9a-fA-F-]+)(">)', r'\1%s\3' % obj.id, obj.xml)
         super().save_model(request, obj, form, change)
 
 
