@@ -344,12 +344,12 @@ STORAGES = {
 
 # For SftpStorage, FileAbsLayer, and FsCmdAbsLayer.
 # List of FreeSWITCHes resolve to IP addresses in /etc/hosts
-PBX_FREESWITCHES = ['djangopbx-dev1']
+PBX_FREESWITCHES = ['localhost']
 # List of file store names resolve to IP addresses in /etc/hosts
 PBX_FILESTORES = ['localhost']
 # Index of FILESTORES
 PBX_DEFAULT_FILESTORE = 0
 # Use message broker or local event socket for commands.
-PBX_USE_LOCAL_EVENT_SOCKET = False
+PBX_USE_LOCAL_EVENT_SOCKET = True
 # Use remote file storage server or local file storage.
-PBX_USE_LOCAL_FILE_STORAGE = False
+PBX_USE_LOCAL_FILE_STORAGE = True
