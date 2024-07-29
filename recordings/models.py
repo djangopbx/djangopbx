@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,8 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.conf import settings
+from django.core.files.storage import storages
 from django.db import models
 
 from django.utils.translation import gettext_lazy as _
@@ -43,11 +45,14 @@ def call_recording_directory_path(instance, filename):
     return 'fs/recordings/{0}/archive/{1}/{2}/{3}/{4}'.format(instance.domain_id.name,
                     instance.year, instance.month, instance.day, filename)
 
+def select_storage():
+    return storages['default'] if settings.PBX_USE_LOCAL_FILE_STORAGE else storages['sftp']
+
 
 class Recording(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))                                      # noqa: E501, E221
     domain_id    = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))  # noqa: E501, E221
-    filename     = PbxFileField(upload_to=user_directory_path, verbose_name=_('File Name'))                                                                 # noqa: E501, E221
+    filename     = PbxFileField(storage=select_storage, upload_to=user_directory_path, verbose_name=_('File Name'))                                         # noqa: E501, E221
     name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                  # noqa: E501, E221
     description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
     base64       = models.TextField(blank=True, null=True, verbose_name=_('Base64'))                                                                        # noqa: E501, E221
@@ -72,7 +77,7 @@ class Recording(models.Model):
 class CallRecording(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Call Recording'))                                 # noqa: E501, E221
     domain_id    = models.ForeignKey('tenants.Domain', db_column='domain_uuid', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))  # noqa: E501, E221
-    filename     = PbxFileField(upload_to=call_recording_directory_path, verbose_name=_('File Name'))                                                       # noqa: E501, E221
+    filename     = PbxFileField(storage=select_storage, upload_to=call_recording_directory_path, verbose_name=_('File Name'))                               # noqa: E501, E221
     name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                  # noqa: E501, E221
     year         = models.CharField(max_length=8, verbose_name=_('Year'))                                                                                   # noqa: E501, E221
     month        = models.CharField(max_length=8, verbose_name=_('Month'))                                                                                  # noqa: E501, E221
