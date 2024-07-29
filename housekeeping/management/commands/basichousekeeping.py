@@ -28,6 +28,7 @@
 
 import os, time
 import glob
+from django.conf import settings
 from django.utils import timezone
 from django.core.management.base import BaseCommand
 from tenants.pbxsettings import PbxSettings
@@ -44,11 +45,11 @@ class Command(BaseCommand):
         self.now_time = time.time()
         self.day_sec = 86400
         self.pbxs = PbxSettings()
-        self.fs_media = '/home/django-pbx/media/fs/'
-        self.use_local_file_storage = self.pbxs.default_settings('cluster', 'use_local_file_storage', 'boolean', 'true', True)[0]
+        self.fs_media = '%s/' % settings.MEDIA_ROOT
+        self.use_local_file_storage = settings.PBX_USE_LOCAL_FILE_STORAGE
         if not self.use_local_file_storage:
             self.ssh = SSHConnection()
-            self.filestores = self.pbxs.default_settings_wild('cluster', 'file_store_', 'text')
+            self.filestores = settings.PBX_FILESTORES
 
         if not self.filestores:
             self.filestores = []

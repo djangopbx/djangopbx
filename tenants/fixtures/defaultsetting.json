@@ -4447,24 +4447,6 @@
 },
 {
     "model": "tenants.defaultsetting",
-    "pk": "893888ba-58c9-40d0-8276-6c7c5422a7fe",
-    "fields": {
-        "app_uuid": null,
-        "category": "cluster",
-        "subcategory": "switch_name_1",
-        "value_type": "text",
-        "value": "djangopbx-dev1",
-        "sequence": "10",
-        "enabled": "true",
-        "description": "Hostname of the first freeswitch server.  This will form part of the command queue on the message broker.",
-        "created": "2024-01-27T16:09:37.859Z",
-        "updated": "2024-01-27T16:35:10.741Z",
-        "synchronised": null,
-        "updated_by": "system"
-    }
-},
-{
-    "model": "tenants.defaultsetting",
     "pk": "c4e7424f-b8be-4922-bed4-cb2491067b73",
     "fields": {
         "app_uuid": null,

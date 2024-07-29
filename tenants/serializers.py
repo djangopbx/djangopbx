@@ -28,6 +28,7 @@
 #
 
 from django.contrib.auth.models import User, Group
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from .models import (
     Domain, Profile, DefaultSetting, DomainSetting, ProfileSetting
@@ -80,27 +81,6 @@ class DefaultSettingSerializer(serializers.ModelSerializer):
                 ]
 
 
-class FreeswitchesSerializer(serializers.ModelSerializer):
-
-    url = serializers.SerializerMethodField()
-
-    def get_url(self, obj):
-        rq = self.context['request']
-        if rq.path.endswith('freeswitches/'):
-            return rq.build_absolute_uri('%s/' % obj.id)
-        else:
-            return '%s://%s:%s%s' % (rq.scheme, rq.META['SERVER_NAME'], rq.META['SERVER_PORT'], rq.path)
-
-    class Meta:
-        model = DefaultSetting
-        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
-        fields = [
-                    'id', 'url', 'app_uuid', 'category', 'subcategory',
-                    'value_type', 'value', 'sequence', 'enabled',
-                    'created', 'updated', 'synchronised', 'updated_by'
-                ]
-
-
 class DomainSettingSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -123,3 +103,16 @@ class ProfileSettingSerializer(serializers.ModelSerializer):
                     'value_type', 'value', 'sequence', 'enabled',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
+
+
+class GenericItemValueSerializer(serializers.Serializer):
+
+    url     = serializers.SerializerMethodField()          # noqa: E501, E221
+    id      = serializers.CharField(source='item')         # noqa: E501, E221
+    item    = serializers.CharField(label=_('Item'))       # noqa: E501, E221
+    value   = serializers.CharField(label=_('Value'))      # noqa: E501, E221
+
+    def get_url(self, obj):
+        if self.context['request'].get_full_path().endswith('/%s/' % obj.get('item')):
+            return self.context['request'].build_absolute_uri(None)
+        return self.context['request'].build_absolute_uri('%s/' % obj.get('item'))

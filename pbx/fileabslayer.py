@@ -29,14 +29,12 @@
 
 import os
 import socket
-from django.core.cache import cache
-from tenants.pbxsettings import PbxSettings
+from django.conf import settings
 from pbx.sshconnect import SFTPConnection
 
 
 class FileAbsLayer:
 
-    cache_key = 'fileabslayer:localfiles'
     loc_files = False
     filestores = []
     freeswitches = []
@@ -50,20 +48,15 @@ class FileAbsLayer:
             self.hostname = socket.gethostname()
         except:
             self.hostname = 'localhost'
-        s = cache.get(self.cache_key)
-        if not s:
-            s = PbxSettings().default_settings('cluster', 'use_local_file_storage', 'boolean', 'true', True)[0]
-            cache.set(self.cache_key, s)
-        if s == 'true':
-            self.loc_files = True
+        self.loc_files = settings.PBX_USE_LOCAL_FILE_STORAGE
 
     # Call if file find on freeswitches then open is required
     def load_freeswitches(self):
-        self.freeswitches = PbxSettings().default_settings_wild('cluster', 'switch_name_', 'text', self.hostname, True)
+        self.freeswitches = settings.PBX_FREESWITCHES
 
     # Call if file find on filestores then open is required
     def load_file_stores(self):
-        self.filestores = PbxSettings().default_settings_wild('cluster', 'file_store_', 'text')
+        self.filestores = settings.PBX_FILESTORES
         if not self.filestores:
             self.filestores = []
 

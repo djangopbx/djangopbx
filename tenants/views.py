@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.conf import settings
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -39,7 +40,7 @@ from .models import (
 )
 from .serializers import (
     UserSerializer, GroupSerializer, DomainSerializer, ProfileSerializer, DefaultSettingSerializer,
-    FreeswitchesSerializer, DomainSettingSerializer, ProfileSettingSerializer
+    DomainSettingSerializer, ProfileSettingSerializer, GenericItemValueSerializer
 )
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -146,35 +147,79 @@ class DefaultSettingViewSet(viewsets.ModelViewSet):
         instance = serializer.save(updated_by=self.request.user.username)
 
 
-class FreeswitchesViewSet(viewsets.ReadOnlyModelViewSet):
+class GenericItemValueViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows Default Settings to be viewed or edited.
+    API endpoint that allows Item/Value data to be viewed.
     """
-    queryset = DefaultSetting.objects.filter(category='cluster', subcategory__startswith='switch_name').order_by('value')
-    serializer_class = FreeswitchesSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['value']
+    serializer_class = GenericItemValueSerializer
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
     ]
 
+    def get_queryset(self):
+        pass
+
+    def append_data(self, key, value):
+        return {'item': key, 'value': value}
+
+    def list(self, request):
+        raise NotImplementedError
+
+
+
+class FreeswitchesViewSet(GenericItemValueViewSet):
+    """
+    API endpoint that allows Switches to be viewed.
+    """
+    def list(self, request):
+        data = []
+        i = 0
+        for s in settings.PBX_FREESWITCHES:
+            data.append(self.append_data(str(i), s))
+            i += 1
+
+        results = self.serializer_class(data, many=True, context={'request': request}).data
+        return Response({'count': len(data), 'results': results})
+
+    def retrieve(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if not pk:
+             return {'detail': 'Not found.'}
+        try:
+            pk = int(pk)
+        except ValueError:
+             return {'detail': 'Not found.'}
+        data = []
+        data.append(self.append_data(pk, settings.PBX_FREESWITCHES[pk]))
+        serializer = self.serializer_class(data, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def get_fs_object(self, pk):
+        if not pk:
+             return -1
+        try:
+            pk = int(pk)
+        except ValueError:
+             return -1
+        return settings.PBX_FREESWITCHES[pk]
+
     @action(detail=True)
     def reload_xml_single(self, request, pk=None):
-        obj = self.get_object()
+        obj = self.get_fs_object(pk)
         rload = ReloadXml()
         if not rload.connect():
             return Response({'status': 'broker/socket error'})
-        rload.xml(obj.value)
+        rload.xml(obj)
         return Response({'status': 'reloadxml ok'})
 
     @action(detail=True)
     def reload_acl_single(self, request, pk=None):
-        obj = self.get_object()
+        obj = self.get_fs_object(pk)
         rload = ReloadXml()
         if not rload.connect():
             return Response({'status': 'broker/socket error'})
-        rload.acl(obj.value)
+        rload.acl(obj)
         return Response({'status': 'reloadacl ok'})
 
     @action(detail=False)

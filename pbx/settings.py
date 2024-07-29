@@ -329,3 +329,27 @@ PBX_ADMIN_SHOW_ALL = False
 # New in Django 4.1.   If set to True, existing persistent database connections will be
 # health checked before they are reused in each request performing database access.
 CONN_HEALTH_CHECKS = True
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+    'sftp': {
+        "BACKEND": "pbx.sftpstorage.SftpStorage",
+    },
+}
+
+# For SftpStorage, FileAbsLayer, and FsCmdAbsLayer.
+# List of FreeSWITCHes resolve to IP addresses in /etc/hosts
+PBX_FREESWITCHES = ['djangopbx-dev1']
+# List of file store names resolve to IP addresses in /etc/hosts
+PBX_FILESTORES = ['localhost']
+# Index of FILESTORES
+PBX_DEFAULT_FILESTORE = 0
+# Use message broker or local event socket for commands.
+PBX_USE_LOCAL_EVENT_SOCKET = False
+# Use remote file storage server or local file storage.
+PBX_USE_LOCAL_FILE_STORAGE = False

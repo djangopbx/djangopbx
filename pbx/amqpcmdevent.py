@@ -32,6 +32,7 @@ import socket
 import logging
 import uuid
 import time
+from django.conf import settings
 from tenants.models import DefaultSetting
 
 logger = logging.getLogger(__name__)
@@ -73,12 +74,8 @@ class AmqpCmdEvent:
             if mbcf.value_type == 'boolean':
                 self.mb[mbcf.subcategory] = (True if mbcf.value == 'true' else False)
         self.channel = None
-        self.freeswitches = DefaultSetting.objects.values_list('value', flat=True).filter(
-                category='cluster',
-                subcategory__istartswith='switch_name_',
-                enabled='true',
-                )
-        if self.freeswitches.count() < 1:
+        self.freeswitches = settings.PBX_FREESWITCHES
+        if len(self.freeswitches) < 1:
             self.freeswitches = [self.hostname]
         self.switchcount = len(self.freeswitches)
         self.singlehostrequest = False

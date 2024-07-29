@@ -163,7 +163,8 @@ class SFTPConnection(SSHConnection):
     def mkdir(self, host, path):
         # Create directory, recursing up to create parent dirs if necessary.
         parent = posixpath.dirname(path)
-        if not self.exists(parent):
+        print(parent)
+        if not self.exists(host, parent):
             self.mkdir(host, parent)
         self.sftp(host).mkdir(path)
 
