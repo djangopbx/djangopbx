@@ -36,6 +36,7 @@ from django.core.cache import cache
 from tenants.pbxsettings import PbxSettings
 from pbx.commonfunctions import DomainUtils
 from pbx.pbxipaddresscheck import pbx_ip_address_check, loopback_default
+from pbx.putuploadhandler import putuploadhandler
 
 from pbx.restpermissions import (
     AdminApiAccessPermission
@@ -111,7 +112,6 @@ def rec_check_address(request):
         return False
     return True
 
-
 @csrf_exempt
 def rec_import(request, domain, recfile):
     if not rec_check_address(request):
@@ -121,16 +121,14 @@ def rec_import(request, domain, recfile):
     except Domain.DoesNotExist:
         return HttpResponseNotFound()
 
-    if request.method == 'PUT' or request.method == 'POST':
+    if request.method == "PUT": # FreeSWITCH mod_http_cache PUT request
+        if not putuploadhandler(request):
+            return HttpResponse(status=400)
+
+    if request.method == "POST" or request.method == "PUT": # Multipart form data with file field POST request
         rec = Recording.objects.create(name=recfile,
                 domain_id=d, updated_by='Recording Import %s' % request.method)
-
-    if request.method == "PUT": # FreeSWITCH mod_http_cache PUT request
-        rec.filename.save(recfile, request)
-    elif request.method == "POST": # Multipart form data with file field POST request
-        if request.content_type.startswith('multipart'):
-            post, files = request.parse_file_upload(request.META, request)
-            rec.filename.save(recfile, files['file'])
+        rec.filename.save(recfile, request.FILES[recfile])
     return HttpResponse('')
 
 @csrf_exempt
@@ -142,15 +140,13 @@ def call_rec_import(request, domain, year, month, day, recfile):
     except Domain.DoesNotExist:
         return HttpResponseNotFound()
 
-    if request.method == 'PUT' or request.method == 'POST':
+    if request.method == "PUT": # FreeSWITCH mod_http_cache PUT request
+        if not putuploadhandler(request):
+            return HttpResponse(status=400)
+
+    if request.method == "POST" or request.method == "PUT": # Multipart form data with file field POST request
         rec = CallRecording.objects.create(name=recfile,
                 domain_id=d, year=year, month=month, day=day,
                 updated_by='Call Record Import %s' % request.method)
-
-    if request.method == "PUT": # FreeSWITCH mod_http_cache PUT request
-        rec.filename.save(recfile, request)
-    elif request.method == "POST": # Multipart form data with file field POST request
-        if request.content_type.startswith('multipart'):
-            post, files = request.parse_file_upload(request.META, request)
-            rec.filename.save(recfile, files['file'])
+        rec.filename.save(recfile, request.FILES[recfile])
     return HttpResponse('')

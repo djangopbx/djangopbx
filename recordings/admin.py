@@ -55,7 +55,7 @@ class RecordingAdmin(ImportExportModelAdmin):
     list_display = ('name', 'filename', 'description')
     list_filter = (DomainFilter, 'name')
 
-    actions = None
+#    actions = None
     ordering = [
         'domain_id',
         'name'
@@ -90,7 +90,7 @@ class CallRecordingAdmin(ImportExportModelAdmin):
     list_display = ('name', 'year', 'month', 'day', 'filename', 'description')
     list_filter = (DomainFilter, 'year', 'month', 'day')
 
-    actions = None
+#    actions = None
     ordering = [
         '-created',
         'name'
