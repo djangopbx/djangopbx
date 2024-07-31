@@ -201,7 +201,7 @@ def servefsmedia(request, fs, fdir, fdom, fullpath):
     fal = FileAbsLayer()
     file_location = '%s/%s' % (settings.MEDIA_ROOT, fullpath)
     try:
-        f = fal.open(file_location, 'rb', fdom)
+        f = fal.open(file_location, 'rb', settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE])
     except FileNotFoundError:
         return HttpResponseNotFound()
     return FileResponse(f)
