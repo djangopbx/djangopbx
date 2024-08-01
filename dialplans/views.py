@@ -589,7 +589,7 @@ def timecondition(request, dpuuid=None):
         default_action = request.POST['default_action'].split(':')
         region = request.POST['tcregion']
         p_dict = {}
-        pd_list = PbxSettings().default_settings('time_conditions', 'preset_%s' % region, 'array')
+        pd_list = PbxSettings().default_settings('time_conditions', 'preset_%s' % region, 'array', [], True)
         for pd in pd_list:
             p_dict.update(dict(json.loads(pd)))
         cstr_list = []

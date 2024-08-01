@@ -28,9 +28,6 @@
 #
 
 from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
-from django.http import HttpResponseRedirect
-from tenants.pbxsettings import PbxSettings
 from .models import HttApiSession
 
 

@@ -100,25 +100,15 @@ class SwitchSounds():
     def get_sounds_dir(self):
         if self.sounds_dir:
             return self.sounds_dir
-        soundslist = PbxSettings().default_settings('switch', 'sounds', 'dir')
-        if soundslist:
-            sounddir = soundslist[0]
-        else:
-            sounddir = '/usr/share/freeswitch/sounds'
-        self.sounds_dir = sounddir
-        return sounddir
+        self.sounds_dir = PbxSettings().default_settings('switch', 'sounds', 'dir', '/usr/share/freeswitch/sounds', True)
+        return self.sounds_dir
 
     def get_recordings_dir(self, domain_name):
         if self.recordings_dir:
             return self.recordings_dir
-        reclist = PbxSettings().default_settings('switch', 'recordings', 'dir')
-        if reclist:
-            recdir = os.path.join(reclist[0], domain_name)
-        else:
-            recdir = os.path.join('/usr/share/freeswitch/recordings', domain_name)
-        self.recordings_dir = recdir
-        return recdir
-
+        recdir = PbxSettings().default_settings('switch', 'recordings', 'dir', '/usr/share/freeswitch/recordings', True)
+        self.recordings_dir = os.path.join(recdir, domain_name)
+        return self.recordings_dir
 
     def get_voice_dir(self):
         if self.voice_dir:

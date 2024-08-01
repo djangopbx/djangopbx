@@ -39,6 +39,7 @@ class PbxSettings():
     sequence_str = 'sequence'
     text_str = 'text'
     provision_str = 'provision'
+    setting_string_types = ['text', 'code', 'name', 'var', 'dir']
 
     def default_brand_settings(self):
         branding = {}
@@ -140,84 +141,99 @@ class PbxSettings():
                     fsvs[vendor_key] = False
         return fsvs
 
+    def process_setting_type(self, qs, settingtype):
+        if settingtype in self.setting_string_types:
+            value = qs[0].value
+        elif settingtype == 'numberic':
+            try:
+                value = int(qs[0].value)
+            except ValueError:
+                value = 0
+        elif settingtype == 'boolean':
+            value = (True if qs[0].value == 'true' else False)
+        elif settingtype == 'array':
+            value = []
+            for q in qs:
+                value.append(qs[0].value)
+        return value
+
     def default_settings_wild(self, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
-        settingList = DefaultSetting.objects.values_list('value', flat=True).filter(
+        settingList = DefaultSetting.objects.filter(
                 category=cat,
                 subcategory__istartswith=subcat,
                 value_type=settingtype,
                 enabled=self.true_str).order_by(self.sequence_str)
-        if settingList.count() == 0:
+        if not qs:
             if usedefault:
-                return [defaultsetting]
+                return defaultsetting
             else:
                 return False
-        return settingList
+        return self.process_setting_type(qs, settingtype)
 
     def default_settings(self, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
-        settingList = DefaultSetting.objects.values_list('value', flat=True).filter(
+        qs = DefaultSetting.objects.filter(
                 category=cat,
                 subcategory=subcat,
                 value_type=settingtype,
                 enabled=self.true_str).order_by(self.sequence_str)
-        if settingList.count() == 0:
+        if not qs:
             if usedefault:
-                return [defaultsetting]
+                return defaultsetting
             else:
                 return False
-        return settingList
+        return self.process_setting_type(qs, settingtype)
 
     def domain_settings(self, uuidstr, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
-        settingList = DomainSetting.objects.values_list('value', flat=True).filter(
+        qs = DomainSetting.objects.filter(
                 domain_id=uuid.UUID(uuidstr),
                 category=cat,
                 subcategory=subcat,
                 value_type=settingtype,
                 enabled=self.true_str).order_by(self.sequence_str)
-
-        if settingList.count() == 0:
+        if not qs:
             if usedefault:
-                return [defaultsetting]
+                return defaultsetting
             else:
                 return False
-        return settingList
+        return self.process_setting_type(qs, settingtype)
+
 
     def user_settings(self, uuidstr, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
-        settingList = ProfileSetting.objects.values_list('value', flat=True).filter(
+        settingList = ProfileSetting.objects.filter(
                 user_id=uuid.UUID(uuidstr),
                 category=cat,
                 subcategory=subcat,
                 value_type=settingtype,
                 enabled=self.true_str).order_by(self.sequence_str)
-
-        if settingList.count() == 0:
+        if not qs:
             if usedefault:
-                return [defaultsetting]
+                return defaultsetting
             else:
                 return False
-        return settingList
+        return self.process_setting_type(qs, settingtype)
 
     def settings(
             self, useruuidstr, domainuuidstr, cat, subcat,
             settingtype='text', defaultsetting='', usedefault=False
             ):
-        settingList = self.user_settings(useruuidstr, cat, subcat, settingtype, defaultsetting, False)
-        if settingList:
-            return settingList
-        settingList = self.domain_settings(domainuuidstr, cat, subcat, settingtype, defaultsetting, False)
-        if settingList:
-            return settingList
-        settingList = self.default_settings(cat, subcat, settingtype, defaultsetting, usedefault)
-        return settingList
+        setg = self.user_settings(useruuidstr, cat, subcat, settingtype, defaultsetting, False)
+        if setg:
+            return setg
+        setg = self.domain_settings(domainuuidstr, cat, subcat, settingtype, defaultsetting, False)
+        if setg:
+            return setg
+        setg = self.default_settings(cat, subcat, settingtype, defaultsetting, usedefault)
+        return setg
 
     def dd_settings(
             self, domainuuidstr, cat, subcat,
             settingtype='text', defaultsetting='', usedefault=False
             ):
-        settingList = self.domain_settings(domainuuidstr, cat, subcat, settingtype, defaultsetting, False)
-        if settingList:
-            return settingList
-        settingList = self.default_settings(cat, subcat, settingtype, defaultsetting, usedefault)
-        return settingList
+        setg = self.domain_settings(domainuuidstr, cat, subcat, settingtype, defaultsetting, False)
+        if setg:
+            return setg
+        setg = self.default_settings(cat, subcat, settingtype, defaultsetting, usedefault)
+        return setg
 
     def get_domains(self):
         qs_dict = [{i.name: str(i.id)} for i in Domain.objects.filter(enabled=self.true_str)]

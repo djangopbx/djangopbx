@@ -73,9 +73,7 @@ def xml_cdr_import(request):
     aa = cache.get(aa_cache_key)
     if not aa:
         aa = PbxSettings().default_settings('cdr', 'allowed_address', 'array')
-        if aa:
-            aa = list(aa)
-        else:
+        if not aa:
             aa = loopback_default
         cache.set(aa_cache_key, aa)
 
@@ -204,7 +202,7 @@ def selectcdr(request, cdruuid=None):
     cache_key = 'xmlcdr:record_path'
     cdr_record_path = cache.get(cache_key)
     if not cdr_record_path:
-        cdr_record_path = PbxSettings().default_settings('cdr', 'recordings', 'text', '/fs/recordings', True)[0]
+        cdr_record_path = PbxSettings().default_settings('cdr', 'recordings', 'text', '/fs/recordings', True)
         cache.set(cache_key, cdr_record_path)
 
     cache_key = 'switch:record_path'
@@ -212,7 +210,7 @@ def selectcdr(request, cdruuid=None):
     if not switch_record_path:
         switch_record_path = PbxSettings().default_settings(
             'switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True
-            )[0]
+            )
         cache.set(cache_key, switch_record_path)
 
     extension_list = request.session['extension_list_uuid'].split(',')

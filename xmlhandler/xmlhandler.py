@@ -87,7 +87,6 @@ class XmlHandler():
             return aa
         aa = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
         if aa:
-            aa = list(aa)
             cache.set(cache_key, aa)
             return aa
         aa = loopback_default

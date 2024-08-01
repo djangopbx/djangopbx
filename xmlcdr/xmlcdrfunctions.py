@@ -293,7 +293,7 @@ class XmlCdrFunctions():
         cache_key = 'xmlcdr:switch_recordings'
         switch_recordings_path = cache.get(cache_key)
         if not switch_recordings_path:
-            switch_recordings_path = PbxSettings().default_settings('switch', 'recordings', 'dir')[0]
+            switch_recordings_path = PbxSettings().default_settings('switch', 'recordings', 'dir')
             cache.set(cache_key, switch_recordings_path)
 
         uuid = cdr_variables.get('uuid', nonestr)
@@ -386,14 +386,14 @@ class XmlCdrFunctions():
                 populate_call_recordings = cache.get(cache_key)
                 if not populate_call_recordings:
                     populate_call_recordings = PbxSettings().default_settings(
-                        'cdr', 'populate_call_recordings', 'boolean', 'true', True)[0]
+                        'cdr', 'populate_call_recordings', 'boolean', True, True)
                     cache.set(cache_key, populate_call_recordings)
-                if populate_call_recordings == 'true':
+                if populate_call_recordings:
                     cache_key = 'xmlcdr:recordings'
                     call_recordings_path = cache.get(cache_key)
                     if not call_recordings_path:
                         call_recordings_path = PbxSettings().default_settings(
-                            'cdr', 'recordings', 'text', '/fs/recordings', True)[0]
+                            'cdr', 'recordings', 'text', '/fs/recordings', True)
                         cache.set(cache_key, call_recordings_path)
 
                     path_parts = record_path.split('/')[-5:]
@@ -455,7 +455,7 @@ class XmlCdrFunctions():
         cache_key = 'xmlcdr:format'
         format = cache.get(cache_key)
         if not format:
-            format = PbxSettings().default_settings('cdr', 'format', 'text', 'json', True)[0]
+            format = PbxSettings().default_settings('cdr', 'format', 'text', 'json', True)
             cache.set(cache_key, format)
 
         if format == 'xml':

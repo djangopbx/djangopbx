@@ -149,7 +149,7 @@ class RgFunctions():
                 etree.SubElement(x_condition, "action", application='playback', data=self.rg.greeting)
 
             if self.rg.follow_me_enabled == 'true':
-                httapi_url = PbxSettings().default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)[0]
+                httapi_url = PbxSettings().default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)
                 etree.SubElement(x_condition, "action", application='httapi', data='{httapi_profile=dpbx,url=%s/httapihandler/ringgroup/}' % httapi_url)
             else:
                 etree.SubElement(x_condition, "action", application='bridge', data=self.generate_bridge())

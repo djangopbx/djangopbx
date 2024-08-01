@@ -105,8 +105,8 @@ class TimeConditionForm(forms.Form):
             )
 
         tc_cnd = tc.get_condition_list(True)
-        region = PbxSettings().default_settings('time_conditions', 'region', 'text', 'england', True)[0]
-        preset_list = PbxSettings().default_settings('time_conditions', 'preset_%s' % region, 'array')
+        region = PbxSettings().default_settings('time_conditions', 'region', 'text', 'england', True)
+        preset_list = PbxSettings().default_settings('time_conditions', 'preset_%s' % region, 'array', [], True)
         for pj in preset_list:
             pset_name = list(json.loads(pj))[0]
             field_name = 'preset_%s' % pset_name

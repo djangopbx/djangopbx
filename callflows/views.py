@@ -67,10 +67,10 @@ class CallFlowsViewSet(viewsets.ModelViewSet):
         pe = PresenceIn()
         pe.send(str(obj.id), obj.status, obj.feature_code, obj.domain_id.name)
         pbxsettings = PbxSettings()
-        if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+        if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):
             cff = CfFunctions(obj, self.request.user.username)
             cff.generate_xml()
-        if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+        if pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', True, True):
             cc = ClearCache()
             cc.dialplan(obj.domain_id.name)
 

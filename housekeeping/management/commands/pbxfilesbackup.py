@@ -67,19 +67,13 @@ class Command(BaseCommand):
         with open(os.path.join(backup_dir, 'djangopbx_files_latest.txt'), 'w') as latest:
             latest.write('%s\n' % backup_file)
 
-        days_keep_file_backups = self.get_hk_default_setting('days_keep_file_backups', '5', True)
+        days_keep_file_backups = self.get_hk_default_setting('days_keep_file_backups', 5)
         files = glob.iglob('%s/*.tgz' % backup_dir )
         for f in files:
             if os.stat(f).st_mtime < now_time - days_keep_file_backups * day_sec:
                 os.remove(f)
 
-    def get_hk_default_setting(self, setting, default, integer=False):
+    def get_hk_default_setting(self, setting, default):
         s = self.pbxs.default_settings('housekeeping',
-                setting, 'numeric', default, True)[0]
-        if integer:
-            try:
-                si = int(s)
-            except ValueError:
-                si = 1000
-            return si
+                setting, 'numeric', default, True)
         return s

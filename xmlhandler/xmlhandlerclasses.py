@@ -300,18 +300,10 @@ class DirectoryHandler(XmlHandler):
         cache_key = 'xmlhandler:number_as_presence_id'
         number_as_presence_id = cache.get(cache_key)
         if not number_as_presence_id:
-            try:
-                number_as_presence_id = PbxSettings().default_settings(
+            number_as_presence_id = PbxSettings().default_settings(
                     'xmlhandler', 'number_as_presence_id', 'boolean'
-                    )[0]
-            except KeyError:
-                number_as_presence_id = 'false'
+                    )
             cache.set(cache_key, number_as_presence_id)
-
-        if number_as_presence_id == 'true':
-            number_as_presence_id = True
-        else:
-            number_as_presence_id = False
 
         directory_cache_key = 'directory:%s@%s' % (user, domain)
         xml = cache.get(directory_cache_key)
@@ -479,15 +471,7 @@ class DirectoryHandler(XmlHandler):
         return xml
 
     def GetDirectoryStatic(self, number_as_presence_id, cacheable=False):
-        try:
-            number_as_presence_id = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')[0]
-        except KeyError:
-            number_as_presence_id = 'false'
-
-        if number_as_presence_id == 'true':
-            number_as_presence_id = True
-        else:
-            number_as_presence_id = False
+        number_as_presence_id = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')
 
         x_root = self.XrootStatic()
         es = Extension.objects.select_related('domain_id').prefetch_related('extensionuser', 'voicemail').filter(
@@ -521,7 +505,7 @@ class DialplanHandler(XmlHandler):
         cache_key = 'xmlhandler:context_type'
         context_type = cache.get(cache_key)
         if not context_type:
-            context_type = PbxSettings().default_settings('xmlhandler', 'context_type', 'text')[0]
+            context_type = PbxSettings().default_settings('xmlhandler', 'context_type', 'text')
             cache.set(cache_key, context_type)
 
         dialplan_cache_key = 'dialplan:%s' % call_context
@@ -621,7 +605,7 @@ class LanguagesHandler(XmlHandler):
         cache_key = 'xmlhandler:lang:sounds_dir'
         sounds_dir = cache.get(cache_key)
         if not sounds_dir:
-            sounds_dir = PbxSettings().default_settings('switch', 'sounds', 'dir', '/usr/share/freeswitch/sounds', True)[0]
+            sounds_dir = PbxSettings().default_settings('switch', 'sounds', 'dir', '/usr/share/freeswitch/sounds', True)
             cache.set(cache_key, sounds_dir)
 
         default_language = self.get_default_language()

@@ -64,10 +64,10 @@ class IvrMenusViewSet(viewsets.ModelViewSet):
         serializer.save(updated_by=self.request.user.username)
         obj = self.get_object()
         pbxsettings = PbxSettings()
-        if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+        if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):
             objf = IvrFunctions(obj, self.request.user.username)
             objf.generate_xml()
-        if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+        if pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', True, True):
             cc = ClearCache()
             cc.dialplan(obj.domain_id.name)
             cc.ivrmenus(obj.domain_id.name)

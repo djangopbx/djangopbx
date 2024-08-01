@@ -126,7 +126,7 @@ def index(request):
                 request.session['extension_list'] = ','.join(extension_list)
 
             currentmenu = s.settings(
-                pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True )[0]
+                pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True )
             try:
                 m = Menu.objects.get(name=currentmenu)
             except Menu.DoesNotExist:
@@ -193,6 +193,13 @@ def selectdomain(request, domainuuid):
     return HttpResponseRedirect('/')
 
 def servefsmedia(request, fs, fdir, fdom, fullpath):
+    s = PbxSettings()
+    call_rec_on_switch = s.default_settings('cluster', 'call_recordings_stored_on_switch', 'boolean', True, True)
+    if call_rec_on_switch:
+        media_location = s.dd_settings('cluster', 'home_switch', 'text', 'localhost', True)
+    else:
+        media_location = settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
+
     if not fs == 'fs':
         return HttpResponseNotFound()
     if not request.user.is_superuser:
@@ -201,7 +208,7 @@ def servefsmedia(request, fs, fdir, fdom, fullpath):
     fal = FileAbsLayer()
     file_location = '%s/%s' % (settings.MEDIA_ROOT, fullpath)
     try:
-        f = fal.open(file_location, 'rb', settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE])
+        f = fal.open(file_location, 'rb', media_location)
     except FileNotFoundError:
         return HttpResponseNotFound()
     return FileResponse(f)

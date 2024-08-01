@@ -55,7 +55,7 @@ class IpFunctions():
         if ia:
             ignore_addresses = ia.split(',')
         else:
-            ignore_addresses = self.pbxsettings.default_settings('portal', 'ignore_fail_address', 'array')
+            ignore_addresses = self.pbxsettings.default_settings('portal', 'ignore_fail_address', 'array', [], True)
             ia = ','.join(ignore_addresses)
             cache.set(cache_key, ia)
         return ignore_addresses
@@ -63,22 +63,16 @@ class IpFunctions():
     def get_portal_fail_attempts(self):
         max_fail_attempts = 5
         cache_key = 'portal:fail_attempts'
-        fa = cache.get(cache_key)
-        if not fa:
-            fa = self.pbxsettings.default_settings('portal', 'max_fail_attempts', 'numeric', '5', True)[0]
-            cache.set(cache_key, fa)
-        try:
-            max_fail_attempts = int(fa)
-        except ValueError:
-            max_fail_attempts = 5
-
+        max_fail_attempts = cache.get(cache_key)
+        if not max_fail_attempts:
+            max_fail_attempts = self.pbxsettings.default_settings('portal', 'max_fail_attempts', 'numeric', 5, True)
+            cache.set(cache_key, max_fail_attempts)
         return max_fail_attempts
 
     def update_web_fail_ip(self, ip_address, username):
         ignore_addresses = self.get_portal_ignore_fail_address()
         if ip_address in ignore_addresses:
             return
-
         ip, created = Failed_logins.objects.update_or_create(address=ip_address)
         ip.username = username[:250]
         if not created:

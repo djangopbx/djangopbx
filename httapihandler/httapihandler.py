@@ -163,9 +163,7 @@ class HttApiHandler():
         if aa:
             return aa
         aa = PbxSettings().default_settings('httapihandler', 'allowed_address', 'array')
-        if aa:
-            aa = list(aa)
-        else:
+        if not aa:
             aa = loopback_default
         cache.set(cache_key, aa)
         return aa
@@ -220,7 +218,7 @@ class HttApiHandler():
 
     def get_sounds_variables(self):
         self.sounds_dir = self.qdict.get('sounds_dir', '/usr/share/freeswitch/sounds')
-        self.recordings_dir = PbxSettings().default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True)[0]
+        self.recordings_dir = PbxSettings().default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True)
         return
 
     def play_and_get_digits(self, file_name, var_name='pb_input', digit_regex='~\\d+#'):

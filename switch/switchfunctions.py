@@ -196,165 +196,128 @@ class SwitchFunctions():
         xml = '<include>'
         prev_var_cat = ''
         hostname = socket.gethostname()
+        confdir = PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True)
+        for v in vlist:
+            if not v.category == 'Provision':
+                if not prev_var_cat == v.category:
+                    xml += '\n<!-- " + v.category + " -->\n'
+                    if v.description is not None:
+                        if len(v.description) > 0:
+                            xml += '\n<!-- " + v.category + " -->\n'
+                cmd = v.command
+                if len(cmd) == 0:
+                    cmd = 'set'
+                if cmd == 'Exec-Set':
+                    cmd = 'exec-set'
+                if v.hostname:
+                    if len(v.hostname) == 0:
+                        xml += '<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n' % (v.command, v.name, v.value)
+                    elif v.hostname == hostname:
+                        xml += '<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n' % (v.command, v.name, v.value)
+                else:
+                    xml += '<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n' % (v.command, v.name, v.value)
 
-        conflist = PbxSettings().default_settings('switch', 'conf', 'dir')
-        if conflist:
-            confdir = conflist[0]
-            for v in vlist:
-                if not v.category == 'Provision':
-                    if not prev_var_cat == v.category:
-                        xml += "\n<!-- " + v.category + " -->\n"
-                        if v.description is not None:
-                            if len(v.description) > 0:
-                                xml += "\n<!-- " + v.category + " -->\n"
+                prev_var_cat = v.category
 
-                    cmd = v.command
-                    if len(cmd) == 0:
-                        cmd = 'set'
-                    if cmd == 'Exec-Set':
-                        cmd = 'exec-set'
-                    if v.hostname:
-                        if len(v.hostname) == 0:
-                            xml += "<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n" % (v.command, v.name, v.value)
-                        elif v.hostname == hostname:
-                            xml += "<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n" % (v.command, v.name, v.value)
-                    else:
-                        xml += "<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n" % (v.command, v.name, v.value)
-
-                    prev_var_cat = v.category
-
-            xml += "</include>"
-
-            try:
-                os.makedirs(confdir, mode=0o755, exist_ok=True)
-            except OSError:
-                return 2
-
-            try:
-                with open('%s/vars.xml' % confdir, 'w') as f:
-                    f.write(xml)
-            except OSError:
-                return 3
-
-            return 0
-
-        else:
-            return 1
+        xml += '</include>'
+        try:
+            os.makedirs(confdir, mode=0o755, exist_ok=True)
+        except OSError:
+            return 2
+        try:
+            with open('%s/vars.xml' % confdir, 'w') as f:
+                f.write(xml)
+        except OSError:
+            return 3
+        return 0
 
     def write_sip_profiles(self):
         plist = switch.models.SipProfile.objects.filter(enabled='true').order_by('name')
         xml = ''
-
-        conflist = PbxSettings().default_settings('switch', 'sip_profiles', 'dir')
-        if conflist:
-            confdir = conflist[0]
-            for p in plist:
-                root = etree.Element('profile', name=p.name)
-                root.set('name', p.name)
-                gateways = etree.SubElement(root, 'gateways')
-                etree.SubElement(gateways, 'X-PRE-PROCESS', cmd='include', data='%s/*.xml' % p.name)
-                domains = etree.SubElement(root, 'domains')
-                dlist = switch.models.SipProfileDomain.objects.filter(sip_profile_id=p.id).order_by('name')
-                for d in dlist:
-                    etree.SubElement(domains, 'domain', name=d.name, alias=d.alias, parse=d.parse)
-                settings = etree.SubElement(root, 'settings')
-                slist = switch.models.SipProfileSetting.objects.filter(
-                            sip_profile_id=p.id, enabled='true'
-                            ).order_by('name')
-                for s in slist:
-                    if s.value is None:
-                        s_value = ''
-                    else:
-                        s_value = s.value
-                    etree.SubElement(settings, 'param', name=s.name, value=s_value)
-                etree.indent(root)
-                xml = str(etree.tostring(root), "utf-8")
-                del settings
-                del domains
-                del gateways
-                del root
-
-                try:
-                    os.makedirs('%s/%s' % (confdir, p.name), mode=0o755, exist_ok=True)
-                except OSError:
-                    return 2
-
-                try:
-                    with open('%s/%s.xml' % (confdir, p.name), 'w') as f:
-                        f.write(xml)
-                except OSError:
-                    return 3
-
-            return 0
-        else:
-            return 1
+        confdir = PbxSettings().default_settings('switch', 'sip_profiles', 'dir', '/home/django-pbx/freeswitch/sip_profiles', True)
+        for p in plist:
+            root = etree.Element('profile', name=p.name)
+            root.set('name', p.name)
+            gateways = etree.SubElement(root, 'gateways')
+            etree.SubElement(gateways, 'X-PRE-PROCESS', cmd='include', data='%s/*.xml' % p.name)
+            domains = etree.SubElement(root, 'domains')
+            dlist = switch.models.SipProfileDomain.objects.filter(sip_profile_id=p.id).order_by('name')
+            for d in dlist:
+                etree.SubElement(domains, 'domain', name=d.name, alias=d.alias, parse=d.parse)
+            settings = etree.SubElement(root, 'settings')
+            slist = switch.models.SipProfileSetting.objects.filter(
+                        sip_profile_id=p.id, enabled='true'
+                        ).order_by('name')
+            for s in slist:
+                if s.value is None:
+                    s_value = ''
+                else:
+                    s_value = s.value
+                etree.SubElement(settings, 'param', name=s.name, value=s_value)
+            etree.indent(root)
+            xml = str(etree.tostring(root), "utf-8")
+            del settings
+            del domains
+            del gateways
+            del root
+            try:
+                os.makedirs('%s/%s' % (confdir, p.name), mode=0o755, exist_ok=True)
+            except OSError:
+                return 2
+            try:
+                with open('%s/%s.xml' % (confdir, p.name), 'w') as f:
+                    f.write(xml)
+            except OSError:
+                return 3
+        return 0
 
     def write_acl_xml(self):
         alist = switch.models.AccessControl.objects.all().order_by('name')
         xml = ''
-
-        conflist = PbxSettings().default_settings('switch', 'conf', 'dir')
-        if conflist:
-            confdir = conflist[0]
-
-            root = etree.Element('configuration', name='acl.conf', description='Network Lists')
-            networklists = etree.SubElement(root, 'network-lists')
-
-            for a in alist:
-                netlist = etree.SubElement(networklists, 'list', name=a.name, default=a.default)
-                nlist = switch.models.AccessControlNode.objects.filter(access_control_id=a.id).order_by('-type')
-                for n in nlist:
-                    if n.domain is not None:
-                        etree.SubElement(netlist, 'node', type=n.type, domain=n.domain)
-                    if n.cidr is not None:
-                        etree.SubElement(netlist, 'node', type=n.type, cidr=n.cidr)
-            etree.indent(root)
-            xml = str(etree.tostring(root), "utf-8")
-
-            try:
-                os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok=True)
-            except OSError:
-                return 2
-
-            try:
-                with open('%s/autoload_configs/acl.conf.xml' % confdir, 'w') as f:
-                    f.write(xml)
-            except OSError:
-                return 3
-
-            return 0
-        else:
-            return 1
+        confdir = PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True)
+        root = etree.Element('configuration', name='acl.conf', description='Network Lists')
+        networklists = etree.SubElement(root, 'network-lists')
+        for a in alist:
+            netlist = etree.SubElement(networklists, 'list', name=a.name, default=a.default)
+            nlist = switch.models.AccessControlNode.objects.filter(access_control_id=a.id).order_by('-type')
+            for n in nlist:
+                if n.domain is not None:
+                    etree.SubElement(netlist, 'node', type=n.type, domain=n.domain)
+                if n.cidr is not None:
+                    etree.SubElement(netlist, 'node', type=n.type, cidr=n.cidr)
+        etree.indent(root)
+        xml = str(etree.tostring(root), "utf-8")
+        try:
+            os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok=True)
+        except OSError:
+            return 2
+        try:
+            with open('%s/autoload_configs/acl.conf.xml' % confdir, 'w') as f:
+                f.write(xml)
+        except OSError:
+            return 3
+        return 0
 
     def save_modules_xml(self):
         vlist = switch.models.Modules.objects.filter(enabled='true').order_by('sequence', 'category')
         xml = '<configuration name=\"modules.conf\" description=\"Modules\">\n  <modules>\n'
         prev_cat = ''
+        confdir = PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True)
+        for v in vlist:
+            if not prev_cat == v.category:
+                xml += "\n    <!-- " + v.category + " -->\n"
 
-        conflist = PbxSettings().default_settings('switch', 'conf', 'dir')
-        if conflist:
-            confdir = conflist[0]
-            for v in vlist:
-                if not prev_cat == v.category:
-                    xml += "\n    <!-- " + v.category + " -->\n"
+            xml += '    <load module=\"%s\"/>\n' % v.name
+            prev_cat = v.category
+        xml += "  </modules>\n</configuration>\n"
+        try:
+            os.makedirs(confdir, mode=0o755, exist_ok=True)
+        except OSError:
+            return 2
+        try:
+            with open('%s/autoload_configs/modules.conf.xml' % confdir, 'w') as f:
+                f.write(xml)
+        except OSError:
+            return 3
+        return 0
 
-                xml += '    <load module=\"%s\"/>\n' % v.name
-                prev_cat = v.category
-
-            xml += "  </modules>\n</configuration>\n"
-
-            try:
-                os.makedirs(confdir, mode=0o755, exist_ok=True)
-            except OSError:
-                return 2
-
-            try:
-                with open('%s/autoload_configs/modules.conf.xml' % confdir, 'w') as f:
-                    f.write(xml)
-            except OSError:
-                return 3
-
-            return 0
-
-        else:
-            return 1

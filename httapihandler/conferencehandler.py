@@ -165,7 +165,7 @@ class ConferenceHandler(HttApiHandler):
             return self.return_data(self.error_hangup('C0002'))
 
         if self.session.json[self.handler_name]['record'] == 'true':
-            rec_dir = PbxSettings().default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True)[0] # noqa: E501
+            rec_dir = PbxSettings().default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True) # noqa: E501
             dt = datetime.now()
 
             rec_full_path = '%s/%s/archive/%s/%s/%s/%s.wav' % (rec_dir, self.domain_name, dt.strftime('%Y'), dt.strftime('%b'), dt.strftime('%d'), self.session.json[self.handler_name]['sess_uuid']) # noqa: E501

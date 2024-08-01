@@ -103,9 +103,7 @@ def rec_check_address(request):
     aa = cache.get(aa_cache_key)
     if not aa:
         aa = PbxSettings().default_settings('recordings', 'allowed_address', 'array')
-        if aa:
-            aa = list(aa)
-        else:
+        if not aa:
             aa = loopback_default
         cache.set(aa_cache_key, aa)
     if not pbx_ip_address_check(request, aa):

@@ -113,10 +113,10 @@ class CallFlowsAdmin(ImportExportModelAdmin):
         pe.send(str(obj.id), obj.status, obj.feature_code, request.session['domain_name'])
         if change:
             pbxsettings = PbxSettings()
-            if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+            if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):
                 cff = CfFunctions(obj, request.user.username)
                 cff.generate_xml()
-            if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+            if pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', True, True):
                 cc = ClearCache()
                 cc.dialplan(request.session['domain_name'])
         else:

@@ -53,11 +53,11 @@ class Command(BaseCommand):
 
         if not self.filestores:
             self.filestores = []
-        days_keep_call_recordings = self.get_hk_default_setting('days_keep_call_recordings', '30')
-        days_keep_voicemail = self.get_hk_default_setting('days_keep_voicemail', '30')
-        days_keep_cdrs = self.get_hk_default_setting('days_keep_cdrs', '10')
-        days_keep_cdr_json = self.get_hk_default_setting('days_keep_cdr_json', '10', True)
-        days_keep_admin_logs = self.get_hk_default_setting('days_keep_admin_logs', '60', True)
+        days_keep_call_recordings = self.get_hk_default_setting('days_keep_call_recordings', 30)
+        days_keep_voicemail = self.get_hk_default_setting('days_keep_voicemail', 30)
+        days_keep_cdrs = self.get_hk_default_setting('days_keep_cdrs', 10)
+        days_keep_cdr_json = self.get_hk_default_setting('days_keep_cdr_json', 10)
+        days_keep_admin_logs = self.get_hk_default_setting('days_keep_admin_logs', 60)
 
         # Set json field empty to save db space
         query_time = timezone.now() - timezone.timedelta(days_keep_cdr_json)
@@ -71,11 +71,11 @@ class Command(BaseCommand):
         for q in qs:
             domain_id = str(q.id)
             domain_days_keep_call_recordings = self.get_hk_domain_setting(domain_id,
-                'days_keep_call_recordings', days_keep_call_recordings, True)
+                'days_keep_call_recordings', days_keep_call_recordings)
             domain_days_keep_voicemail = self.get_hk_domain_setting(domain_id,
-                'days_keep_voicemail', days_keep_voicemail, True)
+                'days_keep_voicemail', days_keep_voicemail)
             domain_days_keep_cdrs = self.get_hk_domain_setting(domain_id,
-                'days_keep_cdrs', days_keep_cdrs, True)
+                'days_keep_cdrs', days_keep_cdrs)
 
             # Delete call detail records older x days
             query_time = timezone.now() - timezone.timedelta(domain_days_keep_cdrs)
@@ -97,24 +97,12 @@ class Command(BaseCommand):
                 if os.stat(f).st_mtime < self.now_time - days * self.day_sec:
                     os.remove(f)
 
-    def get_hk_default_setting(self, setting, default, integer=False):
+    def get_hk_default_setting(self, setting, default):
         s = self.pbxs.default_settings('housekeeping',
-                setting, 'numeric', default, True)[0]
-        if integer:
-            try:
-                si = int(s)
-            except ValueError:
-                si = 1000
-            return si
+                setting, 'numeric', default, True)
         return s
 
-    def get_hk_domain_setting(self, domain, setting, default, integer=False):
+    def get_hk_domain_setting(self, domain, setting, default):
         s = self.pbxs.domain_settings(domain, 'housekeeping',
-                setting, 'numeric', default, True)[0]
-        if integer:
-            try:
-                si = int(s)
-            except ValueError:
-                si = 1000
-            return si
+                setting, 'numeric', default, True)
         return s

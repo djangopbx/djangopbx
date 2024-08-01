@@ -275,7 +275,7 @@ def chk_prov_auth(request, host, pbxs):
     if not domain:
         return (False, HttpResponseNotFound())
 
-    http_auth_enabled = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_enabled', 'boolean', 'false', True)[0]
+    http_auth_enabled = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_enabled', 'boolean', False, True)
     if http_auth_enabled == 'false':
         return (False, HttpResponseNotFound())
 
@@ -283,15 +283,11 @@ def chk_prov_auth(request, host, pbxs):
         return (False, HttpResponseNotFound())
 
     http_usr = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_username')
-    if http_usr:
-        http_usr = http_usr[0]
-    else:
+    if not http_usr:
         return (False, HttpResponseNotFound())
 
     http_pwd = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_password')
-    if http_pwd:
-        http_pwd = http_pwd[0]
-    else:
+    if not http_pwd:
         return (False, HttpResponseNotFound())
 
     if 'HTTP_AUTHORIZATION' in request.META:

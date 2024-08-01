@@ -434,10 +434,10 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
         obj.updated_by = request.user.username
         if change:
             pbxsettings = PbxSettings()
-            if (pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', 'true', True)[0]) == 'true':
+            if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):
                 ccf = CcFunctions(obj, request.user.username)
                 ccf.generate_xml()
-            if (pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', 'true', True)[0]) == 'true':
+            if pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', True, True):
                 cc = ClearCache()
                 cc.dialplan(request.session['domain_name'])
         else:

@@ -45,35 +45,24 @@ class MohFunctions():
     def write_local_stream_xml(self):
         mlist = MusicOnHold.objects.all().order_by('name', 'rate')
         xml = ''
-
-        conflist = PbxSettings().default_settings('switch', 'conf', 'dir')
-        if conflist:
-            confdir = conflist[0]
-
-            root = etree.Element('configuration', name='local_stream.conf', description='stream files from local dir')
-
-            for m in mlist:
-                mdir = etree.SubElement(root, 'directory', name=m.name, path=m.path)
-                etree.SubElement(mdir, 'param', name='rate', value=str(m.rate))
-                etree.SubElement(mdir, 'param', name='shuffle', value=m.shuffle)
-                etree.SubElement(mdir, 'param', name='channels', value=str(m.channels))
-                etree.SubElement(mdir, 'param', name='interval', value=str(m.interval))
-                etree.SubElement(mdir, 'param', name='timer-name', value=m.timer_name)
-
-            etree.indent(root)
-            xml = str(etree.tostring(root), "utf-8")
-
-            try:
-                os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok=True)
-            except OSError:
-                return 2
-
-            try:
-                with open('%s/autoload_configs/local_stream.conf.xml' % confdir, 'w') as f:
-                    f.write(xml)
-            except OSError:
-                return 3
-
-            return 0
-        else:
-            return 1
+        confdir = PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True)
+        root = etree.Element('configuration', name='local_stream.conf', description='stream files from local dir')
+        for m in mlist:
+            mdir = etree.SubElement(root, 'directory', name=m.name, path=m.path)
+            etree.SubElement(mdir, 'param', name='rate', value=str(m.rate))
+            etree.SubElement(mdir, 'param', name='shuffle', value=m.shuffle)
+            etree.SubElement(mdir, 'param', name='channels', value=str(m.channels))
+            etree.SubElement(mdir, 'param', name='interval', value=str(m.interval))
+            etree.SubElement(mdir, 'param', name='timer-name', value=m.timer_name)
+        etree.indent(root)
+        xml = str(etree.tostring(root), "utf-8")
+        try:
+            os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok=True)
+        except OSError:
+            return 2
+        try:
+            with open('%s/autoload_configs/local_stream.conf.xml' % confdir, 'w') as f:
+                f.write(xml)
+        except OSError:
+            return 3
+        return 0

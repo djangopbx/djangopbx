@@ -463,20 +463,11 @@ class SwitchDp():
                             ddgroup += 1
 
     def import_xml(self, domain_name, dp_remove=False, domain_uuid=''):
-        dp_details = False
         pbxsettings = PbxSettings()
-        sval = pbxsettings.default_settings('dialplan', 'dialplan_details', 'boolean', 'false', True)[0]
-        if sval == 'true':
-            dp_details = True
-        sval = pbxsettings.default_settings('security', 'pin_length', 'numeric', '8', True)
-        if sval:
-            try:
-                pin_length = int(sval[0])
-            except ValueError:
-                # Handle the exception
-                pin_length = 8
+        dp_details = pbxsettings.default_settings('dialplan', 'dialplan_details', 'boolean', False, True)
+        pin_length = pbxsettings.default_settings('security', 'pin_length', 'numeric', 8, True)
 
-        httapi_url = pbxsettings.default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)[0]
+        httapi_url = pbxsettings.default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)
         path_of_xml = settings.BASE_DIR / 'dialplans/resources/switch/conf/dialplans-enabled'
         ext = ('.xml')
         for files in os.listdir(path_of_xml):
