@@ -197,9 +197,10 @@ def servefsmedia(request, fs, fdir, fdom, fullpath):
     call_rec_on_switch = s.default_settings('cluster', 'call_recordings_stored_on_switch', 'boolean', True, True)
     if call_rec_on_switch:
         media_location = s.dd_settings('cluster', 'home_switch', 'text', 'localhost', True)
+    elif settings.PBX_USE_LOCAL_FILE_STORAGE:
+        media_location = fdom
     else:
         media_location = settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
-
     if not fs == 'fs':
         return HttpResponseNotFound()
     if not request.user.is_superuser:
