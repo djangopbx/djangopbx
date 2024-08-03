@@ -199,7 +199,7 @@ class PbxSettings():
 
 
     def user_settings(self, uuidstr, cat, subcat, settingtype='text', defaultsetting='', usedefault=False):
-        settingList = ProfileSetting.objects.filter(
+        qs = ProfileSetting.objects.filter(
                 user_id=uuid.UUID(uuidstr),
                 category=cat,
                 subcategory=subcat,
