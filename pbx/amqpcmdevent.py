@@ -185,6 +185,10 @@ class AmqpCmdEvent:
 
     def disconnect(self):
         if self.channel.is_open:
-            self.channel.close()
+            try:
+                self.channel.close()
+            except pika.exceptions.ChannelClosedByBroker as e:
+                logger.warn('AMQP disconnect : Channel closed by broker {}.'.format(e))
+
         if self.connection.is_open:
             self.connection.close()
