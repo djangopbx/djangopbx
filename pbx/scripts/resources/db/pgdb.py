@@ -33,6 +33,7 @@ class PgDb():
 
     def __init__(self, dbname):
         self.dbname = dbname
+        self.c = None
 
     def __del__(self):
         if (self.c):
