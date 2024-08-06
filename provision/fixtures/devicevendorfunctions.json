@@ -1,6 +1,21 @@
 [
 {
     "model": "provision.devicevendorfunctions",
+    "pk": "011669af-e750-462d-a4f9-4df7ba6d92ad",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "transfer",
+        "value": "Transfer",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
     "pk": "0186ce1a-7868-4e1c-a68c-6ef77ccdb41d",
     "fields": {
         "vendor_id": "30ae187d-6c83-4a59-87bb-7d50be4b7cc4",
@@ -10,6 +25,21 @@
         "description": null,
         "created": "2023-04-29T17:08:38.058Z",
         "updated": "2023-04-29T17:08:38.058Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "01a7c342-5d4e-4d98-8a56-c643e026e9c3",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "line",
+        "value": "1",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -26,6 +56,36 @@
         "created": "2023-04-29T17:08:38.062Z",
         "updated": "2023-04-29T17:08:38.062Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "03748142-d69c-4326-85c6-bd6b473ca354",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "provison_now",
+        "value": "19",
+        "enabled": "true",
+        "description": "Auto Provison Now",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "038d8ce6-f827-4ee8-9edb-e188a7ccf6cd",
+    "fields": {
+        "vendor_id": "8dc1a153-e462-42e9-b73f-c13f8c7eef61",
+        "name": "page",
+        "value": "PAGING",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -40,6 +100,171 @@
         "description": null,
         "created": "2023-04-29T17:15:19.608Z",
         "updated": "2023-04-29T17:15:19.608Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "04cceccb-4185-4ce7-bf34-9221b98fe035",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "speeddialmenu",
+        "value": "SpeedDialMenu",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "09f6ccad-2ad7-4691-a244-b50cfdc98c91",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "blf_axfer",
+        "value": "ba",
+        "enabled": "true",
+        "description": "BLF - Attended Transfer",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0af3c4fe-bb46-4ca4-b6e3-9ba7c46077de",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "exec_filter_on_off",
+        "value": "Exec Filter On/Off",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0b0db6ab-424f-4ae7-ad81-6d9b82bdb704",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "voicemail",
+        "value": "5",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0b124b90-4c86-4d2d-8dc4-b62df1fae242",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "sms",
+        "value": "24",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0b26f63b-9134-4add-a17f-7ad4e2417dc9",
+    "fields": {
+        "vendor_id": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+        "name": "blf",
+        "value": "1",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0c81a580-4414-4f87-ae70-8f1554292aec",
+    "fields": {
+        "vendor_id": "cf2bc52d-5c5f-4819-8c97-62e350f1bf0a",
+        "name": "shared_line",
+        "value": "shared",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0c8f6bc2-03ff-4ae4-8738-45cf1080b632",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "presence_watcher",
+        "value": "presence watcher",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0cde5f00-259a-48c4-b3bb-ee14ac17676b",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "dnd",
+        "value": "21",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0d240043-1160-40e0-951e-160950e01908",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "call_park",
+        "value": "c",
+        "enabled": "true",
+        "description": "If you need to move to another place during a call, use this function.",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0d877eca-0c09-4ac5-a0eb-f0c110d5e818",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "orbit",
+        "value": "orbit",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -56,6 +281,126 @@
         "created": "2023-04-29T17:12:58.334Z",
         "updated": "2023-04-29T17:12:58.334Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0f18b4d3-19be-4131-a1be-2c8a529738c6",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "prefix",
+        "value": "11",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "0f731275-7900-49a6-b5db-3cc39482e69f",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "url",
+        "value": "35",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "101a035c-1682-4e18-99c9-104bef14bd13",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "null",
+        "value": "Null",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "10657f14-d523-452c-bb74-12f15c5aefed",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "hold",
+        "value": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1117b048-1865-4914-9bb6-d51c96c893e1",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "hot_desking",
+        "value": "32",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "129fc3bf-99e0-4b73-aa4e-b2af370cb27a",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "transfer",
+        "value": "19",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "136d33fd-2889-473d-bfe3-627a382eec08",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "line",
+        "value": "1",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1422cc25-b32d-46e5-bb87-6cfe04a4711f",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "forward",
+        "value": "18",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -71,7 +416,7 @@
         "created": "2023-04-29T17:15:19.614Z",
         "updated": "2023-04-29T17:15:19.614Z",
         "synchronised": null,
-        "updated_by": "system"
+        "updated_by": "fretweah"
     }
 },
 {
@@ -85,6 +430,21 @@
         "description": null,
         "created": "2023-04-29T17:15:19.609Z",
         "updated": "2023-04-29T17:15:19.609Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "197abece-97da-40e7-9803-b40bdf3bb694",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "speed_dial",
+        "value": "speed dial",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -101,6 +461,96 @@
         "created": "2023-04-29T17:10:43.603Z",
         "updated": "2023-04-29T17:10:43.603Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1a9e4204-f9d5-45fe-a65a-66ab51e04b67",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "speed_dial_mwi",
+        "value": "speeddialmwi",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1cebbc51-dffc-46d1-ab82-929fd838c64b",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "forward",
+        "value": "15",
+        "enabled": "true",
+        "description": "Call Forward",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1dcc8d10-5ac7-4b2b-97ec-9ec63af286a8",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "lcr",
+        "value": "lcr",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1ee4ba86-92a5-46f4-84fc-70b6dd2116fa",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "none",
+        "value": "none",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1f2aa91c-a36f-4890-9c2a-38fe7f7248db",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "shared_line",
+        "value": "mult",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1f642f4d-e832-4661-ad70-73db2372789e",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "park",
+        "value": "park",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -115,6 +565,66 @@
         "description": null,
         "created": "2023-04-29T17:08:38.069Z",
         "updated": "2023-04-29T17:08:38.069Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "1fb9d5e6-a915-4413-ac38-8fabfd3077ae",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "callers",
+        "value": "callers",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "222d4c59-fb2b-487f-8c67-0509b7684e7f",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "transfer",
+        "value": "19",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "224658b9-7aa4-4abe-a220-64a77872d1ff",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "speed_dial_active",
+        "value": "speed dial active",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "2434bb75-ce62-417e-aa2b-d0b333630871",
+    "fields": {
+        "vendor_id": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+        "name": "dtmf",
+        "value": "4",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -131,6 +641,36 @@
         "created": "2023-04-29T17:10:43.602Z",
         "updated": "2023-04-29T17:10:43.602Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "24db086b-2def-4a6c-8b0d-4079ba05f3b3",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "block_caller_id",
+        "value": "Block Caller ID",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "250b53e5-ae3e-4b72-be8c-523c86bf9cdb",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "new_sms",
+        "value": "14",
+        "enabled": "true",
+        "description": "New SMS",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -145,6 +685,36 @@
         "description": null,
         "created": "2023-04-29T17:08:38.059Z",
         "updated": "2023-04-29T17:08:38.059Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "28141e4a-a0e9-47cc-b7bc-d792ce1e76ef",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "call_forward",
+        "value": "Call Forward",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "29987d4f-275f-4eef-b4d6-b03545be19c2",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "ldap",
+        "value": "15",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -161,6 +731,171 @@
         "created": "2023-04-29T17:12:58.344Z",
         "updated": "2023-04-29T17:12:58.344Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "2c4a2b91-6033-484d-b1a4-518960801230",
+    "fields": {
+        "vendor_id": "e1937101-aa34-40c0-9f7d-3aac039ff75e",
+        "name": "shared_line",
+        "value": "shared",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "2c7dff6a-1361-4334-a5f0-4c045ff61823",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "intercom",
+        "value": "intercom",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "2c90c08a-5713-4178-8801-61f27f3419a3",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "ent_phone_book",
+        "value": "4",
+        "enabled": "true",
+        "description": "Enterprise Phonebook",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "2e109527-dcc5-41eb-84c0-1601bbb37275",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "intercom",
+        "value": "icom",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "306615c6-837a-4bdf-90e4-9e52f4fd92d7",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "redial",
+        "value": "Redial",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "31022567-7c03-41d5-a9b2-d3b5b1e2cfc4",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "record",
+        "value": "record",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "33424a2f-db41-4e21-b589-5b8d2e59224b",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "default",
+        "value": "0",
+        "enabled": "true",
+        "description": "Default",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "33542e85-2035-4842-908e-6c1d01889355",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "redial",
+        "value": "22",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "35fdafdf-66df-4ecf-81f7-5dade326c2d9",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "page_group_2",
+        "value": "Page Group 2",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "36112542-5adb-41fd-ad67-2f46145038c6",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "call_park_monitor",
+        "value": "Call Park Monitor",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "370fed3a-297e-4392-836e-0e6d64719d4d",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "dtmf",
+        "value": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -175,6 +910,96 @@
         "description": null,
         "created": "2023-04-29T17:10:43.611Z",
         "updated": "2023-04-29T17:10:43.612Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "386e3c05-08f6-4246-a7f5-1a509926ac61",
+    "fields": {
+        "vendor_id": "e1937101-aa34-40c0-9f7d-3aac039ff75e",
+        "name": "line",
+        "value": "line",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "38ad2050-de75-4231-8fe6-4f8c8c49f837",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "sms",
+        "value": "13",
+        "enabled": "true",
+        "description": "SMS",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3a2a1524-e417-4452-8adc-2fd6936269cb",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "page",
+        "value": "paging",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3a452412-8545-4dcb-ab81-530f10e8476d",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "blf_list",
+        "value": "list",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3a4d6787-2318-49b6-9e54-dcd2995d5560",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "line",
+        "value": "line",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3ae5b36a-33bf-45fc-b5b4-06a18355285d",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "ivr",
+        "value": "ivr",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -191,6 +1016,51 @@
         "created": "2023-04-29T17:10:43.606Z",
         "updated": "2023-04-29T17:10:43.606Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3bd90c16-73f4-4e31-a845-d1f462ca3e06",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "speed_dial",
+        "value": "speed",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3c89f454-fcfd-4830-b3f6-324c43f44602",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "key_event",
+        "value": "keyevent",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3ca820ba-5c3e-4ef5-8d00-6be6f01bb889",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "call_park",
+        "value": "call park",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -205,6 +1075,36 @@
         "description": null,
         "created": "2023-04-29T17:12:58.336Z",
         "updated": "2023-04-29T17:12:58.336Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3dbf4110-4e0d-4716-bf52-f0502590c21e",
+    "fields": {
+        "vendor_id": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+        "name": "pickup",
+        "value": "9",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3de651ff-8189-4dca-94f0-09327166f70a",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "record",
+        "value": "recorder",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -221,6 +1121,21 @@
         "created": "2023-04-29T17:16:39.596Z",
         "updated": "2023-04-29T17:16:39.597Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "3f0a92ac-2802-436e-9d14-29280fe54ba0",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "redial",
+        "value": "22",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -235,6 +1150,216 @@
         "description": null,
         "created": "2023-04-29T17:15:19.611Z",
         "updated": "2023-04-29T17:15:19.611Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "413944cd-c0ac-4301-90e9-de862d49a171",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "blf_xfer",
+        "value": "blfxfer",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "41b3676f-ee02-4de4-ba9d-3f93ed8dc119",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "directory",
+        "value": "6",
+        "enabled": "true",
+        "description": "Directory",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "41f26880-00a1-42e2-9747-72bc5b7b3e35",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "speed_dial",
+        "value": "2",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "431aeeda-9278-4272-9012-3ee7cc79395d",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "pickup",
+        "value": "pickup",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "43c585be-044e-4404-a880-967cd7304b45",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "enable_account",
+        "value": "17",
+        "enabled": "true",
+        "description": "Enable/Disable SIP Account",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "4445846a-e79d-4c91-98d1-bd9a02ec5514",
+    "fields": {
+        "vendor_id": "e1937101-aa34-40c0-9f7d-3aac039ff75e",
+        "name": "blf",
+        "value": "blf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "450075e8-9deb-4797-8833-5f7396a6e1ca",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "menu",
+        "value": "12",
+        "enabled": "true",
+        "description": "Menu",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "454399fe-f4ae-4b6b-9d63-631c42429ddb",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "forward",
+        "value": "16",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "45f5cf5b-ebb4-4e47-801f-afc08f94eed0",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "page_group_1",
+        "value": "Page Group 1",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "4622288e-e569-4b56-beac-6a5e08d3c55e",
+    "fields": {
+        "vendor_id": "894492b3-e517-41db-abad-da176ba8fb65",
+        "name": "speed_dial",
+        "value": "speed_dial",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "46c7703b-4413-44f3-aa7b-ff4477a55a6d",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "pc_application",
+        "value": "18",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "47743fc8-322f-4976-938c-4da6164b8e8b",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "private_hold",
+        "value": "30",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "479f335b-2d00-4ad6-bac0-a704c2249e3d",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "redirect",
+        "value": "redirect",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "47a6a620-a34a-418b-96de-3a65559dcb67",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "dial_dtmf",
+        "value": "dial dtmf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -251,6 +1376,81 @@
         "created": "2023-04-29T17:16:39.595Z",
         "updated": "2023-04-29T17:16:39.595Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "49cc251c-9a34-472c-9d25-85f3780a9a5a",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "automata",
+        "value": "automata",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "4a2d1cf6-1f79-43d4-93a1-51df40be1822",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "block_anonymous_call",
+        "value": "Block Anonymous Call",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "4a8d7b08-ee08-4675-a550-79c57734e4ce",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "blf_list",
+        "value": "4",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "4ad9933d-3d20-42c6-9ad9-700453d7dfc6",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "dnd",
+        "value": "21",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "4b2e2479-3cd6-4aaf-8f82-2891a4bd2569",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "blf",
+        "value": "blf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -265,6 +1465,21 @@
         "description": null,
         "created": "2023-04-29T17:10:43.607Z",
         "updated": "2023-04-29T17:10:43.607Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "4dd7c84c-12b7-47ae-ab0d-70bb4a32e65c",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "blf",
+        "value": "3",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -281,6 +1496,201 @@
         "created": "2023-04-29T17:15:19.619Z",
         "updated": "2023-04-29T17:15:19.619Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "51298ac4-b99d-40b8-9b33-9d1a47a06ee4",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "dialed_calls",
+        "value": "11",
+        "enabled": "true",
+        "description": "Dialed Calls",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "514da7eb-add7-467c-b627-096541188c27",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "multicast_paging",
+        "value": "47",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "51b83f04-2d41-4bc9-942c-9b74c1e42cf2",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "broadsoft_group",
+        "value": "16",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "52b8a3fc-e732-4801-a4d9-de7ff94ea249",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "transfer",
+        "value": "transfer",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "52f48b5e-1b93-448f-bf09-d4483013d610",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "rss_feed",
+        "value": "19",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "5331f03e-f972-4d25-9223-c6a9e2ae377c",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "blind_transfer",
+        "value": "Blind Transfer",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "5374d57a-50ff-4ac5-818e-2463be41c69f",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "headset_on_off",
+        "value": "4",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "5374e4a8-c621-47c5-8b51-68b831436950",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "auto_answer",
+        "value": "auto_answer",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "53be0e1c-d40d-4e1f-bd3f-e401544d5167",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "intercom",
+        "value": "i",
+        "enabled": "true",
+        "description": "Directly speak without answering the call.",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "5cdace07-63c5-434f-833a-dcc19e3efd51",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "normal",
+        "value": "normal",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "5d20ffa3-5e7f-4625-be3f-650eaeaeefb2",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "record",
+        "value": "25",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "5d713657-12e8-4b86-819b-f0ee08486545",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "line",
+        "value": "6",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "5e939d69-bb48-454f-999e-6d1df2212b6c",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "xml_group",
+        "value": "13",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -296,7 +1706,7 @@
         "created": "2023-04-29T17:15:19.607Z",
         "updated": "2023-04-29T17:15:19.607Z",
         "synchronised": null,
-        "updated_by": "system"
+        "updated_by": "fretweah"
     }
 },
 {
@@ -310,6 +1720,231 @@
         "description": null,
         "created": "2023-04-28T16:35:55.748Z",
         "updated": "2023-04-28T16:35:55.748Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "5fe0d277-5b77-460b-b24c-f20c9192f006",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "micmute",
+        "value": "MicMute",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "61153180-c3ba-4b6f-b0b4-40987b16b211",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "speed_dial",
+        "value": "f",
+        "enabled": "true",
+        "description": "Automatically call the specified number when key is pressed. (No BFL)",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "613dab64-879f-433e-860c-a71a5cd788c3",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "speed_dial",
+        "value": "Speed Dial",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "624dd77c-5bc0-4792-bfab-bd12e2593bd5",
+    "fields": {
+        "vendor_id": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+        "name": "intercom",
+        "value": "8",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "637d8d69-58e8-4fe2-a454-ca5ee7991dc3",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "speed_dial",
+        "value": "speeddial",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "63c24ef7-a379-4f1f-99cd-effb4359ee23",
+    "fields": {
+        "vendor_id": "cf2bc52d-5c5f-4819-8c97-62e350f1bf0a",
+        "name": "line",
+        "value": "line",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "64d1d8f3-c33c-4217-9942-b071669264ae",
+    "fields": {
+        "vendor_id": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+        "name": "speed_dial",
+        "value": "5",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "652acce8-5a05-40b3-b795-c53afc507b08",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "blf_list",
+        "value": "4",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "65932803-8af6-4d94-8d0c-dce836957c46",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "redial",
+        "value": "redial",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "65cbfd73-0983-45d5-b837-f4e6d02f3f88",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "phone_book",
+        "value": "3",
+        "enabled": "true",
+        "description": "Contacts",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "65f5e2b8-c159-489e-86cc-be409117c03a",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "menu",
+        "value": "menu",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "670d2a92-7346-4dc0-b235-708284a73596",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "xfer",
+        "value": "xfer",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "675bc85a-4660-426b-9699-730375c89390",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "public_hold",
+        "value": "29",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "67af79b0-408c-4f73-99ba-3fa55fc60d8b",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "url",
+        "value": "35",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "6900c617-71e3-48a4-95c4-cf161167f307",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "voicemail",
+        "value": "2",
+        "enabled": "true",
+        "description": "You can press the key to listen to voice messages and configure the line. The LED is on if a new voice message is received.",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -326,6 +1961,321 @@
         "created": "2023-04-29T17:08:38.056Z",
         "updated": "2023-04-29T17:08:38.056Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "6a638076-e6e8-40c2-91ce-8d5a4a376013",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "group_pickup",
+        "value": "7",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "6a75b251-0ef7-4e14-be18-393e9fdcd6d4",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "blf",
+        "value": "blf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "6af12e30-9649-49b1-85f6-e039afded9d5",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "paging",
+        "value": "27",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "6b5788c1-2477-4bae-b18c-8f8c255434f3",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "do_not_disturb",
+        "value": "Do Not Disturb",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "6c05d117-0b61-40d1-a735-5d2b8e58634e",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "dnd",
+        "value": "17",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "6ec5ca9d-f30f-4b0f-902a-9d9113a75518",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "directory",
+        "value": "directory",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "6fbf50df-091b-443a-a071-73fc95ba52c5",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "intercom",
+        "value": "9",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "70430b5b-3d0e-4ceb-9649-52c3d8fecaf2",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "xml_browser",
+        "value": "18",
+        "enabled": "true",
+        "description": "XML Browser",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "709a8812-0497-430a-947a-59f191a07974",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "busy_lamp_field",
+        "value": "Busy Lamp Field",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "72b34b75-92e6-44d7-befe-39343fa6b135",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "sprecode",
+        "value": "sprecode",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "735c7e66-a166-427a-8d02-111fdddddd3c",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "group_listening",
+        "value": "28",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "741ed4e3-bcf0-4c61-90df-b978792f8f99",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "shared_line",
+        "value": "31",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "74ac0c29-5919-4d06-81f5-c51343feac12",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "monitored_call_park",
+        "value": "monitored call park",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "77bbc063-ad44-41b7-b193-be6b6b543f97",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "action_url",
+        "value": "Action URL",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "780f1b66-d8a4-4754-bb89-4d128f3741b2",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "line",
+        "value": "1",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "78146842-252c-40e7-aae6-5d08d1e0aa43",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "ldap",
+        "value": "5",
+        "enabled": "true",
+        "description": "LDAP",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "7a4fd2a1-7d47-4cf1-9288-9f25b5101773",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "zero_touch",
+        "value": "34",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "7c1eb320-f392-420b-b599-5806b001daa2",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "conf",
+        "value": "conf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "7c368c86-ff7a-4339-8491-4bd3acfee000",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "none",
+        "value": "none",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "7c4c95e1-f843-4c70-804e-e607dc100b5e",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "blf_new_video",
+        "value": "bcV",
+        "enabled": "true",
+        "description": "BLF - New Video Call",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "7d2ad4ff-9b83-48a6-a8be-c98b8dce2cfe",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "messages",
+        "value": "Messages",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -341,7 +2291,7 @@
         "created": "2023-04-29T17:16:39.598Z",
         "updated": "2023-04-29T17:16:39.598Z",
         "synchronised": null,
-        "updated_by": "system"
+        "updated_by": "fretweah"
     }
 },
 {
@@ -355,6 +2305,171 @@
         "description": null,
         "created": "2023-04-29T17:12:58.333Z",
         "updated": "2023-04-29T17:12:58.333Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "7e3909d7-0e27-4f23-bbce-c65cd60ad0ea",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "call_return",
+        "value": "call return",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "80293aeb-e3da-4c5f-9994-7ac1049d3c20",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "acd_sign_on_off",
+        "value": "ACD Sign On/Off",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "80c4d33f-d531-4035-8fe0-771355bd7324",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "voicemail",
+        "value": "5",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "81ef95f6-87e1-414a-9c10-44b507b3fe72",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "url_record",
+        "value": "26",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8206ad33-6c75-4c7a-bc76-55199981f047",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "security_class",
+        "value": "Security Class",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "82b82325-e77a-4d56-b31b-58665ab0da5c",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "speed_dial",
+        "value": "7",
+        "enabled": "true",
+        "description": "Speed Dial",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "84419007-15a3-4925-bcc7-9971a25a18e7",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "xml_browser",
+        "value": "14",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "85e8baf6-a4ba-4954-97b6-959c3eace86b",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "none",
+        "value": "3",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "86330925-1a07-4dea-a13e-0d6291c3b5fb",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "flash",
+        "value": "flash",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "86387579-aefb-4ae2-8683-9daf62d3c0d3",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "filter",
+        "value": "filter",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "86aa7101-53a8-4e7d-9ffd-18e69e270b81",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "broadsoft_group",
+        "value": "16",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -371,6 +2486,216 @@
         "created": "2023-04-29T17:08:38.065Z",
         "updated": "2023-04-29T17:08:38.065Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "88717814-5868-4188-88dc-fbd79946cab1",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "call_park",
+        "value": "8",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8bdebb9a-ec23-4264-bf27-96cd7ae2c580",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "hot_desking",
+        "value": "32",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8c46a47b-7dc9-442e-b65f-28cbb77ccaa0",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "direct_pickup",
+        "value": "6",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8d4e6cee-bcfa-4561-a302-09213c6de0bf",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "speed_dial",
+        "value": "2",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8daee290-41c9-4304-a981-65873b4c4157",
+    "fields": {
+        "vendor_id": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+        "name": "broadsoft_group",
+        "value": "11",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8df8c69e-c66b-4ce3-b1dd-f70927cc3414",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "advisory_message",
+        "value": "3",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8e1d119b-a9af-4013-99dc-90c28fbc9f74",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "status",
+        "value": "16",
+        "enabled": "true",
+        "description": "View Status",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8e26f47a-6d52-46e5-a656-d655c99b14b1",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "conference",
+        "value": "conference",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8e746ec1-1099-404d-ba28-8beae31ebeb9",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "record",
+        "value": "25",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "8fc7e3b7-83c7-4e9f-bba3-006c6644a94b",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "multicast_page",
+        "value": "multicast",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "91b0920d-0d0f-4f1e-aad2-e370ada7470c",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "park_return",
+        "value": "23",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "92cdcdfb-4444-424e-bee9-1dbd8f0c24f5",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "blf_new",
+        "value": "bc",
+        "enabled": "true",
+        "description": "BLF - New Call",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "93252e3c-955d-4bdc-a395-288abc54044e",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "call_log",
+        "value": "2",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "932e17be-cb79-4abc-beae-361d2d64d7e6",
+    "fields": {
+        "vendor_id": "e1937101-aa34-40c0-9f7d-3aac039ff75e",
+        "name": "disabled",
+        "value": "disabled",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -385,6 +2710,51 @@
         "description": null,
         "created": "2023-04-29T17:12:58.337Z",
         "updated": "2023-04-29T17:12:58.337Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "9555fc78-a7ba-4f01-8852-20ef3f5060fd",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "do_not_ring",
+        "value": "Do Not Ring",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "956e1d6d-c9b9-47d8-929e-5216fd1d738d",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "intercom",
+        "value": "9",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "95705b9b-732e-4f33-b81c-85351662db48",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "dnd",
+        "value": "2",
+        "enabled": "true",
+        "description": "DND",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -401,7 +2771,7 @@
         "created": "2023-04-29T17:08:38.061Z",
         "updated": "2023-04-29T17:08:38.061Z",
         "synchronised": null,
-        "updated_by": "system"
+        "updated_by": "fretweah"
     }
 },
 {
@@ -415,6 +2785,21 @@
         "description": null,
         "created": "2023-04-29T17:15:19.615Z",
         "updated": "2023-04-29T17:15:19.615Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "9921fd2f-c42e-4d2f-9847-78589addcd6d",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "next_tab",
+        "value": "Next Tab",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -431,6 +2816,96 @@
         "created": "2023-04-28T16:35:55.750Z",
         "updated": "2023-04-28T16:35:55.750Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "9baf61b5-db9f-4116-b7c7-f9075c72223d",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "conference",
+        "value": "17",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "9c440cda-d36e-4bba-a1aa-26dd5c157ce5",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "sms",
+        "value": "24",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "9cab6704-6e11-4ee1-aab4-994248a105da",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "hold",
+        "value": "Hold",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "9cb583db-6ba8-4d61-9e7d-95ab675d9763",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "conference",
+        "value": "conference",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "9fc4eddf-2b68-41a1-a3ad-2d6df60cee41",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "not_programmed",
+        "value": "0",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "a1e5b2d5-78b3-4229-9438-f8cf68b855e2",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "voicemail",
+        "value": "voicemail",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -446,7 +2921,7 @@
         "created": "2023-04-29T17:12:58.342Z",
         "updated": "2023-04-29T17:12:58.342Z",
         "synchronised": null,
-        "updated_by": "system"
+        "updated_by": "fretweah"
     }
 },
 {
@@ -460,6 +2935,66 @@
         "description": null,
         "created": "2023-04-29T17:12:58.343Z",
         "updated": "2023-04-29T17:15:19.604Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "a5d84690-ec7f-45b1-b4d0-82dda0de8fbf",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "hold",
+        "value": "20",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "a60ffbcf-d2b5-463e-951c-266242931580",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "blf_conference",
+        "value": "bf",
+        "enabled": "true",
+        "description": "BLF - Conference",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "a74e69ae-fa43-4a25-b798-8b31dd10902b",
+    "fields": {
+        "vendor_id": "894492b3-e517-41db-abad-da176ba8fb65",
+        "name": "blf",
+        "value": "blf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "a8491dcb-aa5f-427a-a988-b5679dcd74a4",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "xml_browser",
+        "value": "14",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -476,6 +3011,231 @@
         "created": "2023-04-29T17:10:43.600Z",
         "updated": "2023-04-29T17:10:43.600Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "a8f2b166-243a-4b29-89cc-4fc541ac1256",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "disposition_code",
+        "value": "Disposition Code",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "aa59f131-4926-43cd-b042-d0c469c44401",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "message_status",
+        "value": "Message Status",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "aa600f24-f27f-415b-8f9b-f96fd30749f0",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "presence",
+        "value": "presence",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "ac6ef940-6b1f-4647-ab1a-890dacf618fb",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "call_log",
+        "value": "8",
+        "enabled": "true",
+        "description": "Call List",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "ad3e5197-c2a6-4c17-8c9f-bbaf8f36e853",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "url_record",
+        "value": "26",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "add5966b-ef38-424d-9d10-d086f8652ac4",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "call_agent",
+        "value": "call_agent",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "ae1dbc13-3e9f-4270-b915-0f1d19848e26",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "call_appearance",
+        "value": "Call Appearance",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "b04f2478-24c3-4582-a5e2-3d85addf5ccf",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "phonelock",
+        "value": "phonelock",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "b15556a6-e162-49c5-89d5-ca295f604bf4",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "line",
+        "value": "line",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "b1746efb-6848-4898-88fd-c538690d3693",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "blf",
+        "value": "blf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "b35ce107-dc6e-42dd-8b51-6661e0ce44a9",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "transfer",
+        "value": "transfer",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "b7ee4bec-596f-4508-8109-f1ea12bf8f32",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "local_group",
+        "value": "12",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "b9609499-6bf0-4388-950c-cb26d482d8bf",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "speed_dial_xfer",
+        "value": "speeddialxfer",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "b9a7dd5c-b8a9-44a8-9f38-740289853972",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "group_listening",
+        "value": "28",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "bc0d72eb-640a-42c0-a8fa-9d6d70e3a2b3",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "multicast_paging",
+        "value": "multicast paging",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -490,6 +3250,66 @@
         "description": null,
         "created": "2023-04-29T17:10:43.605Z",
         "updated": "2023-04-29T17:10:43.605Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "bf3576b2-b5fb-4a74-8faf-9cf0914a720a",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "ldap",
+        "value": "15",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "c0edf9e1-5e00-4b95-9c62-87dc700c4efe",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "empty",
+        "value": "empty",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "c4a79bdc-a493-46f9-bef1-f2693583768a",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "acd",
+        "value": "33",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "c4f8e4bd-8c00-43cb-8152-81912ecfe395",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "group_pickup",
+        "value": "7",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -506,6 +3326,201 @@
         "created": "2023-04-29T17:08:38.066Z",
         "updated": "2023-04-29T17:08:38.066Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "c670dc0e-bbab-433f-8d28-1832c80806b7",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "park_return",
+        "value": "23",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "c912a2cd-8ded-4450-949e-e61c9bad8959",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "forward",
+        "value": "18",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "c91c5633-9478-4dbb-856a-ce97e2ee735a",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "line",
+        "value": "line",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "ca0e613f-8e47-4664-ad36-51d8ca14eefa",
+    "fields": {
+        "vendor_id": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+        "name": "call_park",
+        "value": "7",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "cae038c9-2b85-4f91-b798-723c0672634e",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "none",
+        "value": "none",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "cb4fe1ca-1bbb-40b6-acad-b8129bd299b1",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "dtmf",
+        "value": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "cbb66281-034e-47b6-b509-ddddd100f324",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "dnd",
+        "value": "dnd",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "cbcf5a58-8142-4492-aa60-b3e0a6eaad73",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "dtmf",
+        "value": "dtmf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "cd844518-2d7e-47fc-9f38-beba21187f04",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "park",
+        "value": "8",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "cdc46eeb-3d9f-4688-8155-e24b6e304a79",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "direct_pickup",
+        "value": "6",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "cf680252-6811-4c85-90a1-6a587bef13ed",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "phone_book",
+        "value": "15",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d06fc434-4044-4bc1-b355-145ec72c2354",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "hoteling",
+        "value": "Hoteling",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d242f818-26cb-4d8b-bebf-4b31de81ac7b",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "public_hold",
+        "value": "29",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -520,6 +3535,81 @@
         "description": null,
         "created": "2023-04-29T17:12:58.339Z",
         "updated": "2023-04-29T17:12:58.339Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d2ca831a-4bfb-4d62-8865-c0cbbea1b689",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "paging",
+        "value": "27",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d41cfeb2-a3a9-4d96-9bb4-0b87fa2870d0",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "call_forward",
+        "value": "callforward",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d4fdcb51-9d6b-474d-bbff-b531fb2235af",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "missed_calls",
+        "value": "9",
+        "enabled": "true",
+        "description": "Missed Calls",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d516e44e-85a0-4049-9b23-6ffe1a71e402",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "speed_dial",
+        "value": "1",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d5583b22-2d20-44b2-8442-328071773360",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "speed_dial_blf",
+        "value": "27",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -536,7 +3626,7 @@
         "created": "2023-04-29T17:15:19.617Z",
         "updated": "2023-04-29T17:15:19.617Z",
         "synchronised": null,
-        "updated_by": "system"
+        "updated_by": "fretweah"
     }
 },
 {
@@ -551,7 +3641,7 @@
         "created": "2023-04-29T17:08:38.064Z",
         "updated": "2023-04-29T17:08:38.064Z",
         "synchronised": null,
-        "updated_by": "system"
+        "updated_by": "fretweah"
     }
 },
 {
@@ -565,6 +3655,21 @@
         "description": null,
         "created": "2023-04-29T17:08:38.068Z",
         "updated": "2023-04-29T17:08:38.068Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d6ae9e48-f454-43f2-963b-39f2b4b06409",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "line",
+        "value": "line",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -581,6 +3686,156 @@
         "created": "2023-04-29T17:16:39.594Z",
         "updated": "2023-04-29T17:16:39.594Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d7eb7fba-23fc-45ac-88b8-6e1b6d43fb89",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "redial",
+        "value": "1",
+        "enabled": "true",
+        "description": "Redial",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d85da660-2b41-4cee-9d68-ab0cdb594950",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "blf",
+        "value": "3",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d8b6cee0-6ea0-4a83-adbb-628f051e131f",
+    "fields": {
+        "vendor_id": "8dc1a153-e462-42e9-b73f-c13f8c7eef61",
+        "name": "speed_dial",
+        "value": "SPEED_DIAL",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d90a0cf6-f636-49ad-9337-789ca26f3c9b",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "p2t",
+        "value": "p2t",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "d983620e-41e1-4559-bb31-9cc5111741ed",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "conference",
+        "value": "17",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "db3ca5ac-750e-43a2-9597-c13077ff027c",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "call_forward",
+        "value": "a",
+        "enabled": "true",
+        "description": "When receiving a call, you can press the key to transfer the call to the specified number.",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "db5f34f3-0ea4-4af4-bf36-73a9534db93c",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "multicast_paging",
+        "value": "47",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "dc777b60-b4e5-4665-8cfd-61977066c85d",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "ldap_search",
+        "value": "ldap search",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "de01f56a-b2ac-4210-be00-fba5c0441f34",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "acd",
+        "value": "33",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "deec6655-dadf-400c-a89b-db0b96491936",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "prefix",
+        "value": "11",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -595,6 +3850,171 @@
         "description": null,
         "created": "2023-04-29T17:12:58.331Z",
         "updated": "2023-04-29T17:12:58.331Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e1306aee-38bd-4848-899a-870e6ffb6892",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "xml_group",
+        "value": "13",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e1cb3586-3722-4d9a-9e66-6a9339b2b583",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "presence_monitor",
+        "value": "Presence Monitor",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e1cf128f-a447-409e-a525-fe197951d96f",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "url",
+        "value": "action_url",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e2ad6a53-1aed-44f7-bd9f-86a15719d5b7",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "blf_bxfer",
+        "value": "bb",
+        "enabled": "true",
+        "description": "BLF - Blind Transfer",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e3a25186-9410-4504-8b81-2a4b2a4ff0b5",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "shared_line",
+        "value": "shared line",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e3a515f0-c9dc-4d64-92ee-024a76f56bf9",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "speeddial",
+        "value": "SpeedDial",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e496bc2c-6a4c-4046-a901-7ba16174b12d",
+    "fields": {
+        "vendor_id": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+        "name": "mwi",
+        "value": "m",
+        "enabled": "true",
+        "description": "MWI - *97 Voicemail",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e4c7ee99-b4ab-4e83-82e4-6543b688296c",
+    "fields": {
+        "vendor_id": "8dc1a153-e462-42e9-b73f-c13f8c7eef61",
+        "name": "blf",
+        "value": "SPEED_DIAL_BLF",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e6befb8d-d478-48eb-acff-7e8885761280",
+    "fields": {
+        "vendor_id": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+        "name": "speed_dial_prefix",
+        "value": "2",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e7249417-3d61-4cdb-ad10-11eb499432d2",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "speed_dial_conf",
+        "value": "speeddialconf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e77abb40-4b6d-4968-b137-a2e461190fe4",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "call_waiting",
+        "value": "Call Waiting",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -611,6 +4031,51 @@
         "created": "2023-04-29T17:16:39.592Z",
         "updated": "2023-04-29T17:16:39.592Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e8b08098-8d4a-4671-8d5f-f73bcf7d8946",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "exec_assistant",
+        "value": "Exec Assistant",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "e9a26ecf-e29c-4b13-b3da-cfe492f9cee7",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "local_group",
+        "value": "12",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "eaa1d831-43ef-4be2-82ab-e59fcb7046cc",
+    "fields": {
+        "vendor_id": "cf2bc52d-5c5f-4819-8c97-62e350f1bf0a",
+        "name": "disabled",
+        "value": "disabled",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -625,6 +4090,21 @@
         "description": null,
         "created": "2023-04-29T17:10:43.610Z",
         "updated": "2023-04-29T17:10:43.610Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "eaf10b14-43a0-479e-bf63-27c168bbe920",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "auto_answer_intercom",
+        "value": "Auto Answer Intercom",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -641,7 +4121,7 @@
         "created": "2023-04-29T17:15:19.616Z",
         "updated": "2023-04-29T17:15:19.616Z",
         "synchronised": null,
-        "updated_by": "system"
+        "updated_by": "fretweah"
     }
 },
 {
@@ -655,6 +4135,96 @@
         "description": null,
         "created": "2023-04-29T17:12:58.340Z",
         "updated": "2023-04-29T17:12:58.340Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f0166852-d48a-457d-804d-17d929b50cde",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "url",
+        "value": "19",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f22a7162-418d-489a-8f89-0df04c17df48",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "line_monitor",
+        "value": "Line Monitor",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f2a537db-eddc-4417-b3c0-ea3a6b8fb4d1",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "private_hold",
+        "value": "30",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f447713d-d3f0-4572-8002-7f3a47d7f5bb",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "extension",
+        "value": "dest",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f462d4ef-9ef6-4dd9-abfe-17a7419c56d8",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "hot_desking",
+        "value": "20",
+        "enabled": "true",
+        "description": "Hot Desking",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f49e54e4-96e3-4879-b1a3-96722e0a0f2f",
+    "fields": {
+        "vendor_id": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+        "name": "url",
+        "value": "URL",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -671,6 +4241,51 @@
         "created": "2023-04-29T17:10:43.613Z",
         "updated": "2023-04-29T17:10:43.613Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f61b413a-7da6-48fc-ad85-50dce445039c",
+    "fields": {
+        "vendor_id": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+        "name": "button",
+        "value": "button",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f6636596-3f21-4134-9442-1fac214c9158",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "xml",
+        "value": "xml",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f7434abf-10f7-452f-85e7-278ad2710b05",
+    "fields": {
+        "vendor_id": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+        "name": "shared_line",
+        "value": "31",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -686,6 +4301,96 @@
         "created": "2023-04-29T17:15:19.612Z",
         "updated": "2023-04-29T17:15:19.612Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f83df711-a4dc-455a-a3d8-6b94926e332c",
+    "fields": {
+        "vendor_id": "00a24674-8077-4ac9-82fa-60d5048cab86",
+        "name": "shared_line",
+        "value": "5",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "f8c3912b-78a7-4eda-873c-eed7f169b3b6",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "conference",
+        "value": "conference",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "fa7c3548-9d13-402e-a90d-6946e8e1802f",
+    "fields": {
+        "vendor_id": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+        "name": "add_to_conference",
+        "value": "Add to Conference",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "fcb00644-8f25-48b7-a537-a601dab72359",
+    "fields": {
+        "vendor_id": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+        "name": "received_calls",
+        "value": "10",
+        "enabled": "true",
+        "description": "Received Calls",
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "fd7c6e78-3290-4be9-8fdc-d8800d072aef",
+    "fields": {
+        "vendor_id": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+        "name": "zero_touch",
+        "value": "34",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "fddc3b97-7352-4012-b8d6-fc8b94ea20a1",
+    "fields": {
+        "vendor_id": "43349027-18a7-423a-8423-4779f542a99b",
+        "name": "icom",
+        "value": "icom",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
     }
 },
@@ -700,6 +4405,21 @@
         "description": null,
         "created": "2023-04-29T17:10:43.609Z",
         "updated": "2023-04-29T17:10:43.609Z",
+        "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendorfunctions",
+    "pk": "ffeeb867-9128-4ab2-9f90-979bdd723541",
+    "fields": {
+        "vendor_id": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+        "name": "eventlist_blf",
+        "value": "eventlist blf",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
         "synchronised": null,
         "updated_by": "system"
     }

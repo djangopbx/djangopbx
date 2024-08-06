@@ -1,6 +1,58 @@
 [
 {
     "model": "provision.devicevendors",
+    "pk": "00a24674-8077-4ac9-82fa-60d5048cab86",
+    "fields": {
+        "name": "mitel",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "0a7e5cb4-b5ba-40d8-be5b-1012e6ea54d3",
+    "fields": {
+        "name": "htek",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "17e3cbb8-1bac-4f9d-8f71-4dfcd68e144f",
+    "fields": {
+        "name": "polycom",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "2a82fc9a-a81d-405c-8a97-ea728f52ec7d",
+    "fields": {
+        "name": "snom",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
     "pk": "30ae187d-6c83-4a59-87bb-7d50be4b7cc4",
     "fields": {
         "name": "yealink",
@@ -9,7 +61,228 @@
         "created": "2023-04-28T16:35:55.745Z",
         "updated": "2023-04-29T17:16:39.590Z",
         "synchronised": null,
+        "updated_by": "fretweah"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "3c8c61e8-47be-4df4-a83d-e6774d74cae3",
+    "fields": {
+        "name": "poly",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
         "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "3d8961e2-0e3c-4592-a73a-c983f7783a29",
+    "fields": {
+        "name": "fanvil",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "43349027-18a7-423a-8423-4779f542a99b",
+    "fields": {
+        "name": "aastra",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "495437cc-38e0-40c2-b73e-f8b5940f08dc",
+    "fields": {
+        "name": "escene",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "540ba60a-06f6-4bd9-bc5e-675e77efa525",
+    "fields": {
+        "name": "vtech",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "5ef03824-16a8-42f4-abcb-2d2d6136822f",
+    "fields": {
+        "name": "sangoma",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "652c8b21-3d78-46b7-9bd0-3d91f1bba913",
+    "fields": {
+        "name": "atcom",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "73488127-9aaa-4db5-a3f1-ec3d6565c610",
+    "fields": {
+        "name": "spectralink",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "820c44cc-2a92-4b36-ac6f-94b708ba335e",
+    "fields": {
+        "name": "grandstream",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:06:36.750Z",
+        "synchronised": null,
+        "updated_by": "adrian@djangopbx.com"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "86f503df-5902-4791-b892-f5fac6115904",
+    "fields": {
+        "name": "panasonic",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "894492b3-e517-41db-abad-da176ba8fb65",
+    "fields": {
+        "name": "digium",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "8dc1a153-e462-42e9-b73f-c13f8c7eef61",
+    "fields": {
+        "name": "audiocodes",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "aa1a3bf4-dfb9-4129-8b15-2090baa0f774",
+    "fields": {
+        "name": "algo",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "bc8d3800-1a37-49bb-8b97-fcf86dedb7ab",
+    "fields": {
+        "name": "obihai",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "cf2bc52d-5c5f-4819-8c97-62e350f1bf0a",
+    "fields": {
+        "name": "linksys",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "e14b088c-f086-4ab6-990e-cba89b468fa5",
+    "fields": {
+        "name": "escene programmable",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:45:29.200Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "provision.devicevendors",
+    "pk": "e1937101-aa34-40c0-9f7d-3aac039ff75e",
+    "fields": {
+        "name": "cisco",
+        "enabled": "false",
+        "description": null,
+        "created": "2024-08-06T09:45:29.200Z",
+        "updated": "2024-08-06T09:06:17.744Z",
+        "synchronised": null,
+        "updated_by": "adrian@djangopbx.com"
     }
 }
 ]
