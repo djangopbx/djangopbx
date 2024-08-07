@@ -194,13 +194,13 @@ class ContactOrg(models.Model):
 class ContactAddress(models.Model):
     id               = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Email ID'))                          # noqa: E501, E221
     contact_id       = models.ForeignKey('Contact', on_delete=models.CASCADE, verbose_name=_('Contact'))                                           # noqa: E501, E221
-    post_office_box  = models.CharField(max_length=64, blank=True, verbose_name=_('Post Office Box'))                                              # noqa: E501, E221
-    extended_address = models.CharField(max_length=128, blank=True, verbose_name=_('Extended Address'))                                            # noqa: E501, E221
+    post_office_box  = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Post Office Box'))                                   # noqa: E501, E221
+    extended_address = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Extended Address'))                                 # noqa: E501, E221
     street_address   = models.CharField(max_length=128, verbose_name=_('Street Address'))                                                          # noqa: E501, E221
-    locality         = models.CharField(max_length=128, verbose_name=_('Locality'))                                                                # noqa: E501, E221
-    region           = models.CharField(max_length=128, verbose_name=_('Region'))                                                                  # noqa: E501, E221
+    locality         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Locality'))                                         # noqa: E501, E221
+    region           = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Region'))                                           # noqa: E501, E221
     postal_code      = models.CharField(max_length=16, verbose_name=_('Postal Code'))                                                              # noqa: E501, E221
-    country_name     = models.CharField(max_length=128, verbose_name=_('Country Name'))                                                            # noqa: E501, E221
+    country_name     = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Country Name'))                                     # noqa: E501, E221
     addr_type        = models.CharField(max_length=16, choices=AddressTypeChoice.choices, default=AddressTypeChoice.CWORK, verbose_name=_('Type')) # noqa: E501, E221
     created          = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                   # noqa: E501, E221
     updated          = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                       # noqa: E501, E221
