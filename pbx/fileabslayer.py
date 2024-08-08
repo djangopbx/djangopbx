@@ -89,3 +89,7 @@ class FileAbsLayer:
                     return self.sftp.open(s, filename)
             raise FileNotFoundError('FileAbsLayer open find failed to locate file')
         return self.sftp.open(self.check_host(host), filename)
+
+    def save_to_freeswitches(self, localfile, remotefile):
+        for sw in self.freeswitches:
+            self.sftp.put(sw, localfile, remotefile)

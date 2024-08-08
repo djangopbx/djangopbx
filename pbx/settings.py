@@ -353,3 +353,5 @@ PBX_DEFAULT_FILESTORE = 0
 PBX_USE_LOCAL_EVENT_SOCKET = True
 # Use remote file storage server or local file storage.
 PBX_USE_LOCAL_FILE_STORAGE = True
+# Indicates if FreeSWITCH config files are to be sent to all switches in a cluster.
+PBX_FREESWITCH_LOCAL = True

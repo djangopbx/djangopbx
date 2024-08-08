@@ -35,6 +35,7 @@ from lxml import etree
 from io import StringIO
 import switch.models
 from tenants.pbxsettings import PbxSettings
+from pbx.fileabslayer import FileAbsLayer
 
 
 class SipProfileChoice():
@@ -193,17 +194,17 @@ class SwitchFunctions():
 
     def save_var_xml(self):
         vlist = switch.models.SwitchVariable.objects.filter(enabled='true').order_by('category', 'sequence')
-        xml = '<include>'
+        xml = ['<include>']
         prev_var_cat = ''
         hostname = socket.gethostname()
         confdir = PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True)
         for v in vlist:
             if not v.category == 'Provision':
                 if not prev_var_cat == v.category:
-                    xml += '\n<!-- " + v.category + " -->\n'
+                    xml.append('\n<!-- %s -->' % v.category)
                     if v.description is not None:
                         if len(v.description) > 0:
-                            xml += '\n<!-- " + v.category + " -->\n'
+                            xml.append('<!-- %s -->' % v.description)
                 cmd = v.command
                 if len(cmd) == 0:
                     cmd = 'set'
@@ -211,30 +212,39 @@ class SwitchFunctions():
                     cmd = 'exec-set'
                 if v.hostname:
                     if len(v.hostname) == 0:
-                        xml += '<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n' % (v.command, v.name, v.value)
+                        xml.append('<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />' % (v.command, v.name, v.value))
                     elif v.hostname == hostname:
-                        xml += '<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n' % (v.command, v.name, v.value)
+                        xml.append('<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />' % (v.command, v.name, v.value))
                 else:
-                    xml += '<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />\n' % (v.command, v.name, v.value)
+                    xml.append('<X-PRE-PROCESS cmd=\"%s\" data=\"%s=%s\" />' % (v.command, v.name, v.value))
 
                 prev_var_cat = v.category
 
-        xml += '</include>'
+        xml.append('</include>')
+        xml = '\n'.join(xml)
+        filename = '%s/vars.xml' % confdir
         try:
             os.makedirs(confdir, mode=0o755, exist_ok=True)
         except OSError:
             return 2
         try:
-            with open('%s/vars.xml' % confdir, 'w') as f:
+            with open(filename, 'w') as f:
                 f.write(xml)
         except OSError:
             return 3
+        if not settings.PBX_FREESWITCH_LOCAL:
+            fal = FileAbsLayer()
+            fal.load_freeswitches()
+            fal.save_to_freeswitches(filename, filename)
         return 0
 
     def write_sip_profiles(self):
         plist = switch.models.SipProfile.objects.filter(enabled='true').order_by('name')
         xml = ''
         confdir = PbxSettings().default_settings('switch', 'sip_profiles', 'dir', '/home/django-pbx/freeswitch/sip_profiles', True)
+        if not settings.PBX_FREESWITCH_LOCAL:
+            fal = FileAbsLayer()
+            fal.load_freeswitches()
         for p in plist:
             root = etree.Element('profile', name=p.name)
             root.set('name', p.name)
@@ -264,11 +274,14 @@ class SwitchFunctions():
                 os.makedirs('%s/%s' % (confdir, p.name), mode=0o755, exist_ok=True)
             except OSError:
                 return 2
+            filename = '%s/%s.xml' % (confdir, p.name)
             try:
-                with open('%s/%s.xml' % (confdir, p.name), 'w') as f:
+                with open(filename, 'w') as f:
                     f.write(xml)
             except OSError:
                 return 3
+            if not settings.PBX_FREESWITCH_LOCAL:
+                fal.save_to_freeswitches(filename, filename)
         return 0
 
     def write_acl_xml(self):
@@ -287,37 +300,47 @@ class SwitchFunctions():
                     etree.SubElement(netlist, 'node', type=n.type, cidr=n.cidr)
         etree.indent(root)
         xml = str(etree.tostring(root), "utf-8")
+        filename = '%s/autoload_configs/acl.conf.xml' % confdir
         try:
             os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok=True)
         except OSError:
             return 2
         try:
-            with open('%s/autoload_configs/acl.conf.xml' % confdir, 'w') as f:
+            with open(filename, 'w') as f:
                 f.write(xml)
         except OSError:
             return 3
+        if not settings.PBX_FREESWITCH_LOCAL:
+            fal = FileAbsLayer()
+            fal.load_freeswitches()
+            fal.save_to_freeswitches(filename, filename)
         return 0
 
     def save_modules_xml(self):
         vlist = switch.models.Modules.objects.filter(enabled='true').order_by('sequence', 'category')
-        xml = '<configuration name=\"modules.conf\" description=\"Modules\">\n  <modules>\n'
+        xml = ['<configuration name=\"modules.conf\" description=\"Modules\">\n  <modules>']
         prev_cat = ''
         confdir = PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True)
         for v in vlist:
             if not prev_cat == v.category:
-                xml += "\n    <!-- " + v.category + " -->\n"
+                xml.append('\n    <!-- %s -->' % v.category)
 
-            xml += '    <load module=\"%s\"/>\n' % v.name
+            xml.append('    <load module=\"%s\"/>' % v.name)
             prev_cat = v.category
-        xml += "  </modules>\n</configuration>\n"
+        xml.append('  </modules>\n</configuration>')
+        xml = '\n'.join(xml)
+        filename = '%s/autoload_configs/modules.conf.xml' % confdir
         try:
             os.makedirs(confdir, mode=0o755, exist_ok=True)
         except OSError:
             return 2
         try:
-            with open('%s/autoload_configs/modules.conf.xml' % confdir, 'w') as f:
+            with open(filename, 'w') as f:
                 f.write(xml)
         except OSError:
             return 3
+        if not settings.PBX_FREESWITCH_LOCAL:
+            fal = FileAbsLayer()
+            fal.load_freeswitches()
+            fal.save_to_freeswitches(filename, filename)
         return 0
-
