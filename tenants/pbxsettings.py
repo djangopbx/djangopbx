@@ -144,7 +144,7 @@ class PbxSettings():
     def process_setting_type(self, qs, settingtype):
         if settingtype in self.setting_string_types:
             value = qs[0].value
-        elif settingtype == 'numberic':
+        elif settingtype == 'numeric':
             try:
                 value = int(qs[0].value)
             except ValueError:

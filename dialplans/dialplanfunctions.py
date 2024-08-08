@@ -470,8 +470,10 @@ class SwitchDp():
         httapi_url = pbxsettings.default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)
         path_of_xml = settings.BASE_DIR / 'dialplans/resources/switch/conf/dialplans-enabled'
         ext = ('.xml')
+        i = 0
         for files in os.listdir(path_of_xml):
             if files.endswith(ext):
+                i += 1
                 pin = BaseUserManager().make_random_password(pin_length, '1234567890')
                 with open(path_of_xml / files) as f:
                     xml = f.read()
@@ -483,6 +485,7 @@ class SwitchDp():
 
             else:
                 continue
+        return i
 
     def update_xml(self, obj, change=None):
         regex = re.compile('expression=\"(.*)\"', re.MULTILINE)

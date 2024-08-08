@@ -30,6 +30,7 @@
 import re
 import uuid
 from django.contrib import admin
+from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from django.conf import settings
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
@@ -150,6 +151,11 @@ def add_to_global_excludes(modeladmin, request, queryset):
     if rc > 0:
         messages.add_message(request, messages.INFO, _('%s Dialplan Exclude(s) created.' % rc))
 
+@admin.action(permissions=['change'], description='Update Dialplans from defaults')
+def update_dialplans_from_defaults(modeladmin, request, queryset):
+    r = SwitchDp().import_xml(request.session['domain_name'], False)
+    messages.add_message(request, messages.INFO, _('%s dialplan XML files processed.' % r))
+
 
 class DialplanAdmin(ImportExportModelAdmin):
     resource_class = DialplanResource
@@ -180,7 +186,7 @@ class DialplanAdmin(ImportExportModelAdmin):
     )
 
     ordering = ['sequence', 'name']
-    actions = [add_to_global_excludes]
+    actions = [add_to_global_excludes, update_dialplans_from_defaults]
 
     inlines = [DialplanDetailsInLine]
 
@@ -225,6 +231,15 @@ class DialplanAdmin(ImportExportModelAdmin):
             obj.id = uuid.uuid4()
             obj.xml = re.sub(r'^(<extension name=.*uuid=")([0-9a-fA-F-]+)(">)', r'\1%s\3' % obj.id, obj.xml)
         super().save_model(request, obj, form, change)
+
+    # This is a workaround to allow the admin action to be run without selecting any objects.
+    # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
+    def changelist_view(self, request, extra_context=None):
+        if 'action' in request.POST and request.POST['action'] == 'update_dialplans_from_defaults':
+            post = request.POST.copy()
+            post.update({ACTION_CHECKBOX_NAME: 'cc30bc83-ccb8-4f27-a1d6-9340ae7de325'})
+            request._set_post(post)
+        return super(DialplanAdmin, self).changelist_view(request, extra_context)
 
 
 class DialplanExcludesResource(resources.ModelResource):
