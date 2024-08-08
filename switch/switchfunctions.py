@@ -287,7 +287,7 @@ class SwitchFunctions():
     def write_acl_xml(self):
         alist = switch.models.AccessControl.objects.all().order_by('name')
         xml = ''
-        confdir = PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True)
+        confdir = '%s/%s' % (PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True), 'autoload_configs')
         root = etree.Element('configuration', name='acl.conf', description='Network Lists')
         networklists = etree.SubElement(root, 'network-lists')
         for a in alist:
@@ -300,9 +300,9 @@ class SwitchFunctions():
                     etree.SubElement(netlist, 'node', type=n.type, cidr=n.cidr)
         etree.indent(root)
         xml = str(etree.tostring(root), "utf-8")
-        filename = '%s/autoload_configs/acl.conf.xml' % confdir
+        filename = '%s/acl.conf.xml' % confdir
         try:
-            os.makedirs('%s/autoload_configs' % confdir, mode=0o755, exist_ok=True)
+            os.makedirs(confdir, mode=0o755, exist_ok=True)
         except OSError:
             return 2
         try:
@@ -320,7 +320,7 @@ class SwitchFunctions():
         vlist = switch.models.Modules.objects.filter(enabled='true').order_by('sequence', 'category')
         xml = ['<configuration name=\"modules.conf\" description=\"Modules\">\n  <modules>']
         prev_cat = ''
-        confdir = PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True)
+        confdir = '%s/%s' % (PbxSettings().default_settings('switch', 'conf', 'dir', '/home/django-pbx/freeswitch', True), 'autoload_configs')
         for v in vlist:
             if not prev_cat == v.category:
                 xml.append('\n    <!-- %s -->' % v.category)
@@ -329,7 +329,7 @@ class SwitchFunctions():
             prev_cat = v.category
         xml.append('  </modules>\n</configuration>')
         xml = '\n'.join(xml)
-        filename = '%s/autoload_configs/modules.conf.xml' % confdir
+        filename = '%s/modules.conf.xml' % confdir
         try:
             os.makedirs(confdir, mode=0o755, exist_ok=True)
         except OSError:
