@@ -81,7 +81,10 @@ class CallCentreQueuesViewSet(viewsets.ModelViewSet):
         pbxsettings = PbxSettings()
         if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):
             objf = CcFunctions(obj, self.request.user.username)
-            objf.generate_xml()
+            dp_id = objf.generate_xml()
+            if dp_id:
+                obj.dialplan_id = dp_id
+                obj.save()
         if pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', True, True):
             cc = ClearCache()
             cc.dialplan(obj.domain_id.name)

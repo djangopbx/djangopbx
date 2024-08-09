@@ -207,7 +207,9 @@ class RingGroupAdmin(ImportExportModelAdmin):
             pbxsettings = PbxSettings()
             if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):
                 rgf = RgFunctions(request.session['domain_uuid'], request.session['domain_name'], obj, request.user.username)
-                rgf.generate_xml()
+                dp_id = rgf.generate_xml()
+                if dp_id:
+                    obj.dialplan_id = dp_id
             if pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', True, True):
                 cc = ClearCache()
                 cc.dialplan(request.session['domain_name'])

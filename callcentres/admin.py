@@ -436,7 +436,9 @@ class CallCentreQueuesAdmin(ImportExportModelAdmin):
             pbxsettings = PbxSettings()
             if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):
                 ccf = CcFunctions(obj, request.user.username)
-                ccf.generate_xml()
+                dp_id = ccf.generate_xml()
+                if dp_id:
+                    obj.dialplan_id = dp_id
             if pbxsettings.default_settings('dialplan', 'auto_flush_cache', 'boolean', True, True):
                 cc = ClearCache()
                 cc.dialplan(request.session['domain_name'])
