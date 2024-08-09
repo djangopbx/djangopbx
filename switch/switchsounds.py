@@ -157,7 +157,7 @@ class SwitchSounds():
                 sounds_choices.append((self.decorate('Recordings', decorate), self.get_recordings_list(domain_name, True)))
         if opt & 8 == 8:
             filestore = settings.PBX_FREESWITCHES[0]
-            if self.fal.exists(self.get_sounds_dir()):
+            if self.fal.exists(self.get_sounds_dir(), filestore):
                 sounds_choices.append((self.decorate('Sounds', decorate), self.get_sounds_list()))
         return sounds_choices
 
