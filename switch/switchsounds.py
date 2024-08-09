@@ -76,7 +76,7 @@ class SwitchSounds():
         return dlist
 
     def recordings_dir_scan(self, sdir):
-        ldf = self.fal.listdir(sdir, settings.PBX_FREESWITCHES[0])
+        ldf = self.fal.listdir(sdir, settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE])
         dlist = ldf[1]
         dlist.sort()
         return dlist
