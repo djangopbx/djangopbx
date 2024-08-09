@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.conf import settings
 from django.core.cache import cache
 from lxml import etree
 from pbx.commonvalidators import valid_uuid4
@@ -297,14 +298,6 @@ class DirectoryHandler(XmlHandler):
             xml = self.NotFoundXml()
             return xml
 
-        cache_key = 'xmlhandler:number_as_presence_id'
-        number_as_presence_id = cache.get(cache_key)
-        if not number_as_presence_id:
-            number_as_presence_id = PbxSettings().default_settings(
-                    'xmlhandler', 'number_as_presence_id', 'boolean'
-                    )
-            cache.set(cache_key, number_as_presence_id)
-
         directory_cache_key = 'directory:%s@%s' % (user, domain)
         xml = cache.get(directory_cache_key)
         if xml:
@@ -325,7 +318,7 @@ class DirectoryHandler(XmlHandler):
         x_section = etree.SubElement(x_root, "section", name='directory')
 
         x_users = self.DirectoryAddDomain(domain, x_section)
-        self.DirectoryAddUser(domain, user, number_as_presence_id, x_users, e, eu, v, cacheable)
+        self.DirectoryAddUser(domain, user, settings.XMLH_NUMBER_AS_PRESENCE_ID, x_users, e, eu, v, cacheable)
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
@@ -470,8 +463,7 @@ class DirectoryHandler(XmlHandler):
         xml = str(etree.tostring(x_root), "utf-8")
         return xml
 
-    def GetDirectoryStatic(self, number_as_presence_id, cacheable=False):
-        number_as_presence_id = PbxSettings().default_settings('xmlhandler', 'number_as_presence_id', 'boolean')
+    def GetDirectoryStatic(self, cacheable=False):
 
         x_root = self.XrootStatic()
         es = Extension.objects.select_related('domain_id').prefetch_related('extensionuser', 'voicemail').filter(
@@ -484,7 +476,7 @@ class DirectoryHandler(XmlHandler):
                 x_users = self.DirectoryAddDomain(e.domain_id.name, x_root)
             v = e.voicemail.filter(enabled='true').first()
             eu = e.extensionuser.filter(default_user='true').first()
-            self.DirectoryAddUser(e.domain_id.name, e.extension, number_as_presence_id, x_users, e, eu, v, cacheable)
+            self.DirectoryAddUser(e.domain_id.name, e.extension, settings.XMLH_NUMBER_AS_PRESENCE_ID, x_users, e, eu, v, cacheable)
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
@@ -502,14 +494,8 @@ class DialplanHandler(XmlHandler):
         if call_context == 'public' or call_context[:7] == 'public@' or call_context[-7:] == '.public':
             context_name = 'public'
 
-        cache_key = 'xmlhandler:context_type'
-        context_type = cache.get(cache_key)
-        if not context_type:
-            context_type = PbxSettings().default_settings('xmlhandler', 'context_type', 'text')
-            cache.set(cache_key, context_type)
-
         dialplan_cache_key = 'dialplan:%s' % call_context
-        if context_name == 'public' and context_type == "single":
+        if context_name == 'public' and settings.XMLH_CONTEXT_TYPE == "single":
             dialplan_cache_key = 'dialplan:%s:%s' % (context_name, destination_number)
 
         xml = cache.get(dialplan_cache_key)
@@ -518,7 +504,7 @@ class DialplanHandler(XmlHandler):
 
         xml_list.append(self.XmlHeader('dialplan', call_context))
 
-        if context_name == 'public' and context_type == 'single':
+        if context_name == 'public' and settings.XMLH_CONTEXT_TYPE == 'single':
             xml_list.extend(Dialplan.objects.filter(
                 (Q( category='Inbound route',  xml__isnull=False,
                     number=destination_number
@@ -831,6 +817,7 @@ class ConfigHandler(XmlHandler):
         configuration_cache_key = 'configuration:ivr.conf:%s' % ivr_id
         xml = cache.get(configuration_cache_key)
         if xml:
+            print(xml)
             return xml
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='configuration')
@@ -840,12 +827,11 @@ class ConfigHandler(XmlHandler):
             ivr = IvrMenus.objects.get(pk=ivr_id)
         except:
             return self.NotFoundXml()
-
         x_menu = etree.SubElement(x_menus, "menu", name=str(ivr.id), description=ivr.name)
-        x_menu.attrib['greet-long'] = (ivr.greet_long if ivr.greet_long else '')
-        x_menu.attrib['greet-short'] = (ivr.greet_short if ivr.greet_short else '')
-        x_menu.attrib['invalid-sound'] = (ivr.invalid_sound if ivr.invalid_sound else '')
-        x_menu.attrib['exit-sound'] = (ivr.exit_sound if ivr.exit_sound else '')
+        x_menu.attrib['greet-long'] = (self.get_snd_file_prefix(ivr.greet_long, ivr.domain_id.name) if ivr.greet_long else '')
+        x_menu.attrib['greet-short'] = (self.get_snd_file_prefix(ivr.greet_short, ivr.domain_id.name) if ivr.greet_short else '')
+        x_menu.attrib['invalid-sound'] = (self.get_snd_file_prefix(ivr.invalid_sound, ivr.domain_id.name) if ivr.invalid_sound else '')
+        x_menu.attrib['exit-sound'] = (self.get_snd_file_prefix(ivr.exit_sound, ivr.domain_id.name) if ivr.exit_sound else '')
         x_menu.attrib['confirm-macro'] = (ivr.confirm_macro if ivr.confirm_macro else '')
         x_menu.attrib['confirm-key'] = (ivr.confirm_key if ivr.confirm_key else '')
         x_menu.attrib['tts-engine'] = (ivr.tts_engine if ivr.tts_engine else '')
@@ -859,10 +845,17 @@ class ConfigHandler(XmlHandler):
 
         ivropts = ivr.ivrmenuoptions_set.all().order_by('sequence')
         for op in ivropts:
+            op_tmp = (op.option_param if op.option_param else '')
+            op_list = op_tmp.split(':', 1)
+            if op_list[0] == 'playback':
+                if op_list[1].startswith('/'):
+                    op_tmp = self.get_snd_file_prefix(op_list[1], ivr.domain_id.name)
+                else:
+                    op_tmp = op_list[1]
             etree.SubElement(x_menu, "entry", action=(
                 op.option_action if op.option_action else ''),
                 digits=(op.option_digits if op.option_digits else '1'),
-                param=(op.option_param if op.option_param else ''),
+                param=op_tmp,
                 description=(op.description if op.description else ''))
 
         if ivr.direct_dial == 'true':
@@ -878,8 +871,8 @@ class ConfigHandler(XmlHandler):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
-        if self.debug:
-            print(xml)
+#        if self.debug:
+        print(xml)
         return xml
 
     def GetConference(self):

@@ -355,3 +355,12 @@ PBX_USE_LOCAL_EVENT_SOCKET = True
 PBX_USE_LOCAL_FILE_STORAGE = True
 # Indicates if FreeSWITCH config files are to be sent to all switches in a cluster.
 PBX_FREESWITCH_LOCAL = True
+# Used for calculating sound file locations
+PBX_SOUND_DIRS = ['ascii', 'base256', 'conference', 'currency', 'digits', 'directory', 'ivr', 'misc', 'phonetic-ascii', 'time', 'voicemail', 'zrtp']
+PBX_SOUND_LIST_DIR = '8000'
+
+# XML Handler Settings
+XMLH_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']
+XMLH_CONTEXT_TYPE = 'multiple'
+XMLH_NUMBER_AS_PRESENCE_ID = False
+XMLH_HTTP_CACHE_SCHEME = 'http_cache://http://'

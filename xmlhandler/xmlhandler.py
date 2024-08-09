@@ -27,9 +27,9 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.conf import settings
 from django.core.cache import cache
 from lxml import etree
-from tenants.pbxsettings import PbxSettings
 from switch.models import SwitchVariable
 from pbx.pbxipaddresscheck import loopback_default
 
@@ -81,17 +81,7 @@ class XmlHandler():
         return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
 
     def get_allowed_addresses(self):
-        cache_key = 'xmlhandler:allowed_addresses'
-        aa = cache.get(cache_key)
-        if aa:
-            return aa
-        aa = PbxSettings().default_settings('xmlhandler', 'allowed_address', 'array')
-        if aa:
-            cache.set(cache_key, aa)
-            return aa
-        aa = loopback_default
-        cache.set(cache_key, aa)
-        return aa
+        return settings.XMLH_ALLOWED_ADDRESSES
 
     def get_default_language(self):
         cache_key = 'xmlhandler:lang:default_language'
@@ -132,3 +122,13 @@ class XmlHandler():
         cache.set(cache_key, cv)
         return cv
 
+    def get_snd_file_prefix(self, soundfile, domain_name = 'None'):
+        t_snd_dir = soundfile.split('/')
+        if t_snd_dir[0] in settings.PBX_SOUND_DIRS:
+            return soundfile
+        if settings.PBX_USE_LOCAL_FILE_STORAGE and settings.PBX_FREESWITCH_LOCAL:
+            return soundfile
+        filestore = settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
+        if t_snd_dir[0]: # if True, soundfile does not start with a /
+            return '%s%s/%s' % (settings.XMLH_HTTP_CACHE_SCHEME, filestore, soundfile)
+        return '%s%s%s' % (settings.XMLH_HTTP_CACHE_SCHEME, filestore, soundfile)

@@ -234,7 +234,6 @@ class SwitchFunctions():
             return 3
         if not settings.PBX_FREESWITCH_LOCAL:
             fal = FileAbsLayer()
-            fal.load_freeswitches()
             fal.save_to_freeswitches(filename, filename)
         return 0
 
@@ -244,7 +243,6 @@ class SwitchFunctions():
         confdir = PbxSettings().default_settings('switch', 'sip_profiles', 'dir', '/home/django-pbx/freeswitch/sip_profiles', True)
         if not settings.PBX_FREESWITCH_LOCAL:
             fal = FileAbsLayer()
-            fal.load_freeswitches()
         for p in plist:
             root = etree.Element('profile', name=p.name)
             root.set('name', p.name)
@@ -312,7 +310,6 @@ class SwitchFunctions():
             return 3
         if not settings.PBX_FREESWITCH_LOCAL:
             fal = FileAbsLayer()
-            fal.load_freeswitches()
             fal.save_to_freeswitches(filename, filename)
         return 0
 
@@ -341,6 +338,5 @@ class SwitchFunctions():
             return 3
         if not settings.PBX_FREESWITCH_LOCAL:
             fal = FileAbsLayer()
-            fal.load_freeswitches()
             fal.save_to_freeswitches(filename, filename)
         return 0

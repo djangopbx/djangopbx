@@ -883,24 +883,6 @@
 },
 {
     "model": "tenants.defaultsetting",
-    "pk": "34f7b640-e156-4c54-9346-32e42f3e4afc",
-    "fields": {
-        "app_uuid": null,
-        "category": "xmlhandler",
-        "subcategory": "number_as_presence_id",
-        "value_type": "boolean",
-        "value": "false",
-        "sequence": "10",
-        "enabled": "true",
-        "description": null,
-        "created": "2022-11-28T08:42:42.270Z",
-        "updated": "2022-11-28T08:42:42.270Z",
-        "synchronised": null,
-        "updated_by": "system"
-    }
-},
-{
-    "model": "tenants.defaultsetting",
     "pk": "3528a13b-5f99-4b32-aefc-f48d764a33d6",
     "fields": {
         "app_uuid": null,
@@ -1291,24 +1273,6 @@
         "description": "Canada Holiday",
         "created": "2022-12-12T07:32:52.708Z",
         "updated": "2022-12-12T07:32:52.708Z",
-        "synchronised": null,
-        "updated_by": "system"
-    }
-},
-{
-    "model": "tenants.defaultsetting",
-    "pk": "46618749-b241-4da2-bba1-4f2d23247f48",
-    "fields": {
-        "app_uuid": null,
-        "category": "xmlhandler",
-        "subcategory": "context_type",
-        "value_type": "text",
-        "value": "multiple",
-        "sequence": "10",
-        "enabled": "true",
-        "description": null,
-        "created": "2022-11-28T08:41:26.139Z",
-        "updated": "2022-11-28T08:41:26.139Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -1795,24 +1759,6 @@
         "description": "(0-Disabled;1-Enabled)",
         "created": "2022-11-26T12:49:25.941Z",
         "updated": "2022-11-26T12:49:25.941Z",
-        "synchronised": null,
-        "updated_by": "system"
-    }
-},
-{
-    "model": "tenants.defaultsetting",
-    "pk": "696bb467-7ec7-4d2b-bb08-5f6e82c694ad",
-    "fields": {
-        "app_uuid": null,
-        "category": "xmlhandler",
-        "subcategory": "allowed_address",
-        "value_type": "array",
-        "value": "127.0.0.1/32",
-        "sequence": "10",
-        "enabled": "true",
-        "description": null,
-        "created": "2022-11-28T08:39:27.574Z",
-        "updated": "2022-11-28T08:39:27.574Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -3217,24 +3163,6 @@
         "description": "0-INBAND, 1-RFC 2833 (default), 2-SIP INFO, 3-RFC2833 + SIP INFO",
         "created": "2022-11-26T12:49:25.941Z",
         "updated": "2022-11-26T12:49:25.941Z",
-        "synchronised": null,
-        "updated_by": "system"
-    }
-},
-{
-    "model": "tenants.defaultsetting",
-    "pk": "ba5d4434-b28e-4fd4-86cb-94c20c07f1a0",
-    "fields": {
-        "app_uuid": null,
-        "category": "xmlhandler",
-        "subcategory": "allowed_address",
-        "value_type": "array",
-        "value": "::1/128",
-        "sequence": "20",
-        "enabled": "true",
-        "description": null,
-        "created": "2022-11-28T08:39:53.203Z",
-        "updated": "2022-11-28T08:39:53.203Z",
         "synchronised": null,
         "updated_by": "system"
     }
@@ -4711,6 +4639,24 @@
         "description": null,
         "created": "2024-07-13T11:09:38.729Z",
         "updated": "2024-07-13T11:09:38.730Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "aa3947a8-ef27-4bac-b851-c0d96237d9f8",
+    "fields": {
+        "app_uuid": null,
+        "category": "sound",
+        "subcategory": "languages",
+        "value_type": "array",
+        "value": "en/us/callie",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "FreeSWITCH sounds directories",
+        "created": "2024-08-08T19:46:29.300Z",
+        "updated": "2024-08-08T19:46:29.300Z",
         "synchronised": null,
         "updated_by": "system"
     }

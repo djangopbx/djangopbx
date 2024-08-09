@@ -88,6 +88,10 @@ class IvrMenuOptionsAdmin(ImportExportModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
+        if obj.option_param.startswith('playback:'):
+            obj.option_action = 'menu-play-sound'
+        elif obj.option_param == 'exit':
+            obj.option_action = 'menu-exit'
         super().save_model(request, obj, form, change)
 
 
@@ -183,7 +187,7 @@ class IvrMenusAdmin(ImportExportModelAdmin):
         ivra = CommonDestAction(request.session['domain_name'], request.session['domain_uuid'])
         # this is required for access to the request object so the domain_name session
         # variable can be passed to the chioces function
-        sound_choices_list = ss.get_sounds_choices_list(request.session['domain_name'], True)
+        sound_choices_list = ss.get_sounds_choices_list(request.session['domain_name'], True, 0b00001111)
         self.form.Meta.widgets['language'].choices = ss.get_languages()
         self.form.Meta.widgets['greet_long'].choices = sound_choices_list
         self.form.Meta.widgets['greet_short'].choices = sound_choices_list
@@ -206,6 +210,10 @@ class IvrMenusAdmin(ImportExportModelAdmin):
             obj.delete()
         for instance in instances:
             instance.updated_by = request.user.username
+            if instance.option_param.startswith('playback:'):
+                instance.option_action = 'menu-play-sound'
+            elif instance.option_param == 'exit':
+                instance.option_action = 'menu-exit'
             instance.save()
         formset.save_m2m()
 

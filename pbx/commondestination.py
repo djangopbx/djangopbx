@@ -31,7 +31,7 @@ from django.utils.translation import gettext_lazy as _
 from dialplans.models import Dialplan
 from accounts.models import Extension, Bridge, Gateway
 from switch.models import SwitchVariable
-
+from switch.switchsounds import SwitchSounds
 
 class CommonDestAction():
 
@@ -56,6 +56,14 @@ class CommonDestAction():
                 enabled='true').order_by('name')
         for q in qs:
             d_list.append(('transfer%s%s XML %s' % (self.sep, q.number, self.domain_name), '%s-%s' % (q.name, q.number)))
+        return d_list
+
+    def get_recordings_list(self):
+        d_list = []
+        ss = SwitchSounds()
+        l = ss.get_recordings_list(self.domain_name, True)
+        for r in l:
+            d_list.append(('playback:%s' % r[0], r[1]))
         return d_list
 
     def get_action_choices(self, sep=':', decorate=False, opt=65535):
@@ -128,8 +136,11 @@ class CommonDestAction():
             if d_list:
                 cd_actions.append((self.decorate('IVR menus', decorate), d_list))
 
-        #if opt & 256 == 256:
+        if opt & 256 == 256:
         # Placeholder: Recordings - needs httapi handler
+            d_list = self.get_recordings_list()
+            if d_list:
+                cd_actions.append((self.decorate('Recordings', decorate), d_list))
 
         if opt & 512 == 512:
             d_list = self.get_dp_list('Ring group')

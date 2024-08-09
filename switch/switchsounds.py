@@ -28,9 +28,11 @@
 #
 
 import os
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from .models import SwitchVariable
 from tenants.pbxsettings import PbxSettings
+from pbx.fileabslayer import FileAbsLayer
 
 phrases_available = True
 try:
@@ -52,48 +54,30 @@ class SwitchSounds():
         self.recordings_dir = False
         self.sounds_dir = False
         self.voice_dir = False
+        self.settings = PbxSettings()
+        self.fal = FileAbsLayer()
 
     def get_languages(self):
         lang_list = []
-        self.get_sounds_dir()
-        for f1 in os.scandir(self.sounds_dir):
-            if f1.is_dir():
-                d1 = os.path.relpath(f1.path, start=self.sounds_dir)
-                if len(d1) == 2:
-                    for f2 in os.scandir(f1.path):
-                        if f2.is_dir():
-                            d2 = os.path.relpath(f2.path, start=f1.path)
-                            if len(d2) == 2:
-                                for f3 in os.scandir(f2.path):
-                                    if f3.is_dir():
-                                        d3 = os.path.relpath(f3.path, start=f2.path)
-                                        lang_list.append(('%s/%s/%s' % (d1, d2, d3), '%s-%s %s' % (d1, d2, d3)))
-
+        ll = self.settings.default_settings('sound', 'languages', 'array', ['en/us/callie'], True)
+        for l in ll:
+            d1, d2, d3 = l.split('/')
+            lang_list.append((l, '%s-%s %s' % (d1, d2, d3)))
         return lang_list
 
-    def sounds_dir_scan(self, sdir, rdir=None ):
-        if not rdir:
-            rdir = sdir
+    def sounds_dir_scan(self, sdir):
         dlist =[]
-        for f in os.scandir(sdir):
-            if f.is_dir():
-                if not f.name in ['flac', '16000', '32000', '48000', '64000']:
-                    dlist.extend(self.sounds_dir_scan(f.path, rdir))
-            else:
-                dlist.append(os.path.relpath(f.path, start=rdir).replace('/8000',''))
+        ldf1 = self.fal.listdir(sdir, settings.PBX_FREESWITCHES[0])
+        for sd1 in ldf1[0]:
+            ldf2 = self.fal.listdir(os.path.join(sdir, sd1, settings.PBX_SOUND_LIST_DIR), settings.PBX_FREESWITCHES[0])
+            for sf1 in ldf2[1]:
+                dlist.append(os.path.join(sd1, sf1))
         dlist.sort()
         return dlist
 
-    def recordings_dir_scan(self, sdir, rdir=None ):
-        if not rdir:
-            rdir = sdir
-        dlist =[]
-        for f in os.scandir(sdir):
-            if f.is_dir():
-                if not f.name in ['archive']:
-                    dlist.extend(self.recordingsdir_scan(f.path, rdir))
-            else:
-                dlist.append(os.path.relpath(f.path, start=rdir).replace('/8000',''))
+    def recordings_dir_scan(self, sdir):
+        ldf = self.fal.listdir(sdir, settings.PBX_FREESWITCHES[0])
+        dlist = ldf[1]
         dlist.sort()
         return dlist
 
@@ -106,7 +90,7 @@ class SwitchSounds():
     def get_recordings_dir(self, domain_name):
         if self.recordings_dir:
             return self.recordings_dir
-        recdir = PbxSettings().default_settings('switch', 'recordings', 'dir', '/usr/share/freeswitch/recordings', True)
+        recdir = self.settings.default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True)
         self.recordings_dir = os.path.join(recdir, domain_name)
         return self.recordings_dir
 
@@ -168,10 +152,12 @@ class SwitchSounds():
                 if phrases_available:
                     sounds_choices.append((self.decorate('Phrases', decorate), phrase_list))
         if opt & 4 == 4:
-            if os.path.exists(self.get_recordings_dir(domain_name)):
+            filestore = settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
+            if self.fal.exists(self.get_recordings_dir(domain_name), filestore):
                 sounds_choices.append((self.decorate('Recordings', decorate), self.get_recordings_list(domain_name, True)))
         if opt & 8 == 8:
-            if os.path.exists(self.get_sounds_dir()):
+            filestore = settings.PBX_FREESWITCHES[0]
+            if self.fal.exists(self.get_sounds_dir()):
                 sounds_choices.append((self.decorate('Sounds', decorate), self.get_sounds_list()))
         return sounds_choices
 
@@ -193,7 +179,8 @@ class SwitchSounds():
         ringback_choices = []
         if moh_available:
             ringback_choices.append((_('Music on Hold'), self.get_moh_list()))
-        if os.path.exists(self.get_recordings_dir(domain_name)):
+        filestore = settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
+        if self.fal.exists(self.get_recordings_dir(domain_name), filestore):
             ringback_choices.append((_('Recordings'), self.get_recordings_list(domain_name, True)))
         ringback_choices.append((_('Ringtones'), self.get_tones('Ringtones')))
         ringback_choices.append((_('Tones'), self.get_tones('Tones')))

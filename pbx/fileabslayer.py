@@ -49,36 +49,29 @@ class FileAbsLayer:
         except:
             self.hostname = 'localhost'
         self.loc_files = settings.PBX_USE_LOCAL_FILE_STORAGE
-
-    # Call if file find on freeswitches then open is required
-    def load_freeswitches(self):
-        self.freeswitches = settings.PBX_FREESWITCHES
-
-    # Call if file find on filestores then open is required
-    def load_file_stores(self):
+        self.loc_freeswich = settings.PBX_FREESWITCH_LOCAL
         self.filestores = settings.PBX_FILESTORES
-        if not self.filestores:
-            self.filestores = []
+        self.freeswitches = settings.PBX_FREESWITCHES
 
     # If True Follow all known SFTP connections to locate a file
     def set_open_find(self, open_find=False):
         self.open_find = open_find
 
     # Allow an SFTP location to have an additional path prefix
-    def set_base_path(self, base_path=''):
-        if not self.loc_files:
+    def set_base_path(self, base_path='', host=None):
+        if not self.use_local(host):
             self.sftp.set_base_path(base_path)
 
     def check_host(self, host=None):
         return (host if host else self.hostname)
 
     def exists(self, filename, host=None):
-        if self.loc_files:
+        if self.use_local(host):
             return os.path.exists(filename)
         return self.sftp.exists(self.check_host(host), filename)
 
     def open(self, filename, mode='rb', host=None):
-        if self.loc_files:
+        if self.use_local(host):
             return open(filename, mode)
         if self.open_find:
             for s in self.freeswitches:
@@ -93,3 +86,21 @@ class FileAbsLayer:
     def save_to_freeswitches(self, localfile, remotefile):
         for sw in self.freeswitches:
             self.sftp.put(sw, localfile, remotefile)
+
+    def use_local(self, host=None):
+        if host in self.freeswitches and not self.loc_freeswich:
+            return True
+        return self.loc_files
+
+    def listdir(self, path, host=None):
+        dirs = []
+        files = []
+        if self.use_local(host):
+            with os.scandir(path) as it:
+                for f in it:
+                    if f.is_dir():
+                        dirs.append(f.name)
+                    else:
+                        files.append(f.name)
+            return (dirs, files)
+        return self.sftp.listdir(host, path)
