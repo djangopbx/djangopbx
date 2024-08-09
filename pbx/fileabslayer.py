@@ -88,7 +88,7 @@ class FileAbsLayer:
             self.sftp.put(sw, localfile, remotefile)
 
     def use_local(self, host=None):
-        if host in self.freeswitches and not self.loc_freeswich:
+        if host in self.freeswitches and self.loc_freeswich:
             return True
         return self.loc_files
 
