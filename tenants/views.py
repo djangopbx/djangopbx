@@ -84,7 +84,7 @@ class DomainViewSet(viewsets.ModelViewSet):
     queryset = Domain.objects.all().order_by('name')
     serializer_class = DomainSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['name']
+    filterset_fields = ['home_switch', 'enabled']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -96,15 +96,6 @@ class DomainViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         instance = serializer.save(updated_by=self.request.user.username)
         SwitchDp().import_xml(instance.name, False, instance.id)  # Create dialplans
-        DomainSetting.objects.create(
-            domain_id=instance,   # Create default menu setting
-            category='domain',
-            subcategory='menu',
-            value_type='text',
-            value='Default',
-            sequence=10,
-            updated_by=self.request.user.username
-            )
 
 
 class ProfileViewSet(viewsets.ModelViewSet):

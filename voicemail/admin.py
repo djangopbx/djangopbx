@@ -54,7 +54,7 @@ class VoicemailGreetingInLine(admin.TabularInline):
 
     extra = 1
     fieldsets = [
-        (None,          {'fields': ['name', 'filename']}),
+        (None,          {'fields': ['name', 'filename', 'filestore']}),
     ]
     ordering = [
         'filename'

@@ -69,7 +69,7 @@ class MohFileViewSet(viewsets.ModelViewSet):
     queryset = MohFile.objects.all().order_by('moh_id', 'file_name')
     serializer_class = MohFileSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['moh_id', 'file_name']
+    filterset_fields = ['moh_id', 'file_name', 'filestore']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

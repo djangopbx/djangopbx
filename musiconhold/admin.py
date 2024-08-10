@@ -58,7 +58,7 @@ class MusicOnHoldFileInLine(admin.TabularInline):
 
     extra = 1
     fieldsets = [
-        (None,          {'fields': ['file_name', 'filename']}),
+        (None,          {'fields': ['file_name', 'filename', 'filestore']}),
     ]
     ordering = [
         'file_name'

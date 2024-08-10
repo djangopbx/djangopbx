@@ -27,8 +27,9 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.db import models
 import uuid
+from django.db import models
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from pbx.commonchoices import (
@@ -39,6 +40,11 @@ from pbx.commonchoices import (
 from django.urls import reverse
 from django.utils.html import mark_safe
 
+def default_switch():
+    return settings.PBX_FREESWITCHES[0]
+
+def default_portal():
+    return '%s.com' % uuid.uuid4()
 
 #
 # Becomes effectivly the pbx users table
@@ -74,14 +80,17 @@ class Domain(models.Model):
         db_table = "pbx_domains"
         permissions = (("can_select_domain", "can_select_domain"),)
 
-    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                   # noqa: E501, E221
-    name         = models.CharField(max_length=128, db_index=True, unique=True, verbose_name=_('Name'), help_text="Eg. tenant.djangopbx.com")               # noqa: E501, E221
-    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))  # noqa: E501, E221
-    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
-    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
-    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
-    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                              # noqa: E501, E221
-    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                            # noqa: E501, E221
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)                                                                                     # noqa: E501, E221
+    menu_id      = models.ForeignKey('portal.Menu', models.SET_NULL, blank=True, null=True, verbose_name=_('Menu'))                                                           # noqa: E501, E221
+    name         = models.CharField(max_length=128, db_index=True, unique=True, verbose_name=_('Name'), help_text='Eg. tenant1.djangopbx.com')                                # noqa: E501, E221
+    portal_name  = models.CharField(max_length=128, db_index=True, unique=True, default=default_portal, verbose_name=_('Portal Name'), help_text='Eg. tenant1.pbxportal.com') # noqa: E501, E221
+    home_switch  = models.CharField(max_length=128, default=default_switch, verbose_name=_('Home Switch'), help_text=_('The Switch to which this domain is assigned'))        # noqa: E501, E221
+    enabled      = models.CharField(max_length=8, choices=EnabledTrueFalseChoice.choices, default=EnabledTrueFalseChoice.CTRUE, verbose_name=_('Enabled'))                    # noqa: E501, E221
+    description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                                     # noqa: E501, E221
+    created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                                  # noqa: E501, E221
+    updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                                      # noqa: E501, E221
+    synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                                                # noqa: E501, E221
+    updated_by   = models.CharField(max_length=64, verbose_name=_('Updated by'))                                                                                              # noqa: E501, E221
 
     def select_domain(self):
         return mark_safe('<a class="grp-button" href="%s">%s</a>' % (

@@ -51,6 +51,6 @@ class VoicemailGreetingSerializer(serializers.ModelSerializer):
         model = VoicemailGreeting
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
-                    'url', 'id', 'voicemail_id', 'filename', 'name', 'description',
+                    'url', 'id', 'voicemail_id', 'filename', 'name', 'description', 'filestore',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]

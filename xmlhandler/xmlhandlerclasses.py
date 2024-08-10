@@ -39,7 +39,7 @@ from tenants.pbxsettings import PbxSettings
 from accounts.models import Extension, ExtensionUser, Gateway
 from voicemail.models import Voicemail
 from switch.models import (
-    AccessControl, AccessControlNode, SipProfile, SwitchVariable
+    AccessControl, AccessControlNode, SipProfile
     )
 from phrases.models import PhraseDetails
 from musiconhold.models import MusicOnHold
@@ -318,7 +318,7 @@ class DirectoryHandler(XmlHandler):
         x_section = etree.SubElement(x_root, "section", name='directory')
 
         x_users = self.DirectoryAddDomain(domain, x_section)
-        self.DirectoryAddUser(domain, user, settings.XMLH_NUMBER_AS_PRESENCE_ID, x_users, e, eu, v, cacheable)
+        self.DirectoryAddUser(domain, user, settings.PBX_XMLH_NUMBER_AS_PRESENCE_ID, x_users, e, eu, v, cacheable)
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
@@ -476,7 +476,7 @@ class DirectoryHandler(XmlHandler):
                 x_users = self.DirectoryAddDomain(e.domain_id.name, x_root)
             v = e.voicemail.filter(enabled='true').first()
             eu = e.extensionuser.filter(default_user='true').first()
-            self.DirectoryAddUser(e.domain_id.name, e.extension, settings.XMLH_NUMBER_AS_PRESENCE_ID, x_users, e, eu, v, cacheable)
+            self.DirectoryAddUser(e.domain_id.name, e.extension, settings.PBX_XMLH_NUMBER_AS_PRESENCE_ID, x_users, e, eu, v, cacheable)
 
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
@@ -495,7 +495,7 @@ class DialplanHandler(XmlHandler):
             context_name = 'public'
 
         dialplan_cache_key = 'dialplan:%s' % call_context
-        if context_name == 'public' and settings.XMLH_CONTEXT_TYPE == "single":
+        if context_name == 'public' and settings.PBX_XMLH_CONTEXT_TYPE == "single":
             dialplan_cache_key = 'dialplan:%s:%s' % (context_name, destination_number)
 
         xml = cache.get(dialplan_cache_key)
@@ -504,7 +504,7 @@ class DialplanHandler(XmlHandler):
 
         xml_list.append(self.XmlHeader('dialplan', call_context))
 
-        if context_name == 'public' and settings.XMLH_CONTEXT_TYPE == 'single':
+        if context_name == 'public' and settings.PBX_XMLH_CONTEXT_TYPE == 'single':
             xml_list.extend(Dialplan.objects.filter(
                 (Q( category='Inbound route',  xml__isnull=False,
                     number=destination_number
@@ -594,18 +594,19 @@ class LanguagesHandler(XmlHandler):
             sounds_dir = PbxSettings().default_settings('switch', 'sounds', 'dir', '/usr/share/freeswitch/sounds', True)
             cache.set(cache_key, sounds_dir)
 
-        default_language = self.get_default_language()
-        default_dialect = self.get_default_dialect()
-        default_voice = self.get_default_voice()
+        ld = self.get_language_switch_vars()
+        #default_language = self.get_default_language()
+        #default_dialect = self.get_default_dialect()
+        #default_voice = self.get_default_voice()
 
         xml_list = list()
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='languages')
         x_language = etree.SubElement(x_section, "language", name=lang)
         x_language.attrib['say-module'] = lang
-        x_language.attrib['sound-prefix'] = '{}/{}/{}/{}'.format(sounds_dir, default_language, default_dialect, default_voice)
+        x_language.attrib['sound-prefix'] = '{}/{}/{}/{}'.format(sounds_dir, ld['default_language'], ld['default_dialect'], ld['default_voice'])
         x_language.attrib['tts-engine'] = 'cepstral'
-        x_language.attrib['tts-voice'] = default_voice
+        x_language.attrib['tts-voice'] = ld['default_voice']
         x_phrases = etree.SubElement(x_language, "phrases")
         x_macros = etree.SubElement(x_phrases, "macros")
         pds = PhraseDetails.objects.filter(phrase_id=macro_name).order_by('sequence')
@@ -629,11 +630,6 @@ class ConfigHandler(XmlHandler):
 
     def __init__(self):
         self.debug = False
-        try:
-            cs_dsn_r = SwitchVariable.objects.get(enabled='true', category='DSN', name='dsn_callcentre')
-            self.cs_dsn = cs_dsn_r.value
-        except:
-            self.cs_dsn = None
 
     def GetACL(self):
         configuration_cache_key = 'configuration:acl.conf'
@@ -817,7 +813,6 @@ class ConfigHandler(XmlHandler):
         configuration_cache_key = 'configuration:ivr.conf:%s' % ivr_id
         xml = cache.get(configuration_cache_key)
         if xml:
-            print(xml)
             return xml
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='configuration')
@@ -871,8 +866,8 @@ class ConfigHandler(XmlHandler):
         etree.indent(x_root)
         xml = str(etree.tostring(x_root), "utf-8")
         cache.set(configuration_cache_key, xml)
-#        if self.debug:
-        print(xml)
+        if self.debug:
+            print(xml)
         return xml
 
     def GetConference(self):
@@ -908,6 +903,7 @@ class ConfigHandler(XmlHandler):
         return xml
 
     def GetCallcentre(self):
+        self.get_callcentre_dsn()
         configuration_cache_key = 'configuration:callcentre.conf'
         xml = cache.get(configuration_cache_key)
         if xml:
@@ -976,6 +972,7 @@ class ConfigHandler(XmlHandler):
         return xml
 
     def GetCallcentreQueue(self, queue_id):
+        self.get_callcentre_dsn()
         x_root = self.XrootDynamic()
         x_section = etree.SubElement(x_root, "section", name='configuration')
         x_conf_name = etree.SubElement(x_section, 'configuration', name='callcenter.conf', description='Call Centre')

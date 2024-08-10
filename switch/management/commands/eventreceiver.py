@@ -32,6 +32,7 @@ import datetime
 import logging
 import json
 from pika import BasicProperties as PikaBasicProperties
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.management.base import BaseCommand
@@ -154,53 +155,11 @@ class Command(BaseCommand):
             if mbr.value_type == 'boolean':
                 mb[mbr.subcategory] = (True if mbr.value == 'true' else False)
         del mbl
-        self.message_broker_adhoc_publish = mb[self.mb_key_adhoc]
-        bleg = DefaultSetting.objects.filter(
-                category='cdr',
-                subcategory='b_leg',
-                value_type='array',
-                enabled='true',
-                )
-        self.b_leg = []
-        for leg in bleg:
-            self.b_leg.append(leg.value)
-        del bleg
-        fmt = DefaultSetting.objects.filter(
-                category='cdr',
-                subcategory='format',
-                value_type='text',
-                enabled='true',
-                )
-        if fmt:
-            self.cdrformat = fmt[0].value
-        del fmt
-        pcr = DefaultSetting.objects.filter(
-                category='cdr',
-                subcategory='populate_call_recordings',
-                value_type='boolean',
-                enabled='true',
-                )
-        if pcr:
-            self.pop_call_recordings = (True if pcr[0].value == 'true' else False)
-        del pcr
-        crp = DefaultSetting.objects.filter(
-                category='cdr',
-                subcategory='recordings',
-                value_type='text',
-                enabled='true',
-                )
-        if crp:
-            self.call_recordings_path = crp[0].value
-        del crp
-        srp = DefaultSetting.objects.filter(
-                category='switch',
-                subcategory='recordings',
-                value_type='dir',
-                enabled='true',
-                )
-        if srp:
-            self.switch_recordings_path = srp[0].value
-        del srp
+        self.b_leg = settings.PBX_CDRH_B_LEG
+        self.cdrformat = settings.PBX_CDRH_FORMAT
+        self.pop_call_recordings = settings.PBX_CDRH_POPULATE_CALL_RECORDINGS
+        self.call_recordings_path = settings.PBX_CDRH_RECORDINGS
+        self.switch_recordings_path = settings.PBX_CDRH_SWITCH_RECORDINGS
 
         self.firewall_event_template = '{\"Event-Name\":\"FIREWALL\", \"Action\":\"add\", \"IP-Type\":\"%s\",\"Fw-List\":\"sip-customer\", \"IP-Address\":\"%s\"}' # noqa: E501
         self.mq = AmqpConnection(mb[self.mb_key_host], mb[self.mb_key_port],

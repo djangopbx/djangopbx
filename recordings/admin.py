@@ -49,7 +49,7 @@ class RecordingAdmin(ImportExportModelAdmin):
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
-        (None,               {'fields': ['domain_id', 'name', 'filename', 'description']}),
+        (None,               {'fields': ['domain_id', 'name', 'filename', 'description', 'filestore']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('name', 'filename', 'description')
@@ -84,7 +84,7 @@ class CallRecordingAdmin(ImportExportModelAdmin):
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
-        (None,               {'fields': ['domain_id', 'name', 'filename', 'year', 'month', 'day', 'description']}),
+        (None,               {'fields': ['domain_id', 'name', 'filename', 'year', 'month', 'day', 'description', 'filestore']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('name', 'year', 'month', 'day', 'filename', 'description')

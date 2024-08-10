@@ -57,7 +57,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
     queryset = Recording.objects.all().order_by('domain_id', 'name')
     serializer_class = RecordingSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['domain_id', 'name']
+    filterset_fields = ['domain_id', 'name', 'filestore']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -81,7 +81,7 @@ class CallRecordingViewSet(viewsets.ModelViewSet):
     queryset = CallRecording.objects.all().order_by('domain_id', 'name')
     serializer_class = CallRecordingSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['domain_id', 'year', 'month', 'day']
+    filterset_fields = ['domain_id', 'year', 'month', 'day', 'filestore']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

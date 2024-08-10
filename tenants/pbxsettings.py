@@ -28,6 +28,7 @@
 #
 
 import uuid
+from django.db.models import Q
 from .models import DefaultSetting, DomainSetting, ProfileSetting, Domain
 from accounts.models import ExtensionUser
 
@@ -243,7 +244,9 @@ class PbxSettings():
 
     def get_domain(self, dname):
         try:
-            d = Domain.objects.get(name=dname)
+            d = Domain.objects.get((Q(name=dname) | Q(portal_name=dname)))
         except Domain.DoesNotExist:
+            d = None
+        except Domain.MultipleObjectsReturned:
             d = None
         return d

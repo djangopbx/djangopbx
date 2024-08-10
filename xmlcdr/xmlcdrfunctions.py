@@ -33,7 +33,7 @@ import logging
 import xmltodict
 from xml.parsers.expat import ExpatError
 from urllib.parse import unquote
-from django.core.cache import cache
+from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
@@ -42,7 +42,6 @@ from .models import XmlCdr
 from recordings.models import CallRecording
 from tenants.models import Domain
 from accounts.models import Extension
-from tenants.pbxsettings import PbxSettings
 
 logger = logging.getLogger(__name__)
 
@@ -50,13 +49,7 @@ logger = logging.getLogger(__name__)
 class XmlCdrFunctions():
 
     def accept_b_leg(self, direction):
-        cache_key = 'xmlcdr:b_leg'
-        b_leg = cache.get(cache_key)
-        if not b_leg:
-            b_leg = PbxSettings().default_settings('cdr', 'b_leg', 'array')
-            cache.set(cache_key, b_leg)
-
-        if direction in b_leg:
+        if direction in settings.PBX_CDRH_B_LEG:
             return True
         return False
 
@@ -290,12 +283,7 @@ class XmlCdrFunctions():
                         record_name = os.path.basename(recording)
                         record_length = self.str2int(cdr_variables.get('duration'))
 
-        cache_key = 'xmlcdr:switch_recordings'
-        switch_recordings_path = cache.get(cache_key)
-        if not switch_recordings_path:
-            switch_recordings_path = PbxSettings().default_settings('switch', 'recordings', 'dir')
-            cache.set(cache_key, switch_recordings_path)
-
+        switch_recordings_path = settings.PBX_CDRH_SWITCH_RECORDINGS
         uuid = cdr_variables.get('uuid', nonestr)
 
         if not record_name:
@@ -382,20 +370,9 @@ class XmlCdrFunctions():
                 xcdr.record_path = record_path
                 xcdr.record_name = record_name
                 # record_description = cdr_variables.get('record_description', nonestr)
-                cache_key = 'xmlcdr:populate_call_recordings'
-                populate_call_recordings = cache.get(cache_key)
-                if not populate_call_recordings:
-                    populate_call_recordings = PbxSettings().default_settings(
-                        'cdr', 'populate_call_recordings', 'boolean', True, True)
-                    cache.set(cache_key, populate_call_recordings)
+                populate_call_recordings = settings.PBX_CDRH_POPULATE_CALL_RECORDINGS
                 if populate_call_recordings:
-                    cache_key = 'xmlcdr:recordings'
-                    call_recordings_path = cache.get(cache_key)
-                    if not call_recordings_path:
-                        call_recordings_path = PbxSettings().default_settings(
-                            'cdr', 'recordings', 'text', '/fs/recordings', True)
-                        cache.set(cache_key, call_recordings_path)
-
+                    call_recordings_path = settings.PBX_CDRH_RECORDINGS
                     path_parts = record_path.split('/')[-5:]
                     if len(path_parts) == 5:
                         local_path = '%s/%s' % (switch_recordings_path, '/'.join(path_parts))
@@ -452,12 +429,7 @@ class XmlCdrFunctions():
         xcdr.hangup_cause_q850 = self.str2int(cdr_variables.get('hangup_cause_q850'))
         xcdr.sip_hangup_disposition = cdr_variables.get('sip_hangup_disposition')
 
-        cache_key = 'xmlcdr:format'
-        format = cache.get(cache_key)
-        if not format:
-            format = PbxSettings().default_settings('cdr', 'format', 'text', 'json', True)
-            cache.set(cache_key, format)
-
+        format = settings.PBX_CDRH_FORMAT
         if format == 'xml':
             xcdr.xml = xml
         if format == 'json':

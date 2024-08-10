@@ -113,9 +113,14 @@ def index(request):
             if ureload:
                 pbx_domain_name = request.user.profile.domain_id.name
                 pbx_domain_uuid = str(request.user.profile.domain_id.id)
+                pbx_portal_name = request.user.profile.domain_id.portal_name
+                pbx_home_switch = request.user.profile.domain_id.home_switch
+                pbx_domain_menu = request.user.profile.domain_id.menu_id
                 request.session['domain_name'] = pbx_domain_name
                 request.session['domain_uuid'] = pbx_domain_uuid
                 request.session['user_uuid'] = pbx_user_uuid
+                request.session['portal_name'] = pbx_portal_name
+                request.session['home_switch'] = pbx_home_switch
                 extension_list = []
                 for ext in AccountFunctions().list_user_extensions_uuid(pbx_domain_uuid, pbx_user_uuid):
                     extension_list.append(str(ext))
@@ -125,35 +130,31 @@ def index(request):
                     extension_list.append(ext)
                 request.session['extension_list'] = ','.join(extension_list)
 
-            currentmenu = s.settings(
-                pbx_user_uuid, pbx_domain_uuid, 'domain', 'menu', 'text', 'Default', True )
-            try:
-                m = Menu.objects.get(name=currentmenu)
-            except Menu.DoesNotExist:
-                m = None
         else:
             request.session['user_uuid'] = 'ffffffff-aaaa-489c-aa00-1234567890ab'
             request.session['extension_list'] = 'None,None'
             request.session['extension_list_uuid'] = 'ffffffff-aaaa-489c-aa00-1234567890ab,'
             try:
-                m = Menu.objects.get(name='Default')
+                pbx_domain_menu = Menu.objects.get(name='Default')
             except Menu.DoesNotExist:
-                m = None
+                pbx_domain_menu = None
 
-        if m:
+        if pbx_domain_menu:
             if request.user.is_superuser:
-                menuList = MenuItem.objects.filter(menu_id=m.id, parent_id__isnull=True).order_by('sequence')
-                submenuList = MenuItem.objects.filter(menu_id=m.id, parent_id__isnull=False).order_by('sequence')
+                menuList = MenuItem.objects.filter(menu_id=pbx_domain_menu.id,
+                                            parent_id__isnull=True).order_by('sequence')
+                submenuList = MenuItem.objects.filter(menu_id=pbx_domain_menu.id,
+                                            parent_id__isnull=False).order_by('sequence')
             else:
                 groupList = list(request.user.groups.values_list('name', flat=True))
                 menuitemList = MenuItemGroup.objects.values_list(
                     'menu_item_id', flat=True
-                    ).filter(name__in=groupList, menu_item_id__menu_id=m.id)
+                    ).filter(name__in=groupList, menu_item_id__menu_id=pbx_domain_menu.id)
                 menuList = MenuItem.objects.filter(
-                    menu_id=m.id, parent_id__isnull=True, id__in=menuitemList
+                    menu_id=pbx_domain_menu.id, parent_id__isnull=True, id__in=menuitemList
                     ).order_by('sequence')
                 submenuList = MenuItem.objects.filter(
-                    menu_id=m.id, parent_id__isnull=False, id__in=menuitemList
+                    menu_id=pbx_domain_menu.id, parent_id__isnull=False, id__in=menuitemList
                     ).order_by('sequence')
 
             mainmenu = MenuItemNavSerializer(menuList, many=True)
@@ -192,15 +193,17 @@ def selectdomain(request, domainuuid):
         return HttpResponseRedirect('/admin/')
     return HttpResponseRedirect('/')
 
-def servefsmedia(request, fs, fdir, fdom, fullpath):
+def servefsmedia(request, fs, fdir, fdom, fullpath, mtype=1):
     s = PbxSettings()
     call_rec_on_switch = s.default_settings('cluster', 'call_recordings_stored_on_switch', 'boolean', True, True)
     if call_rec_on_switch:
-        media_location = s.dd_settings('cluster', 'home_switch', 'text', 'localhost', True)
+        media_location = request.session['home_switch']
     elif settings.PBX_USE_LOCAL_FILE_STORAGE:
         media_location = fdom
     else:
         media_location = settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
+    if mtype == 3:
+        media_location = request.session['home_switch']
     if not fs == 'fs':
         return HttpResponseNotFound()
     if not request.user.is_superuser:
@@ -216,15 +219,15 @@ def servefsmedia(request, fs, fdir, fdom, fullpath):
 
 @login_required
 def servefsmediavoicemail(request, fs, fdir, fpro, fdom, fext, fpath, fullpath):
-    return servefsmedia(request, fs, fdir, fdom, fullpath)
+    return servefsmedia(request, fs, fdir, fdom, fullpath, 3)
 
 @login_required
 def servefsmediarecordings(request, fs, fdir, fdom, fpath, fullpath):
-    return servefsmedia(request, fs, fdir, fdom, fullpath)
+    return servefsmedia(request, fs, fdir, fdom, fullpath, 2)
 
 @login_required
 def servefsmediarecordingsarchive(request, fs, fdir, fdom, fyear, fmon, fday, fpath, fullpath):
-    return servefsmedia(request, fs, fdir, fdom, fullpath)
+    return servefsmedia(request, fs, fdir, fdom, fullpath, 1)
 
 class DomainSelectorList(tables.Table):
     class Meta:

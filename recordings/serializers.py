@@ -39,7 +39,7 @@ class RecordingSerializer(serializers.ModelSerializer):
         model = Recording
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
-                    'url', 'id', 'domain_id', 'filename', 'name', 'description', 'base64',
+                    'url', 'id', 'domain_id', 'filename', 'name', 'description', 'filestore', 'base64',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
 
@@ -50,6 +50,7 @@ class CallRecordingSerializer(serializers.ModelSerializer):
         model = CallRecording
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
-                    'url', 'id', 'domain_id', 'filename', 'name', 'year', 'month', 'day', 'description',
+                    'url', 'id', 'domain_id', 'filename', 'name', 'year', 'month', 'day',
+                    'description', 'filestore',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]

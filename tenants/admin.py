@@ -215,11 +215,11 @@ class DomainAdmin(ImportExportModelAdmin):
         }
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
-    search_fields = ['name', 'description']
-    list_display = ('name', 'description', 'enabled', 'select_domain')
-    list_filter = ('name', 'description', 'enabled')
+    search_fields = ['name', 'portal_name', 'description']
+    list_display = ('name', 'portal_name', 'home_switch', 'description', 'enabled', 'select_domain')
+    list_filter = ('home_switch', 'enabled')
     fieldsets = [
-        (None,          {'fields': ['name', 'enabled', 'description']}),
+        (None,          {'fields': ['name', 'portal_name', 'home_switch', 'menu_id', 'enabled', 'description']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     inlines = [DomainSettingInLine]
@@ -238,15 +238,6 @@ class DomainAdmin(ImportExportModelAdmin):
         super().save_model(request, obj, form, change)
         if not change:
             SwitchDp().import_xml(obj.name, False, obj.id)  # Create dialplans
-            DomainSetting.objects.create(
-                domain_id=obj,   # Create default menu setting
-                category='domain',
-                subcategory='menu',
-                value_type='text',
-                value='Default',
-                sequence=10,
-                updated_by=request.user.username
-                )
 
     def has_delete_permission(self, request, obj=None):
         if obj:

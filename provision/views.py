@@ -268,28 +268,18 @@ ipf = IpFunctions()
 
 def chk_prov_auth(request, host, pbxs):
     realm = host
-    if ':' in host:
-        realm = host.split(':')[0]
-
     domain = pbxs.get_domain(realm)
     if not domain:
         return (False, HttpResponseNotFound())
-
     http_auth_enabled = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_enabled', 'boolean', False, True)
-    if http_auth_enabled == 'false':
+    if not http_auth_enabled:
         return (False, HttpResponseNotFound())
-
-    if not http_auth_enabled == 'true':
-        return (False, HttpResponseNotFound())
-
     http_usr = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_username')
     if not http_usr:
         return (False, HttpResponseNotFound())
-
     http_pwd = pbxs.dd_settings(str(domain.id), 'provision', 'http_auth_password')
     if not http_pwd:
         return (False, HttpResponseNotFound())
-
     if 'HTTP_AUTHORIZATION' in request.META:
         auth = request.META['HTTP_AUTHORIZATION'].split()
         if len(auth) == 2:
@@ -321,6 +311,7 @@ def device_config(request, *args, **kwargs):
     pf = ProvisionFunctions()
 
     pauth = chk_prov_auth(request, host, pbxs)
+    print(pauth)
     if not pauth[0]:
         return pauth[1]
 

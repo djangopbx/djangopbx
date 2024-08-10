@@ -31,12 +31,12 @@ from django.conf import settings
 from django.core.cache import cache
 from lxml import etree
 from switch.models import SwitchVariable
-from pbx.pbxipaddresscheck import loopback_default
 
 class XmlHandler():
 
     def __init__(self):
         self.debug = False
+        self.cs_dsn = None
 
     def NotFoundXml(self):
         return '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -81,46 +81,36 @@ class XmlHandler():
         return etree.XML(b'<?xml version=\"1.0\" encoding=\"UTF-8\"?><include></include>\n')
 
     def get_allowed_addresses(self):
-        return settings.XMLH_ALLOWED_ADDRESSES
+        return settings.PBX_XMLH_ALLOWED_ADDRESSES
 
-    def get_default_language(self):
-        cache_key = 'xmlhandler:lang:default_language'
+    def get_language_switch_vars(self):
+        cache_key = 'xmlhandler:lang:switchvars'
         cv = cache.get(cache_key)
         if cv:
             return cv
-        sv = SwitchVariable.objects.filter(category='defaults', name='default_language', enabled='true').first()
-        if sv is None:
-            cv = 'en'
-        else:
-            cv = sv.value
-        cache.set(cache_key, cv)
-        return cv
+        names = ['default_dialect', 'default_language', 'default_voice']
+        lang_dict = {names[0]: 'us', names[1]: 'en', names[2]: 'callie'}
+        qs = SwitchVariable.objects.filter(category='defaults', name__in=names, enabled='true')
+        for q in qs:
+            lang_dict[q.name] = q.value
+        cache.set(cache_key, lang_dict)
+        return lang_dict
 
-    def get_default_dialect(self):
-        cache_key = 'xmlhandler:lang:default_dialect'
+    def get_callcentre_dsn(self):
+        if self.cs_dsn is not None:
+            return self.cs_dsn
+        cache_key = 'xmlhandler:cc:dsv_value'
         cv = cache.get(cache_key)
         if cv:
+            self.cs_dsn = cv
             return cv
-        sv = SwitchVariable.objects.filter(category='defaults', name='default_dialect', enabled='true').first()
-        if sv is None:
-            cv = 'us'
-        else:
-            cv = sv.value
-        cache.set(cache_key, cv)
-        return cv
-
-    def get_default_voice(self):
-        cache_key = 'xmlhandler:lang:default_voice'
-        cv = cache.get(cache_key)
-        if cv:
-            return cv
-        sv = SwitchVariable.objects.filter(category='defaults', name='default_voice', enabled='true').first()
-        if sv is None:
-            cv = 'callie'
-        else:
-            cv = sv.value
-        cache.set(cache_key, cv)
-        return cv
+        try:
+            cs_dsn_r = SwitchVariable.objects.get(enabled='true', category='DSN', name='dsn_callcentre')
+            self.cs_dsn = cs_dsn_r.value
+        except:
+            self.cs_dsn = False
+        cache.set(cache_key, self.cs_dsn)
+        return self.cs_dsn
 
     def get_snd_file_prefix(self, soundfile, domain_name = 'None'):
         t_snd_dir = soundfile.split('/')
@@ -130,5 +120,5 @@ class XmlHandler():
             return soundfile
         filestore = settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
         if t_snd_dir[0]: # if True, soundfile does not start with a /
-            return '%s%s/%s' % (settings.XMLH_HTTP_CACHE_SCHEME, filestore, soundfile)
-        return '%s%s%s' % (settings.XMLH_HTTP_CACHE_SCHEME, filestore, soundfile)
+            return '%s%s/%s' % (settings.PBX_XMLH_HTTP_CACHE_SCHEME, filestore, soundfile)
+        return '%s%s%s' % (settings.PBX_XMLH_HTTP_CACHE_SCHEME, filestore, soundfile)

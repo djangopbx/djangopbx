@@ -28,6 +28,8 @@
 #
 
 import uuid
+from django.conf import settings
+from django.core.files.storage import storages
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.core.validators import MinValueValidator
@@ -43,10 +45,16 @@ def user_directory_path(instance, filename):
             filename
             )
 
+def select_storage():
+    return storages['default'] if settings.PBX_USE_LOCAL_FILE_STORAGE else storages['sftp']
+
+def default_filestore():
+    return settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
+
 
 class Voicemail(models.Model):
     id                    = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Voicemail'))                                                      # noqa: E501, E221
-    extension_id           = models.ForeignKey('accounts.Extension', related_name='voicemail', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Extension'))         # noqa: E501, E221
+    extension_id          = models.ForeignKey('accounts.Extension', related_name='voicemail', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Extension'))          # noqa: E501, E221
     password              = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Password'))                                                                       # noqa: E501, E221
     greeting_id           = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, default=1, verbose_name=_('Greeting ID'), validators=[MinValueValidator(1)])  # noqa: E501, E221
     alternate_greeting_id = models.DecimalField(max_digits=2, decimal_places=0, blank=True, null=True, verbose_name=_('Alternate Greeting ID'), validators=[MinValueValidator(1)])   # noqa: E501, E221
@@ -72,9 +80,10 @@ class Voicemail(models.Model):
 class VoicemailGreeting(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))           # noqa: E501, E221
     voicemail_id = models.ForeignKey('Voicemail', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Voicemail'))  # noqa: E501, E221
-    filename     = PbxFileField(upload_to=user_directory_path, verbose_name=_('File Name'))                                      # noqa: E501, E221
+    filename     = PbxFileField(storage=select_storage, upload_to=user_directory_path, verbose_name=_('File Name'))              # noqa: E501, E221
     name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                       # noqa: E501, E221
     description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                        # noqa: E501, E221
+    filestore    = models.CharField(max_length=128, default=default_filestore, verbose_name=_('Filestore'))                      # noqa: E501, E221
     created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                     # noqa: E501, E221
     updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                         # noqa: E501, E221
     synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                   # noqa: E501, E221

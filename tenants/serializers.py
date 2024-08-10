@@ -55,7 +55,8 @@ class DomainSerializer(serializers.ModelSerializer):
     class Meta:
         model = Domain
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
-        fields = ['id', 'url', 'name', 'enabled', 'description', 'created', 'updated', 'synchronised', 'updated_by']
+        fields = ['id', 'url', 'name', 'portal_name', 'home_switch', 'menu_id', 'enabled',
+                    'description', 'created', 'updated', 'synchronised', 'updated_by']
 
 
 class ProfileSerializer(serializers.ModelSerializer):

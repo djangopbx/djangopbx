@@ -76,7 +76,7 @@ class VoicemailGreetingViewSet(viewsets.ModelViewSet):
     queryset = VoicemailGreeting.objects.all().order_by('voicemail_id', 'name')
     serializer_class = VoicemailGreetingSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['voicemail_id', 'name']
+    filterset_fields = ['voicemail_id', 'name', 'filestore']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

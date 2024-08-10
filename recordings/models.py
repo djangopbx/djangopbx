@@ -48,6 +48,8 @@ def call_recording_directory_path(instance, filename):
 def select_storage():
     return storages['default'] if settings.PBX_USE_LOCAL_FILE_STORAGE else storages['sftp']
 
+def default_filestore():
+    return settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
 
 class Recording(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Recording'))                                      # noqa: E501, E221
@@ -55,6 +57,7 @@ class Recording(models.Model):
     filename     = PbxFileField(storage=select_storage, upload_to=user_directory_path, verbose_name=_('File Name'))                                         # noqa: E501, E221
     name         = models.CharField(max_length=64, verbose_name=_('Name'))                                                                                  # noqa: E501, E221
     description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
+    filestore    = models.CharField(max_length=128, default=default_filestore, verbose_name=_('Filestore'))                                                 # noqa: E501, E221
     base64       = models.TextField(blank=True, null=True, verbose_name=_('Base64'))                                                                        # noqa: E501, E221
     created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
     updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
@@ -83,6 +86,7 @@ class CallRecording(models.Model):
     month        = models.CharField(max_length=8, verbose_name=_('Month'))                                                                                  # noqa: E501, E221
     day          = models.CharField(max_length=8, verbose_name=_('Day'))                                                                                    # noqa: E501, E221
     description  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Description'))                                                   # noqa: E501, E221
+    filestore    = models.CharField(max_length=128, default=default_filestore, verbose_name=_('Filestore'))                                                 # noqa: E501, E221
     created      = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                                                # noqa: E501, E221
     updated      = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                                    # noqa: E501, E221
     synchronised = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                                              # noqa: E501, E221

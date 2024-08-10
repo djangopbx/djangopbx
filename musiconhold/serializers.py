@@ -51,6 +51,6 @@ class MohFileSerializer(serializers.ModelSerializer):
         model = MohFile
         read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
         fields = [
-                    'url', 'id', 'moh_id', 'filename', 'file_name',
+                    'url', 'id', 'moh_id', 'filename', 'file_name', 'filestore',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]

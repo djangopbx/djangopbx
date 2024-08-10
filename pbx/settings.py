@@ -298,7 +298,7 @@ REST_FRAMEWORK = {
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-
+SESSION_SAVE_EVERY_REQUEST = True
 # Uncomment for production
 # SESSION_COOKIE_AGE = 3600
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -360,7 +360,16 @@ PBX_SOUND_DIRS = ['ascii', 'base256', 'conference', 'currency', 'digits', 'direc
 PBX_SOUND_LIST_DIR = '8000'
 
 # XML Handler Settings
-XMLH_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']
-XMLH_CONTEXT_TYPE = 'multiple'
-XMLH_NUMBER_AS_PRESENCE_ID = False
-XMLH_HTTP_CACHE_SCHEME = 'http_cache://http://'
+PBX_XMLH_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']
+PBX_XMLH_CONTEXT_TYPE = 'multiple'
+PBX_XMLH_NUMBER_AS_PRESENCE_ID = False
+PBX_XMLH_HTTP_CACHE_SCHEME = 'http_cache://http://'
+
+# CDR Handler settings
+PBX_CDRH_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']
+#PBX_CDRH_B_LEG = ['outbound', 'inbound', 'local']
+PBX_CDRH_B_LEG = []
+PBX_CDRH_FORMAT = 'json'
+PBX_CDRH_POPULATE_CALL_RECORDINGS = True
+PBX_CDRH_RECORDINGS = '/fs/recordings'
+PBX_CDRH_SWITCH_RECORDINGS = '/var/lib/freeswitch/recordings'
