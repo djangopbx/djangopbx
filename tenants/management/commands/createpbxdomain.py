@@ -32,6 +32,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.management.base import BaseCommand
 
 from tenants.models import Domain, DomainSetting, Profile
+from portal.models import Menu
 from dialplans.dialplanfunctions import SwitchDp
 
 
@@ -60,21 +61,21 @@ class Command(BaseCommand):
         if Domain.objects.filter(name=d).exists():
             print(_('Domain: %s exists' % d))
             sys.exit(2)
+        try:
+            pbx_domain_menu = Menu.objects.get(name='Default')
+        except Menu.DoesNotExist:
+            print(_('Default menu not found - please assign manually.'))
+            pbx_domain_menu = None
+
         dom = Domain.objects.create(
             name=d,
+            menu_id=pbx_domain_menu,
+            portal_name='portal-%s' % d,
+            home_switch='localhost',
             enabled='true',
             updated_by='system'
             )
         SwitchDp().import_xml(dom.name, False, dom.id)  # Create dialplans
-        DomainSetting.objects.create(
-            domain_id=dom,   # Create default menu setting
-            category='domain',
-            subcategory='menu',
-            value_type='text',
-            value='Default',
-            sequence=10,
-            updated_by='system'
-            )
 
         if u:
             try:
