@@ -4516,5 +4516,23 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "23344dba-985f-4c34-80a9-b71ed90761dc",
+    "fields": {
+        "app_uuid": null,
+        "category": "cluster",
+        "subcategory": "call_recordings_stored_on_switch",
+        "value_type": "boolean",
+        "value": "false",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "True if call recordings are stored on the switch",
+        "created": "2024-08-01T14:07:42.070Z",
+        "updated": "2024-08-01T14:07:42.071Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]
