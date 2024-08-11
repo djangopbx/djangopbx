@@ -229,7 +229,10 @@ class DialplanAdmin(ImportExportModelAdmin):
             obj.context = request.session['domain_name']
             # if it is a new record or a "save as new", make sure the extension uuid matches the dialplan record uuid.
             obj.id = uuid.uuid4()
-            obj.xml = re.sub(r'^(<extension name=.*uuid=")([0-9a-fA-F-]+)(">)', r'\1%s\3' % obj.id, obj.xml)
+            try:
+                obj.xml = re.sub(r'^(<extension\sname=.*uuid=")([0-9a-fA-F\-]+)(.*">)', r'\g<1>%s\g<3>' % obj.id, obj.xml)
+            except re.error:
+                pass
         super().save_model(request, obj, form, change)
 
     # This is a workaround to allow the admin action to be run without selecting any objects.
