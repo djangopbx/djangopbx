@@ -33,10 +33,10 @@ from lxml import etree
 from switch.models import SwitchVariable
 
 class XmlHandler():
+    cs_dsn = None
 
     def __init__(self):
         self.debug = False
-        self.cs_dsn = None
 
     def NotFoundXml(self):
         return '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
