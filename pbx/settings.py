@@ -354,7 +354,7 @@ PBX_USE_LOCAL_EVENT_SOCKET = True
 # Use remote file storage server or local file storage.
 PBX_USE_LOCAL_FILE_STORAGE = True
 # Indicates if FreeSWITCH config files are to be sent to all switches in a cluster.
-PBX_FREESWITCH_LOCAL = False
+PBX_FREESWITCH_LOCAL = True
 # Used for calculating sound file locations
 PBX_SOUND_DIRS = ['ascii', 'base256', 'conference', 'currency', 'digits', 'directory', 'ivr', 'misc', 'phonetic-ascii', 'time', 'voicemail', 'zrtp']
 PBX_SOUND_LIST_DIR = '8000'
