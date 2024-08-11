@@ -376,16 +376,17 @@ class XmlCdrFunctions():
                     path_parts = record_path.split('/')[-5:]
                     if len(path_parts) == 5:
                         local_path = '%s/%s' % (switch_recordings_path, '/'.join(path_parts))
-                        if os.path.exists('%s/%s' % (local_path, record_name)):
-                            call_rec_path = '%s/%s' % (call_recordings_path[1:], '/'.join(path_parts))
-                            try:
-                                CallRecording.objects.create(name=record_name,
-                                        domain_id=d, year=path_parts[2],
-                                        month=path_parts[3], day=path_parts[4],
-                                        filename='%s/%s' % (call_rec_path, record_name),
-                                        updated_by='XML CDR Import')
-                            except:
-                                pass
+                        call_rec_path = '%s/%s' % (call_recordings_path[1:], '/'.join(path_parts))
+                        rec_start_stamp = cdr_variables.get('start_stamp', '')
+                        try:
+                            CallRecording.objects.create(name=record_name,
+                                    domain_id=d, year=path_parts[2],
+                                    month=path_parts[3], day=path_parts[4],
+                                    filename='%s/%s' % (call_rec_path, record_name),
+                                    description='%s-%s @ %s' % (caller_id_number, destination_number, rec_start_stamp[-8:]),
+                                    updated_by='XML CDR Import')
+                        except:
+                            pass
         xcdr.leg = leg
         xcdr.pdd_ms = self.str2int(cdr_variables.get(
             'progress_mediamsec'

@@ -446,11 +446,13 @@ class Command(BaseCommand):
                     if len(path_parts) == 5:
                         local_path = '%s/%s' % (self.switch_recordings_path, '/'.join(path_parts))
                         call_rec_path = '%s/%s' % (self.call_recordings_path[1:], '/'.join(path_parts))
+                        rec_start_stamp = event.get('variable_start_stamp', '')
                         try:
                             CallRecording.objects.create(name=record_name,
                                     domain_id=d, year=path_parts[2],
                                     month=path_parts[3], day=path_parts[4],
                                     filename='%s/%s' % (call_rec_path, record_name),
+                                    description='%s-%s @ %s' % (caller_id_number, destination_number, rec_start_stamp[-8:]),
                                     updated_by='CDR Event Import')
                         except:
                             pass
