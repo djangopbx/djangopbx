@@ -110,12 +110,12 @@ def index(request):
         messages.add_message(request, messages.INFO, local_message)
         if request.user.profile.domain_id:
             pbx_user_uuid = str(request.user.profile.user_uuid)
+            pbx_domain_menu = request.user.profile.domain_id.menu_id
             if ureload:
                 pbx_domain_name = request.user.profile.domain_id.name
                 pbx_domain_uuid = str(request.user.profile.domain_id.id)
                 pbx_portal_name = request.user.profile.domain_id.portal_name
                 pbx_home_switch = request.user.profile.domain_id.home_switch
-                pbx_domain_menu = request.user.profile.domain_id.menu_id
                 request.session['domain_name'] = pbx_domain_name
                 request.session['domain_uuid'] = pbx_domain_uuid
                 request.session['user_uuid'] = pbx_user_uuid
