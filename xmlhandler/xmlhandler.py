@@ -90,7 +90,7 @@ class XmlHandler():
             return cv
         names = ['default_dialect', 'default_language', 'default_voice']
         lang_dict = {names[0]: 'us', names[1]: 'en', names[2]: 'callie'}
-        qs = SwitchVariable.objects.filter(category='defaults', name__in=names, enabled='true')
+        qs = SwitchVariable.objects.filter(category='Defaults', name__in=names, enabled='true')
         for q in qs:
             lang_dict[q.name] = q.value
         cache.set(cache_key, lang_dict)
