@@ -22,8 +22,8 @@
 {% block branding %}
 <h1 id="site-name" style="font-size: 16px;">
     <a href="{% url 'admin:index' %}" style="color: #141414;">
-        <img src="{% static '/img/logo.png' %}" height="27px" />&nbsp&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}&nbsp;-&nbsp;{{ request.session.domain_name }}
-    </a>
+        <img src="{% static '/img/logo.png' %}" height="27px" />&nbsp&nbsp;@&nbsp;{{ request.META.HTTP_HOST }}&nbsp;-&nbsp;</a>
+        <a href="{% url 'admin:tenants_domain_changelist' %}" style="color: #141414; font-weight: bold;">{{ request.session.domain_name }}</a>
 </h1>
 {% endblock %}
 
@@ -40,7 +40,7 @@
                 {% if user.has_usable_password %}
                 <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
                 {% endif %}
-                <a href="{% url 'admin:logout' %}">{% translate 'Log out' %}</a>
+                <a href="{% url 'pbxlogout' %}">{% translate 'Log out' %}</a>
             {% endblock %}
 
 
