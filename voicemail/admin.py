@@ -114,10 +114,12 @@ class VoicemailAdmin(ImportExportModelAdmin):
             instance.updated_by = request.user.username
             instance.save()
             if not settings.PBX_FREESWITCH_LOCAL:
-                instance.filename.open(mode='rb')
-                fal.mkdir('/home/django-pbx/media/fs/voicemail/default/{0}/{1}'.format(
+                path = '/home/django-pbx/media/fs/voicemail/default/{0}/{1}'.format(
                         instance.voicemail_id.extension_id.domain_id.name,
-                        instance.voicemail_id.extension_id.extension), request.session['home_switch'])
+                        instance.voicemail_id.extension_id.extension)
+                instance.filename.open(mode='rb')
+                if not fal.exists(path, request.session['home_switch']):
+                    fal.mkdir(path, request.session['home_switch'])
                 fal.putfo(instance.filename, '/home/django-pbx/media/%s' % instance.filename.name, request.session['home_switch'])
                 instance.filename.close()
         formset.save_m2m()
