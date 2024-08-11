@@ -163,7 +163,6 @@ class SFTPConnection(SSHConnection):
     def mkdir(self, host, path):
         # Create directory, recursing up to create parent dirs if necessary.
         parent = posixpath.dirname(path)
-        print(parent)
         if not self.exists(host, parent):
             self.mkdir(host, parent)
         self.sftp(host).mkdir(path)
@@ -183,6 +182,10 @@ class SFTPConnection(SSHConnection):
     def put(self, host, localfile, remotefile):
         sftp_path = self.sftp_path(remotefile)
         return self.sftp(host).put(localfile, sftp_path)
+
+    def putfo(self, host, fh, remotefile):
+        sftp_path = self.sftp_path(remotefile)
+        return self.sftp(host).putfo(fh, sftp_path)
 
     def save(self, host, name, content):
         # Copy the contents of an open file object (content) to the SFTP server
@@ -214,5 +217,5 @@ class SFTPConnection(SSHConnection):
         try:
             self.sftp(host).remove(sftp_path)
         except OSError:
-            pass
-
+            return False
+        return True

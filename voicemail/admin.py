@@ -28,10 +28,12 @@
 #
 
 from django.contrib import admin
+from django.conf import settings
 from django.forms import ModelForm
 from django.forms.widgets import TextInput
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
+from pbx.fileabslayer import FileAbsLayer
 
 from .models import (
     Voicemail, VoicemailGreeting,
@@ -99,12 +101,24 @@ class VoicemailAdmin(ImportExportModelAdmin):
         return False
 
     def save_formset(self, request, form, formset, change):
+        if not settings.PBX_FREESWITCH_LOCAL:
+            fal = FileAbsLayer()
         instances = formset.save(commit=False)
         for obj in formset.deleted_objects:
+            if not settings.PBX_FREESWITCH_LOCAL:
+                fal.delete(request.session['home_switch'], '/home/django-pbx/media/%s' % obj.filename.name)
+            obj.filename.delete(save=False)
             obj.delete()
         for instance in instances:
             instance.updated_by = request.user.username
             instance.save()
+            if not settings.PBX_FREESWITCH_LOCAL:
+                instance.filename.open(mode='rb')
+                fal.mkdir(request.session['home_switch'], '/home/django-pbx/media/fs/voicemail/default/{0}/{1}'.format(
+                        instance.voicemail_id.extension_id.domain_id.name,
+                        instance.voicemail_id.extension_id.extension))
+                fal.putfo(request.session['home_switch'], instance.filename, '/home/django-pbx/media/%s' % instance.filename.name)
+                instance.filename.close()
         formset.save_m2m()
 
     def save_model(self, request, obj, form, change):

@@ -187,6 +187,8 @@ def selectdomain(request, domainuuid):
     d = Domain.objects.get(pk=domainuuid)
     request.session['domain_name'] = d.name
     request.session['domain_uuid'] = str(d.id)
+    request.session['portal_name'] = d.portal_name
+    request.session['home_switch'] = d.home_switch
     request.session['domain_change'] = 'yes'
     messages.add_message(request, messages.INFO, _('Selected Domain changed to ') + d.name)
     if request.META['HTTP_REFERER'].endswith('/admin/tenants/domain/'):

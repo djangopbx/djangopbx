@@ -65,10 +65,24 @@ class FileAbsLayer:
     def check_host(self, host=None):
         return (host if host else self.hostname)
 
+    def delete(self, filename, host=None):
+        if self.use_local(host):
+            try:
+                os.remove(filename)
+            except OSError:
+                return False
+            return True
+        return self.sftp.delete(self.check_host(host), filename)
+
     def exists(self, filename, host=None):
         if self.use_local(host):
             return os.path.exists(filename)
         return self.sftp.exists(self.check_host(host), filename)
+
+    def mkdir(self, path, host=None):
+        if self.use_local(host):
+            return os.makedirs(path, exist_ok=True)
+        return self.sftp.mkdir(self.check_host(host), path)
 
     def open(self, filename, mode='rb', host=None):
         if self.use_local(host):
@@ -82,6 +96,9 @@ class FileAbsLayer:
                     return self.sftp.open(s, filename)
             raise FileNotFoundError('FileAbsLayer open find failed to locate file')
         return self.sftp.open(self.check_host(host), filename)
+
+    def putfo(self, host, fh, remotefile):
+        self.sftp.putfo(host, fh, remotefile)
 
     def save_to_freeswitches(self, localfile, remotefile):
         for sw in self.freeswitches:
