@@ -97,8 +97,10 @@ class FileAbsLayer:
             raise FileNotFoundError('FileAbsLayer open find failed to locate file')
         return self.sftp.open(self.check_host(host), filename)
 
-    def putfo(self, host, fh, remotefile):
-        self.sftp.putfo(host, fh, remotefile)
+    def putfo(self, fh, remotefile, host=None):
+        if not host:
+            return False
+        return self.sftp.putfo(host, fh, remotefile)
 
     def save_to_freeswitches(self, localfile, remotefile):
         for sw in self.freeswitches:

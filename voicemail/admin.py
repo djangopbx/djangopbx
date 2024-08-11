@@ -93,11 +93,12 @@ class VoicemailAdmin(ImportExportModelAdmin):
     list_filter = ('extension_id__domain_id', 'enabled',)
 
     ordering = [
-        'extension_id'
+        'extension_id__extension'
     ]
     inlines = [VoicemailGreetingInLine]
 
     def has_add_permission(self, request):
+        print(request.session['home_switch'])
         return False
 
     def save_formset(self, request, form, formset, change):
@@ -106,7 +107,7 @@ class VoicemailAdmin(ImportExportModelAdmin):
         instances = formset.save(commit=False)
         for obj in formset.deleted_objects:
             if not settings.PBX_FREESWITCH_LOCAL:
-                fal.delete(request.session['home_switch'], '/home/django-pbx/media/%s' % obj.filename.name)
+                fal.delete('/home/django-pbx/media/%s' % obj.filename.name, request.session['home_switch'])
             obj.filename.delete(save=False)
             obj.delete()
         for instance in instances:
@@ -114,10 +115,10 @@ class VoicemailAdmin(ImportExportModelAdmin):
             instance.save()
             if not settings.PBX_FREESWITCH_LOCAL:
                 instance.filename.open(mode='rb')
-                fal.mkdir(request.session['home_switch'], '/home/django-pbx/media/fs/voicemail/default/{0}/{1}'.format(
+                fal.mkdir('/home/django-pbx/media/fs/voicemail/default/{0}/{1}'.format(
                         instance.voicemail_id.extension_id.domain_id.name,
-                        instance.voicemail_id.extension_id.extension))
-                fal.putfo(request.session['home_switch'], instance.filename, '/home/django-pbx/media/%s' % instance.filename.name)
+                        instance.voicemail_id.extension_id.extension), request.session['home_switch'])
+                fal.putfo(instance.filename, '/home/django-pbx/media/%s' % instance.filename.name, request.session['home_switch'])
                 instance.filename.close()
         formset.save_m2m()
 
