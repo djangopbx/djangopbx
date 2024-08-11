@@ -35,8 +35,10 @@ import json
 from django.forms import ModelForm
 from django_ace import AceWidget
 from .models import XmlCdr, CallTimeline
-from .listfilters import MosScoreListFilter
-
+from .listfilters import (
+    MosScoreListFilter, CallDurationListFilter, CallDirectionListFilter, HangupCauseListFilter,
+    EventNameListFilter, EventSubclassListFilter
+)
 
 class PrettyJSONWidget(AceWidget):
     def format_value(self, value):
@@ -67,7 +69,9 @@ class XmlCdrResource(resources.ModelResource):
 
 
 class XmlCdrAdmin(ImportExportModelAdmin):
+    show_facets = admin.ShowFacets.NEVER
     resource_class = XmlCdrResource
+    search_fields = ['caller_id_name', 'caller_id_number', 'destination_number']
     form = JsonEditAdminForm
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
@@ -145,7 +149,7 @@ class XmlCdrAdmin(ImportExportModelAdmin):
         'extension_id', 'caller_id_name', 'caller_id_number', 'caller_destination',
         'destination_number', 'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause'
         )
-    list_filter = (DomainFilter, 'direction', 'hangup_cause', MosScoreListFilter)
+    list_filter = ('created', DomainFilter, CallDirectionListFilter, HangupCauseListFilter, MosScoreListFilter, CallDurationListFilter)
 
     ordering = [
         '-start_stamp', 'extension_id'
@@ -165,6 +169,7 @@ class CallTimelineResource(resources.ModelResource):
 
 
 class CallTimelineAdmin(ImportExportModelAdmin):
+    show_facets = admin.ShowFacets.NEVER
     resource_class = CallTimelineResource
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
@@ -273,7 +278,7 @@ class CallTimelineAdmin(ImportExportModelAdmin):
         'hostname', 'event_name', 'event_subclass', 'event_date_local', 'call_uuid',
         'caller_id_number'
         )
-    list_filter = (DomainFilter, 'event_name', 'event_subclass')
+    list_filter = ('created', DomainFilter, EventNameListFilter, EventSubclassListFilter)
 
     ordering = [
         'event_epoch', 'event_sequence'

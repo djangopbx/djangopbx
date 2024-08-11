@@ -30,6 +30,46 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+CALL_DIRECTION = {
+    'inbound': 'Inbound',
+    'outbound': 'Outbound',
+    'loacl': 'Local',
+    'None' : 'None'
+}
+
+HANGUP_CAUSE = {
+    'CALL_REJECTED' : 'CALL_REJECTED',
+    'CHAN_NOT_IMPLEMENTED' : 'CHAN_NOT_IMPLEMENTED',
+    'DESTINATION_OUT_OF_ORDER' : 'DESTINATION_OUT_OF_ORDER',
+    'INVALID_GATEWAY' : 'INVALID_GATEWAY',
+    'MANDATORY_IE_MISSING' : 'MANDATORY_IE_MISSING',
+    'MEDIA_TIMEOUT' : 'MEDIA_TIMEOUT',
+    'NO_ANSWER' : 'NO_ANSWER',
+    'NORMAL_CLEARING' : 'NORMAL_CLEARING',
+    'NORMAL_UNSPECIFIED' : 'NORMAL_UNSPECIFIED',
+    'NO_ROUTE_DESTINATION' : 'NO_ROUTE_DESTINATION',
+    'ORIGINATOR_CANCEL' : 'ORIGINATOR_CANCEL',
+    'SERVICE_UNAVAILABLE' : 'SERVICE_UNAVAILABLE',
+    'UNALLOCATED_NUMBER' : 'UNALLOCATED_NUMBER',
+    'USER_BUSY' : 'USER_BUSY',
+}
+
+EVENT_NAME = {
+    'CHANNEL_CALLSTATE' : 'CHANNEL_CALLSTATE',
+    'CHANNEL_HOLD' : 'CHANNEL_HOLD',
+    'CHANNEL_UNHOLD' : 'CHANNEL_UNHOLD',
+    'CUSTOM' : 'CUSTOM',
+    'DTMF' : 'DTMF',
+    'PLAYBACK_START' : 'PLAYBACK_START',
+    'PLAYBACK_STOP' : 'PLAYBACK_STOP',
+}
+
+EVENT_SUBCLASS = {
+    'callcenter_info' : 'callcenter::info',
+    'conference_maintenance' : 'conference::maintenance',
+}
+
+
 class MosScoreListFilter(admin.SimpleListFilter):
     title = _('MOS Score')
     parameter_name = "mos"
@@ -63,3 +103,107 @@ class MosScoreListFilter(admin.SimpleListFilter):
             return queryset.filter(rtp_audio_in_mos__gt=0, rtp_audio_in_mos__lte=1.0)
         if self.value() == '00':
             return queryset.filter(rtp_audio_in_mos=0)
+
+
+class CallDurationListFilter(admin.SimpleListFilter):
+    title = _('Call duration')
+
+    parameter_name = 'call_duration'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('0s', _('Zero s')),
+            ('lt2s', _('< 2s')),
+            ('lt10s', _('< 10s')),
+            ('gt10slt3600s', _('> 10s but < 1h')),
+            ('gt3600s', _('> 1h')),
+            ('gt7200s', _('> 2h')),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == '0s':
+            return queryset.filter(
+                duration=0
+            )
+        if self.value() == 'lt2s':
+            return queryset.filter(
+                duration__lt=2
+            )
+        if self.value() == 'lt10s':
+            return queryset.filter(
+                duration__lt=10
+            )
+        if self.value() == 'gt10slt3600s':
+            return queryset.filter(
+                duration__gt=10,
+                duration__lte=3600,
+            )
+        if self.value() == 'gt3600s':
+            return queryset.filter(
+                duration__gt=3600
+            )
+        if self.value() == 'gt7200s':
+            return queryset.filter(
+                duration__gt=7200
+            )
+
+
+class CallDirectionListFilter(admin.SimpleListFilter):
+    title = _('Call direction')
+
+    parameter_name = 'direction'
+
+    def lookups(self, request, model_admin):
+        return [(k, _(v))for k,v in CALL_DIRECTION.items()]
+
+    def queryset(self, request, queryset):
+        if self.value() in CALL_DIRECTION:
+            return queryset.filter(
+                direction=CALL_DIRECTION[self.value()],
+            )
+
+
+class HangupCauseListFilter(admin.SimpleListFilter):
+    title = _('Hangup cause')
+
+    parameter_name = 'hangupc'
+
+    def lookups(self, request, model_admin):
+        return [(k, _(v))for k,v in HANGUP_CAUSE.items()]
+
+    def queryset(self, request, queryset):
+        if self.value() in HANGUP_CAUSE:
+            return queryset.filter(
+                hangup_cause=HANGUP_CAUSE[self.value()],
+            )
+
+
+class EventNameListFilter(admin.SimpleListFilter):
+    title = _('Event name')
+
+    parameter_name = 'eventname'
+
+    def lookups(self, request, model_admin):
+        return [(k, _(v))for k,v in EVENT_NAME.items()]
+
+    def queryset(self, request, queryset):
+        if self.value() in EVENT_NAME:
+            return queryset.filter(
+                event_name=EVENT_NAME[self.value()],
+            )
+
+
+class EventSubclassListFilter(admin.SimpleListFilter):
+    title = _('Event subclass')
+
+    parameter_name = 'eventsubclass'
+
+    def lookups(self, request, model_admin):
+        return [(k, _(v))for k,v in EVENT_SUBCLASS.items()]
+
+    def queryset(self, request, queryset):
+        if self.value() in EVENT_SUBCLASS:
+            return queryset.filter(
+                event_subclass=EVENT_SUBCLASS[self.value()],
+            )
+

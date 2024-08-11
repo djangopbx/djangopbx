@@ -35,6 +35,7 @@ from pbx.commonfunctions import DomainFilter, DomainUtils
 from .models import (
     Recording, CallRecording
 )
+from .listfilters import YearsListFilter, MonthsListFilter, DaysListFilter
 
 
 class RecordingsResource(resources.ModelResource):
@@ -55,7 +56,6 @@ class RecordingAdmin(ImportExportModelAdmin):
     list_display = ('name', 'filename', 'description')
     list_filter = (DomainFilter, 'name')
 
-#    actions = None
     ordering = [
         'domain_id',
         'name'
@@ -79,18 +79,19 @@ class CallRecordingsResource(resources.ModelResource):
 
 
 class CallRecordingAdmin(ImportExportModelAdmin):
+    show_facets = admin.ShowFacets.NEVER
     resource_class = RecordingsResource
     change_form_template = 'admin_media_player_changeform.html'
 
+    search_fields = ['description']
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
         (None,               {'fields': ['domain_id', 'name', 'filename', 'year', 'month', 'day', 'description', 'filestore']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('name', 'year', 'month', 'day', 'filename', 'description')
-    list_filter = (DomainFilter, 'year', 'month', 'day')
+    list_filter = (DomainFilter, YearsListFilter, MonthsListFilter, DaysListFilter)
 
-#    actions = None
     ordering = [
         '-created',
         'name'
