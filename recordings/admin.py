@@ -28,14 +28,27 @@
 #
 
 from django.contrib import admin
+from django.forms import ModelForm
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from pbx.commonfunctions import DomainFilter, DomainUtils
+from pbx.commonwidgets import PlayerAdminFileFieldWidget
 
 from .models import (
     Recording, CallRecording
 )
 from .listfilters import YearsListFilter, MonthsListFilter, DaysListFilter
+
+
+class RecordingsAdminForm(ModelForm):
+
+    class Meta:
+        model = Recording
+        widgets = {
+            "filename": PlayerAdminFileFieldWidget(),
+        }
+        fields = '__all__'
+
 
 
 class RecordingsResource(resources.ModelResource):
@@ -46,7 +59,7 @@ class RecordingsResource(resources.ModelResource):
 
 class RecordingAdmin(ImportExportModelAdmin):
     resource_class = RecordingsResource
-    change_form_template = 'admin_media_player_changeform.html'
+    form = RecordingsAdminForm
 
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
@@ -72,6 +85,16 @@ class RecordingAdmin(ImportExportModelAdmin):
         super().delete_model(request, obj)
 
 
+class CallRecordingsAdminForm(ModelForm):
+
+    class Meta:
+        model = Recording
+        widgets = {
+            "filename": PlayerAdminFileFieldWidget(),
+        }
+        fields = '__all__'
+
+
 class CallRecordingsResource(resources.ModelResource):
     class Meta:
         model = CallRecording
@@ -81,7 +104,7 @@ class CallRecordingsResource(resources.ModelResource):
 class CallRecordingAdmin(ImportExportModelAdmin):
     show_facets = admin.ShowFacets.NEVER
     resource_class = RecordingsResource
-    change_form_template = 'admin_media_player_changeform.html'
+    form = CallRecordingsAdminForm
 
     search_fields = ['description']
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']

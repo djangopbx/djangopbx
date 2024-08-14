@@ -54,6 +54,7 @@ class AmqpConnection:
         self.connection = None
         self.channel = None
         self.auto_delete = auto_delete
+        self.pid = os.getpid()
         try:
             self.hostname = socket.gethostname()
         except:
@@ -79,7 +80,7 @@ class AmqpConnection:
 
     def connect(self):
         if logger is not None:
-            logger.info('Event Receiver: Attempting to connect to %s' % self.rabbithostname)
+            logger.info('Event Receiver PID: %s Attempting to connect to %s' % (self.pid, self.rabbithostname))
         print('Attempting to connect to %s' % self.rabbithostname)
         params = pika.ConnectionParameters(
             host=self.rabbithostname,
@@ -91,13 +92,13 @@ class AmqpConnection:
         except pika.exceptions.ProbableAuthenticationError:
             print('ConnectionClosedByBroker: (403) ACCESS_REFUSED')
             if logger is not None:
-                logger.info('Event Receiver: Connection refused from %s' % self.rabbithostname)
+                logger.info('Event Receiver PID: %s Connection refused from %s' % (self.pid, self.rabbithostname))
             os._exit(1)
         self.channel = self.connection.channel()
         # To Enable delivery confirmations. This is REQUIRED.
         # self.channel.confirm_delivery()
         if logger is not None:
-            logger.info('Event Receiver: Connected Successfully to %s' % self.rabbithostname)
+            logger.info('Event Receiver PID: %s Connected Successfully to %s' % (self.pid, self.rabbithostname))
         print('Connected Successfully to %s' % self.rabbithostname)
 
     def setup_exchange(self, exchange, exchange_type='topic', passive=False,
@@ -128,7 +129,7 @@ class AmqpConnection:
             self.channel.start_consuming()
         except KeyboardInterrupt:
             if logger is not None:
-                logger.info('Event Receiver: Received interrupt, shtting down... %s' % self.rabbithostname)
+                logger.info('Event Receiver PID: %s Received interrupt, shtting down... %s' % (self.pid, self.rabbithostname))
             print('Keyboard interrupt received')
             self.channel.stop_consuming()
             self.connection.close()
@@ -136,7 +137,7 @@ class AmqpConnection:
         except pika.exceptions.ChannelClosedByBroker:
             print('Channel Closed By Broker Exception')
             if logger is not None:
-                logger.info('Event Receiver: Channel closed by broker exception. %s' % self.rabbithostname)
+                logger.info('Event Receiver PID: %s Channel closed by broker exception. %s' % (self.pid, self.rabbithostname))
 
     def consume(self, on_message):
         tries = -1
@@ -153,7 +154,7 @@ class AmqpConnection:
                 if not tries:
                     raise
                 if logger is not None:
-                    logger.warning('Event Receiver: %s, retrying in %s seconds...' % (e, delay))
+                    logger.warning('Event Receiver PID: %s %s, retrying in %s seconds...' % (self.pid, e, delay))
                 time.sleep(delay)
                 delay *= backoff
                 if isinstance(jitter, tuple):

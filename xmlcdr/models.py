@@ -33,6 +33,9 @@ from django.utils.translation import gettext_lazy as _
 from pbx.commonchoices import (
     EnabledTrueFalseChoice,
 )
+# for timeline link
+from django.urls import reverse
+from django.utils.html import mark_safe
 
 
 class XmlCdr(models.Model):
@@ -40,6 +43,7 @@ class XmlCdr(models.Model):
     domain_id                 = models.ForeignKey('tenants.Domain', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Domain'))            # noqa: E501, E221
     extension_id              = models.ForeignKey('accounts.Extension', on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Extension'))     # noqa: E501, E221
     core_uuid                 = models.UUIDField(blank=True, null=True, verbose_name=_('Core UUID'))                                                      # noqa: E501, E221
+    call_uuid                 = models.UUIDField(blank=True, null=True, verbose_name=_('Call UUID'))                                                      # noqa: E501, E221
     domain_name               = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Domain Name'))                                    # noqa: E501, E221
     accountcode               = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Account Code'))                                    # noqa: E501, E221
     direction                 = models.CharField(max_length=16, blank=True, null=True, verbose_name=_('Direction'))                                       # noqa: E501, E221
@@ -111,6 +115,13 @@ class XmlCdr(models.Model):
     def __str__(self):
         return str(self.extension_id)
 
+    def timeline(self):
+        return mark_safe('<a class="grp-button" href="%s">%s</a>' % (
+                    reverse('cdrtimeline', args=[self.call_uuid]), _('Timeline')
+                    ))
+
+    timeline.short_description = _('Timeline')
+
 
 class CallTimeline(models.Model):
     id                            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, verbose_name=_('Timeline Record'))             # noqa: E501, E221
@@ -172,6 +183,8 @@ class CallTimeline(models.Model):
     hold_accu_time                = models.DecimalField(max_digits=32, decimal_places=0, default=0, verbose_name=_('Hold Accu. Time'))                    # noqa: E501, E221
     other_leg_hold_accu_time      = models.DecimalField(max_digits=32, decimal_places=0, default=0, verbose_name=_('Other Leg Hold Accu. Time'))          # noqa: E501, E221
     application                   = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Application'))                                 # noqa: E501, E221
+    application_name              = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Application Name'))                            # noqa: E501, E221
+    application_action            = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Application Action'))                          # noqa: E501, E221
     application_uuid              = models.UUIDField(blank=True, null=True, verbose_name=_('Application UUID'))                                           # noqa: E501, E221
     application_data              = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Application Data'))                           # noqa: E501, E221
     application_status            = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Application Status'))                          # noqa: E501, E221
@@ -210,6 +223,7 @@ class CallTimeline(models.Model):
     cf_profile_name               = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Conference Profile Name'))                     # noqa: E501, E221
     cf_member_type                = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Conference Member Type'))                      # noqa: E501, E221
     cf_member_id                  = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Conference Member ID'))                        # noqa: E501, E221
+    general_error                 = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('General Error'))                               # noqa: E501, E221
     created                       = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name=_('Created'))                             # noqa: E501, E221
     updated                       = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name=_('Updated'))                                 # noqa: E501, E221
     synchronised                  = models.DateTimeField(blank=True, null=True, verbose_name=_('Synchronised'))                                           # noqa: E501, E221
@@ -221,4 +235,4 @@ class CallTimeline(models.Model):
         db_table = 'pbx_call_timeline'
 
     def __str__(self):
-        return f"{self.id}->{self.call_uuid}: {self.event_name}"
+        return f"{self.context}->{self.caller_id_number}: {self.event_name}"

@@ -37,7 +37,7 @@ from django_ace import AceWidget
 from .models import XmlCdr, CallTimeline
 from .listfilters import (
     MosScoreListFilter, CallDurationListFilter, CallDirectionListFilter, HangupCauseListFilter,
-    EventNameListFilter, EventSubclassListFilter
+    EventNameListFilter, EventSubclassListFilter, WithRecordingsListFilter
 )
 
 class PrettyJSONWidget(AceWidget):
@@ -74,12 +74,13 @@ class XmlCdrAdmin(ImportExportModelAdmin):
     search_fields = ['caller_id_name', 'caller_id_number', 'destination_number']
     form = JsonEditAdminForm
 
-    readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
+    readonly_fields = ['domain_id', 'extension_id', 'created', 'updated', 'synchronised', 'updated_by']
     fieldsets = [
         (None,  {'fields': [
                         'domain_id',
                         'extension_id',
                         'core_uuid',
+                        'call_uuid',
                         'domain_name',
                         'accountcode',
                         'direction',
@@ -147,9 +148,9 @@ class XmlCdrAdmin(ImportExportModelAdmin):
     ]
     list_display = (
         'extension_id', 'caller_id_name', 'caller_id_number', 'caller_destination',
-        'destination_number', 'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause'
+        'destination_number', 'start_stamp', 'duration', 'rtp_audio_in_mos', 'hangup_cause', 'timeline'
         )
-    list_filter = ('created', DomainFilter, CallDirectionListFilter, HangupCauseListFilter, MosScoreListFilter, CallDurationListFilter)
+    list_filter = ('created', DomainFilter, CallDirectionListFilter, WithRecordingsListFilter, HangupCauseListFilter, MosScoreListFilter, CallDurationListFilter)
 
     ordering = [
         '-start_stamp', 'extension_id'
@@ -235,6 +236,8 @@ class CallTimelineAdmin(ImportExportModelAdmin):
                         'application',
                         'application_uuid',
                         'application_data',
+                        'application_name',
+                        'application_action',
                         'application_status',
                         'application_file_path',
                         'application_seconds',
@@ -281,7 +284,7 @@ class CallTimelineAdmin(ImportExportModelAdmin):
     list_filter = ('created', DomainFilter, EventNameListFilter, EventSubclassListFilter)
 
     ordering = [
-        'event_epoch', 'event_sequence'
+        '-event_epoch', '-event_sequence'
     ]
 
     def save_model(self, request, obj, form, change):

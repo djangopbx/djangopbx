@@ -29,6 +29,7 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 
 CALL_DIRECTION = {
     'inbound': 'Inbound',
@@ -60,13 +61,15 @@ EVENT_NAME = {
     'CHANNEL_UNHOLD' : 'CHANNEL_UNHOLD',
     'CUSTOM' : 'CUSTOM',
     'DTMF' : 'DTMF',
-    'PLAYBACK_START' : 'PLAYBACK_START',
+#    'PLAYBACK_START' : 'PLAYBACK_START',
+#    'PLAYBACK_STOP' : 'PLAYBACK_STOP',
     'PLAYBACK_STOP' : 'PLAYBACK_STOP',
 }
 
 EVENT_SUBCLASS = {
     'callcenter_info' : 'callcenter::info',
     'conference_maintenance' : 'conference::maintenance',
+    'vm_maintenance' : 'vm::maintenance',
 }
 
 
@@ -89,19 +92,19 @@ class MosScoreListFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() == '40':
             return queryset.filter(rtp_audio_in_mos__gt=0, rtp_audio_in_mos__lte=4.0)
-        if self.value() == '35':
+        elif self.value() == '35':
             return queryset.filter(rtp_audio_in_mos__gt=0, rtp_audio_in_mos__lte=3.5)
-        if self.value() == '30':
+        elif self.value() == '30':
             return queryset.filter(rtp_audio_in_mos__gt=0, rtp_audio_in_mos__lte=3.0)
-        if self.value() == '25':
+        elif self.value() == '25':
             return queryset.filter(rtp_audio_in_mos__gt=0, rtp_audio_in_mos__lte=2.5)
-        if self.value() == '20':
+        elif self.value() == '20':
             return queryset.filter(rtp_audio_in_mos__gt=0, rtp_audio_in_mos__lte=2.0)
-        if self.value() == '15':
+        elif self.value() == '15':
             return queryset.filter(rtp_audio_in_mos__gt=0, rtp_audio_in_mos__lte=1.5)
-        if self.value() == '10':
+        elif self.value() == '10':
             return queryset.filter(rtp_audio_in_mos__gt=0, rtp_audio_in_mos__lte=1.0)
-        if self.value() == '00':
+        elif self.value() == '00':
             return queryset.filter(rtp_audio_in_mos=0)
 
 
@@ -125,27 +128,46 @@ class CallDurationListFilter(admin.SimpleListFilter):
             return queryset.filter(
                 duration=0
             )
-        if self.value() == 'lt2s':
+        elif self.value() == 'lt2s':
             return queryset.filter(
                 duration__lt=2
             )
-        if self.value() == 'lt10s':
+        elif self.value() == 'lt10s':
             return queryset.filter(
                 duration__lt=10
             )
-        if self.value() == 'gt10slt3600s':
+        elif self.value() == 'gt10slt3600s':
             return queryset.filter(
                 duration__gt=10,
                 duration__lte=3600,
             )
-        if self.value() == 'gt3600s':
+        elif self.value() == 'gt3600s':
             return queryset.filter(
                 duration__gt=3600
             )
-        if self.value() == 'gt7200s':
+        elif self.value() == 'gt7200s':
             return queryset.filter(
                 duration__gt=7200
             )
+
+
+class WithRecordingsListFilter(admin.SimpleListFilter):
+    title = _('Has recording')
+
+    parameter_name = 'hasrec'
+
+    def lookups(self, request, model_admin):
+        return [('yes', _('Yes')), ('no', _('No'))]
+
+    def queryset(self, request, queryset):
+        if self.value() == 'no':
+            return queryset.filter(
+                (Q(record_path__isnull=True) | Q(record_path=''))
+            )
+        elif self.value() == 'yes':
+            return queryset.filter(
+                record_path__isnull=False
+            ).exclude(record_path='')
 
 
 class CallDirectionListFilter(admin.SimpleListFilter):

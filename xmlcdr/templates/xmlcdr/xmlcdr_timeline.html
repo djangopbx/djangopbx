@@ -1,0 +1,28 @@
+{% extends "portal.html" %}
+
+{% load i18n static %}
+
+    {% block content %}
+    <div class="card" style="margin-left: 5%; width: 90%;">
+        <div class="card-header">
+            <div class="row">
+            <div class="col-lg-6"><i class="fa fa-chart-bar"></i> {% translate title %}</div>
+            <div class="col-lg-6 text-right">
+            {% if back %}<a href="{% url back %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Back' %}"></a>{% endif %}
+            {% if refresher %}<a href="{% url refresher %}" target="_self"><input type="button" class="btn btn-info btn-sm" value="{% translate 'Refresh' %}"></a>{% endif %}
+            </div>
+            </div>
+        </div>
+        <div class="card-body cardbody1">
+            {% if request.user.is_superuser %}
+            {% endif %}
+            <div>
+            {% for value in info %}
+                <b>{{ value.0|safe }}</b> <i class="fa fa-play" aria-hidden="true"></i> {{ value.1|safe }}<br>
+            {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+    {% endblock %}

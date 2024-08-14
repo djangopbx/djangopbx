@@ -34,6 +34,7 @@ from django.forms.widgets import TextInput
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from pbx.fileabslayer import FileAbsLayer
+from pbx.commonwidgets import PlayerAdminFileFieldWidget
 
 from .models import (
     Voicemail, VoicemailGreeting,
@@ -46,6 +47,7 @@ class VoicemailGreetingInlineAdminForm(ModelForm):
         model = VoicemailGreeting
         widgets = {
             "name": TextInput(attrs={'size': '60'}),
+            "filename": PlayerAdminFileFieldWidget(),
         }
         fields = '__all__'
 
@@ -98,7 +100,6 @@ class VoicemailAdmin(ImportExportModelAdmin):
     inlines = [VoicemailGreetingInLine]
 
     def has_add_permission(self, request):
-        print(request.session['home_switch'])
         return False
 
     def save_formset(self, request, form, formset, change):

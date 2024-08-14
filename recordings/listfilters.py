@@ -133,4 +133,3 @@ class DaysListFilter(admin.SimpleListFilter):
             return queryset.filter(
                 day=F_DAYS[self.value()],
             )
-

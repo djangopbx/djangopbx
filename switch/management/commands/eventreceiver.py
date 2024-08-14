@@ -41,8 +41,10 @@ from tenants.models import DefaultSetting, Domain
 from xmlcdr.models import XmlCdr, CallTimeline
 from recordings.models import CallRecording
 from accounts.models import Extension
+from voicemail.models import Voicemail, VoicemailGreeting
 from pbx.commonfunctions import shcommand
 from pbx.scripts.resources.pbx.amqpconnection import AmqpConnection
+from pbx.sshconnect import SFTPConnection
 
 
 logger = logging.getLogger(__name__)
@@ -60,6 +62,8 @@ class Command(BaseCommand):
     switch_recordings_path = '/var/lib/freeswitch/recordings'
     pop_call_recordings = False
     call_recordings_path = '/fs/recordings'
+    vm_greetings_path = '/fs/voicemail'
+    updated_by = 'Event Receiver'
     domains = {}
 
     def str2int(self, tmpstr):
@@ -108,7 +112,7 @@ class Command(BaseCommand):
         msg = body.decode('utf8')
         if self.debug:
             if logger is not None:
-                logger.debug('Event Receiver: %s', msg)
+                logger.debug('Event Receiver PID: %s\n%s', (self.pid, msg))
             print(msg)
         event = json.loads(msg)
         event_name = event.get('Event-Name', self.nonstr)
@@ -127,15 +131,24 @@ class Command(BaseCommand):
             self.handle_playback_start(event)
         elif event_name == 'PLAYBACK_STOP':
             self.handle_playback_stop(event)
+        elif event_name == 'RECORD_STOP':
+            self.handle_record_stop(event)
         elif event_name == 'CUSTOM':
             if event.get('Event-Subclass', self.nonstr) == 'sofia::register':
                 self.handle_register(channel, event)
-            if event.get('Event-Subclass', self.nonstr) == 'callcenter::info':
+            elif event.get('Event-Subclass', self.nonstr) == 'callcenter::info':
                 self.handle_callcentreinfo(event)
-            if event.get('Event-Subclass', self.nonstr) == 'conference::maintenance':
+            elif event.get('Event-Subclass', self.nonstr) == 'menu::enter':
+                self.handle_ivrmenu(event)
+            elif event.get('Event-Subclass', self.nonstr) == 'menu::exit':
+                self.handle_ivrmenu(event)
+            elif event.get('Event-Subclass', self.nonstr) == 'conference::maintenance':
                 self.handle_conferencemaintenance(event)
+            elif event.get('Event-Subclass', self.nonstr) == 'vm::maintenance':
+                self.handle_vmmaintenance(event)
 
     def handle(self, *args, **kwargs):
+        self.pid = os.getpid()
         mb = {self.mb_key_host: '127.0.0.1', self.mb_key_port: 5672,
             self.mb_key_pass: 'djangopbx-insecure',
             self.mb_key_user: 'guest', self.mb_key_adhoc: False}
@@ -164,6 +177,7 @@ class Command(BaseCommand):
         self.firewall_event_template = '{\"Event-Name\":\"FIREWALL\", \"Action\":\"add\", \"IP-Type\":\"%s\",\"Fw-List\":\"sip-customer\", \"IP-Address\":\"%s\"}' # noqa: E501
         self.mq = AmqpConnection(mb[self.mb_key_host], mb[self.mb_key_port],
                                     mb[self.mb_key_user], mb[self.mb_key_pass])
+        self.sftp = SFTPConnection()
         self.mq.connect()
         self.mq.setup_queues()
         self.mq.consume(self.on_message)
@@ -394,6 +408,7 @@ class Command(BaseCommand):
         xcdr = XmlCdr(domain_id=d, core_uuid=core_uuid)
         if extension_found:
             xcdr.extension_id=e
+        xcdr.call_uuid = event.get('variable_call_uuid')
         xcdr.domain_name = domain_name
         xcdr.accountcode = event.get('variable_accountcode')
         xcdr.direction = event.get('variable_call_direction', self.nonstr)
@@ -453,7 +468,7 @@ class Command(BaseCommand):
                                     month=path_parts[3], day=path_parts[4],
                                     filename='%s/%s' % (call_rec_path, record_name),
                                     description='%s-%s @ %s' % (caller_id_number, destination_number, rec_start_stamp[-8:]),
-                                    updated_by='CDR Event Import')
+                                    updated_by=self.updated_by)
                         except:
                             pass
 
@@ -503,8 +518,22 @@ class Command(BaseCommand):
         if self.cdrformat == 'json':
             xcdr.json = event
 
-        xcdr.updated_by = 'system'
+        xcdr.updated_by = self.updated_by
         xcdr.save()
+        ctl = self.create_call_timeline(event)
+        if ctl:
+            self.add_ctl_caller_channel_data(ctl, event)
+            self.add_ctl_application_data([
+                'variable_current_application',
+                None,
+                None,
+                None,
+                'variable_current_application_data',
+                None,
+                None,
+                None
+                ], ctl, event)
+            ctl.save()
         CallTimeline.objects.filter(core_uuid=core_uuid).update(domain_id=d)
         return
 
@@ -531,11 +560,13 @@ class Command(BaseCommand):
 
     def add_ctl_application_data(self, fields, ctl, event):
         ctl.application = event.get(fields[0])
-        ctl.application_uuid = event.get(fields[1])
-        ctl.application_data = event.get(fields[2])
-        ctl.application_status = event.get(fields[3])
-        ctl.application_file_path = event.get(fields[4])
-        ctl.application_seconds = self.str2int(event.get(fields[5]))
+        ctl.application_name = event.get(fields[1])
+        ctl.application_action = event.get(fields[2])
+        ctl.application_uuid = event.get(fields[3])
+        ctl.application_data = event.get(fields[4])
+        ctl.application_status = event.get(fields[5])
+        ctl.application_file_path = event.get(fields[6])
+        ctl.application_seconds = self.str2int(event.get(fields[7]))
         return
 
     def add_ctl_caller_channel_data(self, ctl, event):
@@ -619,6 +650,8 @@ class Command(BaseCommand):
         self.add_ctl_caller_channel_data(ctl, event)
         self.add_ctl_application_data([
             'variable_current_application',      # Application
+            None,                                # Application Name
+            None,                                # Application Action
             None,                                # Application UUID
             'variable_current_application_data', # Application Data
             None,                                # Application Status
@@ -636,10 +669,30 @@ class Command(BaseCommand):
         self.add_ctl_application_data([
             'variable_current_application',
             None,
+            None,
+            None,
             'variable_current_application_data',
             'Playback-Status',
             'Playback-File-Path',
             'variable_playback_seconds'
+            ], ctl, event)
+        ctl.save()
+        return
+
+    def handle_record_stop(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        self.add_ctl_caller_channel_data(ctl, event)
+        self.add_ctl_application_data([
+            'variable_current_application',
+            None,
+            None,
+            None,
+            'variable_current_application_data',
+            'variable_record_completion_cause',
+            'Record-File-Path',
+            'variable_record_seconds'
             ], ctl, event)
         ctl.save()
         return
@@ -651,6 +704,8 @@ class Command(BaseCommand):
         self.add_ctl_caller_channel_data(ctl, event)
         self.add_ctl_application_data([
             'variable_current_application',
+            None,
+            None,
             None,
             'variable_current_application_data',
             None,
@@ -700,3 +755,55 @@ class Command(BaseCommand):
         ctl.cf_member_id = event.get('Member-ID')
         ctl.save()
         return
+
+    def handle_vmmaintenance(self, event):
+        vm_action = event.get('VM-Action', '')
+        if vm_action == 'mwi-update':
+            return
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        vm_domain = event.get('VM-Domain', 'None')
+        vm_user = event.get('VM-User', '000')
+        vm_greeting_no = event.get('VM-User', '000')
+        self.add_ctl_caller_channel_data(ctl, event)
+        self.add_ctl_application_data([
+            'variable_current_application',
+            'variable_current_application',
+            'VM-Action',
+            'variable_uuid',
+            'variable_current_application_data',
+            None,
+            'VM-Greeting-Path',
+            None
+            ], ctl, event)
+        if vm_action == 'record-greeting':
+            path = event.get('VM-Greeting-Path')
+            filename= os.path.basename(path)
+            storage_path='%s/default/%s/%s/%s' % (self.vm_greetings_path, vm_domain, vm_user, filename)
+            # Create or update the voicemail greetings record with the currect filename adjusting storage path to be relative to MEDIA_ROOT
+            vm = Voicemail.objects.get(extension_id__extension=vm_user, extension_id__domain_id__name=vm_domain)
+            if not vm:
+                ctl.general_error = 'Voicemail record not found'
+                ctl.save()
+                return
+            vmg, created = VoicemailGreeting.objects.get_or_create(
+                                        voicemail_id=vm,
+                                        filename=storage_path,
+                                        updated_by=self.updated_by,
+                                        defaults={'name': filename}
+                                        )
+            if not settings.PBX_FREESWITCH_LOCAL and not settings.PBX_USE_LOCAL_FILE_STORAGE:
+                # if freeswitch and filestore are not local copy recordings contents to filestore
+                grtg = filename.open(mode='rb')
+                sftp.getfo(path, grtg)
+            vmg.save()
+        #if vm_action == 'remove-greeting':
+        #    There is not much we can do because freeswitch does not provide the greeting path
+        ctl.save()
+        return
+
+    def handle_ivrmenu(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return

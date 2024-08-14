@@ -162,19 +162,21 @@ class CdrViewerList(tables.Table):
 
 
 class CdrViewerFilter(filters.FilterSet):
-    caller_id_name = filters.CharFilter(lookup_expr='icontains')
-    caller_id_number = filters.CharFilter(lookup_expr='icontains')
-    start_stamp = filters.DateTimeFilter(lookup_expr='gt')
-    end_stamp = filters.DateTimeFilter(lookup_expr='lt')
-    duration = filters.DateTimeFilter(lookup_expr='gt')
+    def __init__(self, *args, **kwargs):
+       super().__init__(*args, **kwargs)
+       self.filters['extension_id__extension'].label=_('Extension')
 
     class Meta:
         model = XmlCdr
-        fields = [
-            'extension_id', 'direction', 'caller_id_name', 'caller_id_number',
-            'destination_number', 'caller_destination', 'start_stamp',
-            'end_stamp', 'duration'
-            ]
+        fields = {
+            'extension_id__extension':['exact'],
+            'caller_id_name': ['exact', 'icontains'],
+            'caller_id_number': ['exact', 'icontains'],
+            'destination_number': ['exact', 'icontains'],
+            'start_stamp': ['exact', 'lte', 'gte'],
+            'direction': ['exact'],
+            'duration': ['gte', 'lte'],
+            }
 
 
 @method_decorator(login_required, name='dispatch')
@@ -344,3 +346,15 @@ class CdrStatisticsCalls(LoginRequiredMixin, View):
             'title': title, 'type': 'bar',
             'xtitle': 'Hours of the Day', 'labels': labels, 'datasets': datasets})
 
+
+class CdrTimeline(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        info = []
+        call_uuid = kwargs.get('calluuid')
+        if not call_uuid:
+            return render(request, 'xmlcdr/xmlcdr_timeline.html', {'info': info, 'back': 'cdrviewer', 'title': 'CDR Timeline'})
+        qs = CallTimeline.objects.filter(call_uuid=call_uuid).order_by('event_epoch', 'event_sequence')
+        for q in qs:
+            info.append((q.event_date_local, q.event_name))
+            print(q.event_name)
+        return render(request, 'xmlcdr/xmlcdr_timeline.html', {'info': info, 'back': 'cdrviewer', 'title': 'CDR Timeline'})

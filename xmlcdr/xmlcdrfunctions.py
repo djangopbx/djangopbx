@@ -325,6 +325,7 @@ class XmlCdrFunctions():
 
         if extension_found:
             xcdr.extension_id=e
+        xcdr.call_uuid = cdr_variables.get('call_uuid')
         xcdr.domain_name = domain_name
         xcdr.accountcode = cdr_variables.get('accountcode')
         xcdr.direction = cdr_variables.get('call_direction', nonestr)

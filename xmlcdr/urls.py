@@ -42,4 +42,5 @@ urlpatterns = [
     path('cdrstatistics/', views.CdrStatistics.as_view(), name='cdrstatistics'),
     path('cdrstatisticsmos/<int:hours>', views.CdrStatisticsMos.as_view(), name='cdrstatisticsmos'),
     path('cdrstatisticscalls/<int:hours>/', views.CdrStatisticsCalls.as_view(), name='cdrstatisticscalls'),
+    path('cdrtimeline/<calluuid>/', views.CdrTimeline.as_view(), name='cdrtimeline'),
 ]

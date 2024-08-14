@@ -32,9 +32,11 @@
 #
 
 from django.forms.widgets import Select
+from django.forms.widgets import ClearableFileInput
 from django.db.models import FileField
 
 
+# ============= Common Widgets ============================
 class ListTextWidget(Select):
     template_name = 'portal/widgets/listtxt.html'
 
@@ -47,6 +49,11 @@ class ListTextWidget(Select):
         return str(value)
 
 
+class PlayerAdminFileFieldWidget(ClearableFileInput):
+    template_name = 'portal/widgets/player_admin_clearable_file_input.html'
+
+
+# ============= Common Model Fields =======================
 class PbxFileField(FileField):
     def __init__(self, * args, ** kwargs):
         super().__init__(* args, ** kwargs)

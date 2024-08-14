@@ -179,6 +179,10 @@ class SFTPConnection(SSHConnection):
         except FileNotFoundError:
             return False
 
+    def gettfo(self, host, fh, remotefile):
+        sftp_path = self.sftp_path(remotefile)
+        return self.sftp(host).getfo(sftp_path, fh)
+
     def put(self, host, localfile, remotefile):
         sftp_path = self.sftp_path(remotefile)
         return self.sftp(host).put(localfile, sftp_path)
