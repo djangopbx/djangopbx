@@ -31,14 +31,15 @@ from django.contrib import admin
 from django.conf import settings
 from django.forms import ModelForm
 from django.forms.widgets import TextInput
+from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 from pbx.fileabslayer import FileAbsLayer
 from pbx.commonwidgets import PlayerAdminFileFieldWidget
-
 from .models import (
     Voicemail, VoicemailGreeting,
 )
+from.voicemailfunctions import VoicemailFunctions
 
 
 class VoicemailGreetingInlineAdminForm(ModelForm):
@@ -71,6 +72,11 @@ class VoicemailResource(resources.ModelResource):
         import_id_fields = ('id', )
 
 
+@admin.action(permissions=['change'], description='Sync. greeting files on disk with database.')
+def sync_greeting_files(modeladmin, request, queryset):
+    vf = VoicemailFunctions()
+    vf.sync_greetings(request.session['domain_uuid'])
+
 class VoicemailAdmin(ImportExportModelAdmin):
     resource_class = VoicemailResource
 
@@ -97,6 +103,7 @@ class VoicemailAdmin(ImportExportModelAdmin):
     ordering = [
         'extension_id__extension'
     ]
+    actions = [sync_greeting_files]
     inlines = [VoicemailGreetingInLine]
 
     def has_add_permission(self, request):
@@ -128,6 +135,15 @@ class VoicemailAdmin(ImportExportModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.updated_by = request.user.username
         super().save_model(request, obj, form, change)
+
+    # This is a workaround to allow the admin action to be run without selecting any objects.
+    # super checks for a valid UUID, so we pass a meaningless one because it is not actually used.
+    def changelist_view(self, request, extra_context=None):
+        if 'action' in request.POST and request.POST['action'] == 'sync_greeting_files':
+            post = request.POST.copy()
+            post.update({ACTION_CHECKBOX_NAME: 'cc30bc83-ccb8-4f27-a1d6-9340ae7de325'})
+            request._set_post(post)
+        return super(VoicemailAdmin, self).changelist_view(request, extra_context)
 
 
 admin.site.register(Voicemail, VoicemailAdmin)

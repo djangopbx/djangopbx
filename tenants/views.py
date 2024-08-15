@@ -46,6 +46,7 @@ from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from dialplans.dialplanfunctions import SwitchDp
+from voicemail.voicemailfunctions import VoicemailFunctions
 from utilities.reloadxml import ReloadXml
 
 
@@ -96,6 +97,14 @@ class DomainViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         instance = serializer.save(updated_by=self.request.user.username)
         SwitchDp().import_xml(instance.name, False, instance.id)  # Create dialplans
+
+    @action(detail=True)
+    def sync_voicemail_greeting_files_with_db(self, request, pk=None):
+        obj = self.get_object()
+        vf = VoicemailFunctions()
+        if not vf.sync_greetings(str(obj.id)):
+            return Response({'status': 'host/socket error'})
+        return Response({'status': 'voicemail greeting sync ok'})
 
 
 class ProfileViewSet(viewsets.ModelViewSet):

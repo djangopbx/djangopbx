@@ -16,9 +16,11 @@
         <div class="card-body cardbody1">
             {% if request.user.is_superuser %}
             {% endif %}
-            <div>
+            <div id="timeline" style="background-color: #ffffff;" class="container-fluid">
             {% for value in info %}
-                <b>{{ value.0|safe }}</b> <i class="fa fa-play" aria-hidden="true"></i> {{ value.1|safe }}<br>
+                <div class="row">
+                <div class="col-auto"><b class="text-muted">{{ value.0|safe }}</b> <i class="fa fa-arrow-right text-info" aria-hidden="true"></i></div> <div class="col-10-auto">{{ value.1|safe }}</div>
+                </div>
             {% endfor %}
             </div>
 

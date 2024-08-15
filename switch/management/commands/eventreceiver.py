@@ -61,8 +61,8 @@ class Command(BaseCommand):
     mb_key_adhoc = 'message_broker_adhoc_publish'
     switch_recordings_path = '/var/lib/freeswitch/recordings'
     pop_call_recordings = False
-    call_recordings_path = '/fs/recordings'
-    vm_greetings_path = '/fs/voicemail'
+    call_recordings_path = 'fs/recordings'
+    vm_greetings_path = 'fs/voicemail'
     updated_by = 'Event Receiver'
     domains = {}
 
@@ -460,7 +460,7 @@ class Command(BaseCommand):
                     path_parts = record_path.split('/')[-5:]
                     if len(path_parts) == 5:
                         local_path = '%s/%s' % (self.switch_recordings_path, '/'.join(path_parts))
-                        call_rec_path = '%s/%s' % (self.call_recordings_path[1:], '/'.join(path_parts))
+                        call_rec_path = '%s/%s' % (self.call_recordings_path.lstrip('/'), '/'.join(path_parts))
                         rec_start_stamp = event.get('variable_start_stamp', '')
                         try:
                             CallRecording.objects.create(name=record_name,
@@ -780,7 +780,7 @@ class Command(BaseCommand):
         if vm_action == 'record-greeting':
             path = event.get('VM-Greeting-Path')
             filename= os.path.basename(path)
-            storage_path='%s/default/%s/%s/%s' % (self.vm_greetings_path, vm_domain, vm_user, filename)
+            storage_path='%s/default/%s/%s/%s' % (self.vm_greetings_path.lstrip('/'), vm_domain, vm_user, filename)
             # Create or update the voicemail greetings record with the currect filename adjusting storage path to be relative to MEDIA_ROOT
             vm = Voicemail.objects.get(extension_id__extension=vm_user, extension_id__domain_id__name=vm_domain)
             if not vm:
