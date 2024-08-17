@@ -205,6 +205,8 @@ class CallTimelineAdmin(ImportExportModelAdmin):
                         'channel_call_state',
                         'answer_state',
                         'bridge_channel',
+                        'unique_id',
+                        'other_leg_unique_id',
                         'caller_id_name',
                         'other_leg_caller_id_name',
                         'caller_id_number',
@@ -278,10 +280,11 @@ class CallTimelineAdmin(ImportExportModelAdmin):
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = (
-        'hostname', 'event_name', 'event_subclass', 'event_date_local', 'call_uuid',
+        'hostname', 'event_name', 'event_subclass', 'event_date_local', 'unique_id',
         'caller_id_number'
         )
     list_filter = ('created', DomainFilter, EventNameListFilter, EventSubclassListFilter)
+#    list_filter = ('created', EventNameListFilter, EventSubclassListFilter)
 
     ordering = [
         '-event_epoch', '-event_sequence'

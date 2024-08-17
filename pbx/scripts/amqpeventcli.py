@@ -28,6 +28,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import sys
 import argparse
 import json
 from resources.pbx.amqpconnection import AmqpConnection
@@ -42,7 +43,7 @@ def on_message(channel, method, properties, body):
         print('%s, %s\n' % (event_name, event_subclass))
     else:
         print('%s\n' % event_name)
-    print(msg)
+    sys.stdout.write(msg)
     print('\n')
 
 def main():

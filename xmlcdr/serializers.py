@@ -147,6 +147,8 @@ class CallTimelineSerializer(serializers.ModelSerializer):
                 'channel_call_state',
                 'answer_state',
                 'bridge_channel',
+                'unique_id',
+                'other_leg_unique_id',
                 'caller_id_name',
                 'other_leg_caller_id_name',
                 'caller_id_number',

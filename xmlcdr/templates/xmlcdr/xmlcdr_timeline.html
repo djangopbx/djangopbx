@@ -17,9 +17,17 @@
             {% if request.user.is_superuser %}
             {% endif %}
             <div id="timeline" style="background-color: #ffffff;" class="container-fluid">
-            {% for value in info %}
+            {% for v1 in info %}
                 <div class="row">
-                <div class="col-auto"><b class="text-muted">{{ value.0|safe }}</b> <i class="fa fa-arrow-right text-info" aria-hidden="true"></i></div> <div class="col-10-auto">{{ value.1|safe }}</div>
+                <div class="col-auto"><b class="text-muted">{{ v1.0|safe }}</b> <i class="fa fa-long-arrow-alt-right text-info" aria-hidden="true"></i></div>
+                <div class="col-10-auto">
+                {% for v2 in v1.1 %}
+                    {% if forloop.counter > 1 %}
+                        <i class="fa fa-angle-right text-success" aria-hidden="true"></i>&nbsp;
+                    {% endif %}
+                        {{ v2|safe }}&nbsp;
+                {% endfor %}
+                </div>
                 </div>
             {% endfor %}
             </div>

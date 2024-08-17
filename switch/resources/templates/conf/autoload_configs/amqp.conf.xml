@@ -37,7 +37,7 @@
 	<!-- <param name="format_fields" value="#FreeSWITCH,FreeSWITCH-Hostname|#Unknown,Event-Name,Event-Subclass,Unique-ID"/> -->
 
 	<!-- <param name="event_filter" value="SWITCH_EVENT_ALL"/> -->
-	<param name="event_filter" value="CUSTOM,CHANNEL_HANGUP_COMPLETE,CHANNEL_CALLSTATE,RECORD_STOP,CHANNEL_HOLD,CHANNEL_UNHOLD,DTMF"/>
+	<param name="event_filter" value="CUSTOM,CHANNEL_CREATE,CHANNEL_UUID,CHANNEL_BRIDGE,CHANNEL_ANSWER,CHANNEL_HANGUP_COMPLETE,RECORD_STOP,CHANNEL_HOLD,CHANNEL_UNHOLD,DTMF"/>
       </params>
     </profile>
   </producers>

@@ -154,6 +154,8 @@ class CallTimeline(models.Model):
     channel_call_state            = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Channel Call State'))                          # noqa: E501, E221
     answer_state                  = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Answer State'))                                # noqa: E501, E221
     bridge_channel                = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Bridge Channel'))                             # noqa: E501, E221
+    unique_id                     = models.UUIDField(db_index=True, blank=True, null=True, verbose_name=_('Unique ID'))                                   # noqa: E501, E221
+    other_leg_unique_id           = models.UUIDField(db_index=True, blank=True, null=True, verbose_name=_('Other Leg Unique ID'))                         # noqa: E501, E221
     caller_id_name                = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Caller ID Name'))                              # noqa: E501, E221
     other_leg_caller_id_name      = models.CharField(max_length=32, blank=True, null=True, verbose_name=_('Other Leg Caller ID Name'))                    # noqa: E501, E221
     caller_id_number              = models.CharField(db_index=True, max_length=32, blank=True, null=True, verbose_name=_('Caller ID Number'))             # noqa: E501, E221

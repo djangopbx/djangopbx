@@ -348,6 +348,9 @@ class CdrStatisticsCalls(LoginRequiredMixin, View):
 
 
 class CdrTimeline(LoginRequiredMixin, View):
+    create_byto = {'inbound': 'by', 'outbound': 'to'}
+    ch_lookup = {}
+
     def get(self, request, *args, **kwargs):
         info = []
         call_uuid = kwargs.get('calluuid')
@@ -355,6 +358,24 @@ class CdrTimeline(LoginRequiredMixin, View):
             return render(request, 'xmlcdr/xmlcdr_timeline.html', {'info': info, 'back': 'cdrviewer', 'title': 'CDR Timeline'})
         qs = CallTimeline.objects.filter(call_uuid=call_uuid).order_by('event_epoch', 'event_sequence')
         for q in qs:
-            info.append((q.event_date_local, q.event_name))
+            if q.event_name == 'CHANNEL_CREATE':
+                ext = self.get_ext_from_ch_name(q.channel_name)
+                self.ch_lookup[q.unique_id] = ext
+                detail_list = ['%s %s %s' % (_('Call Started'), self.create_byto.get(q.direction), ext)]
+                info.append((q.event_date_local, detail_list))
+            if q.event_name == 'CHANNEL_ANSWER' and q.direction == 'outbound':
+                info.append((q.event_date_local, (_('Call Answered'), 'by', self.get_ext_from_ch_lookup(q.unique_id))))
+
             print(q.event_name)
         return render(request, 'xmlcdr/xmlcdr_timeline.html', {'info': info, 'back': 'cdrviewer', 'title': 'CDR Timeline'})
+
+    def get_ext_from_ch_lookup(self, unique_id, cn=None):
+        try:
+            return self.ch_lookup[unique_id]
+        except KeyError:
+            self.get_ext_from_ch_name(cn)
+
+    def get_ext_from_ch_name(self, cn):
+        if not cn:
+            return 'Unknown'
+        return cn.split('/')[-1:][0].split('@')[0]

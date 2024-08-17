@@ -28,29 +28,24 @@
 #
 
 import os
-import datetime
 import logging
 import json
 from pika import BasicProperties as PikaBasicProperties
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
 from django.core.management.base import BaseCommand
 from switch.models import IpRegister
 from tenants.models import DefaultSetting, Domain
 from xmlcdr.models import XmlCdr, CallTimeline
-from recordings.models import CallRecording
-from accounts.models import Extension
 from voicemail.models import Voicemail, VoicemailGreeting
 from pbx.commonfunctions import shcommand
 from pbx.scripts.resources.pbx.amqpconnection import AmqpConnection
 from pbx.sshconnect import SFTPConnection
-
+from .cdrhandlermixin import CdrHandlerMixin
 
 logger = logging.getLogger(__name__)
 
-
-class Command(BaseCommand):
+class Command(BaseCommand, CdrHandlerMixin):
     help = 'PBX Event Receiver'
     nonstr = 'none'
     debug = False
@@ -84,43 +79,59 @@ class Command(BaseCommand):
             number = 0.0
         return number
 
-    def get_domain_name(self, t_uuid, event):
+    def get_domain_name(self, event):
         domain_name = event.get('variable_domain_name')
         if not domain_name:
-            domain_name = event.get('variable_sip_req_host')
+            domain_name = event.get('variable_sip_auth_realm')
         if not domain_name:
-            logger.warn('EVENT CDR request {}: No domain name provided.'.format(t_uuid))
-            return False
+            domain_name = event.get('realm')
+        if not domain_name:
+            domain_name = event.get('variable_user_context')
+        if not domain_name:
+            domain_name = event.get('variable_sip_from_host')
         return domain_name
 
-    def get_domain(self, u_uuid, domain_name):
+    def get_domain(self, domain_name):
         d = self.domains.get(domain_name)
         if d:
             return d
         try:
             d = Domain.objects.get(name=domain_name)
         except Domain.ObjectDoesNotExist:
-            logger.warn('EVENT CDR request {}: Unable to find domain {}.'.format(t_uuid, domain_name))
-            return False
+            return None
         except Domain.MultipleObjectsReturned:
-            logger.warn('EVENT CDR request {}: Multiple domain record found for {}.'.format(t_uuid, domain_name))
-            return False
+            return None
         self.domains[domain_name] = d
         return d
+
+    def get_direction(self, event):
+        direction = event.get('Call-Direction')
+        if not direction:
+            direction = event.get('variable_direction')
+        if not direction:
+            direction = event.get('variable_call_direction')
+        if not direction:
+            direction = event.get('Caller-Direction')
+        return direction
 
     def on_message(self, channel, method, properties, body):
         msg = body.decode('utf8')
         if self.debug:
             if logger is not None:
                 logger.debug('Event Receiver PID: %s\n%s', (self.pid, msg))
-            print(msg)
         event = json.loads(msg)
         event_name = event.get('Event-Name', self.nonstr)
         event_subclass = event.get('Event-Subclass', self.nonstr)
         if event_name == 'CHANNEL_HANGUP_COMPLETE':
-            self.handle_cdr(event)
-        elif event_name == 'CHANNEL_CALLSTATE':
-            self.handle_call_state(event)
+            self.handle_hup_complete(event)
+        elif event_name == 'CHANNEL_CREATE':
+            self.handle_create(event)
+        elif event_name == 'CHANNEL_BRIDGE':
+            self.handle_bridge(event)
+        elif event_name == 'CHANNEL_ANSWER':
+            self.handle_answer(event)
+        elif event_name == 'CHANNEL_UUID':
+            self.handle_chuuid(event)
         elif event_name == 'DTMF':
             self.handle_dtmf(event)
         elif event_name == 'CHANNEL_HOLD':
@@ -146,6 +157,8 @@ class Command(BaseCommand):
                 self.handle_conferencemaintenance(event)
             elif event.get('Event-Subclass', self.nonstr) == 'vm::maintenance':
                 self.handle_vmmaintenance(event)
+            elif event.get('Event-Subclass', self.nonstr) == 'valet_parking::info':
+                self.handle_park(event)
 
     def handle(self, *args, **kwargs):
         self.pid = os.getpid()
@@ -182,364 +195,14 @@ class Command(BaseCommand):
         self.mq.setup_queues()
         self.mq.consume(self.on_message)
 
-    def handle_register(self, channel, event):
-        if event.get('status', 'N/A').startswith('Registered'):
-            ip_address = event.get('network-ip')
-            if not ip_address:
-                return
-            ip, created = IpRegister.objects.update_or_create(address=ip_address, defaults={"status": 1})
-            if created:
-                ip_type = 'ipv4'
-                if ':' in ip.address:
-                    ip_type = 'ipv6'
-                shcommand(['/usr/local/bin/fw-add-%s-sip-customer-list.sh' % ip_type, ip.address])
-                if self.message_broker_adhoc_publish:
-                    firewall_routing = 'DjangoPBX.%s.FIREWALL.add.%s' % (self.mq.hostname, ip_type)
-                    payload = self.firewall_event_template % (ip_type, ip.address)
-                    try:
-                        channel.basic_publish('TAP.Firewall', firewall_routing, payload.encode(),
-                            properties=PikaBasicProperties(delivery_mode=2), # Delivery Mode 2 for persistent
-                            )
-                    except:
-                        logger.warn('EVENT Register {}: Unable send TAP.Firewall message {}.'.format(ip.address, firewall_routing))
-
-    def handle_cdr(self, event):
-        core_uuid = event.get('Core-UUID')
-        t_uuid = event.get('Channel-Call-UUID', self.nonstr)
-        call_direction = event.get('variable_call_direction', self.nonstr)
-        q850 = event.get('variable_hangup_cause_q850', self.nonstr)
-        if q850 == '502': # LOSE_RACE (call connected elsewhere)
-            return False
-        if q850 == '605': # PICKED_OFF (intercepting it from another extension)
-            return False
-        if q850 == '101': # WRONG_CALL_STATE
-            if call_direction == self.nonstr:
-                return False
-
-        if event.get('Channel-HIT-Dialplan', 'false') == 'true':
-            leg = 'a'
-        else:
-            leg = 'b'
-            if not call_direction in self.b_leg:
-                return False
-
-        domain_name = self.get_domain_name(t_uuid, event)
-        if not domain_name:
-            return False
-
-        d = self.get_domain(t_uuid, domain_name)
-        if not d:
-            return False
-
-        extension_found = False
-        extension_uuid = event.get('variable_extension_uuid')
-        if extension_uuid:
-            try:
-                e = Extension.objects.get(pk=extension_uuid)
-            except Extension.ObjectDoesNotExist:
-                logger.debug('EVENT CDR request {}: Unable to find extension by uuid {}.'.format(t_uuid, extension_uuid))
-            else:
-                extension_found = True
-        else:
-            tmpstr = event.get('variable_dialed_user')
-            if tmpstr and not extension_found:
-                try:
-                    e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
-                    logger.debug(
-                        'EVENT CDR request {}: Unable to find extension by number dialled_user {}.'.
-                        format(t_uuid, tmpstr)
-                        )
-                except Extension.MultipleObjectsReturned:
-                    logger.warn(
-                        'EVENT CDR request {}: Multiple extension records found for dialed_user {}.'.
-                        format(t_uuid, tmpstr)
-                        )
-                else:
-                    extension_found = True
-
-            tmpstr = event.get('variable_referred_by_user')
-            if tmpstr and not extension_found:
-                try:
-                    e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
-                    logger.debug(
-                        'EVENT CDR request {}: Unable to find extension by number referred_by_user {}.'.
-                        format(t_uuid, tmpstr)
-                        )
-                except Extension.MultipleObjectsReturned:
-                    logger.warn(
-                        'EVENT CDR request {}: Multiple extension records found for referred_by_user {}.'.
-                        format(t_uuid, tmpstr)
-                        )
-                else:
-                    extension_found = True
-
-            tmpstr = event.get('variable_last_sent_callee_id_number')
-            if tmpstr and not extension_found:
-                try:
-                    e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
-                    logger.debug(
-                        'EVENT CDR request {}: Unable to find extension by number last_sent_callee_id_number {}.'.
-                        format(t_uuid, tmpstr)
-                        )
-                except Extension.MultipleObjectsReturned:
-                    logger.warn(
-                        'EVENT CDR request {}: Multiple extension records found for last_sent_callee_id_number {}.'.
-                        format(t_uuid, tmpstr)
-                        )
-                else:
-                    extension_found = True
-
-            if not extension_found:
-                logger.info('EVENT CDR request {}: Unable to find extension.'.format(t_uuid))
-
-        caller_id_name = event.get('variable_effective_caller_id_name')
-        if not caller_id_name:
-            caller_id_name = event.get('variable_caller_id_name')
-
-        caller_id_number = event.get('variable_effective_caller_id_number')
-        if not caller_id_number:
-            caller_id_name = event.get('variable_caller_id_number')
-
-        context = event.get('Caller-Context',self.nonstr)
-        destination_number = event.get('Caller-Destination-Number', '-')
-        network_addr = event.get('Caller-Network-Addr', '-')
-
-        tmpstr = event.get('variable_last_sent_callee_id_number')
-        if tmpstr and leg == 'a' and not call_direction in self.b_leg:
-            destination_number = tmpstr
-
-        tz = timezone.get_current_timezone()
-
-        start_stamp = event.get('variable_start_stamp')
-        if start_stamp:
-            start_time = datetime.datetime.strptime(start_stamp, '%Y-%m-%d %H:%M:%S')
-        else:
-            start_stamp = datetime.datetime.now()
-
-        start_year = start_time.strftime('%Y')
-        start_month = start_time.strftime('%b')
-        start_day = start_time.strftime('%d')
-
-        record_path = None
-        record_name = None
-
-        if event.get('variable_record_session'):
-            record_path = event.get('variable_record_path')
-            record_name = event.get('variable_record_name')
-            record_length = self.str2int(event.get('variable_record_seconds'))
-        elif not record_path and event.get('variable_last_app', self.nonstr) == 'record_session':
-            record_path = os.path.dirname(event.get('variable_last_arg'))
-            record_name = os.path.basename(event.get('variable_last_arg'))
-            record_length = self.str2int(event.get('variable_record_seconds'))
-        elif event.get('variable_record_name'):
-            record_path = event.get('variable_record_path')
-            record_name = event.get('variable_record_name')
-            record_length = self.str2int(event.get('variable_record_seconds'))
-        elif event.get('variable_sofia_record_file'):
-            record_path = os.path.dirname(event.get('variable_sofia_record_file'))
-            record_name = os.path.basename(event.get('variable_sofia_record_file'))
-            record_length = self.str2int(event.get('variable_record_seconds'))
-        elif event.get('variable_cc_record_filename'):
-            record_path = os.path.dirname(event.get('variable_cc_record_filename'))
-            record_name = os.path.basename(event.get('variable_cc_record_filename'))
-            record_length = self.str2int(event.get('variable_record_seconds'))
-        elif event.get('variable_api_on_answer'):
-            command = self.uq(event.get('variable_api_on_answer'))
-            command = command.replace('\n', ' ').split(' ')
-            for parts in command:
-                if parts[0] == 'uuid_record':
-                    recording = parts[3]
-                    record_path = os.path.dirname(recording)
-                    record_name = os.path.basename(recording)
-                    record_length = self.str2int(event.get('variable_duration'))
-        elif event.get('variable_current_application_data'):
-            commands = event.get('variable_current_application_data')
-            commands = commands.split(',')
-            for command in commands:
-                cmd = command.split('=')
-                if cmd[0] == 'api_on_answer':
-                    a = cmd[1].split(']')
-                    parts = a[0].replace(',', '').split(' ')
-                    if parts[0] == 'uuid_record':
-                        recording = parts[3]
-                        record_path = os.path.dirname(recording)
-                        record_name = os.path.basename(recording)
-                        record_length = self.str2int(event.get('variable_duration'))
-
-        uuid = event.get('variable_uuid', self.nonstr)
-
-        if not record_name:
-            bridge_uuid = event.get('variable_bridge_uuid', self.nonstr)
-            path = '%s/%s/archive/%s/%s/%s/%s.wav' % (
-                    self.switch_recordings_path, domain_name, start_year, start_month, start_day, bridge_uuid
-                    )
-            if os.path.exists(path):
-                record_path = os.path.dirname(path)
-                record_name = os.path.basename(path)
-                record_length = self.str2int(event.get('variable_duration'))
-            path = '%s/%s/archive/%s/%s/%s/%s.mp3' % (
-                    self.switch_recordings_path, domain_name, start_year, start_month, start_day, bridge_uuid
-                    )
-            if os.path.exists(path):
-                record_path = os.path.dirname(path)
-                record_name = os.path.basename(path)
-                record_length = self.str2int(event.get('variable_duration'))
-
-        if not record_name:
-            bridge_uuid = event.get('variable_bridge_uuid', self.nonstr)
-            path = '%s/%s/archive/%s/%s/%s/%s.wav' % (
-                    self.switch_recordings_path, domain_name, start_year, start_month, start_day, uuid
-                    )
-            if os.path.exists(path):
-                record_path = os.path.dirname(path)
-                record_name = os.path.basename(path)
-                record_length = self.str2int(event.get('variable_duration'))
-            path = '%s/%s/archive/%s/%s/%s/%s.mp3' % (
-                    self.switch_recordings_path, domain_name, start_year, start_month, start_day, uuid
-                    )
-            if os.path.exists(path):
-                record_path = os.path.dirname(path)
-                record_name = os.path.basename(path)
-                record_length = self.str2int(event.get('variable_duration'))
-
-        xcdr = XmlCdr(domain_id=d, core_uuid=core_uuid)
-        if extension_found:
-            xcdr.extension_id=e
-        xcdr.call_uuid = event.get('variable_call_uuid')
-        xcdr.domain_name = domain_name
-        xcdr.accountcode = event.get('variable_accountcode')
-        xcdr.direction = event.get('variable_call_direction', self.nonstr)
-        xcdr.context = context
-        if caller_id_name:
-            xcdr.caller_id_name = caller_id_name
-        if caller_id_number:
-            xcdr.caller_id_number = caller_id_number
-        caller_destination = event.get('variable_caller_destination')
-        if not caller_destination:
-            caller_destination = event.get('Caller-Destination-Number')
-        xcdr.caller_destination = caller_destination
-        # xcdr.source_number = event.get('variable_')
-        xcdr.destination_number = destination_number
-
-        xcdr.start_epoch = self.str2int(event.get('variable_start_epoch'))
-        xcdr.start_stamp = timezone.make_aware(start_time, tz)
-        xcdr.answer_epoch = self.str2int(event.get('variable_answer'))
-
-        answer_stamp = event.get('variable_answer_stamp')
-        if answer_stamp:
-            answer_time = datetime.datetime.strptime(answer_stamp, '%Y-%m-%d %H:%M:%S')
-            xcdr.answer_stamp = timezone.make_aware(answer_time, tz)
-
-        xcdr.end_epoch = self.str2int(event.get('variable_end_epoch'))
-
-        end_stamp = event.get('variable_end_stamp')
-        if end_stamp:
-            end_time = datetime.datetime.strptime(end_stamp, '%Y-%m-%d %H:%M:%S')
-            xcdr.end_stamp = timezone.make_aware(end_time, tz)
-
-        xcdr.duration = self.str2int(event.get('variable_duration'))
-        xcdr.mduration = self.str2int(event.get('variable_mduration'))
-        xcdr.billsec = self.str2int(event.get('variable_billsec'))
-        xcdr.billmsec = self.str2int(event.get('variable_billmsec'))
-        xcdr.bridge_uuid = event.get('variable_bridge_uuid')
-        xcdr.read_codec = event.get('variable_read_codec')
-        xcdr.read_rate = event.get('variable_read_rate')
-        xcdr.write_codec = event.get('variable_write_codec')
-        xcdr.write_rate = event.get('variable_write_rate')
-        xcdr.remote_media_ip = event.get('variable_remote_media_ip')
-        xcdr.network_addr = network_addr
-        if record_path and record_name:
-            if record_length > 0:
-                xcdr.record_path = record_path
-                xcdr.record_name = record_name
-                # record_description = event.get('variable_record_description', self.nonstr)
-                if self.pop_call_recordings:
-                    path_parts = record_path.split('/')[-5:]
-                    if len(path_parts) == 5:
-                        local_path = '%s/%s' % (self.switch_recordings_path, '/'.join(path_parts))
-                        call_rec_path = '%s/%s' % (self.call_recordings_path.lstrip('/'), '/'.join(path_parts))
-                        rec_start_stamp = event.get('variable_start_stamp', '')
-                        try:
-                            CallRecording.objects.create(name=record_name,
-                                    domain_id=d, year=path_parts[2],
-                                    month=path_parts[3], day=path_parts[4],
-                                    filename='%s/%s' % (call_rec_path, record_name),
-                                    description='%s-%s @ %s' % (caller_id_number, destination_number, rec_start_stamp[-8:]),
-                                    updated_by=self.updated_by)
-                        except:
-                            pass
-
-        xcdr.leg = leg
-        xcdr.pdd_ms = self.str2int(event.get(
-            'progress_mediamsec'
-            )) + self.str2int(event.get('variable_progressmsec'))
-        xcdr.rtp_audio_in_mos = self.str2float(event.get('variable_rtp_audio_in_mos'))
-        xcdr.last_app = event.get('variable_last_app')
-        xcdr.last_arg = event.get('variable_last_arg')
-
-        xcdr.missed_call = False
-        if (event.get('variable_call_direction', self.nonstr) == 'local' or
-                event.get('variable_call_direction', self.nonstr) == 'inbound'):
-            if self.str2int(event.get('variable_billsec')) == 0:
-                xcdr.missed_call = True
-        if event.get('variable_missed_call', 'false') == 'true':
-            xcdr.missed_call = True
-
-        xcdr.cc_side = event.get('variable_cc_side')
-        xcdr.cc_member_uuid = event.get('variable_cc_member_uuid')
-        xcdr.cc_queue_joined_epoch = self.str2int(event.get('variable_cc_queue_joinded_epoch'))
-        xcdr.cc_queue = event.get('variable_cc_queue')
-        xcdr.cc_member_session_uuid = event.get('variable_cc_member_session_id')
-        xcdr.cc_agent_uuid = event.get('variable_cc_agent_uuid')
-        xcdr.cc_agent = event.get('variable_cc_agent')
-        xcdr.cc_agent_type = event.get('variable_cc_agent_type')
-        xcdr.cc_agent_bridged = event.get('variable_cc_agent_bridged')
-        xcdr.cc_queue_answered_epoch = self.str2int(event.get('variable_cc_queue_answered_epoch'))
-        xcdr.cc_queue_terminated_epoch = self.str2int(event.get('variable_cc_queue_terminated_epoch'))
-        xcdr.cc_queue_canceled_epoch = self.str2int(event.get('variable_cc_queue_canceled_epoch'))
-        xcdr.cc_cancel_reason = event.get('variable_cc_cancel_reason')
-        xcdr.cc_cause = event.get('variable_cc_cause')
-        xcdr.waitsec = self.str2int(event.get('variable_waitsec'))
-        xcdr.conference_name = event.get('variable_conference_name')
-        xcdr.conference_uuid = event.get('variable_conference_uuid')
-        xcdr.conference_member_id = event.get('variable_conference_member_id')
-        # xcdr.digits_dialed = event.get('variable_digits_dialed')
-        pin_number = event.get('variable_pin_number')
-        if pin_number:
-            xcdr.pin_number = pin_number
-
-        xcdr.hangup_cause = event.get('variable_hangup_cause')
-        xcdr.hangup_cause_q850 = self.str2int(q850)
-        xcdr.sip_hangup_disposition = event.get('variable_sip_hangup_disposition')
-
-        if self.cdrformat == 'json':
-            xcdr.json = event
-
-        xcdr.updated_by = self.updated_by
-        xcdr.save()
-        ctl = self.create_call_timeline(event)
-        if ctl:
-            self.add_ctl_caller_channel_data(ctl, event)
-            self.add_ctl_application_data([
-                'variable_current_application',
-                None,
-                None,
-                None,
-                'variable_current_application_data',
-                None,
-                None,
-                None
-                ], ctl, event)
-            ctl.save()
-        CallTimeline.objects.filter(core_uuid=core_uuid).update(domain_id=d)
-        return
-
     def create_call_timeline(self, event):
+        d = None
+        domain_name = self.get_domain_name(event)
+        if domain_name:
+            d = self.get_domain(domain_name)
         try:
             ctl = CallTimeline(
+                domain_id = d,
                 core_uuid = event.get('Core-UUID'),
                 hostname = event.get('FreeSWITCH-Hostname'),
                 switchame = event.get('FreeSWITCH-Switchname'),
@@ -558,19 +221,12 @@ class Command(BaseCommand):
             return False
         return ctl
 
-    def add_ctl_application_data(self, fields, ctl, event):
-        ctl.application = event.get(fields[0])
-        ctl.application_name = event.get(fields[1])
-        ctl.application_action = event.get(fields[2])
-        ctl.application_uuid = event.get(fields[3])
-        ctl.application_data = event.get(fields[4])
-        ctl.application_status = event.get(fields[5])
-        ctl.application_file_path = event.get(fields[6])
-        ctl.application_seconds = self.str2int(event.get(fields[7]))
+    def add_ctl_unique_ids(self, ctl, event):
+        ctl.unique_id = event.get('Unique-ID')
+        ctl.other_leg_unique_id = event.get('Other-Leg-Unique-ID')
         return
 
     def add_ctl_caller_channel_data(self, ctl, event):
-        ctl.direction = event.get('Call-Direction')
         ctl.other_leg_direction = event.get('Other-Leg-Direction')
         ctl.context = event.get('Caller-Context')
         ctl.other_leg_context = event.get('Other-Leg-Context')
@@ -615,18 +271,53 @@ class Command(BaseCommand):
         ctl.transfer_source = event.get('Caller-Transfer-Source')
         return
 
-    def handle_call_state(self, event):
+    def handle_register(self, channel, event):
+        if event.get('status', 'N/A').startswith('Registered'):
+            ip_address = event.get('network-ip')
+            if not ip_address:
+                return
+            ip, created = IpRegister.objects.update_or_create(address=ip_address, defaults={"status": 1})
+            if created:
+                ip_type = 'ipv4'
+                if ':' in ip.address:
+                    ip_type = 'ipv6'
+                shcommand(['/usr/local/bin/fw-add-%s-sip-customer-list.sh' % ip_type, ip.address])
+                if self.message_broker_adhoc_publish:
+                    firewall_routing = 'DjangoPBX.%s.FIREWALL.add.%s' % (self.mq.hostname, ip_type)
+                    payload = self.firewall_event_template % (ip_type, ip.address)
+                    try:
+                        channel.basic_publish('TAP.Firewall', firewall_routing, payload.encode(),
+                            properties=PikaBasicProperties(delivery_mode=2), # Delivery Mode 2 for persistent
+                            )
+                    except:
+                        logger.warn('EVENT Register {}: Unable send TAP.Firewall message {}.'.format(ip.address, firewall_routing))
+
+    def handle_hup_complete(self, event):
+        call_direction = self.get_direction(event)
+        q850 = event.get('variable_hangup_cause_q850', self.nonstr)
+        if q850 == '502': # LOSE_RACE (call connected elsewhere)
+            return False
+        if q850 == '605': # PICKED_OFF (intercepting it from another extension)
+            return False
+        if q850 == '101': # WRONG_CALL_STATE
+            if not call_direction:
+                return False
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = call_direction
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
         ctl.save()
+        self.handle_cdr(event, call_direction, q850)
         return
 
     def handle_dtmf(self, event):
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
         ctl.dtmf_digit = event.get('DTMF-Digit')
         ctl.dtmf_duration = self.str2int(event.get('DTMF-Duration'))
@@ -638,6 +329,8 @@ class Command(BaseCommand):
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
         ctl.bridge_channel = event.get('variable_bridge_channel')
         ctl.save()
@@ -647,17 +340,12 @@ class Command(BaseCommand):
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
-        self.add_ctl_application_data([
-            'variable_current_application',      # Application
-            None,                                # Application Name
-            None,                                # Application Action
-            None,                                # Application UUID
-            'variable_current_application_data', # Application Data
-            None,                                # Application Status
-            'Playback-File-Path',                # Application File Path
-            None                                 # Application Seconds
-            ], ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_data = event.get('variable_current_application_data')
+        ctl.application_file_path = event.get('Playback-File-Path')
         ctl.save()
         return
 
@@ -665,17 +353,14 @@ class Command(BaseCommand):
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
-        self.add_ctl_application_data([
-            'variable_current_application',
-            None,
-            None,
-            None,
-            'variable_current_application_data',
-            'Playback-Status',
-            'Playback-File-Path',
-            'variable_playback_seconds'
-            ], ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_data = event.get('variable_current_application_data')
+        ctl.application_status = event.get('Playback-Status')
+        ctl.application_file_path = event.get('Playback-File-Path')
+        ctl.application_seconds = self.str2int(event.get('variable_playback_seconds'))
         ctl.save()
         return
 
@@ -683,17 +368,14 @@ class Command(BaseCommand):
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
-        self.add_ctl_application_data([
-            'variable_current_application',
-            None,
-            None,
-            None,
-            'variable_current_application_data',
-            'variable_record_completion_cause',
-            'Record-File-Path',
-            'variable_record_seconds'
-            ], ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_data = event.get('variable_current_application_data')
+        ctl.application_status = event.get('variable_record_completion_cause')
+        ctl.application_file_path = event.get('Record-File-Path')
+        ctl.application_seconds = self.str2int(event.get('variable_record_seconds'))
         ctl.save()
         return
 
@@ -701,17 +383,11 @@ class Command(BaseCommand):
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
-        self.add_ctl_application_data([
-            'variable_current_application',
-            None,
-            None,
-            None,
-            'variable_current_application_data',
-            None,
-            None,
-            None
-            ], ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_data = event.get('variable_current_application_data')
         ctl.cc_side = event.get('variable_cc_side')
         ctl.cc_queue = event.get('CC-Queue')
         ctl.cc_action = event.get('CC-Action')
@@ -743,6 +419,8 @@ class Command(BaseCommand):
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
         ctl.cf_name = event.get('Conference-Name')
         ctl.cf_action = event.get('Action')
@@ -766,17 +444,14 @@ class Command(BaseCommand):
         vm_domain = event.get('VM-Domain', 'None')
         vm_user = event.get('VM-User', '000')
         vm_greeting_no = event.get('VM-User', '000')
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
-        self.add_ctl_application_data([
-            'variable_current_application',
-            'variable_current_application',
-            'VM-Action',
-            'variable_uuid',
-            'variable_current_application_data',
-            None,
-            'VM-Greeting-Path',
-            None
-            ], ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_action = event.get('VM-Action')
+        ctl.application_uuid = event.get('variable_uuid')
+        ctl.application_data = event.get('variable_current_application_data')
+        ctl.application_file_path = event.get('VM-Greeting-Path')
         if vm_action == 'record-greeting':
             path = event.get('VM-Greeting-Path')
             filename= os.path.basename(path)
@@ -807,3 +482,76 @@ class Command(BaseCommand):
         ctl = self.create_call_timeline(event)
         if not ctl:
             return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
+        self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_data = event.get('variable_current_application_data')
+        ctl.save()
+        return
+
+    def handle_create(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
+        ctl.channel_name = event.get('Channel-Name')
+        ctl.channel_state = event.get('Channel-State')
+        ctl.answer_state = event.get('Answer-State')
+        ctl.save()
+        return
+
+    def handle_bridge(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
+        self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_path = 'A:%s B:%s' % (event.get('Bridge-A-Unique-ID', self.nonstr),
+                                             event.get('Bridge-B-Unique-ID', self.nonstr))
+        ctl.application_data = event.get('variable_current_application_data')
+        ctl.save()
+        return
+
+    def handle_answer(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
+        self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_data = event.get('variable_current_application_data')
+        ctl.save()
+        return
+
+    def handle_chuuid(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        ctl.direction = self.get_direction(event)
+        ctl.unique_id = event.get('Unique-ID')
+        ctl.other_leg_unique_id = event.get('Old-Unique-ID')
+        ctl.application = event.get('variable_sip_destination_url')
+        ctl.application_uuid = event.get('Old-Unique-ID')
+        ctl.application_data = event.get('variable_channel_name')
+        ctl.save()
+        return
+
+    def handle_park(self, event):
+        ctl = self.create_call_timeline(event)
+        if not ctl:
+            return
+        ctl.direction = self.get_direction(event)
+        self.add_ctl_unique_ids(ctl, event)
+        self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application = event.get('variable_current_application')
+        ctl.application_name = event.get('variable_park_lot')
+        ctl.application_action = 'park-in' if event.get('variable_inline_detination') else 'update'
+        ctl.application_data = event.get('variable_current_application_data')
+        ctl.application_status = event.get('variable_park_in_use')
+        ctl.save()
+        return
