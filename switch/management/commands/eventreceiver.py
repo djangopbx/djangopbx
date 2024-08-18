@@ -97,7 +97,7 @@ class Command(BaseCommand, CdrHandlerMixin):
             return d
         try:
             d = Domain.objects.get(name=domain_name)
-        except Domain.ObjectDoesNotExist:
+        except Domain.DoesNotExist:
             return None
         except Domain.MultipleObjectsReturned:
             return None
@@ -343,6 +343,7 @@ class Command(BaseCommand, CdrHandlerMixin):
         ctl.direction = self.get_direction(event)
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application_name = 'playback'
         ctl.application = event.get('variable_current_application')
         ctl.application_data = event.get('variable_current_application_data')
         ctl.application_file_path = event.get('Playback-File-Path')
@@ -356,6 +357,7 @@ class Command(BaseCommand, CdrHandlerMixin):
         ctl.direction = self.get_direction(event)
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application_name = 'playback' # We put this manual label in because the current_application is not always what you expect it to be.
         ctl.application = event.get('variable_current_application')
         ctl.application_data = event.get('variable_current_application_data')
         ctl.application_status = event.get('Playback-Status')
@@ -371,6 +373,7 @@ class Command(BaseCommand, CdrHandlerMixin):
         ctl.direction = self.get_direction(event)
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application_name = 'record'
         ctl.application = event.get('variable_current_application')
         ctl.application_data = event.get('variable_current_application_data')
         ctl.application_status = event.get('variable_record_completion_cause')
@@ -386,6 +389,7 @@ class Command(BaseCommand, CdrHandlerMixin):
         ctl.direction = self.get_direction(event)
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application_name = 'callcentre'
         ctl.application = event.get('variable_current_application')
         ctl.application_data = event.get('variable_current_application_data')
         ctl.cc_side = event.get('variable_cc_side')
@@ -422,6 +426,7 @@ class Command(BaseCommand, CdrHandlerMixin):
         ctl.direction = self.get_direction(event)
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application_name = 'conference'
         ctl.cf_name = event.get('Conference-Name')
         ctl.cf_action = event.get('Action')
         ctl.cf_uuid = event.get('Conference-Unique-ID')
@@ -447,6 +452,7 @@ class Command(BaseCommand, CdrHandlerMixin):
         ctl.direction = self.get_direction(event)
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application_name = 'voicemail'
         ctl.application = event.get('variable_current_application')
         ctl.application_action = event.get('VM-Action')
         ctl.application_uuid = event.get('variable_uuid')
@@ -485,6 +491,7 @@ class Command(BaseCommand, CdrHandlerMixin):
         ctl.direction = self.get_direction(event)
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application_name = 'ivrmenu'
         ctl.application = event.get('variable_current_application')
         ctl.application_data = event.get('variable_current_application_data')
         ctl.save()
@@ -509,8 +516,9 @@ class Command(BaseCommand, CdrHandlerMixin):
         ctl.direction = self.get_direction(event)
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
+        ctl.application_name = 'Bridge'
         ctl.application = event.get('variable_current_application')
-        ctl.application_path = 'A:%s B:%s' % (event.get('Bridge-A-Unique-ID', self.nonstr),
+        ctl.application_file_path = 'A:%s B:%s' % (event.get('Bridge-A-Unique-ID', self.nonstr),
                                              event.get('Bridge-B-Unique-ID', self.nonstr))
         ctl.application_data = event.get('variable_current_application_data')
         ctl.save()
@@ -549,7 +557,7 @@ class Command(BaseCommand, CdrHandlerMixin):
         self.add_ctl_unique_ids(ctl, event)
         self.add_ctl_caller_channel_data(ctl, event)
         ctl.application = event.get('variable_current_application')
-        ctl.application_name = event.get('variable_park_lot')
+        ctl.application_name = 'park: %s' % event.get('variable_park_lot', '')
         ctl.application_action = 'park-in' if event.get('variable_inline_detination') else 'update'
         ctl.application_data = event.get('variable_current_application_data')
         ctl.application_status = event.get('variable_park_in_use')

@@ -67,7 +67,7 @@ class CdrHandlerMixin():
         if extension_uuid:
             try:
                 e = Extension.objects.get(pk=extension_uuid)
-            except Extension.ObjectDoesNotExist:
+            except Extension.DoesNotExist:
                 logger.debug('EVENT CDR request {}: Unable to find extension by uuid {}.'.format(t_uuid, extension_uuid))
             else:
                 extension_found = True
@@ -76,7 +76,7 @@ class CdrHandlerMixin():
             if tmpstr and not extension_found:
                 try:
                     e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
+                except Extension.DoesNotExist:
                     logger.debug(
                         'EVENT CDR request {}: Unable to find extension by number dialled_user {}.'.
                         format(t_uuid, tmpstr)
@@ -93,7 +93,7 @@ class CdrHandlerMixin():
             if tmpstr and not extension_found:
                 try:
                     e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
+                except Extension.DoesNotExist:
                     logger.debug(
                         'EVENT CDR request {}: Unable to find extension by number referred_by_user {}.'.
                         format(t_uuid, tmpstr)
@@ -110,7 +110,7 @@ class CdrHandlerMixin():
             if tmpstr and not extension_found:
                 try:
                     e = Extension.objects.get((Q(extension=tmpstr) | Q(number_alias=tmpstr)), domain_id=d.id)
-                except Extension.ObjectDoesNotExist:
+                except Extension.DoesNotExist:
                     logger.debug(
                         'EVENT CDR request {}: Unable to find extension by number last_sent_callee_id_number {}.'.
                         format(t_uuid, tmpstr)

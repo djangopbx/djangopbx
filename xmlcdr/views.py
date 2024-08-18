@@ -350,6 +350,7 @@ class CdrStatisticsCalls(LoginRequiredMixin, View):
 class CdrTimeline(LoginRequiredMixin, View):
     create_byto = {'inbound': 'by', 'outbound': 'to'}
     ch_lookup = {}
+    ch_bridged = {}
 
     def get(self, request, *args, **kwargs):
         info = []
@@ -365,6 +366,8 @@ class CdrTimeline(LoginRequiredMixin, View):
                 info.append((q.event_date_local, detail_list))
             if q.event_name == 'CHANNEL_ANSWER' and q.direction == 'outbound':
                 info.append((q.event_date_local, (_('Call Answered'), 'by', self.get_ext_from_ch_lookup(q.unique_id))))
+            if q.event_name == 'CHANNEL_BRIDGE':
+                info.append((q.event_date_local, (_('Call Bridged'), 'by', self.get_ext_from_ch_lookup(q.unique_id))))
 
             print(q.event_name)
         return render(request, 'xmlcdr/xmlcdr_timeline.html', {'info': info, 'back': 'cdrviewer', 'title': 'CDR Timeline'})
