@@ -46,7 +46,7 @@ from django.utils import timezone
 import django_tables2 as tables
 from django_filters.views import FilterView
 import django_filters as filters
-from django.db.models import Count, Sum, Min, Max, Avg
+from django.db.models import Q, Count, Sum, Min, Max, Avg
 
 from tenants.pbxsettings import PbxSettings
 from pbx.commonvalidators import clean_uuid4_list
@@ -57,6 +57,7 @@ from pbx.pbxipaddresscheck import pbx_ip_address_check, loopback_default
 from .models import (
     XmlCdr, CallTimeline,
 )
+from pbx.commonfunctions import str2uuid
 from .serializers import (
     XmlCdrSerializer, CallTimelineSerializer,
 )
@@ -351,23 +352,59 @@ class CdrTimeline(LoginRequiredMixin, View):
     create_byto = {'inbound': 'by', 'outbound': 'to'}
     ch_lookup = {}
     ch_bridged = {}
+    xf_type_lookup = {'bl_xfer': 'blind transfer', 'xfer': 'transfer', 'uuid_br': 'Connect'}
+    last_valetpark = ''
 
     def get(self, request, *args, **kwargs):
         info = []
+        xf_epoch = xf_uuid = xf_type = xf_dest = None
         call_uuid = kwargs.get('calluuid')
         if not call_uuid:
             return render(request, 'xmlcdr/xmlcdr_timeline.html', {'info': info, 'back': 'cdrviewer', 'title': 'CDR Timeline'})
-        qs = CallTimeline.objects.filter(call_uuid=call_uuid).order_by('event_epoch', 'event_sequence')
+        qs = CallTimeline.objects.filter(
+                (Q(call_uuid=call_uuid) | Q(unique_id=call_uuid) | Q(other_leg_unique_id=call_uuid))
+                ).order_by('event_epoch', 'event_sequence')
         for q in qs:
-            if q.event_name == 'CHANNEL_CREATE':
+            if q.transfer_source:
+                try:
+                    xf_epoch, xf_uuid, xf_type, xf_dest = q.transfer_source.split(':')
+                except VlaueError:
+                    pass
+            if q.event_name == 'CUSTOM':
+                if q.event_subclass == 'valet_parking::info':
+                    valetpark = '%s~%s~%s' % (str(q.unique_id), q.channel_name, q.transfer_source)
+                    if valetpark == self.last_valetpark:  # this prevents displaying sequential duplicates
+                        self.last_valetpark = ''
+                        continue
+                    self.last_valetpark = valetpark
+
+                    if xf_epoch:
+                        info.append((q.event_date_local, (self.xf_type_lookup[xf_type], xf_dest.split('/')[0])))
+                    detail_list = [q.application]
+                    info.append((q.event_date_local, detail_list))
+
+            elif q.event_name == 'CHANNEL_CREATE':
                 ext = self.get_ext_from_ch_name(q.channel_name)
                 self.ch_lookup[q.unique_id] = ext
-                detail_list = ['%s %s %s' % (_('Call Started'), self.create_byto.get(q.direction), ext)]
+                detail_list = ['%s %s %s' % (_('Call Initiated'), self.create_byto.get(q.direction), ext)]
                 info.append((q.event_date_local, detail_list))
-            if q.event_name == 'CHANNEL_ANSWER' and q.direction == 'outbound':
-                info.append((q.event_date_local, (_('Call Answered'), 'by', self.get_ext_from_ch_lookup(q.unique_id))))
-            if q.event_name == 'CHANNEL_BRIDGE':
-                info.append((q.event_date_local, (_('Call Bridged'), 'by', self.get_ext_from_ch_lookup(q.unique_id))))
+            elif q.event_name == 'CHANNEL_ANSWER' and q.direction == 'outbound':
+                detail_list = ['%s by %s' % (_('Call Answered'), ext)]
+                info.append((q.event_date_local, detail_list))
+            elif q.event_name == 'CHANNEL_BRIDGE':
+                if q.application_file_path:
+                    try:
+                        a, b = q.application_file_path.split()
+                    except ValueError:
+                        pass
+                detail_list = [_('Call Connected')]
+                detail_list.append(self.get_ext_from_ch_lookup(str2uuid(a[2:])))
+                detail_list.append(self.get_ext_from_ch_lookup(str2uuid(a[2:])))
+                info.append((q.event_date_local, detail_list))
+            elif q.event_name == 'CHANNEL_HANGUP_COMPLETE':
+                detail_list = [_('Hangup')]
+                detail_list.append('from %s' % self.get_ext_from_ch_lookup(q.unique_id))
+                info.append((q.event_date_local, detail_list))
 
             print(q.event_name)
         return render(request, 'xmlcdr/xmlcdr_timeline.html', {'info': info, 'back': 'cdrviewer', 'title': 'CDR Timeline'})

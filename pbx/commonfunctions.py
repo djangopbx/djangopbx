@@ -31,12 +31,13 @@
 #  These are functions and classes used by more than one application
 #
 
+import os
+import subprocess
+import uuid
+import re
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from tenants.models import Domain
-import subprocess
-import os
-import re
 
 
 def get_version(package):
@@ -90,6 +91,13 @@ def str2regex(dst, pre=''):
 
     return dst
 
+def str2uuid(s, retzero=True):
+    try:
+        s_uuid = uuid.UUID(s)
+    except ValueError:
+        if retzero:
+            return uuid.UUID('00000000-0000-0000-0000-000000000000')
+    return s_uuid
 
 class DomainUtils():
 
