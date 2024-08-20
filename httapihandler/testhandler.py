@@ -39,6 +39,23 @@ class TestHandler(HttApiHandler):
         if self.exiting:
             return self.return_data('Ok\n')
 
+
+        try:
+            fred = self.session_json['fred']
+        except KeyError:
+            fred = 'B'
+        if fred == 'B':
+            x_root = self.XrootApi()
+            etree.SubElement(x_root, 'params')
+            x_work = etree.SubElement(x_root, 'work')
+            etree.SubElement(x_work, 'playback', file='/usr/share/freeswitch/sounds/en/us/callie/ivr/8000/ivr-id_number.wav')
+            etree.SubElement(x_work, 'break')
+            self.session_json['fred'] = 'A'
+            self.session.save()
+            etree.indent(x_root)
+            xml = str(etree.tostring(x_root), "utf-8")
+            return xml
+
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')

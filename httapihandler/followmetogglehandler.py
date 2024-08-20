@@ -37,18 +37,11 @@ class FollowMeToggleHandler(HttApiHandler):
 
     handler_name = 'followmetoggle'
 
-    def get_variables(self):
-        self.var_list = [
-        'extension_uuid'
-        ]
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
-        extension_uuid = self.qdict.get('extension_uuid')
+        extension_uuid = self.session_json.get('variable_extension_uuid')
         try:
             e = Extension.objects.get(pk=extension_uuid)
         except Extension.DoesNotExist:

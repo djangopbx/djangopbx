@@ -358,6 +358,8 @@ PBX_FREESWITCH_LOCAL = True
 # Used for calculating sound file locations
 PBX_SOUND_DIRS = ['ascii', 'base256', 'conference', 'currency', 'digits', 'directory', 'ivr', 'misc', 'phonetic-ascii', 'time', 'voicemail', 'zrtp']
 PBX_SOUND_LIST_DIR = '8000'
+#  Choose voicemail subsystem
+PBX_USE_MOD_VOICEMAIL = False
 
 # XML Handler Settings
 PBX_XMLH_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']
@@ -373,3 +375,7 @@ PBX_CDRH_FORMAT = 'json'
 PBX_CDRH_POPULATE_CALL_RECORDINGS = True
 PBX_CDRH_RECORDINGS = '/fs/recordings'
 PBX_CDRH_SWITCH_RECORDINGS = '/var/lib/freeswitch/recordings'
+
+# HTTAPI Handler settings
+PBX_HTTAPI_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']
+PBX_HTTAPI_SWITCH_RECORDINGS = '/var/lib/freeswitch/recordings'

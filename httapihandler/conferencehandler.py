@@ -41,12 +41,6 @@ class ConferenceHandler(HttApiHandler):
 
     handler_name = 'conference'
 
-    def get_variables(self):
-        self.var_list = [
-        'conference_uuid',
-        ]
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         self.conf_session = None
         if self.getfile:
@@ -55,12 +49,11 @@ class ConferenceHandler(HttApiHandler):
             self.exit_actions()
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
         self.caller_id_name = self.qdict.get('Caller-Orig-Caller-ID-Name', 'None')
         self.caller_id_number = self.qdict.get('Caller-Orig-Caller-ID-Number', 'None')
 
-        if 'conf_uuid' not in self.session.json[self.handler_name]:
-            conf_uuid = self.qdict.get('conference_uuid')
+        if 'conf_uuid' not in self.session_json:
+            conf_uuid = self.session_json.get('variable_conference_uuid')
             try:
                 self.cnf = ConferenceCentres.objects.get(pk=conf_uuid)
             except ConferenceCentres.DoesNotExist:
@@ -72,8 +65,8 @@ class ConferenceHandler(HttApiHandler):
         self.x_work = etree.SubElement(self.x_root, 'work')
 
 
-        if 'next_action' in self.session.json[self.handler_name]:
-            next_action =  self.session.json[self.handler_name]['next_action']
+        if 'next_action' in self.session_json:
+            next_action =  self.session_json['next_action']
             if next_action == 'chk-pin':
                 self.act_chk_pin()
             elif next_action == 'join-conf':
@@ -87,7 +80,7 @@ class ConferenceHandler(HttApiHandler):
 
     # Action Get Pin
     def act_get_pin(self):
-        self.session.json[self.handler_name]['next_action'] = 'chk-pin'
+        self.session_json['next_action'] = 'chk-pin'
         self.session.save()
         self.x_work.append(self.play_and_get_digits('conference/conf-enter_conf_pin.wav'))
         return
@@ -114,19 +107,19 @@ class ConferenceHandler(HttApiHandler):
                 flag_list.append('moderator')
                 etree.SubElement(self.x_work, 'execute', application='set', data='conference_controls=moderator')
 
-            self.session.json[self.handler_name]['conf_name'] = '%s-%s-%s' % (self.domain_name, cnfroom.c_centre_id.name.replace(' ', '_' ), cnfroom.name.replace(' ', '_' )) # noqa: E501
-            self.session.json[self.handler_name]['conf_uuid'] = str(cnfroom.id)
-            self.session.json[self.handler_name]['sess_uuid'] = str(self.conf_session.id)
-            self.session.json[self.handler_name]['name'] = cnfroom.name
-            self.session.json[self.handler_name]['profile'] = cnfroom.c_profile_id.name
-            self.session.json[self.handler_name]['max_members'] = str(cnfroom.max_members)
-            self.session.json[self.handler_name]['record'] = cnfroom.record
-            self.session.json[self.handler_name]['wait_mod'] = cnfroom.wait_mod
-            self.session.json[self.handler_name]['announce'] = cnfroom.announce
-            self.session.json[self.handler_name]['sounds'] = cnfroom.sounds
-            self.session.json[self.handler_name]['mute'] = cnfroom.mute
-            self.session.json[self.handler_name]['flags'] = '|'.join(flag_list)
-            self.session.json[self.handler_name]['member_type'] = member_type
+            self.session_json['conf_name'] = '%s-%s-%s' % (self.domain_name, cnfroom.c_centre_id.name.replace(' ', '_' ), cnfroom.name.replace(' ', '_' )) # noqa: E501
+            self.session_json['conf_uuid'] = str(cnfroom.id)
+            self.session_json['sess_uuid'] = str(self.conf_session.id)
+            self.session_json['name'] = cnfroom.name
+            self.session_json['profile'] = cnfroom.c_profile_id.name
+            self.session_json['max_members'] = str(cnfroom.max_members)
+            self.session_json['record'] = cnfroom.record
+            self.session_json['wait_mod'] = cnfroom.wait_mod
+            self.session_json['announce'] = cnfroom.announce
+            self.session_json['sounds'] = cnfroom.sounds
+            self.session_json['mute'] = cnfroom.mute
+            self.session_json['flags'] = '|'.join(flag_list)
+            self.session_json['member_type'] = member_type
 
             if self.get_live_session_count(cnfroom.id) > cnfroom.max_members:
                 etree.SubElement(self.x_work, 'playback', file='conference/conf-locked.wav')
@@ -140,16 +133,16 @@ class ConferenceHandler(HttApiHandler):
                     etree.SubElement(self.x_work, 'pause', milliseconds='500')
                     etree.SubElement(self.x_work, 'playback', file='ivr/ivr-recording_started.wav')
 
-                self.session.json[self.handler_name]['next_action'] = 'join-conf'
+                self.session_json['next_action'] = 'join-conf'
             self.session.save()
 
         else:
-            self.session.json[self.handler_name].pop('next_action', None)
-            if 'pin_retries' in self.session.json[self.handler_name]:
-                 self.session.json[self.handler_name]['pin_retries'] = self.session.json[self.handler_name]['pin_retries'] + 1 # noqa: E501
+            self.session_json.pop('next_action', None)
+            if 'pin_retries' in self.session_json:
+                 self.session_json['pin_retries'] = self.session_json['pin_retries'] + 1 # noqa: E501
             else:
-                self.session.json[self.handler_name]['pin_retries'] = 1
-            if self.session.json[self.handler_name]['pin_retries'] < 4:
+                self.session_json['pin_retries'] = 1
+            if self.session_json['pin_retries'] < 4:
                 etree.SubElement(self.x_work, 'playback', file='conference/conf-bad-pin.wav')
             else:
                 etree.SubElement(self.x_work, 'playback', file='phrase:voicemail_fail_auth:#')
@@ -164,40 +157,40 @@ class ConferenceHandler(HttApiHandler):
             self.logger.debug(self.log_header.format('conference', 'Conference session not found'))
             return self.return_data(self.error_hangup('C0002'))
 
-        if self.session.json[self.handler_name]['record'] == 'true':
+        if self.session_json['record'] == 'true':
             rec_dir = PbxSettings().default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True) # noqa: E501
             dt = datetime.now()
 
-            rec_full_path = '%s/%s/archive/%s/%s/%s/%s.wav' % (rec_dir, self.domain_name, dt.strftime('%Y'), dt.strftime('%b'), dt.strftime('%d'), self.session.json[self.handler_name]['sess_uuid']) # noqa: E501
-            rec_tmp_flag_file = '/tmp/%s-recording' % self.session.json[self.handler_name]['conf_uuid']
+            rec_full_path = '%s/%s/archive/%s/%s/%s/%s.wav' % (rec_dir, self.domain_name, dt.strftime('%Y'), dt.strftime('%b'), dt.strftime('%d'), self.session_json['sess_uuid']) # noqa: E501
+            rec_tmp_flag_file = '/tmp/%s-recording' % self.session_json['conf_uuid']
             try:
                 with open(rec_tmp_flag_file, "r") as rec_flag:
                     rec_full_path = rec_flag.read()
             except FileNotFoundError:
                 with open(rec_tmp_flag_file, "w") as rec_flag:
                     rec_flag.write(rec_full_path)
-                record_data = 'res=${sched_api +6 none conference %s record %s}' % (self.session.json[self.handler_name]['conf_name'], rec_full_path) # noqa: E501
+                record_data = 'res=${sched_api +6 none conference %s record %s}' % (self.session_json['conf_name'], rec_full_path) # noqa: E501
                 etree.SubElement(self.x_work, 'execute', application='set', data=record_data)
 
-            self.session.json[self.handler_name]['rec_tmp_flag_file'] = rec_tmp_flag_file
+            self.session_json['rec_tmp_flag_file'] = rec_tmp_flag_file
             self.session.save()
             self.conf_session.recording = rec_full_path
         self.conf_session.caller_id_name = self.caller_id_name
         self.conf_session.caller_id_number = self.caller_id_number
         self.conf_session.save()
 
-        if self.session.json[self.handler_name]['announce'] == 'true':
-            announce_data = 'res=${sched_api +1 none conference %s play file_string://%s!conference/conf-has_joined.wav}' % (self.session.json[self.handler_name]['conf_name'], self.session.json[self.handler_name]['name_recording']) # noqa: E501
+        if self.session_json['announce'] == 'true':
+            announce_data = 'res=${sched_api +1 none conference %s play file_string://%s!conference/conf-has_joined.wav}' % (self.session_json['conf_name'], self.session_json['name_recording']) # noqa: E501
         etree.SubElement(self.x_work, 'execute', application='set', data=announce_data)
-        x_conference = etree.SubElement(self.x_work, 'conference', profile=self.session.json[self.handler_name]['profile'], flags=self.session.json[self.handler_name]['flags']) # noqa: E501
-        x_conference.text = self.session.json[self.handler_name]['conf_name']
+        x_conference = etree.SubElement(self.x_work, 'conference', profile=self.session_json['profile'], flags=self.session_json['flags']) # noqa: E501
+        x_conference.text = self.session_json['conf_name']
         return
 
     # Get ConferenceSession (this instance for this user)
     def get_conf_session(self, profile='default', cnfroom=None):
-        if 'sess_uuid' in self.session.json[self.handler_name]:
+        if 'sess_uuid' in self.session_json:
             try:
-                self.conf_session = ConferenceSessions.objects.get(pk=self.session.json[self.handler_name]['sess_uuid'])
+                self.conf_session = ConferenceSessions.objects.get(pk=self.session_json['sess_uuid'])
             except ConferenceSessions.DoesNotExist:
                 if not cnfroom:
                     self.conf_session = None
@@ -220,7 +213,7 @@ class ConferenceHandler(HttApiHandler):
         with open('/tmp/%s' % received_file_name, "wb+") as destination:
             for chunk in self.fdict['rd_input'].chunks():
                 destination.write(chunk)
-        self.session.json[self.handler_name]['name_recording'] = '/tmp/%s' % received_file_name
+        self.session_json['name_recording'] = '/tmp/%s' % received_file_name
         self.session.save()
         return
 
@@ -230,15 +223,15 @@ class ConferenceHandler(HttApiHandler):
         if self.conf_session:
             self.conf_session.live = 'false'
             self.conf_session.save()
-            if 'rec_tmp_flag_file' in self.session.json[self.handler_name]:
+            if 'rec_tmp_flag_file' in self.session_json:
                 if self.get_live_session_count(self.conf_session.c_room_id) < 1:
                     try:
-                        os.remove(self.session.json[self.handler_name]['rec_tmp_flag_file'])
+                        os.remove(self.session_json['rec_tmp_flag_file'])
                     except OSError:
                         pass
-        if 'name_recording' in self.session.json[self.handler_name]:
+        if 'name_recording' in self.session_json:
             try:
-                os.remove(self.session.json[self.handler_name]['name_recording'])
+                os.remove(self.session_json['name_recording'])
             except OSError:
                 pass
         return

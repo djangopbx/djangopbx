@@ -36,20 +36,12 @@ class FollowMeHandler(HttApiHandler):
 
     handler_name = 'followme'
 
-    def get_variables(self):
-        self.var_list = [
-        'call_direction',
-        'extension_uuid'
-        ]
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
-        call_direction = self.qdict.get('call_direction', 'local')
-        extension_uuid = self.qdict.get('extension_uuid')
+        call_direction = self.session_json.get('variable_call_direction', 'local')
+        extension_uuid = self.session_json.get('variable_extension_uuid')
         if extension_uuid:
             extf = ExtFollowMeFunctions(self.domain_uuid, self.domain_name, call_direction, extension_uuid)
 

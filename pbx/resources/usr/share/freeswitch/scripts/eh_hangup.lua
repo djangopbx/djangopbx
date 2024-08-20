@@ -47,13 +47,13 @@
     post_vars = 'session_id=' .. env:getHeader('uuid');
     post_vars = post_vars .. post_add('domain_uuid', true);
     post_vars = post_vars .. post_add('domain_name', true);
-    post_vars = post_vars .. post_add('sip_to_user', false);
-    post_vars = post_vars .. post_add('dialed_user', false);
-    post_vars = post_vars .. post_add('missed_call_app', false);
-    post_vars = post_vars .. post_add('missed_call_data', false);
+    post_vars = post_vars .. post_add('sip_to_user', true);
+    post_vars = post_vars .. post_add('dialed_user', true);
+    post_vars = post_vars .. post_add('missed_call_app', true);
+    post_vars = post_vars .. post_add('missed_call_data', true);
     post_vars = post_vars .. post_add('default_language', true);
     post_vars = post_vars .. post_add('default_dialect', true);
-    post_vars = post_vars .. post_add('originate_disposition', false);
+    post_vars = post_vars .. post_add('originate_disposition', true);
 
 -- get the Caller ID
     caller_id_name = env:getHeader("caller_id_name");
@@ -66,10 +66,10 @@
     end
 
     if (caller_id_name ~= nil) then
-        post_vars = post_vars .. '&caller_id_name=' .. caller_id_name;
+        post_vars = post_vars .. '&variable_caller_id_name=' .. caller_id_name;
     end
     if (caller_id_number ~= nil) then
-        post_vars = post_vars .. '&caller_id_number=' .. caller_id_number;
+        post_vars = post_vars .. '&variable_caller_id_number=' .. caller_id_number;
     end
 
 -- post the data to webserver

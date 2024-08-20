@@ -66,7 +66,7 @@ class CfFunctions():
 
         dp.name = self.cf.name
         dp.number=self.cf.extension
-        httapi_url = PbxSettings().default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)[0]
+        httapi_url = PbxSettings().default_settings('dialplan', 'httapi_url', 'text', 'http://127.0.0.1:8008', True)
 
         x_root = etree.Element("extension", name=dp.name)
         x_root.set('continue', dp.dp_continue)

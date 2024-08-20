@@ -49,7 +49,7 @@ class EventSocket:
 
     def disconnect(self):
         if (self.sock):
-            self.sock.shutdown(1)
+            self.sock.shutdown(socket.SHUT_WR)
             self.sock.close()
 
     def connect(self, host, port, password):

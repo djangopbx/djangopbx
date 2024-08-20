@@ -38,20 +38,12 @@ class SpeedDialHandler(HttApiHandler):
 
     handler_name = 'speeddial'
 
-    def get_variables(self):
-        self.var_list = [
-            'user_uuid',
-            'speed_dial'
-        ]
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
-        speed_dial = self.qdict.get('speed_dial', '~None~')
-        user_uuid = self.qdict.get('user_uuid', False)
+        speed_dial = self.session_json.get('variable_speed_dial', '~None~')
+        user_uuid = self.session_json.get('variable_user_uuid', False)
         if user_uuid:
             q = ContactTel.objects.filter(contact_id_id__domain_id=self.domain_uuid,
                 contact_id_id__user_id__user_uuid=user_uuid,

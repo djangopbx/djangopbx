@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2023 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,9 @@
 #
 
 import logging
-from django.core.cache import cache
+from django.conf import settings
 from lxml import etree
 from .models import HttApiSession
-from tenants.pbxsettings import PbxSettings
-from pbx.pbxipaddresscheck import loopback_default
 
 
 class HttApiHandler():
@@ -50,17 +48,69 @@ class HttApiHandler():
 
     log_header = 'HttApi Handler: {}: {}'
     handler_name = 'base'
+    next_action_str = 'next_action'
+    load_vars = (
+        # domain variables
+        'variable_domain_uuid',
+        'variable_domain_name',
+        # language variables
+        'variable_default_language',
+        'variable_default_dialect',
+        'variable_default_voice',
+        # dialplan call variables
+        'variable_extension_uuid',
+        'variable_context',
+        'variable_originate_disposition',
+        'variable_dialed_extension',
+        'variable_last_busy_dialed_extension',
+        'variable_forward_busy_enabled',
+        'variable_forward_busy_destination',
+        'variable_forward_no_answer_enabled',
+        'variable_forward_no_answer_destination',
+        'variable_forward_user_not_registered_enabled',
+        'variable_forward_user_not_registered_destination',
+        'variable_call_direction',
+        'variable_missed_call_app',
+        'variable_missed_call_data',
+        'variable_caller_id_name',
+        'variable_caller_id_number',
+        'variable_sip_to_user',
+        'variable_dialed_user',
+        # djangopbx application uuid variables
+        'variable_callflow_uuid',
+        'variable_conference_uuid',
+        'variable_ring_group_uuid',
+        # general dialplan application variables
+        'variable_agent_id',
+        'variable_agent_authorized',
+        'variable_callflow_pin',
+        'variable_conference_uuid',
+        'variable_pin_number',
+        'variable_disa_greeting',
+        'variable_predefined_destination',
+        'variable_privacy',
+        'variable_sounds_dir',
+        'variable_recording_prefix',
+        'variable_speed_dial',
+        'variable_uuid',
+        'variable_user_uuid'
+    )
 
-    def __init__(self, qdict, getVar=True, getFile=False, fdict={}, **kwargs):
+
+    def __init__(self, qdict, getFile=False, fdict={}, **kwargs):
         self.__dict__.update(kwargs)
         self.logger = logging.getLogger(__name__)
         self.debug = False
         self.qdict = qdict
+        print(qdict)
         self.fdict = fdict
         self.getfile = getFile
         self.exiting = False
         self.session = None
-        self.first_call = False
+        self.session_json = None
+        self.domain_uuid = None
+        self.domain_name = None
+        self.hostname = None
         self.session_id = qdict.get('session_id')
         if self.session_id:
             self.get_httapi_session()
@@ -69,57 +119,14 @@ class HttApiHandler():
         if qdict.get('exiting', 'false') == 'true':
             self.destroy_httapi_session()
             self.exiting = True
-
-        self.first_call = self.get_first_call()
-
         if self.debug:
             self.logger.debug(self.log_header.format('request\n', self.qdict))
-        self.var_list = []
-        self.domain_uuid = None
-        self.domain_name = None
-        self.extension_uuid = None
-        self.default_language = None
-        self.default_dialiect = None
-        self.default_voice = None
-        self.sounds_dir = None
-        self.sounds_tuple = None
-        self.domain_var_list = [
-        'domain_uuid', 
-        'domain_name', 
-        ]
-        self.language_var_list = [
-        'default_language',
-        'default_dialiect',
-        'default_voice',
-        ]
-
-        if getVar:
-            self.get_variables()
-
-    def get_variables(self):
-        pass
+        self.recordings_dir = settings.PBX_HTTAPI_SWITCH_RECORDINGS
 
     def get_data(self):
         return self.return_data(self.error_hangup('HF0001'))
 
-    def htt_get_variables(self):
-        if not self.var_list:
-            return False
-        x_root = self.XrootApi()
-        etree.SubElement(x_root, 'params')
-        x_work = etree.SubElement(x_root, 'work')
-        for var in self.var_list:
-            etree.SubElement(x_work, 'getVariable', name=var, permanent='1')
-
-        etree.indent(x_root)
-        xml = str(etree.tostring(x_root), "utf-8")
-        return xml
-
     def htt_get_data(self):
-        if self.first_call:
-            xml = self.htt_get_variables()
-            if xml:
-                return self.return_data(xml)
         return self.return_data(self.get_data())
 
     def return_data(self, xml):
@@ -157,41 +164,22 @@ class HttApiHandler():
         xml = str(etree.tostring(x_root), "utf-8")
         return xml
 
-    def get_allowed_addresses(self):
-        cache_key = 'httapihandler:allowed_addresses'
-        aa = cache.get(cache_key)
-        if aa:
-            return aa
-        aa = PbxSettings().default_settings('httapihandler', 'allowed_address', 'array')
-        if not aa:
-            aa = loopback_default
-        cache.set(cache_key, aa)
-        return aa
-
-    def get_first_call(self):
-        if self.exiting:
-            return False
-        if self.handler_name in self.session.json:
-            if 'first_call' in self.session.json[self.handler_name]:
-                if self.session.json[self.handler_name]['first_call']:
-                    self.session.json[self.handler_name]['first_call'] = False
-                    self.session.save()
-                    return False
-            else:
-                self.session.json[self.handler_name].update({'first_call': True})
-                self.session.save()
-                return True
-        else:
-            self.session.json.update({self.handler_name: {'first_call': True}})
-            self.session.save()
-        return self.session.json[self.handler_name]['first_call']
-
     def get_httapi_session(self):
         try:
             self.session = HttApiSession.objects.get(pk=self.session_id)
         except HttApiSession.DoesNotExist:
             s_name = self.qdict.get('url', '/n/None/').rstrip('/').rsplit('/', 1)[1]
             self.session = HttApiSession.objects.create(id=self.session_id, name=s_name, json={self.handler_name: {}})
+        if not self.handler_name in self.session.json:
+            self.session.json[self.handler_name] = {}
+        for v in self.load_vars:
+            val = self.qdict.get(v)
+            if val:
+                self.session.json[self.handler_name][v] = val
+        self.session.save()
+        self.session_json = self.session.json[self.handler_name]
+        self.domain_uuid = self.session_json.get('variable_domain_uuid')
+        self.domain_name = self.session_json.get('variable_domain_name')
         return
 
     def destroy_httapi_session(self):
@@ -204,22 +192,11 @@ class HttApiHandler():
     def get_data(self):
         return self.return_data('Ok\n')
 
-
-    def get_domain_variables(self):
-        self.domain_uuid = self.qdict.get('domain_uuid')
-        self.domain_name = self.qdict.get('domain_name')
-        return
-
-    def get_language_variables(self):
-        self.default_language = self.qdict.get('default_language', 'en')
-        self.default_dialect = self.qdict.get('default_dialiect', 'us')
-        self.default_voice = self.qdict.get('default_voice', 'callie')
-        return
-
-    def get_sounds_variables(self):
-        self.sounds_dir = self.qdict.get('sounds_dir', '/usr/share/freeswitch/sounds')
-        self.recordings_dir = PbxSettings().default_settings('switch', 'recordings', 'dir', '/var/lib/freeswitch/recordings', True)
-        return
+    def get_next_action(self):
+        try:
+            return self.session_json[self.next_action_str]
+        except KeyError:
+            return None
 
     def play_and_get_digits(self, file_name, var_name='pb_input', digit_regex='~\\d+#'):
         x_pb = etree.Element('playback')

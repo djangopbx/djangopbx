@@ -111,6 +111,7 @@ class CallFlowsAdmin(ImportExportModelAdmin):
         obj.updated_by = request.user.username
         pe = PresenceIn()
         pe.send(str(obj.id), obj.status, obj.feature_code, request.session['domain_name'])
+        pe.disconnect()
         if change:
             pbxsettings = PbxSettings()
             if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):

@@ -27,7 +27,6 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.core.cache import cache
 from lxml import etree
 from pbx.commonevents import PresenceIn
 from .httapihandler import HttApiHandler
@@ -38,23 +37,14 @@ class AgentStatusHandler(HttApiHandler):
 
     handler_name = 'agentstatus'
 
-    def get_variables(self):
-        self.var_list = [
-        'agent_authorized',
-        'agent_id',
-        'uuid'
-        ]
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
-        self.hostname = self.qdict.get('hostname')
-        self.uuid = self.qdict.get('uuid')
-        agent_id = self.qdict.get('agent_id')
-        agent_authorised = self.qdict.get('agent_authorized')
+        self.hostname = self.session_json.get('hostname')
+        self.uuid = self.session_json.get('variable_uuid')
+        agent_id = self.session_json.get('variable_agent_id')
+        agent_authorised = self.session_json.get('variable_agent_authorized')
         try:
             self.cca = CallCentreAgents.objects.select_related('user_uuid').filter(
                         domain_id=self.domain_uuid, agent_id=agent_id).first()
@@ -80,18 +70,16 @@ class AgentStatusHandler(HttApiHandler):
         if agent_authorised == 'true':
             self.loginout()
 
-        if 'next_action' in self.session.json[self.handler_name]:
-            next_action =  self.session.json[self.handler_name]['next_action']
+        next_action =  self.get_next_action()
+        if next_action:
             if next_action == 'chk-pin':
                 if self.cca.agent_pin == self.qdict.get('pb_input', ''):
                     self.loginout()
                 else:
                     etree.SubElement(self.x_work, 'playback', file='phrase:voicemail_fail_auth:#')
                     etree.SubElement(self.x_work, 'hangup')
-
         else:
             self.act_get_pin()
-
         return self.get_xml()
 
     def get_xml(self):
@@ -100,20 +88,9 @@ class AgentStatusHandler(HttApiHandler):
         return xml
 
     def act_get_pin(self):
-        self.session.json[self.handler_name]['next_action'] = 'chk-pin'
+        self.session_json[self.next_action_str] = 'chk-pin'
         self.session.save()
         self.x_work.append(self.play_and_get_digits('phrase:voicemail_enter_pass:#'))
-        return
-
-    def act_chk_pin(self):
-        pin_number = self.session.json[self.handler_name]['pin_number']
-        if pin_number == self.qdict.get('pb_input', ''):
-            self.session.json[self.handler_name]['next_action'] = 'record'
-            self.session.save()
-            self.x_work.append(self.play_and_get_digits('ivr/ivr-id_number.wav'))
-        else:
-            etree.SubElement(self.x_work, 'playback', file='phrase:voicemail_fail_auth:#')
-            etree.SubElement(self.x_work, 'hangup')
         return
 
     def loginout(self):
@@ -141,6 +118,7 @@ class AgentStatusHandler(HttApiHandler):
         self.pe.es.send('api callcenter_config agent set status %s \'%s\'' % (str(self.cca.id), self.cca.user_uuid.status))
         self.pe.es.send('api uuid_display %s %s' % (self.uuid, self.cca.user_uuid.status))
         etree.SubElement(self.x_work, 'hangup')
+        self.pe.disconnect()
         return
 
 

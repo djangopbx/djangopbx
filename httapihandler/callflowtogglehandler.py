@@ -39,20 +39,13 @@ class CallFlowToggleHandler(HttApiHandler):
 
     handler_name = 'callflowtoggle'
 
-    def get_variables(self):
-        self.var_list = [
-        'callflow_uuid',
-        'callflow_pin',
-        ]
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
-        self.hostname = self.qdict.get('hostname')
-        call_flow_uuid = self.qdict.get('callflow_uuid')
+        self.hostname = self.session_json.get('hostname')
+        call_flow_uuid = self.session_json.get('variable_callflow_uuid')
+        print(call_flow_uuid)
         try:
             q = CallFlows.objects.get(pk=call_flow_uuid)
         except CallFlows.DoesNotExist:
@@ -62,10 +55,10 @@ class CallFlowToggleHandler(HttApiHandler):
         x_root = self.XrootApi()
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
-        if 'next_action' in self.session.json[self.handler_name]:
-            next_action =  self.session.json[self.handler_name]['next_action']
+        next_action =  self.get_next_action()
+        if next_action:
             if next_action == 'chk-pin':
-                pin_number = self.session.json[self.handler_name]['pin_number']
+                pin_number = self.session_json['pin_number']
                 if pin_number == self.qdict.get('pb_input', ''):
                     etree.SubElement(x_work, 'pause', milliseconds='1000')
                     if q.status == 'true':
@@ -90,17 +83,18 @@ class CallFlowToggleHandler(HttApiHandler):
                     cache.delete(directory_cache_key)
                     pe = PresenceIn()
                     pe.send(str(q.id), q.status, q.feature_code, self.domain_name, self.hostname)
+                    pe.disconnect()
                 else:
                     etree.SubElement(x_work, 'playback', file='phrase:voicemail_fail_auth:#')
                     etree.SubElement(x_work, 'hangup')
 
         else:
-            pin_number = self.qdict.get('callflow_pin')
+            pin_number = self.session_json.get('variable_callflow_pin')
             if not pin_number:
                 return self.error_hangup('R2001')
 
-            self.session.json[self.handler_name]['pin_number'] = pin_number
-            self.session.json[self.handler_name]['next_action'] = 'chk-pin'
+            self.session_json['pin_number'] = pin_number
+            self.session_json[self.next_action_str] = 'chk-pin'
             self.session.save()
             x_work.append(self.play_and_get_digits('phrase:voicemail_enter_pass:#'))
 

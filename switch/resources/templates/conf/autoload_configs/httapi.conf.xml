@@ -202,7 +202,7 @@
 	</permission>
 	<permission name="get-vars" value="true">
 	</permission>
-	<permission name="extended-data" value="false"/>
+	<permission name="extended-data" value="true"/>
 	<permission name="execute-apps" value="true">
 	</permission>
 	<permission name="expand-vars-in-tag-body" value="false">
@@ -223,6 +223,62 @@
 	<!-- default url can be overridden by app data -->
 	<param name="gateway-url" value="http://127.0.0.1:8008/httapihandler/index/" />
 	<param name="method" value="POST"/> -->
+	<!-- basic httapi variables -->
+	<param name="enable-post-var" value="exiting"/>
+	<param name="enable-post-var" value="pb_input"/>
+	<param name="enable-post-var" value="session_id"/>
+	<param name="enable-post-var" value="url"/>
+	<!-- basic channel variables -->
+	<param name="enable-post-var" value="hostname"/>
+	<param name="enable-post-var" value="Caller-Context"/>
+	<param name="enable-post-var" value="Caller-Username"/>
+	<param name="enable-post-var" value="Caller-Destination-Number"/>
+	<param name="enable-post-var" value="Caller-Orig-Caller-ID-Name"/>
+	<param name="enable-post-var" value="Caller-Orig-Caller-ID-Number"/>
+	<!-- domain variables -->
+	<param name="enable-post-var" value="variable_domain_uuid"/>
+	<param name="enable-post-var" value="variable_domain_name"/>
+	<!-- language variables -->
+	<param name="enable-post-var" value="variable_default_language"/>
+	<param name="enable-post-var" value="variable_default_dialiect"/>
+	<param name="enable-post-var" value="variable_default_voice"/>
+	<!-- dialplan call variables -->
+	<param name="enable-post-var" value="variable_extension_uuid"/>
+	<param name="enable-post-var" value="variable_context"/>
+	<param name="enable-post-var" value="variable_originate_disposition"/>
+	<param name="enable-post-var" value="variable_dialed_extension"/>
+	<param name="enable-post-var" value="variable_last_busy_dialed_extension"/>
+	<param name="enable-post-var" value="variable_forward_busy_enabled"/>
+	<param name="enable-post-var" value="variable_forward_busy_destination"/>
+	<param name="enable-post-var" value="variable_forward_no_answer_enabled"/>
+	<param name="enable-post-var" value="variable_forward_no_answer_destination"/>
+	<param name="enable-post-var" value="variable_forward_user_not_registered_enabled"/>
+	<param name="enable-post-var" value="variable_forward_user_not_registered_destination"/>
+	<param name="enable-post-var" value="variable_call_direction"/>
+	<param name="enable-post-var" value="variable_missed_call_app"/>
+	<param name="enable-post-var" value="variable_missed_call_data"/>
+	<param name="enable-post-var" value="variable_caller_id_name"/>
+	<param name="enable-post-var" value="variable_caller_id_number"/>
+	<param name="enable-post-var" value="variable_sip_to_user"/>
+	<param name="enable-post-var" value="variable_dialed_user"/>
+	<!-- djangopbx application uuid variables -->
+	<param name="enable-post-var" value="variable_callflow_uuid"/>
+	<param name="enable-post-var" value="variable_conference_uuid"/>
+	<param name="enable-post-var" value="variable_ring_group_uuid"/>
+	<!-- general dialplan application variables -->
+	<param name="enable-post-var" value="variable_agent_id"/>
+	<param name="enable-post-var" value="variable_agent_authorized"/>
+	<param name="enable-post-var" value="variable_callflow_pin"/>
+	<param name="enable-post-var" value="variable_conference_uuid"/>
+	<param name="enable-post-var" value="variable_pin_number"/>
+	<param name="enable-post-var" value="variable_disa_greeting"/>
+	<param name="enable-post-var" value="variable_predefined_destination"/>
+	<param name="enable-post-var" value="variable_privacy"/>
+	<param name="enable-post-var" value="variable_sounds_dir"/>
+	<param name="enable-post-var" value="variable_recording_prefix"/>
+	<param name="enable-post-var" value="variable_speed_dial"/>
+	<param name="enable-post-var" value="variable_uuid"/>
+	<param name="enable-post-var" value="variable_user_uuid"/>
       </params>
     </profile>
   </profiles>

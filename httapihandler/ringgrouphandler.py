@@ -36,16 +36,11 @@ class RingGroupHandler(HttApiHandler):
 
     handler_name = 'ringgroup'
 
-    def get_variables(self):
-        self.var_list = ['ring_group_uuid']
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
-        ringgroup_uuid = self.qdict.get('ring_group_uuid')
+        ringgroup_uuid = self.session_json.get('variable_ring_group_uuid')
         rg = get_ringgroup(ringgroup_uuid)
         if not rg:
             return self.return_data(self.error_hangup('R1001'))

@@ -66,6 +66,7 @@ class CallFlowsViewSet(viewsets.ModelViewSet):
         obj = self.get_object()
         pe = PresenceIn()
         pe.send(str(obj.id), obj.status, obj.feature_code, obj.domain_id.name)
+        pe.disconnect()
         pbxsettings = PbxSettings()
         if pbxsettings.default_settings('dialplan', 'auto_generate_xml', 'boolean', True, True):
             cff = CfFunctions(obj, self.request.user.username)

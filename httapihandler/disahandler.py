@@ -37,13 +37,7 @@ class DISAHandler(HttApiHandler):
 
     handler_name = 'disa'
 
-    def get_variables(self):
-        self.var_list = ['pin_number', 'predefined_destination', 'privacy',
-                            'disa_greeting', 'dialplan_context']
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
-        self.get_domain_variables()
         if self.getfile:
             self.get_uploaded_file()
 
@@ -54,8 +48,8 @@ class DISAHandler(HttApiHandler):
         etree.SubElement(self.x_root, 'params')
         self.x_work = etree.SubElement(self.x_root, 'work')
 
-        if 'next_action' in self.session.json[self.handler_name]:
-            next_action =  self.session.json[self.handler_name]['next_action']
+        next_action =  self.get_next_action()
+        if next_action:
             if next_action == 'chk-pin':
                 self.act_chk_pin()
             elif next_action == 'disa':
@@ -68,25 +62,25 @@ class DISAHandler(HttApiHandler):
         return xml
 
     def act_get_pin(self):
-        pin_number = self.qdict.get('pin_number')
+        pin_number = self.session_json.get('variable_pin_number')
         if not pin_number:
             return self.error_hangup('R2001')
 
-        self.session.json[self.handler_name]['pin_number'] = pin_number
-        self.session.json[self.handler_name]['next_action'] = 'chk-pin'
+        self.session_json['pin_number'] = pin_number
+        self.session_json[self.next_action_str] = 'chk-pin'
         self.session.save()
         self.x_work.append(self.play_and_get_digits('phrase:voicemail_enter_pass:#'))
         return
 
     def act_chk_pin(self):
-        pin_number = self.session.json[self.handler_name]['pin_number']
+        pin_number = self.session_json['pin_number']
         if pin_number == self.qdict.get('pb_input', ''):
-            self.session.json[self.handler_name]['next_action'] = 'disa'
+            self.session_json[self.next_action_str] = 'disa'
             self.session.save()
-            greeting = self.qdict.get('disa_greeting')
+            greeting = self.session_json.get('variable_disa_greeting')
             if greeting:
                 etree.SubElement(self.x_work, 'playback', file=greeting)
-            predefined_destination = self.qdict.get('predefined_destination')
+            predefined_destination = self.session_json.get('variable_predefined_destination')
             if predefined_destination:
                 self.act_disa(predefined_destination)
                 return
@@ -101,11 +95,11 @@ class DISAHandler(HttApiHandler):
             destination_number = predefined_destination
         else:
             destination_number = self.qdict.get('pb_input', '')
-        privacy = self.qdict.get('privacy', '')
+        privacy = self.session_json.get('variable_privacy', '')
         if privacy == 'true':
             etree.SubElement(self.x_work, 'execute', application='privacy', data='full')
             etree.SubElement(self.x_work, 'execute', application='set', data='sip_h_Privacy=id')
             etree.SubElement(self.x_work, 'execute', application='set', data='privacy=yes')
-        context = self.qdict.get('dialplan_context', '')
+        context = self.session_json.get('variable_context', '')
         etree.SubElement(self.x_work, 'execute', application='transfer', data='%s XML %s' % (destination_number, context))
         return

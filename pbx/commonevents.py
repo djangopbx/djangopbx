@@ -42,6 +42,10 @@ class PresenceIn():
             self.connected = True
         return
 
+    def disconnect(self):
+        self.es.disconnect()
+        return
+
     def send(self, user_uuid, status, user_code, domain_name, host=None):
         if not self.connected:
             return False
@@ -65,5 +69,4 @@ class PresenceIn():
         self.es.send(fse.getEvent(), host)
         self.es.process_events()
         self.es.get_responses()
-        self.es.disconnect()
         return True

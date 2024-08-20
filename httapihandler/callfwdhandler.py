@@ -37,19 +37,14 @@ class CallFwdHandler(HttApiHandler):
 
     handler_name = 'callforward'
 
-    def get_variables(self):
-        self.var_list = [
-        'extension_uuid'
-        ]
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
         if not self.hraction:
             self.error_hangup('CallFwd: action not specified')
-        extension_uuid = self.qdict.get('extension_uuid')
-        if extension_uuid:
+        extension_uuid = self.session_json.get('variable_extension_uuid')
+        if not extension_uuid:
             self.error_hangup('CallFwd: extension uuid not specified')
 
         try:
@@ -72,12 +67,14 @@ class CallFwdHandler(HttApiHandler):
                 e.forward_all_enabled = self.hraction
                 e.forward_all_destination = self.hrparam1
                 e.do_not_disturb = 'false'
+                etree.SubElement(x_work, 'pause', milliseconds='250')
                 etree.SubElement(x_work, 'playback', file='ivr/ivr-call_forwarding_has_been_set.wav')
             else:
                 self.hraction = 'false'
 
         if self.hraction == 'false':
             e.forward_all_enabled = self.hraction
+            etree.SubElement(x_work, 'pause', milliseconds='250')
             etree.SubElement(x_work, 'playback', file='ivr/ivr-call_forwarding_has_been_cancelled.wav')
         e.save()
         efsf = ExtFeatureSyncFunctions(extension_uuid, DoNotDisturbOn=e.do_not_disturb)

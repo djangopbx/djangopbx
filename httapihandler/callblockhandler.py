@@ -37,14 +37,10 @@ class CallBlockHandler(HttApiHandler):
 
     handler_name = 'callblock'
 
-    def get_variables(self):
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
         caller_id_name = self.qdict.get('Caller-Orig-Caller-ID-Name', 'None')
         caller_id_number = self.qdict.get('Caller-Orig-Caller-ID-Number', 'None')
 
@@ -52,8 +48,8 @@ class CallBlockHandler(HttApiHandler):
         etree.SubElement(x_root, 'params')
         x_work = etree.SubElement(x_root, 'work')
 
-        if not 'run' in self.session.json[self.handler_name]:
-            self.session.json[self.handler_name]['run'] = False
+        if not 'run' in self.session_json:
+            self.session_json['run'] = False
             self.session.save()
 
             qs = CallBlock.objects.filter(

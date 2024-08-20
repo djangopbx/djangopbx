@@ -27,6 +27,7 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotFound
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -80,8 +81,7 @@ class HttApiSessionViewSet(viewsets.ModelViewSet):
 def processhttapi(request, httapihf):
     if not request.method == 'POST':
         return HttpResponseNotFound()
-    allowed_addresses = httapihf.get_allowed_addresses()
-    if not pbx_ip_address_check(request, allowed_addresses):
+    if not pbx_ip_address_check(request, settings.PBX_HTTAPI_ALLOWED_ADDRESSES):
         return HttpResponseNotFound()
     return HttpResponse(httapihf.htt_get_data(), content_type='text/xml')
 
@@ -107,12 +107,12 @@ def failurehandler(request):
 
 @csrf_exempt
 def hangup(request):
-    httapihf = HangupHandler(request.POST, False)
+    httapihf = HangupHandler(request.POST)
     return processhttapi(request, httapihf)
 
 @csrf_exempt
 def register(request):
-    httapihf = RegisterHandler(request.POST, False)
+    httapihf = RegisterHandler(request.POST)
     return processhttapi(request, httapihf)
 
 @csrf_exempt
@@ -124,7 +124,7 @@ def ringgroup(request):
 def recordings(request):
     if request.content_type.startswith('multipart'):
         post, files = request.parse_file_upload(request.META, request)
-        httapihf = RecordingsHandler(post, True, True, files)
+        httapihf = RecordingsHandler(post, True, files)
     else:
         httapihf = RecordingsHandler(request.POST)
     return processhttapi(request, httapihf)
@@ -143,7 +143,7 @@ def callblock(request):
 def conference(request):
     if request.content_type.startswith('multipart'):
         post, files = request.parse_file_upload(request.META, request)
-        httapihf = ConferenceHandler(post, True, True, files)
+        httapihf = ConferenceHandler(post, True, files)
     else:
         httapihf = ConferenceHandler(request.POST)
     return processhttapi(request, httapihf)
@@ -165,7 +165,7 @@ def httapiindex(request):
 
 @csrf_exempt
 def ccevent(request):
-    httapihf = CcEventHandler(request.POST, False)
+    httapihf = CcEventHandler(request.POST)
     return processhttapi(request, httapihf)
 
 @csrf_exempt

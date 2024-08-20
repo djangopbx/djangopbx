@@ -37,12 +37,7 @@ class RecordingsHandler(HttApiHandler):
 
     handler_name = 'recordings'
 
-    def get_variables(self):
-        self.var_list = ['pin_number', 'recording_prefix']
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
-        self.get_domain_variables()
         if self.getfile:
             self.get_uploaded_file()
 
@@ -53,8 +48,9 @@ class RecordingsHandler(HttApiHandler):
         etree.SubElement(self.x_root, 'params')
         self.x_work = etree.SubElement(self.x_root, 'work')
 
-        if 'next_action' in self.session.json[self.handler_name]:
-            next_action =  self.session.json[self.handler_name]['next_action']
+        next_action =  self.get_next_action()
+
+        if next_action:
             if next_action == 'chk-pin':
                 self.act_chk_pin()
             elif next_action == 'record':
@@ -71,20 +67,20 @@ class RecordingsHandler(HttApiHandler):
         return xml
 
     def act_get_pin(self):
-        pin_number = self.qdict.get('pin_number')
+        pin_number = self.session_json.get('variable_pin_number')
         if not pin_number:
             return self.error_hangup('R2001')
 
-        self.session.json[self.handler_name]['pin_number'] = pin_number
-        self.session.json[self.handler_name]['next_action'] = 'chk-pin'
+        self.session_json['pin_number'] = pin_number
+        self.session_json[self.next_action_str] = 'chk-pin'
         self.session.save()
         self.x_work.append(self.play_and_get_digits('phrase:voicemail_enter_pass:#'))
         return
 
     def act_chk_pin(self):
-        pin_number = self.session.json[self.handler_name]['pin_number']
+        pin_number = self.session_json['pin_number']
         if pin_number == self.qdict.get('pb_input', ''):
-            self.session.json[self.handler_name]['next_action'] = 'record'
+            self.session_json[self.next_action_str] = 'record'
             self.session.save()
             self.x_work.append(self.play_and_get_digits('ivr/ivr-id_number.wav'))
         else:
@@ -94,35 +90,41 @@ class RecordingsHandler(HttApiHandler):
 
     def act_record(self):
         rec_no = self.qdict.get('pb_input', '')
-        rec_prefix = self.qdict.get('recording_prefix', 'recording')
-        self.get_sounds_variables()
+        rec_prefix = self.session_json.get('variable_recording_prefix', 'recording')
         rec_file = '%s%s.wav' % (rec_prefix, rec_no)
-        self.session.json[self.handler_name]['rec_file'] = '%s/%s/%s' % (self.recordings_dir, self.domain_name, rec_file)
-        self.session.json[self.handler_name]['next_action'] = 'review'
+        self.session_json['rec_file'] = '%s/%s/%s' % (
+            self.recordings_dir, self.session_json['variable_domain_name'], rec_file
+            )
+        self.session_json[self.next_action_str] = 'review'
         self.session.save()
         etree.SubElement(self.x_work, 'playback', file='ivr/ivr-recording_started.wav')
         self.x_work.append(self.record_and_get_digits(rec_file))
         return
 
     def act_review(self):
-        rec_file = self.session.json[self.handler_name]['rec_file']
-        self.session.json[self.handler_name]['next_action'] = 'rerecord'
+        rec_file = self.session_json['rec_file']
+        self.session_json[self.next_action_str] = 'rerecord'
         self.session.save()
         etree.SubElement(self.x_work, 'pause', milliseconds='1000')
         etree.SubElement(self.x_work, 'playback', file=rec_file)
         etree.SubElement(self.x_work, 'pause', milliseconds='500')
         etree.SubElement(self.x_work, 'playback', file='voicemail/vm-press.wav')
         etree.SubElement(self.x_work, 'playback', file='digits/1.wav')
-        self.x_work.append(self.play_and_get_digits('voicemail/vm-rerecord.wav', 'pb_input', '~\\d{1}'))
+        etree.SubElement(self.x_work, 'playback', file='voicemail/vm-rerecord.wav')
+        etree.SubElement(self.x_work, 'pause', milliseconds='250')
+        etree.SubElement(self.x_work, 'playback', file='digits/2.wav')
+        self.x_work.append(self.play_and_get_digits('voicemail/vm-save_recording.wav', 'pb_input', '~\\d{1}'))
         return
 
     def act_rerecord(self):
         re_rec = self.qdict.get('pb_input', '')
         if re_rec == '1':
-            rec_file = self.session.json[self.handler_name]['rec_file']
-            self.session.json[self.handler_name]['next_action'] = 'record'
+            rec_file = self.session_json['rec_file']
+            self.session_json[self.next_action_str] = 'review'
             self.session.save()
-            etree.SubElement(self.x_work, 'continue')
+#            etree.SubElement(self.x_work, 'continue')
+            etree.SubElement(self.x_work, 'playback', file='ivr/ivr-recording_started.wav')
+            self.x_work.append(self.record_and_get_digits(rec_file))
         else:
             etree.SubElement(self.x_work, 'playback', file='ivr/ivr-recording_saved.wav')
             etree.SubElement(self.x_work, 'hangup')

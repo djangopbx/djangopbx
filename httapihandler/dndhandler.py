@@ -37,19 +37,14 @@ class DndHandler(HttApiHandler):
 
     handler_name = 'donotdisturb'
 
-    def get_variables(self):
-        self.var_list = [
-        'extension_uuid'
-        ]
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
         if not self.hraction:
             self.error_hangup('DND: action not specified')
-        extension_uuid = self.qdict.get('extension_uuid')
-        if extension_uuid:
+        extension_uuid = self.session_json.get('variable_extension_uuid')
+        if not extension_uuid:
             self.error_hangup('DND: extension uuid not specified')
 
         try:
@@ -70,10 +65,12 @@ class DndHandler(HttApiHandler):
         if self.hraction == 'true':
             e.do_not_disturb = self.hraction
             e.follow_me_enabled = 'false'
+            etree.SubElement(x_work, 'pause', milliseconds='250')
             etree.SubElement(x_work, 'playback', file='ivr/ivr-dnd_activated.wav')
 
         if self.hraction == 'false':
             e.do_not_disturb = self.hraction
+            etree.SubElement(x_work, 'pause', milliseconds='250')
             etree.SubElement(x_work, 'playback', file='ivr/ivr-dnd_cancelled.wav')
         e.save()
         efsf = ExtFeatureSyncFunctions(extension_uuid, DoNotDisturbOn=e.do_not_disturb)

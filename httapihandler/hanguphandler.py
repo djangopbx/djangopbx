@@ -38,15 +38,14 @@ class HangupHandler(HttApiHandler):
 
     def get_data(self):
 
-        self.get_domain_variables()
-        self.get_language_variables()
-
-        missed_call_app  = self.qdict.get('missed_call_app')        # noqa: E221
-        missed_call_data = self.qdict.get('missed_call_data')       # noqa: E221
-        caller_id_name   = self.qdict.get('caller_id_name', ' ')    # noqa: E221
-        caller_id_number = self.qdict.get('caller_id_number', ' ')  # noqa: E221
-        sip_to_user      = self.qdict.get('sip_to_user', ' ')       # noqa: E221
-        dialed_user      = self.qdict.get('dialed_user', ' ')       # noqa: E221
+        missed_call_app  = self.session_json.get('variable_missed_call_app')        # noqa: E221
+        missed_call_data = self.session_json.get('variable_missed_call_data')       # noqa: E221
+        caller_id_name   = self.session_json.get('variable_caller_id_name', ' ')    # noqa: E221
+        caller_id_number = self.session_json.get('variable_caller_id_number', ' ')  # noqa: E221
+        sip_to_user      = self.session_json.get('variable_sip_to_user', ' ')       # noqa: E221
+        dialed_user      = self.session_json.get('variable_dialed_user', ' ')       # noqa: E221
+        default_language = self.session_json.get('variable_default_language', ' ')  # noqa: E221
+        default_dialect  = self.session_json.get('variable_default_dialect', ' ')   # noqa: E221
 
         if not missed_call_app:
             return self.return_data('Ok\n')
@@ -57,7 +56,7 @@ class HangupHandler(HttApiHandler):
 
         m = PbxTemplateMessage()
         template = m.GetTemplate(
-            self.domain_uuid, '%s-%s' % (self.default_language, self.default_dialect),
+            self.domain_uuid, '%s-%s' % (default_language, default_dialect),
             'missed', 'default'
             )
         if not template[0]:

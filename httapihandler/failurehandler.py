@@ -35,29 +35,13 @@ class FailureHandler(HttApiHandler):
 
     handler_name = 'failure'
 
-    def get_variables(self):
-        self.var_list = [
-        'originate_disposition',
-        'dialed_extension',
-        'last_busy_dialed_extension',
-        'forward_busy_enabled',
-        'forward_busy_destination',
-        'forward_busy_destination',
-        'forward_no_answer_enabled',
-        'forward_no_answer_destination',
-        'forward_user_not_registered_enabled',
-        'forward_user_not_registered_destination'
-        ]
-        self.var_list.extend(self.domain_var_list)
-
     def get_data(self):
         if self.exiting:
             return self.return_data('Ok\n')
 
-        self.get_domain_variables()
-        originate_disposition = self.qdict.get('originate_disposition')
-        dialed_extension = self.qdict.get('dialed_extension')
-        context = self.qdict.get('Caller-Context')
+        originate_disposition = self.session_json.get('variable_originate_disposition')
+        dialed_extension = self.session_json.get('variable_dialed_extension')
+        context = self.session_json.get('Caller-Context')
         if not context:
             context = self.domain_name
 
@@ -66,17 +50,17 @@ class FailureHandler(HttApiHandler):
         x_work = etree.SubElement(x_root, 'work')
 
         if originate_disposition == 'USER_BUSY':
-            last_busy_dialed_extension = self.qdict.get('last_busy_dialed_extension', '~None~')
+            last_busy_dialed_extension = self.session_json.get('variable_last_busy_dialed_extension', '~None~')
             if self.debug:
                 self.logger.debug(self.log_header.format(
                     'falurehandler', 'last_busy_dialed_extension %s' % last_busy_dialed_extension
                     ))
             if dialed_extension and last_busy_dialed_extension:
                 if not dialed_extension == last_busy_dialed_extension:
-                    forward_busy_enabled = self.qdict.get('forward_busy_enabled', 'false')
+                    forward_busy_enabled = self.session_json.get('variable_forward_busy_enabled', 'false')
                     if forward_busy_enabled:
                         if forward_busy_enabled == 'true':
-                            forward_busy_destination = self.qdict.get('forward_busy_destination')
+                            forward_busy_destination = self.session_json.get('variable_forward_busy_destination')
                             if forward_busy_destination:
                                 etree.SubElement(
                                     x_work, 'execute', application='set',
@@ -94,10 +78,10 @@ class FailureHandler(HttApiHandler):
                                 etree.SubElement(x_work, 'hangup', cause='USER_BUSY')
 
         elif originate_disposition == 'NO_ANSWER':
-            forward_no_answer_enabled = self.qdict.get('forward_no_answer_enabled')
+            forward_no_answer_enabled = self.session_json.get('variable_forward_no_answer_enabled')
             if forward_no_answer_enabled:
                 if forward_no_answer_enabled == 'true':
-                    forward_no_answer_destination = self.qdict.get('forward_no_answer_destination')
+                    forward_no_answer_destination = self.session_json.get('variable_forward_no_answer_destination')
                     if forward_no_answer_destination:
                         x_log = etree.SubElement(x_work, 'log', level='NOTICE')
                         x_log.text = 'forwarding on no answer to: %s' % forward_no_answer_destination
@@ -111,7 +95,7 @@ class FailureHandler(HttApiHandler):
                         etree.SubElement(x_work, 'hangup', cause='NO_ANSWER')
 
         elif originate_disposition == 'USER_NOT_REGISTERED':
-            forward_user_not_registered_enabled = self.qdict.get('forward_user_not_registered_enabled')
+            forward_user_not_registered_enabled = self.session_json.get('variable_forward_user_not_registered_enabled')
             if forward_user_not_registered_enabled:
                 if forward_user_not_registered_enabled == 'true':
                     forward_user_not_registered_destination = self.qdict.get(
