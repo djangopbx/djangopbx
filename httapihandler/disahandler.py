@@ -100,6 +100,6 @@ class DISAHandler(HttApiHandler):
             etree.SubElement(self.x_work, 'execute', application='privacy', data='full')
             etree.SubElement(self.x_work, 'execute', application='set', data='sip_h_Privacy=id')
             etree.SubElement(self.x_work, 'execute', application='set', data='privacy=yes')
-        context = self.session_json.get('variable_context', '')
+        context = self.qdict.get('Caller-Context', 'None')
         etree.SubElement(self.x_work, 'execute', application='transfer', data='%s XML %s' % (destination_number, context))
         return

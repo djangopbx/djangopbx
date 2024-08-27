@@ -27,6 +27,8 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
+import os
+import uuid
 import logging
 from django.conf import settings
 from lxml import etree
@@ -59,9 +61,9 @@ class HttApiHandler():
         'variable_default_voice',
         # dialplan call variables
         'variable_extension_uuid',
-        'variable_context',
         'variable_originate_disposition',
         'variable_dialed_extension',
+        'variable_destination_number',
         'variable_last_busy_dialed_extension',
         'variable_forward_busy_enabled',
         'variable_forward_busy_destination',
@@ -74,8 +76,12 @@ class HttApiHandler():
         'variable_missed_call_data',
         'variable_caller_id_name',
         'variable_caller_id_number',
+        'variable_effective_caller_id_number',
         'variable_sip_to_user',
+        'variable_sip_from_user',
+        'variable_sip_number_alias',
         'variable_dialed_user',
+        'variable_record_seconds',
         # djangopbx application uuid variables
         'variable_callflow_uuid',
         'variable_conference_uuid',
@@ -93,7 +99,14 @@ class HttApiHandler():
         'variable_recording_prefix',
         'variable_speed_dial',
         'variable_uuid',
-        'variable_user_uuid'
+        'variable_user_uuid',
+        # voicemail application variables
+        'variable_voicemail_greeting_number',
+        'variable_skip_instructions',
+        'variable_skip_greeting',
+        'variable_vm_say_caller_id_number',
+        'variable_vm_say_date_time',
+        'variable_voicemail_authorized'
     )
 
 
@@ -102,7 +115,6 @@ class HttApiHandler():
         self.logger = logging.getLogger(__name__)
         self.debug = False
         self.qdict = qdict
-        print(qdict)
         self.fdict = fdict
         self.getfile = getFile
         self.exiting = False
@@ -117,11 +129,20 @@ class HttApiHandler():
         else:
             self.exiting = True
         if qdict.get('exiting', 'false') == 'true':
-            self.destroy_httapi_session()
+            if self.destroy_session_ok():
+                self.destroy_session()
             self.exiting = True
         if self.debug:
             self.logger.debug(self.log_header.format('request\n', self.qdict))
         self.recordings_dir = settings.PBX_HTTAPI_SWITCH_RECORDINGS
+
+    def destroy_session_ok(self):
+        #  Handler classes can override this function if they wish to destroy the session themselves.
+        return True
+
+    def destroy_session(self):
+        self.delete_all_temporary_files(False)
+        self.destroy_httapi_session()
 
     def get_data(self):
         return self.return_data(self.error_hangup('HF0001'))
@@ -169,9 +190,10 @@ class HttApiHandler():
             self.session = HttApiSession.objects.get(pk=self.session_id)
         except HttApiSession.DoesNotExist:
             s_name = self.qdict.get('url', '/n/None/').rstrip('/').rsplit('/', 1)[1]
-            self.session = HttApiSession.objects.create(id=self.session_id, name=s_name, json={self.handler_name: {}})
+            self.session = HttApiSession.objects.create(id=self.session_id, name=s_name, json={self.handler_name: {'tmpfiles': {}}})
         if not self.handler_name in self.session.json:
             self.session.json[self.handler_name] = {}
+            self.session.json[self.handler_name]['tmpfiles'] = {}
         for v in self.load_vars:
             val = self.qdict.get(v)
             if val:
@@ -189,6 +211,47 @@ class HttApiHandler():
             pass
         return
 
+    def create_temporary_file(self, ext='.tmp'):
+        name = '%s%s' % (uuid.uuid4(), ext)
+        fullname = '/tmp/%s' % name
+        # creates the temporary file and closes it Immediately.
+        with open(fullname, 'w') as fp:
+            pass
+        self.session.json[self.handler_name]['tmpfiles'][name] = fullname
+        self.session.save()
+        return name
+
+    def delete_temporary_file(self, name):
+        try:
+            fullname = self.session.json[self.handler_name]['tmpfiles'][name]
+        except KeyError:
+            return False
+        try:
+            os.remove(fullname)
+        except OSError:
+            pass
+        del self.session.json[self.handler_name]['tmpfiles'][name]
+        self.session.save()
+        return True
+
+    def delete_all_temporary_files(self, save=True):
+        tempfiles = self.session.json[self.handler_name]['tmpfiles']
+        for k, v in tempfiles.items():
+            try:
+                os.remove(v)
+            except OSError:
+                pass
+        self.session.json[self.handler_name]['tmpfiles'] = {}
+        if save:
+            self.session.save()
+        return True
+
+    def str2int(self, tmpstr):
+        try:
+            return int(tmpstr)
+        except (TypeError, ValueError):
+            return 0
+
     def get_data(self):
         return self.return_data('Ok\n')
 
@@ -198,27 +261,38 @@ class HttApiHandler():
         except KeyError:
             return None
 
-    def play_and_get_digits(self, file_name, var_name='pb_input', digit_regex='~\\d+#'):
+    def play_and_get_digits(self, file_name, **kwargs):
+        var_name = kwargs.get('var_name', 'pb_input')
+        digit_regex = kwargs.get('digit_regex', '~\\d+#')
+        digit_timeout = kwargs.get('digit_timeout', '5000')
+        input_timeout = kwargs.get('input_timeout', '10000')
+        loops = kwargs.get('loops', '2')
         x_pb = etree.Element('playback')
         x_pb.attrib['name'] = var_name
         x_pb.attrib['error-file'] = 'ivr/ivr-error.wav'
         x_pb.attrib['file'] = file_name
-        x_pb.attrib['digit-timeout'] = '5000'
-        x_pb.attrib['input-timeout'] = '10000'
-        x_pb.attrib['loops'] = '3'
+        x_pb.attrib['digit-timeout'] = digit_timeout
+        x_pb.attrib['input-timeout'] = input_timeout
+        x_pb.attrib['loops'] = loops
         x_pb_b = etree.SubElement(x_pb, 'bind')
         x_pb_b.attrib['strip'] = '#'
         x_pb_b.text = digit_regex
         return x_pb
 
-    def record_and_get_digits(self, file_name, var_name='rd_input', digit_regex='~\\d+#'):
+    def record_and_get_digits(self, file_name, **kwargs):
+        var_name = kwargs.get('var_name', 'rd_input')
+        digit_regex = kwargs.get('digit_regex', '~[0-9#\*]')
+        digit_timeout = kwargs.get('digit_timeout', '50000')
+        terminators = kwargs.get('terminators', '')
+        limit = kwargs.get('limit', '60')
         x_pb = etree.Element('record')
         x_pb.attrib['name'] = var_name
         x_pb.attrib['error-file'] = 'ivr/ivr-error.wav'
         x_pb.attrib['beep-file'] = 'tone_stream://%(100,0,800)'
         x_pb.attrib['file'] = file_name
-        x_pb.attrib['input-timeout'] = '60000'
+        x_pb.attrib['limit'] = limit
+        x_pb.attrib['terminators'] = terminators
+        x_pb.attrib['digit-timeout'] = digit_timeout
         x_pb_b = etree.SubElement(x_pb, 'bind')
         x_pb_b.text = digit_regex
         return x_pb
-

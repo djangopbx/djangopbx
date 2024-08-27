@@ -29,7 +29,8 @@
 
 from rest_framework import serializers
 from .models import (
-    Voicemail, VoicemailGreeting,
+    Voicemail, VoicemailGreeting, VoicemailMessages, VoicemailOptions,
+    VoicemailDestinations
 )
 
 
@@ -54,3 +55,40 @@ class VoicemailGreetingSerializer(serializers.ModelSerializer):
                     'url', 'id', 'voicemail_id', 'filename', 'name', 'description', 'filestore',
                     'created', 'updated', 'synchronised', 'updated_by'
                 ]
+
+
+class VoicemailMessagesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = VoicemailMessages
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'url', 'id', 'voicemail_id', 'filename', 'name', 'filestore',
+                    'caller_id_name', 'caller_id_number', 'duration', 'status',
+                    'read', 'transcription', 'base64',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
+
+class VoicemailOptionsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = VoicemailOptions
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'url', 'id', 'voicemail_id', 'option_digits', 'option_action',
+                    'option_param', 'sequence', 'description',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+
+
+class VoicemailDestinationsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = VoicemailDestinations
+        read_only_fields = ['created', 'updated', 'synchronised', 'updated_by']
+        fields = [
+                    'url', 'id', 'voicemail_id', 'voicemail_dest',
+                    'created', 'updated', 'synchronised', 'updated_by'
+                ]
+

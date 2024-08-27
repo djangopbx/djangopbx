@@ -113,7 +113,7 @@ class RecordingsHandler(HttApiHandler):
         etree.SubElement(self.x_work, 'playback', file='voicemail/vm-rerecord.wav')
         etree.SubElement(self.x_work, 'pause', milliseconds='250')
         etree.SubElement(self.x_work, 'playback', file='digits/2.wav')
-        self.x_work.append(self.play_and_get_digits('voicemail/vm-save_recording.wav', 'pb_input', '~\\d{1}'))
+        self.x_work.append(self.play_and_get_digits('voicemail/vm-save_recording.wav', digit_regex='~\\d{1}'))
         return
 
     def act_rerecord(self):

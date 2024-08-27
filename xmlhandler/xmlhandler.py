@@ -120,5 +120,5 @@ class XmlHandler():
             return soundfile
         filestore = settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
         if t_snd_dir[0]: # if True, soundfile does not start with a /
-            return '%s%s/%s' % (settings.PBX_XMLH_HTTP_CACHE_SCHEME, filestore, soundfile)
-        return '%s%s%s' % (settings.PBX_XMLH_HTTP_CACHE_SCHEME, filestore, soundfile)
+            return '%s%s/%s' % (settings.PBX_HTTP_CACHE_SCHEME, filestore, soundfile)
+        return '%s%s%s' % (settings.PBX_HTTP_CACHE_SCHEME, filestore, soundfile)

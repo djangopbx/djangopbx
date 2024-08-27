@@ -42,10 +42,12 @@ from pbx.restpermissions import (
     AdminApiAccessPermission
 )
 from .models import (
-    Voicemail, VoicemailGreeting,
+    Voicemail, VoicemailGreeting, VoicemailMessages, VoicemailOptions,
+    VoicemailDestinations
 )
 from .serializers import (
-    VoicemailSerializer, VoicemailGreetingSerializer,
+    VoicemailSerializer, VoicemailGreetingSerializer, VoicemailMessagesSerializer,
+    VoicemailOptionsSerializer, VoicemailDestinationsSerializer
 )
 
 
@@ -71,12 +73,72 @@ class VoicemailViewSet(viewsets.ModelViewSet):
 
 class VoicemailGreetingViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows VoicemailGreetingss to be viewed or edited.
+    API endpoint that allows VoicemailGreetings to be viewed or edited.
     """
     queryset = VoicemailGreeting.objects.all().order_by('voicemail_id', 'name')
     serializer_class = VoicemailGreetingSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['voicemail_id', 'name', 'filestore']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+
+class VoicemailMessagesViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows VoicemailMessages to be viewed or edited.
+    """
+    queryset = VoicemailMessages.objects.all().order_by('voicemail_id', 'created')
+    serializer_class = VoicemailMessagesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['voicemail_id', 'name', 'filestore']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+
+class VoicemailOptionsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows VoicemailOptions to be viewed or edited.
+    """
+    queryset = VoicemailOptions.objects.all().order_by('voicemail_id', 'option_digits')
+    serializer_class = VoicemailOptionsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['voicemail_id', 'description', 'option_digits']
+    permission_classes = [
+        permissions.IsAuthenticated,
+        AdminApiAccessPermission,
+    ]
+
+    def perform_update(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+    def perform_create(self, serializer):
+        serializer.save(updated_by=self.request.user.username)
+
+
+class VoicemailDestinationsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows VoicemailDestinations to be viewed or edited.
+    """
+    queryset = VoicemailDestinations.objects.all().order_by('voicemail_id', 'voicemail_dest')
+    serializer_class = VoicemailDestinationsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['voicemail_id', 'voicemail_dest']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,

@@ -39,20 +39,20 @@ class EventSocket:
     nodata_timeout = 0.1
     sleep_time = 0.005
 
-    def __init__(self, sock=None):
-        if sock is None:
-            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        else:
-            self.sock = sock
+    def __init__(self):
         self.headers = {}
         self.auth_fail_str = ' '
 
     def disconnect(self):
         if (self.sock):
-            self.sock.shutdown(socket.SHUT_WR)
+            try:
+                self.sock.shutdown(socket.SHUT_WR)
+            except OSError:
+                pass
             self.sock.close()
 
     def connect(self, host, port, password):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.password = 'auth %s' % password
         try:
             self.sock.connect((host, port))

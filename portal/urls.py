@@ -65,5 +65,7 @@ urlpatterns = [
 #        ),
     re_path(r'clickdial/(?P<dest>[A-Za-z0-9\.@]+)/', views.ClickDial.as_view(), name='clickdial'),
     re_path(r'clickdial/(?P<dest>[A-Za-z0-9\.@]+)/<host>/', views.ClickDial.as_view(), name='clickdial'),
+    re_path(r'voicemail/(?P<vmid>[A-Fa-f0-9\-]+)_(?P<msgid>[A-Fa-f0-9\-]+)', views.VoicemailDownload.as_view(), name='voicemaildownload'), # noqa: E501, E221
+    re_path(r'tmprecording/(?P<sessionid>[A-Fa-f0-9\-]+)_(?P<fileid>[A-Fa-f0-9\-]+\.[A-Za-z0-9]+)', views.TmpRecordingDownload.as_view(), name='tmprecoringdownload'), # noqa: E501, E221
     path('pbxlogout/', views.pbxlogout, name='pbxlogout'),
 ]

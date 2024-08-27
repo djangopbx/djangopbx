@@ -62,6 +62,7 @@ from .cceventhandler import CcEventHandler
 from .dndhandler import DndHandler
 from .callfwdhandler import CallFwdHandler
 from .disahandler import DISAHandler
+from .voicemailhandler import VoicemailHandler
 
 
 class HttApiSessionViewSet(viewsets.ModelViewSet):
@@ -181,4 +182,13 @@ def callforward(request, hraction, hrparam1=False):
 @csrf_exempt
 def disa(request):
     httapihf = DISAHandler(request.POST)
+    return processhttapi(request, httapihf)
+
+@csrf_exempt
+def voicemail(request, hraction, vmuser=False, vmdomain=False):
+    if request.content_type.startswith('multipart'):
+        post, files = request.parse_file_upload(request.META, request)
+        httapihf = VoicemailHandler(post, True, files, hraction=hraction, vmuser=vmuser, vmdomain=vmdomain)
+    else:
+        httapihf = VoicemailHandler(request.POST, hraction=hraction, vmuser=vmuser, vmdomain=vmdomain)
     return processhttapi(request, httapihf)

@@ -347,6 +347,8 @@ STORAGES = {
 PBX_FREESWITCHES = ['localhost']
 # List of file store names resolve to IP addresses in /etc/hosts
 PBX_FILESTORES = ['localhost']
+PBX_FILESTORE_SCHEME = 'http://'
+PBX_HTTP_CACHE_SCHEME = 'http_cache://http://'
 # Index of FILESTORES
 PBX_DEFAULT_FILESTORE = 0
 # Use message broker or local event socket for commands.
@@ -360,12 +362,13 @@ PBX_SOUND_DIRS = ['ascii', 'base256', 'conference', 'currency', 'digits', 'direc
 PBX_SOUND_LIST_DIR = '8000'
 #  Choose voicemail subsystem
 PBX_USE_MOD_VOICEMAIL = False
+# hTTP link for this server
+PBX_SERVER_URL = 'https://myserver.com'
 
 # XML Handler Settings
 PBX_XMLH_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']
 PBX_XMLH_CONTEXT_TYPE = 'multiple'
 PBX_XMLH_NUMBER_AS_PRESENCE_ID = False
-PBX_XMLH_HTTP_CACHE_SCHEME = 'http_cache://http://'
 
 # CDR Handler settings
 PBX_CDRH_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']

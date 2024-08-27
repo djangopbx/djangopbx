@@ -1,7 +1,7 @@
 import smtplib
 
 from email.message import EmailMessage
-import email.utils as utils
+from email.utils import formatdate, make_msgid
 from tenants.pbxsettings import PbxSettings
 from switch.emailtemplates import Templates as Tp
 
@@ -22,7 +22,7 @@ class PbxTemplateMessage:
     def GetTemplate(self, domain_id, lang, cat, subcat):
         return Tp().get_template(domain_id, lang, cat, subcat)
 
-    def Send(self, rps, sub, msg, msg_type):
+    def Send(self, rps, sub, msg, msg_type, fieldfile=None, att_maintype='audio', att_subtype='wav'):
         if not self.ok:
             return (self.ok, ': '.join(self.info))
         try:
@@ -34,8 +34,8 @@ class PbxTemplateMessage:
             m['Subject'] = sub
             m['From'] = self.cfg['smtp_from']
             m['To'] = rps
-            m['Date'] = utils.formatdate(localtime=True)
-            m['Message-ID'] = utils.make_msgid(domain=domain)
+            m['Date'] = formatdate(localtime=True)
+            m['Message-ID'] = make_msgid(domain=domain)
         except (TypeError, ValueError):
             self.info.append('Error with message parameters')
             return (False, ': '.join(self.info))
@@ -49,6 +49,13 @@ class PbxTemplateMessage:
         except (TypeError, ValueError):
             self.info.append('Error with message body')
             return (False, ': '.join(self.info))
+        if fieldfile:
+            fieldfile.open(mode='rb')
+            file_data = fieldfile.read()
+            try:
+                m.add_attachment(file_data, att_maintype, att_subtype, filename=fieldfile.name.split('/')[-1:][0])
+            except:
+                pass
 
         with smtplib.SMTP(self.cfg['smtp_host'], int(self.cfg['smtp_port'])) as server:
             try:

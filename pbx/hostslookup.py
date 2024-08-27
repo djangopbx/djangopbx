@@ -3,7 +3,7 @@
 #
 #    MIT License
 #
-#    Copyright (c) 2016 - 2022 Adrian Fretwell <adrian@djangopbx.com>
+#    Copyright (c) 2016 - 2024 Adrian Fretwell <adrian@djangopbx.com>
 #
 #    Permission is hereby granted, free of charge, to any person obtaining a copy
 #    of this software and associated documentation files (the "Software"), to deal
@@ -27,19 +27,24 @@
 #    Adrian Fretwell <adrian@djangopbx.com>
 #
 
-from django.urls import path
-from rest_framework import routers
-from . import views
+#
+#  These are Widget classes used by more than one application
+#
 
-router = routers.DefaultRouter()
-router.register(r'voicemails', views.VoicemailViewSet)
-router.register(r'voicemail_greetings', views.VoicemailGreetingViewSet)
-router.register(r'voicemail_messages', views.VoicemailMessagesViewSet)
-router.register(r'voicemail_options', views.VoicemailOptionsViewSet)
-router.register(r'voicemail_destinations', views.VoicemailDestinationsViewSet)
 
-urlpatterns = [
-    path('listvoicemails/', views.listvoicemails, name='listvoicemails'),
-    path('listvoicemails/<vmuuid>/<vmext>/<action>/', views.listvoicemails, name='listvoicemails'),
+class HostsLookup():
+    host_dict = {}
 
-]
+    def __init__(self):
+        with open('/etc/hosts', 'r') as f:
+            for line in f:
+                parts = line.split()
+                if len(parts) == 2:
+                    self.host_dict[parts[1]] = parts[0]
+                if len(parts) > 2:
+                    subparts = parts[1:]
+                    for name in subparts:
+                        self.host_dict[name] = parts[0]
+
+    def get_host(self, name):
+        return self.host_dict.get(name, '127.0.0.1')

@@ -244,9 +244,9 @@
 	<param name="enable-post-var" value="variable_default_voice"/>
 	<!-- dialplan call variables -->
 	<param name="enable-post-var" value="variable_extension_uuid"/>
-	<param name="enable-post-var" value="variable_context"/>
 	<param name="enable-post-var" value="variable_originate_disposition"/>
 	<param name="enable-post-var" value="variable_dialed_extension"/>
+	<param name="enable-post-var" value="variable_destination_number"/>
 	<param name="enable-post-var" value="variable_last_busy_dialed_extension"/>
 	<param name="enable-post-var" value="variable_forward_busy_enabled"/>
 	<param name="enable-post-var" value="variable_forward_busy_destination"/>
@@ -259,8 +259,12 @@
 	<param name="enable-post-var" value="variable_missed_call_data"/>
 	<param name="enable-post-var" value="variable_caller_id_name"/>
 	<param name="enable-post-var" value="variable_caller_id_number"/>
+	<param name="enable-post-var" value="variable_effective_caller_id_number"/>
 	<param name="enable-post-var" value="variable_sip_to_user"/>
+	<param name="enable-post-var" value="variable_sip_from_user"/>
+	<param name="enable-post-var" value="variable_sip_number_alias"/>
 	<param name="enable-post-var" value="variable_dialed_user"/>
+	<param name="enable-post-var" value="variable_record_seconds"/>
 	<!-- djangopbx application uuid variables -->
 	<param name="enable-post-var" value="variable_callflow_uuid"/>
 	<param name="enable-post-var" value="variable_conference_uuid"/>
@@ -279,6 +283,13 @@
 	<param name="enable-post-var" value="variable_speed_dial"/>
 	<param name="enable-post-var" value="variable_uuid"/>
 	<param name="enable-post-var" value="variable_user_uuid"/>
+	<!-- voicemail application variables -->
+	<param name="enable-post-var" value="variable_voicemail_greeting_number"/>
+	<param name="enable-post-var" value="variable_skip_instructions"/>
+	<param name="enable-post-var" value="variable_skip_greeting"/>
+	<param name="enable-post-var" value="variable_vm_say_caller_id_number"/>
+	<param name="enable-post-var" value="variable_vm_say_date_time"/>
+	<param name="enable-post-var" value="variable_voicemail_authorized"/>
       </params>
     </profile>
   </profiles>

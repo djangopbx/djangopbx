@@ -28,6 +28,7 @@
 #
 
 import os
+from uuid import UUID
 from django.conf import settings
 from django.views import View
 from django.shortcuts import render
@@ -56,6 +57,12 @@ from tenants.models import (
 )
 from accounts.models import (
     Extension, ExtensionUser,
+)
+from voicemail.models import (
+    VoicemailMessages,
+)
+from httapihandler.models import (
+    HttApiSession,
 )
 from tenants.pbxsettings import (
     PbxSettings,
@@ -360,6 +367,43 @@ class ClickDial(LoginRequiredMixin, View):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             return HttpResponse('')
+
+
+class VoicemailDownload(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            vmid = UUID(kwargs.get('vmid'))
+        except ValueError:
+            return HttpResponseNotFound()
+        try:
+            msgid = UUID(kwargs.get('msgid'))
+        except ValueError:
+            return HttpResponseNotFound()
+        try:
+            msg = VoicemailMessages.objects.get(pk=msgid, voicemail_id_id=vmid)
+        except VoicemailMessages.DoesNotExist:
+            return HttpResponseNotFound()
+        return FileResponse(msg.filename)
+
+
+class TmpRecordingDownload(View):
+    def get(self, request, *args, **kwargs):
+        print('TmpRecordingDownload')
+        print(kwargs)
+        try:
+            sessionid = UUID(kwargs.get('sessionid'))
+        except ValueError:
+            return HttpResponseNotFound()
+        fileid = kwargs.get('fileid')
+        if not fileid:
+            return HttpResponseNotFound()
+        try:
+            msg = HttApiSession.objects.get(pk=sessionid)
+        except HttApiSession.DoesNotExist:
+            return HttpResponseNotFound()
+        filename = '/tmp/%s' % fileid
+        return FileResponse(open(filename, 'rb'))
+
 
 @login_required
 def pbxlogout(request):
