@@ -151,8 +151,8 @@ class VoicemailResource(resources.ModelResource):
 
 
 @admin.action(permissions=['change'], description='Sync. greeting files on disk with database.')
-def sync_greeting_files(modeladmin, request, queryset):
-    vf = VoicemailFunctions()
+def sync_greeting_files(modeladmin, request, queryset):  # Only applicable if using mod_voicemail
+    vf = VoicemailFunctions()                            # See get_actions below.
     vf.sync_greetings(request.session['domain_uuid'])
 
 class VoicemailAdmin(ImportExportModelAdmin):
@@ -184,6 +184,12 @@ class VoicemailAdmin(ImportExportModelAdmin):
     actions = [sync_greeting_files]
     inlines = [VoicemailGreetingInLine, VoicemailOptionsInLine, VoicemailDestinationsInLine, VoicemailMessagesInLine]
 
+    def get_actions(self, request):
+        actns = super().get_actions(request)
+        if not settings.PBX_USE_MOD_VOICEMAIL:
+            del actns['sync_greeting_files']
+        return actns
+
     def has_add_permission(self, request):
         return False
 
@@ -214,15 +220,16 @@ class VoicemailAdmin(ImportExportModelAdmin):
         for instance in instances:
             instance.updated_by = request.user.username
             instance.save()
-            if not settings.PBX_FREESWITCH_LOCAL:
-                path = '/home/django-pbx/media/fs/voicemail/default/{0}/{1}'.format(
+            if type(instance) is VoicemailGreeting or type(instance) is VoicemailMessages:
+                if not settings.PBX_FREESWITCH_LOCAL and settings.PBX_USE_MOD_VOICEMAIL:
+                    path = '/home/django-pbx/media/fs/voicemail/default/{0}/{1}'.format(
                         instance.voicemail_id.extension_id.domain_id.name,
                         instance.voicemail_id.extension_id.extension)
-                instance.filename.open(mode='rb')
-                if not fal.exists(path, request.session['home_switch']):
-                    fal.mkdir(path, request.session['home_switch'])
-                fal.putfo(instance.filename, '/home/django-pbx/media/%s' % instance.filename.name, request.session['home_switch'])
-                instance.filename.close()
+                    instance.filename.open(mode='rb')
+                    if not fal.exists(path, request.session['home_switch']):
+                        fal.mkdir(path, request.session['home_switch'])
+                    fal.putfo(instance.filename, '/home/django-pbx/media/%s' % instance.filename.name, request.session['home_switch'])
+                    instance.filename.close()
         formset.save_m2m()
 
     def save_model(self, request, obj, form, change):

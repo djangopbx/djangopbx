@@ -60,6 +60,13 @@ def shcommand(cmd, env=None):
         return stdout.decode() + stderr.decode()
     return stdout.decode('utf-8', 'ignore')
 
+def audio_type(ext):
+    atype = 'audio/unknown'
+    if ext == 'wav':
+        atype = 'audio/wav'
+    elif ext == 'mp3':
+        atype = 'audio/mpeg'
+    return atype
 
 def str2regex(dst, pre=''):
     # excape the +
