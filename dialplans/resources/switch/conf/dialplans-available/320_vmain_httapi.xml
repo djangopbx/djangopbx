@@ -1,0 +1,19 @@
+<!-- voicemail main extension, used when * is pressed from an external number -->
+<context name="{v_context}">
+	<extension name="vmain_httapi" number="*98" continue="false" app_uuid="ca342076-14d2-48b8-93c6-230588e35814" order="320">
+		<condition field="destination_number" expression="^vmain$|^\*4000$|^\*98$" break="never">
+			<action application="answer"/>
+			<action application="sleep" data="1000"/>
+			<action application="set" data="record_append=false"/>
+			<action application="set" data="voicemail_authorized=false"/>
+			<action application="httapi" data="{httapi_profile=dpbx,url=${pbx_httapi_url}/httapihandler/voicemail/check/${sip_from_user}/${domain_name}/}"/>
+		</condition>
+		<condition field="destination_number" expression="^(vmain$|^\*4000$|^\*98)(\d{2,12})$">
+			<action application="answer"/>
+			<action application="sleep" data="1000"/>
+			<action application="set" data="record_append=false"/>
+			<action application="set" data="voicemail_authorized=false"/>
+			<action application="httapi" data="{httapi_profile=dpbx,url=${pbx_httapi_url}/httapihandler/voicemail/check/$2/${domain_name}/}"/>
+		</condition>
+	</extension>
+</context>

@@ -1,0 +1,11 @@
+<!-- voicemail provide user extension -->
+<context name="{v_context}">
+	<extension name="vmain_user_httap" number="*97" continue="false" app_uuid="c3d1eeff-e08e-42dc-9804-a3bd062ba829" order="330">
+		<condition field="destination_number" expression="^\*97$">
+			<action application="answer"/>
+			<action application="sleep" data="1000"/>
+			<action application="set" data="voicemail_authorized=${sip_authorized}"/>
+			<action application="httapi" data="{httapi_profile=dpbx,url=${pbx_httapi_url}/httapihandler/voicemail/check/${sip_from_user}/${domain_name}/}"/>
+		</condition>
+	</extension>
+</context>
