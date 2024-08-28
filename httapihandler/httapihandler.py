@@ -30,8 +30,9 @@
 import os
 import uuid
 import logging
-from django.conf import settings
 from lxml import etree
+from django.conf import settings
+from pbx.pbxsendsmtp import PbxTemplateMessage
 from .models import HttApiSession
 
 
@@ -116,6 +117,7 @@ class HttApiHandler():
         self.debug = False
         self.qdict = qdict
         self.fdict = fdict
+        print(qdict)
         self.getfile = getFile
         self.exiting = False
         self.session = None
@@ -129,12 +131,18 @@ class HttApiHandler():
         else:
             self.exiting = True
         if qdict.get('exiting', 'false') == 'true':
-            if self.destroy_session_ok():
-                self.destroy_session()
-            self.exiting = True
+            self.exit_handler()
         if self.debug:
             self.logger.debug(self.log_header.format('request\n', self.qdict))
         self.recordings_dir = settings.PBX_HTTAPI_SWITCH_RECORDINGS
+
+    def exit_handler(self):
+        if settings.PBX_HTTAPI_HANGUP_HANDLER:
+            self.hangup_handler()
+        if self.destroy_session_ok():
+            self.destroy_session()
+        self.exiting = True
+        return
 
     def destroy_session_ok(self):
         #  Handler classes can override this function if they wish to destroy the session themselves.
@@ -296,3 +304,57 @@ class HttApiHandler():
         x_pb_b = etree.SubElement(x_pb, 'bind')
         x_pb_b.text = digit_regex
         return x_pb
+
+    def hangup_handler(self):
+        if self.session_json.get('hangup_handler_set', 'no') == 'no':
+            return False
+        missed_call_app  = self.session_json.get('variable_missed_call_app')            # noqa: E221
+        missed_call_data = self.session_json.get('variable_missed_call_data')           # noqa: E221
+        caller_id_name   = self.session_json.get('variable_caller_id_name', ' ')        # noqa: E221
+        caller_id_number = self.session_json.get('variable_caller_id_number', ' ')      # noqa: E221
+        sip_to_user      = self.session_json.get('variable_sip_to_user', ' ')           # noqa: E221
+        dialed_user      = self.session_json.get('variable_dialed_user', ' ')           # noqa: E221
+        default_language = self.session_json.get('variable_default_language', 'en')     # noqa: E221
+        default_dialect  = self.session_json.get('variable_default_dialect', 'us')      # noqa: E221
+        orig_disposition = self.session_json.get('variable_originate_disposition', ' ') # noqa: E221
+
+        if not orig_disposition == 'ORIGINATOR_CANCEL':
+            return False
+        if not missed_call_app:
+            return False
+        if not missed_call_app == 'email':
+            return False
+        if not missed_call_data:
+            return False
+
+        m = PbxTemplateMessage()
+        tp_subject, tp_body, tp_type = m.GetTemplate(
+            self.domain_uuid, '%s-%s' % (default_language, default_dialect),
+            'missed', 'default'
+            )
+        if not tp_subject:
+            self.logger.warn(self.log_header.format('hangup', 'Email Template mising'))
+            return False
+
+        try:
+            subject = tp_subject.format(
+                caller_id_name=caller_id_name, caller_id_number=caller_id_number,
+                sip_to_user=sip_to_user, dialed_user=dialed_user
+                )
+            body = tp_body.format(
+                caller_id_name=caller_id_name, caller_id_number=caller_id_number,
+                sip_to_user=sip_to_user, dialed_user=dialed_user
+                )
+        except:
+            self.logger.warn(self.log_header.format('hangup', 'Template format Exception'))
+            return False
+
+        try:
+            out = m.Send(missed_call_data, subject, body, tp_type)
+        except:
+            self.logger.warn(self.log_header.format('hangup', 'SMTP Exception'))
+            return False
+
+        if self.debug or not out[0]:
+            self.logger.warn(self.log_header.format('hangup', out[1]))
+        return True

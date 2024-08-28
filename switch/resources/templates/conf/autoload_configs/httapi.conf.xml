@@ -240,7 +240,7 @@
 	<param name="enable-post-var" value="variable_domain_name"/>
 	<!-- language variables -->
 	<param name="enable-post-var" value="variable_default_language"/>
-	<param name="enable-post-var" value="variable_default_dialiect"/>
+	<param name="enable-post-var" value="variable_default_dialect"/>
 	<param name="enable-post-var" value="variable_default_voice"/>
 	<!-- dialplan call variables -->
 	<param name="enable-post-var" value="variable_extension_uuid"/>
