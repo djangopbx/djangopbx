@@ -46,7 +46,7 @@ def user_directory_path(instance, filename):
             )
 
 def select_storage():
-    return storages['default'] if settings.PBX_USE_LOCAL_FILE_STORAGE else storages['sftp']
+    return storages['default'] if settings.PBX_USE_LOCAL_FILE_STORAGE else storages[settings.PBX_REMOTE_FILE_STORAGE_TYPE] # noqa: E501
 
 def default_filestore():
     return settings.PBX_FILESTORES[settings.PBX_DEFAULT_FILESTORE]
