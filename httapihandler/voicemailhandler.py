@@ -60,6 +60,7 @@ class VoicemailHandler(HttApiHandler):
             self.get_uploaded_file()
 
         if self.exiting and not self.getfile:
+            self.destroy_session()
             return self.return_data('Ok\n')
         if not self.vmuser or not self.vmdomain:
             return self.error_hangup('V2001')

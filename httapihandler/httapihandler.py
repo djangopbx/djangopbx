@@ -197,7 +197,10 @@ class HttApiHandler():
         try:
             self.session = HttApiSession.objects.get(pk=self.session_id)
         except HttApiSession.DoesNotExist:
-            s_name = self.qdict.get('url', '/n/None/').rstrip('/').rsplit('/', 1)[1]
+            try:
+                s_name = self.qdict.get('url', 'http://localhost:8080/httapihandler/none/args').split('/')[4]
+            except IndexError:
+                s_name = 'none'
             self.session = HttApiSession.objects.create(id=self.session_id, name=s_name, json={self.handler_name: {'tmpfiles': {}}})
         if not self.handler_name in self.session.json:
             self.session.json[self.handler_name] = {}

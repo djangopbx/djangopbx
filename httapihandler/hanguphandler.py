@@ -35,6 +35,8 @@ class HangupHandler(HttApiHandler):
     handler_name = 'hangup'
 
     def get_data(self):
+        if self.exiting:
+            return self.return_data('Ok\n')
         self.session_json['hangup_handler_set'] = 'yes'
         self.session.save()
         return self.httapi_break()
