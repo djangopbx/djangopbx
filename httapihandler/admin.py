@@ -28,6 +28,7 @@
 #
 
 from django.contrib import admin
+from django.conf import settings
 from .models import HttApiSession
 
 
@@ -46,4 +47,5 @@ class HttApiSessionAdmin(admin.ModelAdmin):
 
 
 # Uncomment below if required for debugging httapi sesions
-#admin.site.register(HttApiSession, HttApiSessionAdmin)
+if settings.PBX_HTTAPI_SHOW_ADMIN:
+    admin.site.register(HttApiSession, HttApiSessionAdmin)

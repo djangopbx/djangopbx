@@ -1,24 +1,6 @@
 [
 {
     "model": "tenants.defaultsetting",
-    "pk": "016b5d73-364d-4398-a437-7cac564d4918",
-    "fields": {
-        "app_uuid": null,
-        "category": "httapihandler",
-        "subcategory": "allowed_address",
-        "value_type": "array",
-        "value": "127.0.0.1/32",
-        "sequence": "10",
-        "enabled": "true",
-        "description": null,
-        "created": "2023-01-05T15:35:39.833Z",
-        "updated": "2023-01-05T15:35:39.833Z",
-        "synchronised": null,
-        "updated_by": "system"
-    }
-},
-{
-    "model": "tenants.defaultsetting",
     "pk": "017d9828-45cf-4881-8e9f-3fc3a6a0c7d6",
     "fields": {
         "app_uuid": null,
@@ -1273,24 +1255,6 @@
         "description": "",
         "created": "2022-11-26T12:49:25.941Z",
         "updated": "2022-11-26T12:49:25.941Z",
-        "synchronised": null,
-        "updated_by": "system"
-    }
-},
-{
-    "model": "tenants.defaultsetting",
-    "pk": "4b9d1e10-e100-4f7f-9614-1c6a01a9ae59",
-    "fields": {
-        "app_uuid": null,
-        "category": "httapihandler",
-        "subcategory": "allowed_address",
-        "value_type": "array",
-        "value": "::1/128",
-        "sequence": "20",
-        "enabled": "true",
-        "description": null,
-        "created": "2023-01-05T15:36:17.882Z",
-        "updated": "2023-01-05T15:36:17.883Z",
         "synchronised": null,
         "updated_by": "system"
     }

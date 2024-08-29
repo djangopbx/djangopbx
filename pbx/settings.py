@@ -384,3 +384,4 @@ PBX_CDRH_SWITCH_RECORDINGS = '/var/lib/freeswitch/recordings'
 PBX_HTTAPI_ALLOWED_ADDRESSES = ['127.0.0.1/32', '::1/128']
 PBX_HTTAPI_SWITCH_RECORDINGS = '/var/lib/freeswitch/recordings'
 PBX_HTTAPI_HANGUP_HANDLER = True
+PBX_HTTAPI_SHOW_ADMIN = False
