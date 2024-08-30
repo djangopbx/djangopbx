@@ -37,6 +37,7 @@ from import_export import resources
 from pbx.fileabslayer import FileAbsLayer
 from pbx.commondestination import CommonDestAction
 from pbx.commonwidgets import PlayerAdminFileFieldWidget, ListTextWidget
+from .filters import VoicemailDomainFilter
 from .models import (
     Voicemail, VoicemailGreeting, VoicemailOptions, VoicemailMessages,
     VoicemailDestinations
@@ -176,7 +177,7 @@ class VoicemailAdmin(ImportExportModelAdmin):
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('extension_id', 'mail_to', 'attach_file', 'local_after_email', 'enabled', 'description')
-    list_filter = ('extension_id__domain_id', 'enabled',)
+    list_filter = (VoicemailDomainFilter, 'enabled')
 
     ordering = [
         'extension_id__extension'
