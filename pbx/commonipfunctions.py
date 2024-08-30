@@ -39,13 +39,13 @@ class IpFunctions():
     def __init__(self):
         self.ipw = IpWare()
         self.ipw = IpWare(precedence=(
-            "X_FORWARDED_FOR",  # Load balancers or proxies such as AWS ELB (default client is `left-most` [`<client>, <proxy1>, <proxy2>`])
+            "X_FORWARDED_FOR",     # Load balancers or proxies such as AWS ELB (default client is `left-most` [`<client>, <proxy1>, <proxy2>`])
             "HTTP_FORWARDED_FOR",  # RFC 7239
-            "HTTP_FORWARDED",  # RFC 7239
-            "X-REAL-IP",  # NGINX
-            "FORWARDED_FOR",  # RFC 7239
-            "FORWARDED",  # RFC 7239
-            "REMOTE_ADDR",  # Default
+            "HTTP_FORWARDED",      # RFC 7239
+            "X-REAL-IP",           # NGINX
+            "FORWARDED_FOR",       # RFC 7239
+            "FORWARDED",           # RFC 7239
+            "REMOTE_ADDR",         # Default
         ))
         self.pbxsettings = PbxSettings()
 
@@ -61,7 +61,6 @@ class IpFunctions():
         return ignore_addresses
 
     def get_portal_fail_attempts(self):
-        max_fail_attempts = 5
         cache_key = 'portal:fail_attempts'
         max_fail_attempts = cache.get(cache_key)
         if not max_fail_attempts:
@@ -69,14 +68,31 @@ class IpFunctions():
             cache.set(cache_key, max_fail_attempts)
         return max_fail_attempts
 
-    def update_web_fail_ip(self, ip_address, username):
+    def get_portal_404_attempts(self):
+        cache_key = 'portal:404_attempts'
+        max_404_attempts = cache.get(cache_key)
+        if not max_404_attempts:
+            max_404_attempts = self.pbxsettings.default_settings('portal', 'max_404_attempts', 'numeric', 10, True)
+            cache.set(cache_key, max_404_attempts)
+        return max_404_attempts
+
+    def update_web_fail_ip(self, ip_address, username='None'):
+        max_fail_attempts = self.get_portal_fail_attempts()
+        self.update_fail_attempts(ip_address, max_fail_attempts, username)
+        return
+
+    def update_web_404_ip(self, ip_address, username='None'):
+        max_404_attempts = self.get_portal_404_attempts()
+        self.update_fail_attempts(ip_address, max_404_attempts, username)
+        return
+
+    def update_fail_attempts(self, ip_address, max_fail_attempts, username):
         ignore_addresses = self.get_portal_ignore_fail_address()
         if ip_address in ignore_addresses:
             return
         ip, created = Failed_logins.objects.update_or_create(address=ip_address)
         ip.username = username[:250]
         if not created:
-            max_fail_attempts = self.get_portal_fail_attempts()
             i = ip.attempts + 1
             ip.attempts = i
             if i > max_fail_attempts:

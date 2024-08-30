@@ -75,6 +75,7 @@ from accounts.accountfunctions import AccountFunctions
 from switch.switchsounds import SwitchSounds
 from pbx.fscmdabslayer import FsCmdAbsLayer
 from pbx.fileabslayer import FileAbsLayer
+from pbx.commonipfunctions import IpFunctions
 
 @login_required
 def index(request):
@@ -408,3 +409,14 @@ class TmpRecordingDownload(View):
 @login_required
 def pbxlogout(request):
     return render(request, 'portal/pbx_logout.html', {})
+
+def error_404(request, exception):
+    meta = request.META
+    ipf = IpFunctions()
+    ip = ipf.get_client_ip(meta)
+    if ip:
+        ipf.update_web_404_ip(ip)
+    return render(request, 'portal/error_404.html', status=404)
+
+def error_500(request):
+    return render(request, 'portal/error_500.html', status=500)

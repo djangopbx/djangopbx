@@ -53,6 +53,12 @@ admin.site.site_header = _('DjangoPBX Administration')
 admin.site.site_title = _('DjangoPBX Admin Portal')
 admin.site.index_title = _('Welcome to the DjangoPBX Admin Portal')
 
+# Custom 404 error view
+handler404 = 'portal.views.error_404'
+
+# Custom 500 error view
+handler500 = 'portal.views.error_500'
+
 from rest_framework import routers
 
 # Routers provide an easy way of automatically determining the URL conf.

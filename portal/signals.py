@@ -31,6 +31,7 @@ from pbx.commonipfunctions import IpFunctions
 
 def failed_user_login(sender, credentials, request, **kwargs):
     meta = request.META
-    ip = IpFunctions().get_client_ip(meta)
+    ipf = IpFunctions()
+    ip = ipf.get_client_ip(meta)
     if ip:
-        IpFunctions().update_web_fail_ip(ip, credentials['username'])
+        ipf.update_web_fail_ip(ip, credentials['username'])

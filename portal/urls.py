@@ -38,7 +38,6 @@ router.register(r'menus', views.MenuViewSet)
 router.register(r'menu_items', views.MenuItemViewSet)
 router.register(r'menu_item_groups', views.MenuItemGroupViewSet)
 
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('domainselect/', views.DomainSelector.as_view(), name='domainselect'),

@@ -194,7 +194,7 @@ class Failed_loginsAdmin(ImportExportModelAdmin):
     readonly_fields = ['created', 'updated', 'synchronised', 'updated_by']
     search_fields = ['address']
     fieldsets = [
-        (None,  {'fields': ['address', 'username', 'sttempts']}),
+        (None,  {'fields': ['address', 'username', 'attempts']}),
         ('update Info.',   {'fields': ['created', 'updated', 'synchronised', 'updated_by'], 'classes': ['collapse']}),
     ]
     list_display = ('address', 'username', 'attempts', 'created', 'updated')
