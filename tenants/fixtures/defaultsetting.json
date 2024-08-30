@@ -4498,5 +4498,23 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "44f035a1-060b-4b10-9aab-68e5af0a111e",
+    "fields": {
+        "app_uuid": null,
+        "category": "portal",
+        "subcategory": "max_404_attempts",
+        "value_type": "numeric",
+        "value": "10",
+        "sequence": "10",
+        "enabled": "true",
+        "description": null,
+        "created": "2024-08-30T11:51:11.002Z",
+        "updated": "2024-08-30T11:51:11.002Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]
