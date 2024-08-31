@@ -28,13 +28,8 @@
 #
 
 import os
-#import socket
 from django.conf import settings
-#from lxml import etree
-#from io import StringIO
 import provision.models
-#from tenants.pbxsettings import PbxSettings
-#from pbx.commonfunctions import shcommand
 from .models import (
     DeviceVendors, DeviceVendorFunctions, DeviceProfiles,
     DeviceProfileSettings, DeviceProfileKeys, DeviceLines, DeviceKeys, DeviceSettings
@@ -55,19 +50,22 @@ class ProvisionFunctions():
     template_list = []
 
     def __init__(self):
-        self.path_of_templates = settings.BASE_DIR / 'provision/templates/provision'
+        self.path_of_templates = os.path.join(settings.BASE_DIR, 'provision/templates/provision')
 
     def get_template_list(self):
         self.template_list = []
         try:
             vendor_list = DeviceVendors.objects.filter(enabled='true')
-            for v in vendor_list:
-                for it in os.scandir(os.path.join(self.path_of_templates, v.name)):
+        except:
+            return[('None', 'None')]
+        for v in vendor_list:
+            scanpath = os.path.join(self.path_of_templates, v.name)
+            if os.path.exists(scanpath):
+                for it in os.scandir(scanpath):
                     if it.is_dir():
                         relpath = os.path.relpath(it.path, start=self.path_of_templates)
                         self.template_list.append((relpath, relpath))
-        except:
-            pass
+
         self.template_list.sort()
         return self.template_list
 
