@@ -4516,5 +4516,23 @@
         "synchronised": null,
         "updated_by": "system"
     }
+},
+{
+    "model": "tenants.defaultsetting",
+    "pk": "d7ac7506-5a99-4da1-98df-e9fddcfbdde9",
+    "fields": {
+        "app_uuid": null,
+        "category": "provision",
+        "subcategory": "yealink_transfer_blind_on_hook",
+        "value_type": "numeric",
+        "value": "0",
+        "sequence": "10",
+        "enabled": "true",
+        "description": "0-Disabled, 1-Enabled (default).",
+        "created": "2024-09-02T14:59:57.233Z",
+        "updated": "2024-09-02T14:59:57.233Z",
+        "synchronised": null,
+        "updated_by": "system"
+    }
 }
 ]

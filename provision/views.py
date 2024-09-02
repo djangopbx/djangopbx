@@ -311,7 +311,6 @@ def device_config(request, *args, **kwargs):
     pf = ProvisionFunctions()
 
     pauth = chk_prov_auth(request, host, pbxs)
-    print(pauth)
     if not pauth[0]:
         return pauth[1]
 
