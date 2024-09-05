@@ -115,11 +115,12 @@ class FileAbsLayer:
         dirs = []
         files = []
         if self.use_local(host):
-            with os.scandir(path) as it:
-                for f in it:
-                    if f.is_dir():
-                        dirs.append(f.name)
-                    else:
-                        files.append(f.name)
+            if os.path.exists(path):
+                with os.scandir(path) as it:
+                    for f in it:
+                        if f.is_dir():
+                            dirs.append(f.name)
+                        else:
+                            files.append(f.name)
             return (dirs, files)
         return self.sftp.listdir(host, path)

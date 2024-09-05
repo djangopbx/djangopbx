@@ -153,11 +153,14 @@ class SFTPConnection(SSHConnection):
         sftp_path = self.sftp_path(path)
         dirs = []
         files = []
-        for item in self.sftp(host).listdir_attr(sftp_path):
-            if self.is_dir(item):
-                dirs.append(item.filename)
-            else:
-                files.append(item.filename)
+        try:
+            for item in self.sftp(host).listdir_attr(sftp_path):
+                if self.is_dir(item):
+                    dirs.append(item.filename)
+                else:
+                    files.append(item.filename)
+        except FileNotFoundError:
+            pass
         return (dirs, files)
 
     def mkdir(self, host, path):
