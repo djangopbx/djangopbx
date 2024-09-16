@@ -1,0 +1,9 @@
+<context name="${domain_name}">
+	<extension name="voicemail_httapi" number="[ext]" continue="false" app_uuid="4e6a1039-6d66-4625-8005-0f287607342a" global="true" order="900">
+		<condition field="${user_exists}" expression="true">
+			<action application="answer"/>
+			<action application="sleep" data="1000"/>
+			<action application="httapi" data="{httapi_profile=dpbx,url=${pbx_httapi_url}/httapihandler/voicemail/record/${dialed_extension}/${domain_name}/}"/>
+		</condition>
+	</extension>
+</context>
