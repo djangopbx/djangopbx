@@ -67,7 +67,7 @@ class VoicemailViewSet(viewsets.ModelViewSet):
     queryset = Voicemail.objects.all().order_by('extension_id')
     serializer_class = VoicemailSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['extension_id']
+    filterset_fields = ['extension_id', 'extension_id__domain_id__name']
     permission_classes = [
         permissions.IsAuthenticated,
         AdminApiAccessPermission,
@@ -125,6 +125,13 @@ class VoicemailMessagesViewSet(viewsets.ModelViewSet):
         obj.status = 'deleted'
         obj.save()
         return Response({'status': 'messsage marked as deleted'})
+
+    @action(detail=True)
+    def mark_saved(self, request, pk=None):
+        obj = self.get_object()
+        obj.status = 'saved'
+        obj.save()
+        return Response({'status': 'messsage marked as saved'})
 
     @action(detail=True)
     def mark_read(self, request, pk=None):
