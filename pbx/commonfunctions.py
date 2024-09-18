@@ -61,6 +61,7 @@ def shcommand(cmd, env=None):
     return stdout.decode('utf-8', 'ignore')
 
 def audio_type(ext):
+    ext = ext.lstrip('.')
     atype = 'audio/unknown'
     if ext == 'wav':
         atype = 'audio/wav'

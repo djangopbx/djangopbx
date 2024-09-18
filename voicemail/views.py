@@ -34,11 +34,17 @@ from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from django.http import FileResponse
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from pbx.fscmdabslayer import FsCmdAbsLayer
 from pbx.commonfunctions import audio_type
+from pbx.commonevents import MessageWaiting
+from pbx.restpbxhelpers import PassthroughRenderer
 from accounts.accountfunctions import AccountFunctions
 
 from pbx.restpermissions import (
@@ -113,6 +119,32 @@ class VoicemailMessagesViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(updated_by=self.request.user.username)
 
+    @action(detail=True)
+    def mark_deleted(self, request, pk=None):
+        obj = self.get_object()
+        obj.status = 'deleted'
+        obj.save()
+        return Response({'status': 'messsage marked as deleted'})
+
+    @action(detail=True)
+    def mark_read(self, request, pk=None):
+        obj = self.get_object()
+        obj.read = timezone.now()
+        obj.status = 'saved'
+        obj.save()
+        mwi = MessageWaiting()
+        mwi.connect()
+        mwi.send(obj.voicemail_id.extension_id, obj.voicemail_id.extension_id.domain_id, 0, 0, True)
+        mwi.disconnect()
+        return Response({'status': 'messsage marked as read/saved'})
+
+    @action(methods=['get'], detail=True, renderer_classes=(PassthroughRenderer,))
+    def download(self, request, pk=None):
+        obj = self.get_object()
+        fh = obj.filename.open()
+        response = FileResponse(fh)
+        return response
+
 
 class VoicemailOptionsViewSet(viewsets.ModelViewSet):
     """
@@ -164,7 +196,7 @@ def append_vm_info(info, domain_name, vm_uuid, vm_user, vm_caller, vm_duration, 
                 extension, filename, audio_type,
                 _('Your browser does not support the audio tag.')
                 ),
-            '<a href=\"/voicemail/listvoicemails/%s/%s/delete/\">%s</a>' % (vm_uuid, vm_user, _('Delete'))
+            '<a href=\"/voicemail/listvoicemails/%s/%s/delete/\">%s</a> | <a href=\"/voicemail/listvoicemails/%s/%s/mkread/\">%s</a>' % (vm_uuid, vm_user, _('Delete'), vm_uuid, vm_user, _('Save'))
             ]
 
 @login_required
@@ -210,11 +242,28 @@ def listvoicemails(request, vmuuid=None, vmext=None, action=None):
                     append_vm_info(info, request.session['domain_name'], v[6], v[2], v[8], v[9], e, filename, atype, date_time)
         es.disconnect()
     else:
-        if action == 'delete':
-            VoicemailMessages.objects.filter(pk=vmuuid).delete()
+        vm = None
+        if action:
+            try:
+                vm = VoicemailMessages.objects.get(pk=vmuuid)
+            except VoicemailMessages.DoesNotExist:
+                pass
+        if vm:
+            if action == 'delete':
+                vm.status = 'deleted'
+                vm.save()
+            elif action == 'mkread':
+                vm.read = timezone.now()
+                vm.status = 'saved'
+                vm.save()
+                mwi = MessageWaiting()
+                mwi.connect()
+                mwi.send(vm.voicemail_id.extension_id, vm.voicemail_id.extension_id.domain_id, 0, 0, True)
+                mwi.disconnect()
+
         vms = Voicemail.objects.filter(enabled='true', extension_id__extension__in=extension_list)
         for vm in vms:
-            msgs = vm.voicemailmessages_set.all()
+            msgs = vm.voicemailmessages_set.filter(status__in=('new', 'saved'))
             for msg in msgs:
                 try:
                     file_ext = os.path.splitext(msg.name)[1]
