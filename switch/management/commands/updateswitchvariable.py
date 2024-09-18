@@ -40,8 +40,10 @@ class Command(BaseCommand):
         parser.add_argument('--category', help=_('Variable Category'))
         parser.add_argument('--name', help=_('Variable Name'))
         parser.add_argument('--value', help=_('The value for the Variable'))
+        parser.add_argument('--enable', help=_('Set to no if the variable is not to be enabled'))
 
     def handle(self, *args, **kwargs):
+        enable_req = False
         cat = kwargs.get('category')
         if not cat:
             print(_('No category specified'))
@@ -57,11 +59,23 @@ class Command(BaseCommand):
             print(_('No value specified'))
             sys.exit(1)
 
+        enable = kwargs.get('enable')
+        if not enable:
+            enable = 'yes'
+
         try:
             v = SwitchVariable.objects.get(enabled='true', category=cat, name=name)
         except SwitchVariable.DoesNotExist:
-                print(_('Variable does not exist, or is not enabled'))
-                sys.exit(1)
+                enable_req = True
+                print(_('Variable is not currently enabled'))
 
+        if enable_req:
+            try:
+                v = SwitchVariable.objects.get(category=cat, name=name)
+            except SwitchVariable.DoesNotExist:
+                    print(_('Variable does not exist'))
+                    sys.exit(1)
         v.value = value
+        if enable == 'yes':
+            v.enabled = 'true'
         v.save()
