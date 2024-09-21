@@ -131,7 +131,7 @@ class AmqpConnection:
             self.channel.start_consuming()
         except KeyboardInterrupt:
             if logger is not None:
-                logger.info('Event Receiver PID: %s Received interrupt, shtting down... %s' % (self.pid, self.rabbithostname))
+                logger.info('Event Receiver PID: %s Received interrupt, shutting down... %s' % (self.pid, self.rabbithostname))
             print('Keyboard interrupt received')
             self.channel.stop_consuming()
             self.connection.close()
