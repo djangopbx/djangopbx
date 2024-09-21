@@ -229,7 +229,37 @@ echo -e $c_white
 cat /tmp/pbx-generic-update.tmp
 echo -e $c_clear
 fi
+echo -e $c_green
+cat << EOF
 
+!IMPORTANT! The Generic Update will now check through your FreeSWITCH
+config.xml files.
+
+You will be shown a diff output of any file in your configuration that differs
+from the file as supplied by the distribution.
+There will naturally be some differences where, for example, URLs or
+passwords have been updated.  You are safe to ignore these, but pay attention
+to any other differences because that may indicate that a configuration
+has been updated to accommodate a new feature.
+
+You can then make your own decision either to keep your existing file or
+to copy in the distribution version.
+
+If you do change any FreeSWITCH configuration files then you must either
+reloadxml, reload a given module or restart FreeSWITCH.
+
+EOF
+cd /home/django-pbx/pbx/switch/resources/templates/conf/autoload_configs
+for CONFFILE in *.xml; do
+    diff $CONFFILE /home/django-pbx/freeswitch/autoload_configs/${CONFFILE} > /tmp/pbx-generic-update.tmp
+    if [ $? -gt 0 ]; then
+    echo -e "${c_cyan}Your ~/freeswitch/autoload_configs/${CONFFILE} differs from the distribution file..."
+    echo -e $c_white
+    cat /tmp/pbx-generic-update.tmp
+    echo -e $c_clear
+    fi
+done
+cd $cwd
 
 echo " "
 echo -e "${c_green}Generic Update Complete"
