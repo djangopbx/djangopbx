@@ -406,7 +406,6 @@ class CdrTimeline(LoginRequiredMixin, View):
                 detail_list.append('from %s' % self.get_ext_from_ch_lookup(q.unique_id))
                 info.append((q.event_date_local, detail_list))
 
-            print(q.event_name)
         return render(request, 'xmlcdr/xmlcdr_timeline.html', {'info': info, 'back': 'cdrviewer', 'title': 'CDR Timeline'})
 
     def get_ext_from_ch_lookup(self, unique_id, cn=None):

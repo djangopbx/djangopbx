@@ -45,7 +45,6 @@ class CallFlowToggleHandler(HttApiHandler):
 
         self.hostname = self.session_json.get('hostname')
         call_flow_uuid = self.session_json.get('variable_callflow_uuid')
-        print(call_flow_uuid)
         try:
             q = CallFlows.objects.get(pk=call_flow_uuid)
         except CallFlows.DoesNotExist:

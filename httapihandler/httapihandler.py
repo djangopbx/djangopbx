@@ -117,7 +117,6 @@ class HttApiHandler():
         self.debug = False
         self.qdict = qdict
         self.fdict = fdict
-        print(qdict)
         self.getfile = getFile
         self.exiting = False
         self.session = None

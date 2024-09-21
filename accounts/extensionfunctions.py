@@ -204,7 +204,6 @@ class ExtFeatureSyncFunctions():
                 ringCount=math.ceil(self.ext.call_timeout / 6),
                 DoNotDisturbOn=self.ext.do_not_disturb
             )
-        print(cmd)
         self.es.clear_responses()
         self.es.send(cmd)
         self.es.process_events()
