@@ -1329,7 +1329,7 @@
     "model": "switch.modules",
     "pk": "1f4875b0-9bb1-4225-879b-65ce32d7f0a5",
     "fields": {
-        "label": "Voicemail",
+        "label": "HTTP GET/PUT",
         "name": "mod_http_cache",
         "category": "Applications",
         "sequence": "790",
