@@ -1,3 +1,24 @@
+DjangoPBX Has Moved to Codeberg
+--------------------------------------
+[https://codeberg.org/DjangoPBX/DjangoPBX](https://codeberg.org/DjangoPBX/DjangoPBX)
+
+## This repository has been left here for historical and reference purposes only
+
+### You can update your local repository as follows...
+
+git remote -v will show you your current upstrem repository:
+```sh
+git remote -v
+origin	https://github.com/djangopbx/djangopbx.git (fetch)
+origin	https://github.com/djangopbx/djangopbx.git (push)
+```
+
+To update the URL issue the following:
+
+```sh
+git remote set-url origin https://codeberg.org/djangopbx/djangopbx.git
+```
+
 DjangoPBX
 --------------------------------------
 DjangoPBX - A full-featured domain based multi-tenant PBX driven by [Django](https://www.djangoproject.com/) and [FreeSWITCH™](https://freeswitch.com).
