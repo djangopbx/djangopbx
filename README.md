@@ -66,7 +66,7 @@ Documentation is available on the [DjangoPBX Site](https://www.djangopbx.com/sta
 This code has entered a stage of Alpha Testing.
 Several test deployments have been made and testing is underway.
 
-Installation has been scripted at [djangopbx-install.sh](https://github.com/djangopbx/djangopbx-install.sh)
+Installation has been scripted at [djangopbx-install.sh](https://codeberg.org/DjangoPBX/djangopbx-install.sh)
 
 ## License Agreement
 
