@@ -30,7 +30,7 @@
 import os
 import socket
 from django.apps import apps
-from django.conf import settings
+from django.conf import settings as django_settings
 from lxml import etree
 from io import StringIO
 import switch.models
@@ -241,7 +241,7 @@ class SwitchFunctions():
         plist = switch.models.SipProfile.objects.filter(enabled='true').order_by('name')
         xml = ''
         confdir = PbxSettings().default_settings('switch', 'sip_profiles', 'dir', '/home/django-pbx/freeswitch/sip_profiles', True)
-        if not settings.PBX_FREESWITCH_LOCAL:
+        if not django_settings.PBX_FREESWITCH_LOCAL:
             fal = FileAbsLayer()
         for p in plist:
             root = etree.Element('profile', name=p.name)
@@ -278,7 +278,7 @@ class SwitchFunctions():
                     f.write(xml)
             except OSError:
                 return 3
-            if not settings.PBX_FREESWITCH_LOCAL:
+            if not django_settings.PBX_FREESWITCH_LOCAL:
                 fal.save_to_freeswitches(filename, filename)
         return 0
 
